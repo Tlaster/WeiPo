@@ -15,6 +15,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Shiba;
 using WeiPo.Activities;
 using WeiPo.Common;
 
@@ -38,8 +39,30 @@ namespace WeiPo
                 it.ButtonBackgroundColor = Colors.Transparent;
                 it.ButtonInactiveBackgroundColor = Colors.Transparent;
             });
+            Init();
+        }
+
+        private async void Init()
+        {
+            ShibaApp.Init();
+            var fname = @"Assets\bundle.js";
+            var InstallationFolder = Windows.ApplicationModel.Package.Current.InstalledLocation;
+            var file = await InstallationFolder.GetFileAsync(fname);
+            var contents = await File.ReadAllTextAsync(file.Path);
+            ShibaApp.Instance.Configuration.ScriptRuntime.Execute(contents);
+            ShibaApp.Instance.AddConverter("weiboTextConverter", param =>
+            {
+                var text = param.FirstOrDefault() as string;
+                if (!string.IsNullOrEmpty(text))
+                {
+                    return Singleton<WeiboHtmlToMarkdown>.Instance.Convert(text);
+                }
+
+                return string.Empty;
+            });
             RootContainer.Navigate(typeof(LoginActivity));
         }
+
 
         private void OnCoreTitleBarOnLayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
         {

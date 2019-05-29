@@ -21,21 +21,14 @@ namespace WeiPo.Activities
             this.InitializeComponent();
         }
 
-        protected override void OnResume()
+        protected override void OnCreate(object parameter)
         {
-            base.OnResume();
-
-            if (Singleton<Storage>.Instance.Load("usercookie", string.Empty).IsNonNullOrEmpty())
-            {
-                StartActivity<TimelineActivity>();
-            }
-            else
-            {
-                const string callback = "https://m.weibo.cn/";
-                var requri = new Uri($"https://m.weibo.cn/login?backURL=${callback}");
-                LoginWebView.NavigationCompleted += LoginWebViewOnNavigationCompleted;
-                LoginWebView.Navigate(requri);
-            }
+            base.OnCreate(parameter);
+            
+            const string callback = "https://m.weibo.cn/";
+            var requri = new Uri($"https://m.weibo.cn/login?backURL=${callback}");
+            LoginWebView.NavigationCompleted += LoginWebViewOnNavigationCompleted;
+            LoginWebView.Navigate(requri);
         }
 
         private void LoginWebViewOnNavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
@@ -43,7 +36,7 @@ namespace WeiPo.Activities
             var httpBaseProtocolFilter = new HttpBaseProtocolFilter();
             var cookieManager = httpBaseProtocolFilter.CookieManager;
             var cookieCollection = cookieManager.GetCookies(new Uri("https://m.weibo.cn/"));
-            if (cookieCollection != null && cookieCollection.Any(it => it.Name == "MLOGIN" || it.Value == "1"))
+            if (cookieCollection != null && cookieCollection.Any(it => it.Name == "MLOGIN" && it.Value == "1"))
             {
                 Singleton<Storage>.Instance.Save("usercookie", cookieCollection.ToDictionary(it => it.Name, it => it.Value).ToJson());
                 StartActivity<TimelineActivity>();

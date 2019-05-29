@@ -14,6 +14,7 @@
     xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Animations.Behaviors"
+    xmlns:shiba="using:Shiba"
     mc:Ignorable="d">
     <paging:Activity.DataContext>
         <viewModels:TimelineViewModel/>
@@ -26,7 +27,7 @@
                 </controls:ItemsRepeater.Layout>
                 <controls:ItemsRepeater.ItemTemplate>
                     <DataTemplate x:DataType="linq:JObject">
-                        <controls2:StatusView Status="{Binding}"/>
+                        <shiba:ShibaHost HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Component="weiboStatus" DataContext="{Binding}"/>
                     </DataTemplate>
                 </controls:ItemsRepeater.ItemTemplate>
             </controls:ItemsRepeater>

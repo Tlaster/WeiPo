@@ -6,6 +6,8 @@
     xmlns:converters="using:WeiPo.Converters">
     <Application.Resources>
         <ResourceDictionary>
+            <AcrylicBrush x:Key="statusBackground" BackgroundSource="Backdrop" TintColor="{StaticResource SystemChromeAltHighColor}" TintOpacity="0.8" FallbackColor="{StaticResource SystemChromeMediumColor}" />
+            <AcrylicBrush x:Key="retweetBackground" BackgroundSource="Backdrop" TintColor="{StaticResource SystemChromeHighColor}" TintOpacity="0.8" FallbackColor="{StaticResource SystemChromeHighColor}" />
             <converters:WeiboContentConverter x:Key="WeiboContentConverter"/>
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls"/>

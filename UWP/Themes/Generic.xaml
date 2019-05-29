@@ -37,7 +37,7 @@
                                         <DataTemplate>
                                             <controls2:ItemsRepeater ItemsSource="{Binding [pics]}">
                                                 <controls2:ItemsRepeater.Layout>
-                                                    <common:WeiboImageLayout/>
+                                                    <common:NineGridLayout/>
                                                 </controls2:ItemsRepeater.Layout>
                                                 <controls2:ItemsRepeater.ItemTemplate>
                                                     <DataTemplate>

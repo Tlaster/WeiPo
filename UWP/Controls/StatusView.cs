@@ -77,5 +77,10 @@ namespace WeiPo.Controls
             get => (JObject) GetValue(StatusProperty);
             set => SetValue(StatusProperty, value);
         }
+
+        protected override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+        }
     }
 }

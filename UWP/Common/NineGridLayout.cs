@@ -4,7 +4,7 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace WeiPo.Common
 {
-    public class WeiboImageLayout : VirtualizingLayout
+    public class NineGridLayout : VirtualizingLayout
     {
         protected override Size MeasureOverride(VirtualizingLayoutContext context, Size availableSize)
         {
