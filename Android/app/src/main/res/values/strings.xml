@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">WeiPo</string>
+    <item name="shiba_items_view_creator" type="id"/>
 </resources>

@@ -5,6 +5,7 @@ using Windows.UI.Xaml.Media;
 using Microsoft.Toolkit.Parsers.Markdown;
 using Microsoft.Toolkit.Parsers.Markdown.Inlines;
 using Microsoft.Toolkit.Parsers.Markdown.Render;
+using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.Toolkit.Uwp.UI.Controls.Markdown.Render;
 using Newtonsoft.Json.Linq;
 

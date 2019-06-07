@@ -20,7 +20,10 @@
         <viewModels:TimelineViewModel/>
     </paging:Activity.DataContext>
     <Grid>
-        <ScrollViewer ViewChanged="ScrollViewer_OnViewChanged">
+
+
+        <shiba:ShibaHost HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Component="weiboTimeline"/>
+        <!--<ScrollViewer ViewChanged="ScrollViewer_OnViewChanged">
             <controls:ItemsRepeater Name="TimelineItemsRepeater" ItemsSource="{x:Bind DataContext.(viewModels:TimelineViewModel.Timeline)}" >
                 <controls:ItemsRepeater.Layout>
                     <common:StaggeredLayout DesiredColumnWidth="400"/>
@@ -31,9 +34,9 @@
                     </DataTemplate>
                 </controls:ItemsRepeater.ItemTemplate>
             </controls:ItemsRepeater>
-        </ScrollViewer>
+        </ScrollViewer>-->
 
-        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Top" MaxWidth="600" Name="Header">
+        <!--<Grid HorizontalAlignment="Stretch" VerticalAlignment="Top" MaxWidth="600" Name="Header">
             <controls1:DropShadowPanel
                         HorizontalAlignment="Stretch"
                         HorizontalContentAlignment="Stretch"
@@ -57,6 +60,6 @@
                 <controls1:ImageEx Width="40" Height="40" CornerRadius="999"/>
                 <TextBox VerticalContentAlignment="Center" BorderThickness="0" Grid.Column="1" HorizontalAlignment="Stretch" IsReadOnly="True" Text="Say sth..."/>
             </Grid>
-        </Grid>
+        </Grid>-->
     </Grid>
 </paging:Activity>

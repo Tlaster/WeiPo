@@ -33,6 +33,6 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind:2.9.+")
     implementation("androidx.constraintlayout:constraintlayout:2.0.0-beta1")
     testImplementation("junit:junit:4.12")
-    androidTestImplementation("androidx.test:runner:1.2.0-beta01")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.2.0-beta01")
+    androidTestImplementation("androidx.test:runner:1.2.0")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.2.0")
 }

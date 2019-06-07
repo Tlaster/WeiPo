@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -18,6 +19,7 @@ using Windows.UI.Xaml.Navigation;
 using Shiba;
 using WeiPo.Activities;
 using WeiPo.Common;
+using WeiPo.Shiba.ExtensionExecutors;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -44,12 +46,22 @@ namespace WeiPo
 
         private async void Init()
         {
-            ShibaApp.Init();
+            ShibaApp.Init(c =>
+            {
+                c.ExtensionExecutors.Add(new JSBindingExecutor());
+                c.ExtensionExecutors.Add(new ResExecutor());
+            });
             var fname = @"Assets\bundle.js";
-            var InstallationFolder = Windows.ApplicationModel.Package.Current.InstalledLocation;
-            var file = await InstallationFolder.GetFileAsync(fname);
+            var file = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFileAsync(fname);
             var contents = await File.ReadAllTextAsync(file.Path);
-            ShibaApp.Instance.Configuration.ScriptRuntime.Execute(contents);
+            try
+            {
+                ShibaApp.Instance.Configuration.ScriptRuntime.Execute(contents);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
             ShibaApp.Instance.AddConverter("weiboTextConverter", param =>
             {
                 var text = param.FirstOrDefault() as string;

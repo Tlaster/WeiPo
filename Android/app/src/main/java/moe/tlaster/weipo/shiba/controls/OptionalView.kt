@@ -14,7 +14,7 @@ class OptionalView @JvmOverloads constructor(
     private lateinit var currentJob: Job
     private var binding: ShibaBinding? = null
     override var propertyChanged: Event<String> = Event()
-    var cachedChild: ShibaHost? = null
+    private var cachedChild: ShibaHost? = null
     var creator: String? = null
         set(value) {
             field = value

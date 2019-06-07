@@ -5,9 +5,9 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".activity.LoginActivity">
-    <WebView
-            android:id="@+id/webView"
+        tools:context=".activity.TimelineActivity">
+    <moe.tlaster.shiba.ShibaHost
+            android:id="@+id/shibaHost"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

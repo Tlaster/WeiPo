@@ -33,7 +33,7 @@ namespace WeiPo.Activities
 
         private void OnCoreTitleBarOnLayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
         {
-            Header.Margin = new Thickness(0, sender.Height, 0, 0);
+            //Header.Margin = new Thickness(0, sender.Height, 0, 0);
         }
 
         private async void ScrollViewer_OnViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
