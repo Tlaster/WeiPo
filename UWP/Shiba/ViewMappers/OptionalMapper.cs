@@ -63,8 +63,8 @@ namespace Shiba.ViewMappers
             {
                 it.SetBinding(ContentControl.ContentProperty, new Binding
                 {
-                    Source = context.ShibaHost,
-                    Path = new PropertyPath("DataContext")
+                    Source = context,
+                    Path = new PropertyPath(nameof(context.DataContext))
                 });
             });
         }

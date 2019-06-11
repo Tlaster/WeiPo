@@ -74,8 +74,8 @@ namespace WeiPo.Shiba.ViewMappers
             {
                 it.SetBinding(ItemsRepeater.DataContextProperty, new Binding
                 {
-                    Source = context.ShibaHost,
-                    Path = new PropertyPath("DataContext"),
+                    Source = context,
+                    Path = new PropertyPath(nameof(context.DataContext)),
                 });
             });
         }
@@ -88,7 +88,7 @@ namespace WeiPo.Shiba.ViewMappers
                 {
                     switch (o)
                     {
-                        case string sourceCreator:
+                        case string sourceCreator when ShibaApp.Instance.Configuration.ScriptRuntime.HasFunction(sourceCreator):
                             repeater.ItemsSource = new IncrementalLoadingCollection<ItemsDataSource, object>(new ItemsDataSource(ShibaApp.Instance.Configuration.ScriptRuntime.CallFunction(sourceCreator)));
                             break;
                         case BindingBase binding:

@@ -49,7 +49,7 @@ namespace WeiPo.Shiba.ExtensionExecutors
         public override Binding ProvideNativeBinding(IShibaContext context, ShibaExtension value)
         {
             var dataContextPath =
-                "DataContext";
+                nameof(context.DataContext);
             var targetPath = value.Value;
             var path = dataContextPath;
 
@@ -57,7 +57,7 @@ namespace WeiPo.Shiba.ExtensionExecutors
             {
                 Converter = JSBindingConverter.Instance,
                 ConverterParameter = targetPath,
-                Source = context.ShibaHost,
+                Source = context,
                 Path = new PropertyPath(path),
                 UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
             };
