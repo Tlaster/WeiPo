@@ -2,16 +2,16 @@ package moe.tlaster.weipo.shiba.controls
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.widget.FrameLayout
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.withContext
 import moe.tlaster.shiba.*
 import moe.tlaster.shiba.dataBinding.ShibaBinding
 
 class OptionalView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr), INotifyPropertyChanged {
-    private lateinit var currentJob: Job
     private var binding: ShibaBinding? = null
     override var propertyChanged: Event<String> = Event()
     private var cachedChild: ShibaHost? = null
@@ -48,12 +48,42 @@ class OptionalView @JvmOverloads constructor(
             }
             return
         }
-        if (::currentJob.isInitialized && currentJob.isActive) {
-            currentJob.cancel()
+
+        val selectorResult = Shiba.configuration.scriptRuntime.callFunction(currentSelector, currentDataContext)
+        if (selectorResult is Boolean) {
+            if (selectorResult) {
+                if (childCount == 0) {
+                    if (cachedChild == null && creator != null) {
+                        cachedChild = ShibaHost(context).also { view ->
+                            view.creator = currentCreator
+                        }
+                    }
+                    if (binding == null && cachedChild != null) {
+                        this@OptionalView.binding = ShibaBinding("dataContext").also { binding ->
+                            binding.targetView = cachedChild
+                            binding.viewSetter = { view, value ->
+                                if (view is ShibaHost) {
+                                    view.dataContext = value
+                                }
+                            }
+                            binding.source = this@OptionalView
+                        }
+                    }
+                    binding?.setValueToView()
+                    addView(cachedChild)
+                }
+            } else {
+                if (childCount > 0) {
+                    removeView(cachedChild)
+                }
+            }
         }
-        currentJob = GlobalScope.launch {
-            updateImpl(currentCreator, currentSelector, currentDataContext)
-        }
+//        if (::currentJob.isInitialized && currentJob.isActive) {
+//            currentJob.cancel()
+//        }
+//        currentJob = GlobalScope.launch {
+//            updateImpl(currentCreator, currentSelector, currentDataContext)
+//        }
     }
 
     private suspend fun updateImpl(

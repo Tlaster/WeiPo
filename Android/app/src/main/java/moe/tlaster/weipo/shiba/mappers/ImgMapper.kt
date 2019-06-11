@@ -1,6 +1,6 @@
 package moe.tlaster.weipo.shiba.mappers
 
-import android.widget.ImageView
+import android.view.ViewGroup
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder
 import com.facebook.drawee.generic.RoundingParams
 import com.facebook.drawee.view.SimpleDraweeView
@@ -13,6 +13,9 @@ open class ImgMapper : ViewMapper<SimpleDraweeView>() {
         return SimpleDraweeView(context.getContext())
     }
 
+    override fun getViewLayoutParams(): ViewGroup.LayoutParams {
+        return ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+    }
     override fun propertyMaps(): ArrayList<PropertyMap> {
         return super.propertyMaps().apply {
             add(PropertyMap("source", {view, value ->

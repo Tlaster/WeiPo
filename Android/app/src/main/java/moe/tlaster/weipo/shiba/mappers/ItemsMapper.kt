@@ -1,7 +1,7 @@
 package moe.tlaster.weipo.shiba.mappers
 
+import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.*
@@ -11,11 +11,71 @@ import moe.tlaster.shiba.ShibaHost
 import moe.tlaster.shiba.mapper.PropertyMap
 import moe.tlaster.shiba.mapper.ViewMapper
 import moe.tlaster.shiba.type.CollectionChangedEventArg
-import moe.tlaster.weipo.R
 import moe.tlaster.weipo.shiba.collection.IIncrementalSource
 import moe.tlaster.weipo.shiba.collection.INotifyCollectionChanged
 import moe.tlaster.weipo.shiba.collection.ISupportIncrementalLoading
 import moe.tlaster.weipo.shiba.collection.IncrementalLoadingCollection
+
+class NineGridLayoutManager : RecyclerView.LayoutManager() {
+    private var itemSize: Double = 0.0
+
+    override fun generateDefaultLayoutParams(): RecyclerView.LayoutParams {
+        return RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+    }
+
+    override fun isAutoMeasureEnabled(): Boolean {
+        return false
+    }
+
+    override fun onMeasure(
+        recycler: RecyclerView.Recycler,
+        state: RecyclerView.State,
+        widthSpec: Int,
+        heightSpec: Int
+    ) {
+        super.onMeasure(recycler, state, widthSpec, heightSpec)
+        if (itemCount == 0 || state.isPreLayout) {
+            return
+        }
+        val width = View.MeasureSpec.getSize(widthSpec)
+
+        itemSize = width.toDouble() / 3.toDouble()
+        val totalHeight = Math.ceil(itemCount.toDouble() / 3.toDouble()) * itemSize
+
+        val actualHeightSpec = View.MeasureSpec.makeMeasureSpec(totalHeight.toInt(), View.MeasureSpec.EXACTLY)
+
+        super.onMeasure(recycler, state, widthSpec, actualHeightSpec)
+    }
+
+    override fun onLayoutChildren(recycler: RecyclerView.Recycler?, state: RecyclerView.State?) {
+        if (recycler == null || state == null || itemCount <= 0 || state.isPreLayout) {
+            return
+        }
+
+        if (state.itemCount == 0) {
+            removeAndRecycleAllViews(recycler)
+            return
+        }
+        detachAndScrapAttachedViews(recycler)
+        var currentY = 0.toDouble()
+        var currentX = 0.toDouble()
+        val size = itemSize
+        val itemWidth = View.MeasureSpec.makeMeasureSpec(size.toInt(), View.MeasureSpec.EXACTLY)
+        for (i in 0 until itemCount) {
+
+            val view = recycler.getViewForPosition(i)
+            addView(view)
+            view.measure(itemWidth, itemWidth)
+            layoutDecorated(view, currentX.toInt(), currentY.toInt(), currentX.toInt() + size.toInt(), currentY.toInt() + size.toInt())
+            currentX += size
+            if (currentX >= size * 3) {
+                currentX = 0.0
+                currentY += size
+            }
+        }
+    }
+
+}
 
 class ItemsMapper : ViewMapper<RecyclerView>() {
     override fun getViewLayoutParams(): ViewGroup.LayoutParams {
@@ -60,7 +120,7 @@ class ItemsMapper : ViewMapper<RecyclerView>() {
             add(PropertyMap("layout", { view, value ->
                 if (view is RecyclerView && value is String) {
                     when (value) {
-                        "nineGrid" -> view.layoutManager = GridLayoutManager(view.context, 3)
+                        "nineGrid" -> view.layoutManager = NineGridLayoutManager()
                     }
                 }
             }))
