@@ -40,6 +40,7 @@ namespace WeiPo.Activities
             {
                 Singleton<Storage>.Instance.Save("usercookie", cookieCollection.ToDictionary(it => it.Name, it => it.Value).ToJson());
                 StartActivity<TimelineActivity>();
+                Finish();
             }
         }
     }

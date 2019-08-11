@@ -23,7 +23,6 @@ namespace WeiPo.Activities
         protected override void OnCreate(object parameter)
         {
             base.OnCreate(parameter);
-            this.Container.ClearBackStack();
 
             CoreApplication.GetCurrentView().TitleBar.Also(it =>
             {

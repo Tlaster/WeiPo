@@ -6,6 +6,12 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:paging="using:Bug10.Paging"
+    xmlns:model="using:WeiPo.Model"
+    xmlns:controls="using:WeiPo.Controls"
+    xmlns:controls1="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Animations.Behaviors"
+    xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
@@ -14,6 +20,19 @@
         <RowDefinition Height="Auto" />
         <RowDefinition Height="*" />
     </Grid.RowDefinitions>
-    <paging:ActivityContainer Name="RootContainer" Grid.RowSpan="2" Background="{ThemeResource SystemControlAcrylicWindowBrush}"/>
-    <Grid Grid.Row="0" Name="TitleBar" VerticalAlignment="Top" Background="Transparent"/>
+    <paging:ActivityContainer Name="RootContainer" Grid.Row="1"
+                              Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+        <paging:ActivityContainer.ContentTransitions>
+            <TransitionCollection>
+                <AddDeleteThemeTransition />
+                <ContentThemeTransition />
+                <NavigationThemeTransition>
+                    <ContinuumNavigationTransitionInfo />
+                </NavigationThemeTransition>
+                <EntranceThemeTransition />
+            </TransitionCollection>
+        </paging:ActivityContainer.ContentTransitions>
+    </paging:ActivityContainer>
+    <Grid Grid.Row="0" Name="TitleBar" VerticalAlignment="Top"
+          Background="{ThemeResource SystemControlAcrylicElementBrush}" />
 </Grid>

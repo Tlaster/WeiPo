@@ -14,29 +14,26 @@
     xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Animations.Behaviors"
-    xmlns:shiba="using:Shiba"
+    xmlns:model="using:WeiPo.Model"
     mc:Ignorable="d">
     <paging:Activity.DataContext>
         <viewModels:TimelineViewModel/>
     </paging:Activity.DataContext>
     <Grid>
-
-
-        <shiba:ShibaHost HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Component="weiboTimeline"/>
-        <!--<ScrollViewer ViewChanged="ScrollViewer_OnViewChanged">
+        <ScrollViewer ViewChanged="ScrollViewer_OnViewChanged">
             <controls:ItemsRepeater Name="TimelineItemsRepeater" ItemsSource="{x:Bind DataContext.(viewModels:TimelineViewModel.Timeline)}" >
                 <controls:ItemsRepeater.Layout>
                     <common:StaggeredLayout DesiredColumnWidth="400"/>
                 </controls:ItemsRepeater.Layout>
                 <controls:ItemsRepeater.ItemTemplate>
-                    <DataTemplate x:DataType="linq:JObject">
-                        <shiba:ShibaHost HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Component="weiboStatus" DataContext="{Binding}"/>
+                    <DataTemplate x:DataType="model:StatusModel">
+                        <controls2:StatusView Status="{x:Bind}"/>
                     </DataTemplate>
                 </controls:ItemsRepeater.ItemTemplate>
             </controls:ItemsRepeater>
-        </ScrollViewer>-->
+        </ScrollViewer>
 
-        <!--<Grid HorizontalAlignment="Stretch" VerticalAlignment="Top" MaxWidth="600" Name="Header">
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Top" MaxWidth="600" Name="Header" Visibility="Collapsed">
             <controls1:DropShadowPanel
                         HorizontalAlignment="Stretch"
                         HorizontalContentAlignment="Stretch"
@@ -60,6 +57,6 @@
                 <controls1:ImageEx Width="40" Height="40" CornerRadius="999"/>
                 <TextBox VerticalContentAlignment="Center" BorderThickness="0" Grid.Column="1" HorizontalAlignment="Stretch" IsReadOnly="True" Text="Say sth..."/>
             </Grid>
-        </Grid>-->
+        </Grid>
     </Grid>
 </paging:Activity>

@@ -9,6 +9,7 @@ namespace WeiPo.Common
 {
     class WeiboHtmlToMarkdown
     {
+        public static WeiboHtmlToMarkdown Instance { get; } = new WeiboHtmlToMarkdown();
         public string Convert(string html)
         {
             var doc = new HtmlDocument();

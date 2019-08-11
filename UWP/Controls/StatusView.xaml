@@ -1,0 +1,126 @@
+﻿<UserControl
+    x:Class="WeiPo.Controls.StatusView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WeiPo.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:controls1="using:Microsoft.UI.Xaml.Controls"
+    xmlns:common="using:WeiPo.Common"
+    xmlns:model="using:WeiPo.Model"
+    Background="{ThemeResource SystemControlAcrylicElementBrush}"
+    Margin="4"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+    <StackPanel
+        Background="{x:Bind Background, Mode=OneWay}"
+        CornerRadius="4"
+        Padding="8"
+        Margin="{x:Bind Margin, Mode=OneWay}"
+        DataContext="{x:Bind Status, Mode=OneWay}" Orientation="Vertical">
+        <Grid DataContext="{x:Bind Status.User}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <controls:ImageEx Grid.RowSpan="2" Margin="0,0,4,4" Width="40" Height="40" CornerRadius="999"
+                              Source="{x:Bind Status.User.ProfileImageUrl, Mode=OneWay}" />
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="{x:Bind Status.User.ScreenName, Mode=OneWay}" />
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind local:StatusViewXamlHelper.TimeConverter(Status.CreatedAt), Mode=OneWay}" Foreground="Gray" />
+        </Grid>
+        <controls:MarkdownTextBlock IsTextSelectionEnabled="False" ImageMaxHeight="14" Background="Transparent" TextWrapping="Wrap"
+                                    Text="{x:Bind common:WeiboHtmlToMarkdown.Instance.Convert(Status.Text), Mode=OneWay}" />
+        <controls1:ItemsRepeater ItemsSource="{x:Bind Status.Pics, Mode=OneWay}">
+            <controls1:ItemsRepeater.Layout>
+                <common:NineGridLayout/>
+            </controls1:ItemsRepeater.Layout>
+            <controls1:ItemsRepeater.ItemTemplate>
+                <DataTemplate x:DataType="model:Pic">
+                    <controls:ImageEx Stretch="UniformToFill" Source="{x:Bind Url}"/>
+                </DataTemplate>
+            </controls1:ItemsRepeater.ItemTemplate>
+        </controls1:ItemsRepeater>
+        <ContentControl Content="{x:Bind Status.PageInfo, Mode=OneWay}">
+            <ContentControl.ContentTemplateSelector>
+                <local:PageInfoDataTemplateSelector>
+                    <local:PageInfoDataTemplateSelector.DataTemplate>
+                        <DataTemplate x:DataType="model:PageInfo">
+                            <local:AspectRatioView WidthRequest="16" HeightRequest="9" RequestedTheme="Dark" >
+                                <controls:ImageEx Stretch="UniformToFill" CornerRadius="4" Source="{x:Bind PagePic.Url, Mode=OneWay}"/>
+                                <Border CornerRadius="4" Background="#aa000000"/>
+                                <TextBlock Margin="8" Text="{x:Bind PageTitle, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                                <StackPanel Margin="8" VerticalAlignment="Bottom" Orientation="Vertical">
+                                    <TextBlock TextTrimming="CharacterEllipsis" Visibility="{x:Bind common:XamlHelper.IsNonNullToVisibility(Title)}" Text="{x:Bind Title, Mode=OneWay}"/>
+                                    <TextBlock TextTrimming="CharacterEllipsis" Visibility="{x:Bind common:XamlHelper.IsNullToVisibility(Title)}" Text="{x:Bind Content1, Mode=OneWay}"/>
+                                    <TextBlock TextTrimming="CharacterEllipsis" FontSize="10" Text="{x:Bind Content2, Mode=OneWay}"/>
+                                </StackPanel>
+                            </local:AspectRatioView>
+                        </DataTemplate>
+                    </local:PageInfoDataTemplateSelector.DataTemplate>
+                </local:PageInfoDataTemplateSelector>
+            </ContentControl.ContentTemplateSelector>
+        </ContentControl>
+        <ContentControl DataContext="{x:Bind Status.RetweetedStatus, Mode=OneWay}" Content="{x:Bind Status.RetweetedStatus, Mode=OneWay}">
+            <ContentControl.ContentTemplateSelector>
+                <common:NonNullDataTemplateSelector>
+                    <common:NonNullDataTemplateSelector.DataTemplate>
+                        <DataTemplate x:DataType="model:StatusModel">
+                            <local:StatusView Margin="0, 4, 0, 0" ShowActions="False" Status="{x:Bind Mode=OneWay}">
+                                <local:StatusView.Background>
+                                    <AcrylicBrush BackgroundSource="Backdrop" TintColor="{StaticResource SystemChromeHighColor}" TintOpacity="0.8" FallbackColor="{StaticResource SystemChromeHighColor}" />
+                                </local:StatusView.Background>
+                            </local:StatusView>
+                        </DataTemplate>
+                    </common:NonNullDataTemplateSelector.DataTemplate>
+                </common:NonNullDataTemplateSelector>
+            </ContentControl.ContentTemplateSelector>
+        </ContentControl>
+        <Grid Visibility="{x:Bind ShowActions, Mode=OneWay}">
+            <Grid.Resources>
+                <Style TargetType="Button" BasedOn="{StaticResource DateTimePickerFlyoutButtonStyle}">
+                    <Setter Property="Margin" Value="0,8,0,0" />
+                    <Setter Property="HorizontalAlignment" Value="Center" />
+                </Style>
+            </Grid.Resources>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Button Tapped="ShareTapped">
+                <StackPanel Orientation="Horizontal">
+                    <SymbolIcon Symbol="ReShare" />
+                    <TextBlock Margin="8,0,0,0"
+                               Visibility="{x:Bind common:XamlHelper.IsLongNonZeroToVisibility(Status.RepostsCount), Mode=OneWay}"
+                               Text="{x:Bind Status.RepostsCount, Mode=OneWay}" />
+                </StackPanel>
+            </Button>
+            <Button Tapped="CommentTapped" Grid.Column="1">
+                <StackPanel Orientation="Horizontal">
+                    <SymbolIcon Symbol="Comment" />
+                    <TextBlock Margin="8,0,0,0"
+                               Visibility="{x:Bind common:XamlHelper.IsLongNonZeroToVisibility(Status.CommentsCount), Mode=OneWay}"
+                               Text="{x:Bind Status.CommentsCount, Mode=OneWay}" />
+                </StackPanel>
+            </Button>
+            <Button Tapped="LikeTapped" Grid.Column="2">
+                <StackPanel Orientation="Horizontal">
+                    <SymbolIcon Symbol="Like" />
+                    <TextBlock Margin="8,0,0,0"
+                               Visibility="{x:Bind common:XamlHelper.IsLongNonZeroToVisibility(Status.AttitudesCount), Mode=OneWay}"
+                               Text="{x:Bind Status.AttitudesCount, Mode=OneWay}" />
+                </StackPanel>
+            </Button>
+            <Button Grid.Column="3">
+                <SymbolIcon Symbol="More" />
+            </Button>
+        </Grid>
+    </StackPanel>
+</UserControl>

@@ -12,13 +12,14 @@ using Microsoft.Toolkit.Uwp;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using WeiPo.Common;
+using WeiPo.Model;
 
 namespace WeiPo.ViewModels
 {
-    public class TimelineDataSource : IIncrementalSource<JToken>
+    public class TimelineDataSource : IIncrementalSource<StatusModel>
     {
         private long _maxId = 0;
-        public async Task<IEnumerable<JToken>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new CancellationToken())
+        public async Task<IEnumerable<StatusModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new CancellationToken())
         {
             var result = (await "https://m.weibo.cn/feed/friends"
                 .SetQueryParams(new
@@ -27,16 +28,17 @@ namespace WeiPo.ViewModels
                 })
                 .WithCookies(GetCookies())
                 .GetStringAsync(cancellationToken: cancellationToken))
-                .Let(JsonConvert.DeserializeObject<JObject>);
-            if (result.Value<int>("ok") == 1)
+                .Let(JsonConvert.DeserializeObject<StatusResponse>);
+            
+            if (result.Ok == 1)
             {
-                var list = result["data"]["statuses"] as JArray;
-                _maxId = result["data"]?.Value<long>("max_id") ?? 0L;
+                var list = result.Data.Statuses;
+                _maxId = result.Data.MaxId;
                 return list;
             }
             else
             {
-                return new List<JToken>();
+                return new List<StatusModel>();
             }
         }
 
@@ -47,7 +49,7 @@ namespace WeiPo.ViewModels
     }
     public class TimelineViewModel : ViewModelBase
     {
-        public IncrementalLoadingCollection<TimelineDataSource, JToken> Timeline { get; } = new IncrementalLoadingCollection<TimelineDataSource, JToken>();
+        public IncrementalLoadingCollection<TimelineDataSource, StatusModel> Timeline { get; } = new IncrementalLoadingCollection<TimelineDataSource, StatusModel>();
 
         public TimelineViewModel()
         {

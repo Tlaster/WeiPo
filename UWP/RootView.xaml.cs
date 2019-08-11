@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI;
+using Windows.UI.Composition;
+using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -15,11 +18,12 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
-using Shiba;
+using Microsoft.Toolkit.Uwp.UI.Extensions;
 using WeiPo.Activities;
 using WeiPo.Common;
-using WeiPo.Shiba.ExtensionExecutors;
+using WeiPo.Controls;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -41,38 +45,45 @@ namespace WeiPo
                 it.ButtonBackgroundColor = Colors.Transparent;
                 it.ButtonInactiveBackgroundColor = Colors.Transparent;
             });
+            SystemNavigationManager.GetForCurrentView().BackRequested += OnBackRequested;
+            
             Init();
         }
 
-        private async void Init()
+        private void OnBackRequested(object sender, BackRequestedEventArgs e)
         {
-            ShibaApp.Init(c =>
+            if (RootContainer.CanGoBack)
             {
-                c.ExtensionExecutors.Add(new JSBindingExecutor());
-                c.ExtensionExecutors.Add(new ResExecutor());
-            });
-            var fname = @"Assets\bundle.js";
-            var file = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFileAsync(fname);
-            var contents = await File.ReadAllTextAsync(file.Path);
-            try
-            {
-                ShibaApp.Instance.Configuration.ScriptRuntime.Execute(contents);
+                RootContainer.GoBack();
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-            ShibaApp.Instance.AddConverter("weiboTextConverter", param =>
-            {
-                var text = param.FirstOrDefault() as string;
-                if (!string.IsNullOrEmpty(text))
-                {
-                    return Singleton<WeiboHtmlToMarkdown>.Instance.Convert(text);
-                }
+        }
 
-                return string.Empty;
+        private void Init()
+        {
+            Singleton<MessagingCenter>.Instance.Subscribe("status_clicked", (sender, args) =>
+            {
             });
+            Singleton<MessagingCenter>.Instance.Subscribe("user_clicked", (sender, args) => RootContainer.Navigate(typeof(UserActivity), args));
+            Singleton<MessagingCenter>.Instance.Subscribe("status_share", (sender, args) =>
+            {
+                
+            });
+            Singleton<MessagingCenter>.Instance.Subscribe("status_comment", (sender, args) =>
+            {
+                
+            });
+            Singleton<MessagingCenter>.Instance.Subscribe("status_like", (sender, args) =>
+            {
+                
+            });
+            RootContainer.BackStackChanged += RootContainerOnBackStackChanged;
             RootContainer.Navigate(typeof(LoginActivity));
+        }
+
+
+        private void RootContainerOnBackStackChanged(object sender, EventArgs e)
+        {
+            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = RootContainer.CanGoBack ? AppViewBackButtonVisibility.Visible : AppViewBackButtonVisibility.Collapsed;
         }
 
 
