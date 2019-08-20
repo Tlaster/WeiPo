@@ -14,7 +14,7 @@
     xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Animations.Behaviors"
-    xmlns:model="using:WeiPo.Model"
+    xmlns:models="using:WeiPo.Services.Models"
     mc:Ignorable="d">
     <paging:Activity.DataContext>
         <viewModels:TimelineViewModel/>
@@ -26,7 +26,7 @@
                     <common:StaggeredLayout DesiredColumnWidth="400"/>
                 </controls:ItemsRepeater.Layout>
                 <controls:ItemsRepeater.ItemTemplate>
-                    <DataTemplate x:DataType="model:StatusModel">
+                    <DataTemplate x:DataType="models:StatusModel">
                         <controls2:StatusView Status="{x:Bind}"/>
                     </DataTemplate>
                 </controls:ItemsRepeater.ItemTemplate>

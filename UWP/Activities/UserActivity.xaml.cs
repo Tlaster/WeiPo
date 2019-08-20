@@ -12,6 +12,8 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using WeiPo.Services.Models;
+using WeiPo.ViewModels;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -22,9 +24,24 @@ namespace WeiPo.Activities
     /// </summary>
     public sealed partial class UserActivity
     {
+        public UserViewModel ViewModel { get; private set; }
         public UserActivity()
         {
             this.InitializeComponent();
+        }
+
+        protected override void OnCreate(object parameter)
+        {
+            base.OnCreate(parameter);
+            switch (parameter)
+            {
+                case UserModel user:
+                    ViewModel = new UserViewModel(user);
+                    break;
+                case string name:
+                    ViewModel = new UserViewModel(name);
+                    break;
+            }
         }
     }
 }

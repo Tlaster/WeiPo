@@ -6,8 +6,28 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:paging="using:Bug10.Paging"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:controls1="using:WeiPo.Controls"
     mc:Ignorable="d">
     <Grid>
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Height="{Binding ElementName=CoverImageView, Path=ActualHeight}">
+            <controls:ImageEx Source="{x:Bind ViewModel.Profile.UserInfo.CoverImagePhone, Mode=OneWay}" Stretch="UniformToFill"/>
+            <Border Background="{ThemeResource SystemControlAcrylicElementBrush}"/>
+        </Grid>
+        <controls1:AspectRatioView x:Name="CoverImageView" Grid.Row="0" HeightRequest="10" WidthRequest="16" MaxWidth="400">
+            <controls:ImageEx Stretch="UniformToFill" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Source="{x:Bind ViewModel.Profile.UserInfo.CoverImagePhone, Mode=OneWay}"/>
+        </controls1:AspectRatioView>
+        <StackPanel Grid.Row="0" Orientation="Vertical">
+            <controls:ImageEx Width="80" Height="80" CornerRadius="999" Source="{x:Bind ViewModel.Profile.UserInfo.AvatarHd, Mode=OneWay}" Margin="16"/>
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                <Button Content="{x:Bind ViewModel.Profile.UserInfo.FollowCount, Mode=OneWay}"/>
+                <Button Content="{x:Bind ViewModel.Profile.UserInfo.FollowersCount, Mode=OneWay}"/>
+                <Button Content="{x:Bind ViewModel.Profile.UserInfo.StatusesCount, Mode=OneWay}"/>
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </paging:Activity>

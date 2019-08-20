@@ -12,7 +12,8 @@ using Microsoft.Toolkit.Uwp;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using WeiPo.Common;
-using WeiPo.Model;
+using WeiPo.Services;
+using WeiPo.Services.Models;
 
 namespace WeiPo.ViewModels
 {
@@ -21,15 +22,11 @@ namespace WeiPo.ViewModels
         private long _maxId = 0;
         public async Task<IEnumerable<StatusModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new CancellationToken())
         {
-            var result = (await "https://m.weibo.cn/feed/friends"
-                .SetQueryParams(new
-                {
-                    max_id = _maxId,
-                })
-                .WithCookies(GetCookies())
-                .GetStringAsync(cancellationToken: cancellationToken))
-                .Let(JsonConvert.DeserializeObject<StatusResponse>);
-            
+            if (pageIndex == 0)
+            {
+                _maxId = 0;
+            }
+            var result = await Singleton<Api>.Instance.Timeline(_maxId, cancellationToken);
             if (result.Ok == 1)
             {
                 var list = result.Data.Statuses;
@@ -40,11 +37,6 @@ namespace WeiPo.ViewModels
             {
                 return new List<StatusModel>();
             }
-        }
-
-        private Dictionary<string, string> GetCookies()
-        {
-            return Singleton<Storage>.Instance.Load("usercookie", string.Empty).FromJson<Dictionary<string, string>>();
         }
     }
     public class TimelineViewModel : ViewModelBase

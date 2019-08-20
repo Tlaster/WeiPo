@@ -5,8 +5,9 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Humanizer;
 using Microsoft.Toolkit.Parsers.Core;
+using Microsoft.Toolkit.Uwp.UI.Controls;
 using WeiPo.Common;
-using WeiPo.Model;
+using WeiPo.Services.Models;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -107,6 +108,18 @@ namespace WeiPo.Controls
         {
             e.Handled = true;
             Singleton<MessagingCenter>.Instance.Send(this, "status_like", Status);
+        }
+
+        private void OnLinkClicked(object sender, LinkClickedEventArgs e)
+        {
+            if (e.Link.StartsWith("/n/"))
+            {
+                Singleton<MessagingCenter>.Instance.Send(this, "user_clicked", e.Link.Substring("/n/".Length));
+            }
+            else if (e.Link.StartsWith("/status/"))
+            {
+                Singleton<MessagingCenter>.Instance.Send(this, "status_clicked", e.Link.Substring("/status/".Length));
+            }
         }
     }
 }

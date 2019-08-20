@@ -8,7 +8,7 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:controls1="using:Microsoft.UI.Xaml.Controls"
     xmlns:common="using:WeiPo.Common"
-    xmlns:model="using:WeiPo.Model"
+    xmlns:models="using:WeiPo.Services.Models"
     Background="{ThemeResource SystemControlAcrylicElementBrush}"
     Margin="4"
     mc:Ignorable="d"
@@ -35,13 +35,14 @@
             <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind local:StatusViewXamlHelper.TimeConverter(Status.CreatedAt), Mode=OneWay}" Foreground="Gray" />
         </Grid>
         <controls:MarkdownTextBlock IsTextSelectionEnabled="False" ImageMaxHeight="14" Background="Transparent" TextWrapping="Wrap"
+                                    LinkClicked="{x:Bind OnLinkClicked}"
                                     Text="{x:Bind common:WeiboHtmlToMarkdown.Instance.Convert(Status.Text), Mode=OneWay}" />
         <controls1:ItemsRepeater ItemsSource="{x:Bind Status.Pics, Mode=OneWay}">
             <controls1:ItemsRepeater.Layout>
                 <common:NineGridLayout/>
             </controls1:ItemsRepeater.Layout>
             <controls1:ItemsRepeater.ItemTemplate>
-                <DataTemplate x:DataType="model:Pic">
+                <DataTemplate x:DataType="models:Pic">
                     <controls:ImageEx Stretch="UniformToFill" Source="{x:Bind Url}"/>
                 </DataTemplate>
             </controls1:ItemsRepeater.ItemTemplate>
@@ -50,7 +51,7 @@
             <ContentControl.ContentTemplateSelector>
                 <local:PageInfoDataTemplateSelector>
                     <local:PageInfoDataTemplateSelector.DataTemplate>
-                        <DataTemplate x:DataType="model:PageInfo">
+                        <DataTemplate x:DataType="models:PageInfo">
                             <local:AspectRatioView WidthRequest="16" HeightRequest="9" RequestedTheme="Dark" >
                                 <controls:ImageEx Stretch="UniformToFill" CornerRadius="4" Source="{x:Bind PagePic.Url, Mode=OneWay}"/>
                                 <Border CornerRadius="4" Background="#aa000000"/>
@@ -70,7 +71,7 @@
             <ContentControl.ContentTemplateSelector>
                 <common:NonNullDataTemplateSelector>
                     <common:NonNullDataTemplateSelector.DataTemplate>
-                        <DataTemplate x:DataType="model:StatusModel">
+                        <DataTemplate x:DataType="models:StatusModel">
                             <local:StatusView Margin="0, 4, 0, 0" ShowActions="False" Status="{x:Bind Mode=OneWay}">
                                 <local:StatusView.Background>
                                     <AcrylicBrush BackgroundSource="Backdrop" TintColor="{StaticResource SystemChromeHighColor}" TintOpacity="0.8" FallbackColor="{StaticResource SystemChromeHighColor}" />
