@@ -135,7 +135,6 @@
     <Compile Include="Common\Extensions.cs" />
     <Compile Include="Common\Storage.cs" />
     <Compile Include="Common\StringExtensions.cs" />
-    <Compile Include="Common\WeiboHtmlToMarkdown.cs" />
     <Compile Include="Common\NineGridLayout.cs" />
     <Compile Include="Common\XamlHelper.cs" />
     <Compile Include="Controls\AspectRatioView.cs" />

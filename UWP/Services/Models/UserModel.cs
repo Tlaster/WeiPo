@@ -13,10 +13,10 @@ namespace WeiPo.Services.Models
         public string ScreenName { get; set; }
 
         [JsonProperty("profile_image_url", NullValueHandling = NullValueHandling.Ignore)]
-        public Uri ProfileImageUrl { get; set; }
+        public string ProfileImageUrl { get; set; }
 
         [JsonProperty("profile_url", NullValueHandling = NullValueHandling.Ignore)]
-        public Uri ProfileUrl { get; set; }
+        public string ProfileUrl { get; set; }
 
         [JsonProperty("statuses_count", NullValueHandling = NullValueHandling.Ignore)]
         public long StatusesCount { get; set; }
@@ -64,10 +64,10 @@ namespace WeiPo.Services.Models
         public long FollowCount { get; set; }
 
         [JsonProperty("cover_image_phone", NullValueHandling = NullValueHandling.Ignore)]
-        public Uri CoverImagePhone { get; set; }
+        public string CoverImagePhone { get; set; }
 
         [JsonProperty("avatar_hd", NullValueHandling = NullValueHandling.Ignore)]
-        public Uri AvatarHd { get; set; }
+        public string AvatarHd { get; set; }
 
         [JsonProperty("like", NullValueHandling = NullValueHandling.Ignore)]
         public bool Like { get; set; }

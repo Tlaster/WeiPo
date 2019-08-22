@@ -8,26 +8,95 @@
     xmlns:paging="using:Bug10.Paging"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:controls1="using:WeiPo.Controls"
+    xmlns:models="using:WeiPo.Services.Models"
     mc:Ignorable="d">
+    <paging:Activity.Resources>
+        <x:Double x:Key="AvatarSize">80</x:Double>
+        <x:Double x:Key="MiddleWidth">400</x:Double>
+    </paging:Activity.Resources>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Grid Height="{Binding ElementName=CoverImageView, Path=ActualHeight}">
-            <controls:ImageEx Source="{x:Bind ViewModel.Profile.UserInfo.CoverImagePhone, Mode=OneWay}" Stretch="UniformToFill"/>
-            <Border Background="{ThemeResource SystemControlAcrylicElementBrush}"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid Height="{Binding ElementName=CoverImageView, Path=ActualHeight}">
+                <controls:ImageEx Source="{x:Bind ViewModel.Profile.UserInfo.CoverImagePhone, Mode=OneWay}"
+                                  Stretch="UniformToFill" />
+                <Border Background="{ThemeResource SystemControlAcrylicElementBrush}" />
+            </Grid>
+            <controls1:AspectRatioView x:Name="CoverImageView" Grid.Row="0" HeightRequest="10" WidthRequest="16"
+                                       MaxWidth="{StaticResource MiddleWidth}">
+                <controls:ImageEx Stretch="UniformToFill" HorizontalContentAlignment="Center"
+                                  VerticalContentAlignment="Center" HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"
+                                  Source="{x:Bind ViewModel.Profile.UserInfo.CoverImagePhone, Mode=OneWay}" />
+            </controls1:AspectRatioView>
+            <controls:DropShadowPanel BlurRadius="20"
+                                      Grid.Row="0"
+                                      Margin="16"
+                                      ShadowOpacity="0.6"
+                                      Color="Black"
+                                      VerticalAlignment="Center"
+                                      HorizontalAlignment="Center">
+                <Ellipse Width="{StaticResource AvatarSize}" Height="{StaticResource AvatarSize}"
+                         Fill="{ThemeResource SystemControlAcrylicElementBrush}" />
+            </controls:DropShadowPanel>
+            <controls:ImageEx Stretch="UniformToFill" HorizontalContentAlignment="Center"
+                              VerticalContentAlignment="Center"
+                              HorizontalAlignment="Center" VerticalAlignment="Center"
+                              Source="{x:Bind ViewModel.Profile.UserInfo.AvatarHd, Mode=OneWay}" CornerRadius="999"
+                              Height="{StaticResource AvatarSize}" Grid.Row="0" Width="{StaticResource AvatarSize}" />
+            <Grid Grid.Row="1">
+                <StackPanel Padding="8" Orientation="Vertical" MaxWidth="{StaticResource MiddleWidth}">
+                    <TextBlock Padding="4" Style="{ThemeResource TitleTextBlockStyle}"
+                               Text="{x:Bind ViewModel.Profile.UserInfo.ScreenName, Mode=OneWay}" />
+                    <TextBlock Padding="4" Visibility="{x:Bind ViewModel.Profile.UserInfo.Verified, Mode=OneWay}"
+                               Text="{x:Bind ViewModel.Profile.UserInfo.VerifiedReason,Mode=OneWay}" />
+                    <TextBlock Padding="4" TextWrapping="Wrap"
+                               Text="{x:Bind ViewModel.Profile.UserInfo.Description, Mode=OneWay}" />
+                    <Grid>
+                        <Grid.Resources>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center" />
+                            </Style>
+                        </Grid.Resources>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Text="Statuses" />
+                            <TextBlock Text="{x:Bind ViewModel.Profile.UserInfo.StatusesCount, Mode=OneWay}" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Orientation="Vertical">
+                            <TextBlock Text="Following" />
+                            <TextBlock Text="{x:Bind ViewModel.Profile.UserInfo.FollowCount, Mode=OneWay}" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Orientation="Vertical">
+                            <TextBlock Text="Follower" />
+                            <TextBlock Text="{x:Bind ViewModel.Profile.UserInfo.FollowersCount, Mode=OneWay}" />
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Grid>
         </Grid>
-        <controls1:AspectRatioView x:Name="CoverImageView" Grid.Row="0" HeightRequest="10" WidthRequest="16" MaxWidth="400">
-            <controls:ImageEx Stretch="UniformToFill" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Source="{x:Bind ViewModel.Profile.UserInfo.CoverImagePhone, Mode=OneWay}"/>
-        </controls1:AspectRatioView>
-        <StackPanel Grid.Row="0" Orientation="Vertical">
-            <controls:ImageEx Width="80" Height="80" CornerRadius="999" Source="{x:Bind ViewModel.Profile.UserInfo.AvatarHd, Mode=OneWay}" Margin="16"/>
-            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                <Button Content="{x:Bind ViewModel.Profile.UserInfo.FollowCount, Mode=OneWay}"/>
-                <Button Content="{x:Bind ViewModel.Profile.UserInfo.FollowersCount, Mode=OneWay}"/>
-                <Button Content="{x:Bind ViewModel.Profile.UserInfo.StatusesCount, Mode=OneWay}"/>
-            </StackPanel>
-        </StackPanel>
+        <Grid Grid.Column="1">
+            <Pivot ItemsSource="{x:Bind ViewModel.Profile.TabsInfo.Tabs, Mode=OneWay}">
+                <Pivot.HeaderTemplate>
+                    <DataTemplate x:DataType="models:Tab">
+                        <TextBlock Text="{x:Bind Title}" />
+                    </DataTemplate>
+                </Pivot.HeaderTemplate>
+                <Pivot.ItemTemplate>
+                    <DataTemplate />
+                </Pivot.ItemTemplate>
+            </Pivot>
+        </Grid>
     </Grid>
 </paging:Activity>
