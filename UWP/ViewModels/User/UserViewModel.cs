@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WeiPo.Common;
+﻿using WeiPo.Common;
 using WeiPo.Services;
 using WeiPo.Services.Models;
 
-namespace WeiPo.ViewModels
+namespace WeiPo.ViewModels.User
 {
     public class UserViewModel : ViewModelBase
     {

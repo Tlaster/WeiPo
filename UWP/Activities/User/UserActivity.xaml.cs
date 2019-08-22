@@ -1,23 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
+﻿using Windows.UI.Xaml;
 using WeiPo.Services.Models;
 using WeiPo.ViewModels;
+using WeiPo.ViewModels.User;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
-namespace WeiPo.Activities
+namespace WeiPo.Activities.User
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
@@ -43,5 +31,6 @@ namespace WeiPo.Activities
                     break;
             }
         }
+
     }
 }

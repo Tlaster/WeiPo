@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -14,6 +13,10 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Flurl.Http;
+using Flurl.Http.Configuration;
+using Newtonsoft.Json;
+using WeiPo.Common;
 
 namespace WeiPo
 {
@@ -26,6 +29,18 @@ namespace WeiPo
 
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
+            FlurlHttp.Configure(settings => {
+                var jsonSettings = new JsonSerializerSettings
+                {
+                    Converters =
+                    {
+                        new JsonNumberConverter(),
+                    },
+                    NullValueHandling = NullValueHandling.Ignore,
+                };
+                settings.JsonSerializer = new NewtonsoftJsonSerializer(jsonSettings);
+            });
+
             if (!(Window.Current.Content is RootView))
             {
                 Window.Current.Content = new RootView();

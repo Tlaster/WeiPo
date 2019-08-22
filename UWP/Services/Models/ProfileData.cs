@@ -34,7 +34,7 @@ namespace WeiPo.Services.Models
     public partial class TabsInfo
     {
         [JsonProperty("selectedTab", NullValueHandling = NullValueHandling.Ignore)]
-        public long? SelectedTab { get; set; }
+        public long SelectedTab { get; set; }
 
         [JsonProperty("tabs", NullValueHandling = NullValueHandling.Ignore)]
         public Tab[] Tabs { get; set; }
@@ -43,16 +43,16 @@ namespace WeiPo.Services.Models
     public partial class Tab
     {
         [JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
-        public long? Id { get; set; }
+        public long Id { get; set; }
 
         [JsonProperty("tabKey", NullValueHandling = NullValueHandling.Ignore)]
         public string TabKey { get; set; }
 
         [JsonProperty("must_show", NullValueHandling = NullValueHandling.Ignore)]
-        public long? MustShow { get; set; }
+        public long MustShow { get; set; }
 
         [JsonProperty("hidden", NullValueHandling = NullValueHandling.Ignore)]
-        public long? Hidden { get; set; }
+        public long Hidden { get; set; }
 
         [JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
         public string Title { get; set; }

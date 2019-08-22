@@ -27,10 +27,20 @@ namespace WeiPo.Common
         {
             return thiz == other;
         }
-
+        
         public static Visibility IsEqualToVisibility(object thiz, object other)
         {
             return BoolToVisibility(IsEqual(thiz, other));
+        }
+        
+        public static Visibility IsLongEqualToVisibility(long thiz, long other)
+        {
+            return BoolToVisibility(thiz == other);
+        }
+
+        public static Visibility IsLongNonEqualToVisibility(long thiz, long other)
+        {
+            return BoolToVisibility(thiz != other);
         }
 
         public static bool IsNonEqual(object thiz, object other)

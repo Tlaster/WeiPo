@@ -22,6 +22,7 @@ using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using WeiPo.Activities;
+using WeiPo.Activities.User;
 using WeiPo.Common;
 using WeiPo.Controls;
 
