@@ -9,6 +9,7 @@
     xmlns:controls1="using:Microsoft.UI.Xaml.Controls"
     xmlns:common="using:WeiPo.Common"
     xmlns:models="using:WeiPo.Services.Models"
+    xmlns:html="using:WeiPo.Controls.Html"
     Background="{ThemeResource SystemControlAcrylicElementBrush}"
     Margin="4"
     mc:Ignorable="d"
@@ -34,9 +35,8 @@
             <TextBlock Grid.Row="0" Grid.Column="1" Text="{x:Bind Status.User.ScreenName, Mode=OneWay}" />
             <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind local:StatusViewXamlHelper.TimeConverter(Status.CreatedAt), Mode=OneWay}" Foreground="Gray" />
         </Grid>
-        <controls:MarkdownTextBlock IsTextSelectionEnabled="False" ImageMaxHeight="14" Background="Transparent" TextWrapping="Wrap"
-                                    LinkClicked="{x:Bind OnLinkClicked}"
-                                    Text="{x:Bind common:WeiboHtmlToMarkdown.Instance.Convert(Status.Text), Mode=OneWay}" />
+        <html:HtmlTextBlock LinkClicked="{x:Bind OnLinkClicked}"
+                            Text="{x:Bind Status.Text, Mode=OneWay}" />
         <controls1:ItemsRepeater ItemsSource="{x:Bind Status.Pics, Mode=OneWay}">
             <controls1:ItemsRepeater.Layout>
                 <common:NineGridLayout/>

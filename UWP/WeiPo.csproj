@@ -139,6 +139,7 @@
     <Compile Include="Common\NineGridLayout.cs" />
     <Compile Include="Common\XamlHelper.cs" />
     <Compile Include="Controls\AspectRatioView.cs" />
+    <Compile Include="Controls\Html\HtmlTextBlock.cs" />
     <Compile Include="Controls\StatusView.xaml.cs">
       <DependentUpon>StatusView.xaml</DependentUpon>
     </Compile>
@@ -219,6 +220,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Bug10.Paging">
@@ -260,7 +265,6 @@
   <ItemGroup>
     <Folder Include="Converters\" />
     <Folder Include="Model\" />
-    <Folder Include="Themes\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

@@ -110,7 +110,7 @@ namespace WeiPo.Controls
             Singleton<MessagingCenter>.Instance.Send(this, "status_like", Status);
         }
 
-        private void OnLinkClicked(object sender, LinkClickedEventArgs e)
+        private void OnLinkClicked(object sender, WeiPo.Controls.Html.LinkClickedEventArgs e)
         {
             if (e.Link.StartsWith("/n/"))
             {
