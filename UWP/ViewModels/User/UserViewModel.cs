@@ -1,4 +1,5 @@
-﻿using WeiPo.Common;
+﻿using System.Threading.Tasks;
+using WeiPo.Common;
 using WeiPo.Services;
 using WeiPo.Services.Models;
 
@@ -11,12 +12,29 @@ namespace WeiPo.ViewModels.User
 
         public UserViewModel(UserModel user)
         {
-            Init(user);
+            Init(user.Id);
         }
 
         public UserViewModel(string name)
         {
             Init(name);
+        }
+
+        public UserViewModel(long id)
+        {
+            Init(id);
+        }
+
+        private async void Init(long id)
+        {
+            if (IsLoading)
+            {
+                return;
+            }
+
+            IsLoading = true;
+            await InitProfile(id);
+            IsLoading = false;
         }
 
         private async void Init(string name)
@@ -27,28 +45,14 @@ namespace WeiPo.ViewModels.User
             }
 
             IsLoading = true;
-            var response = await Singleton<Api>.Instance.Profile(name);
-            if (response.Ok == 1)
-            {
-                Profile = response.Data;
-            }
-            else
-            {
-
-            }
-
+            var id = await Singleton<Api>.Instance.UserId(name);
+            await InitProfile(id);
             IsLoading = false;
         }
 
-        private async void Init(UserModel user)
+        private async Task InitProfile(long id)
         {
-            if (IsLoading)
-            {
-                return;
-            }
-            
-            IsLoading = true;
-            var response = await Singleton<Api>.Instance.Profile(user.Id);
+            var response = await Singleton<Api>.Instance.Profile(id);
             if (response.Ok == 1)
             {
                 Profile = response.Data;
@@ -57,8 +61,7 @@ namespace WeiPo.ViewModels.User
             {
 
             }
-
-            IsLoading = false;
         }
+
     }
 }

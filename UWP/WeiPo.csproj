@@ -188,6 +188,7 @@
     <Compile Include="Services\Models\ProfileData.cs" />
     <Compile Include="Services\Models\StatusModel.cs" />
     <Compile Include="Services\Models\TimelineData.cs" />
+    <Compile Include="Services\Models\TitleModel.cs" />
     <Compile Include="Services\Models\Urls.cs" />
     <Compile Include="Services\Models\User.cs" />
     <Compile Include="Services\Models\UserModel.cs" />

@@ -38,7 +38,7 @@ namespace WeiPo.Services
                 .WithCookies(GetCookies())
                 .GetJsonAsync<WeiboResponse<ProfileData>>();
 
-        public async Task<WeiboResponse<ProfileData>> Profile(string name)
+        public async Task<long> UserId(string name)
         {
             using var client = new HttpClient();
             var response =
@@ -47,12 +47,13 @@ namespace WeiPo.Services
             var redirectUri = response.RequestMessage.RequestUri.ToString();
             var uidStr = Regex.Match(redirectUri, "\\/u\\/(\\d+)").Groups[1].Value;
             long.TryParse(uidStr, out var uid);
-            return await Profile(uid);
+            return uid;
         }
 
-        public async Task<WeiboResponse<JObject>> ProfileTab(long id, string containerid, long since_id = 0)
-        {
-            return await $"{HOST}/api/container/getIndex".SetQueryParams(new
+        public async Task<WeiboResponse<ProfileData>> Profile(string name) => await Profile(await UserId(name));
+
+        public async Task<WeiboResponse<JObject>> ProfileTab(long id, string containerid, long since_id = 0) =>
+            await $"{HOST}/api/container/getIndex".SetQueryParams(new
                 {
                     type = "uid",
                     value = id,
@@ -61,7 +62,6 @@ namespace WeiPo.Services
                 })
                 .WithCookies(GetCookies())
                 .GetJsonAsync<WeiboResponse<JObject>>();
-        }
 
 
         private Dictionary<string, string> GetCookies()

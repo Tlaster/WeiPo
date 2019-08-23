@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -126,6 +127,10 @@ namespace WeiPo.Controls
             else if (e.Link.StartsWith("/status/"))
             {
                 Singleton<MessagingCenter>.Instance.Send(this, "status_clicked", e.Link.Substring("/status/".Length));
+            }
+            else if (e.Link.StartsWith("http"))
+            {
+                Launcher.LaunchUriAsync(new Uri(e.Link));
             }
         }
     }

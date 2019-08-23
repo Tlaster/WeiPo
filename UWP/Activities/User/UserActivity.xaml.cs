@@ -29,6 +29,9 @@ namespace WeiPo.Activities.User
                 case string name:
                     ViewModel = new UserViewModel(name);
                     break;
+                case long id:
+                    ViewModel = new UserViewModel(id);
+                    break;
             }
         }
 

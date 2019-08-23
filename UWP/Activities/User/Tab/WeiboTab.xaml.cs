@@ -23,13 +23,13 @@ namespace WeiPo.Activities.User.Tab
     {
         public DataTemplate StatusTemplate { get; set; }
         public DataTemplate InterestTemplate { get; set; }
-        protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
+        protected override DataTemplate SelectTemplateCore(object item)
         {
             switch (item)
             {
                 case StatusModel status:
                     return StatusTemplate;
-                case InterestPeopleModel interest:
+                case InterestPeopleViewModel interest:
                     return InterestTemplate;
             }
             return new DataTemplate();

@@ -135,5 +135,8 @@ namespace WeiPo.Services.Models
 
         [JsonProperty("reward_scheme", NullValueHandling = NullValueHandling.Ignore)]
         public string RewardScheme { get; set; }
+
+        [JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
+        public TitleModel Title { get; set; }
     }
 }

@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Input;
 using Microsoft.Toolkit.Collections;
 using Microsoft.Toolkit.Uwp;
 using Newtonsoft.Json.Linq;
@@ -11,6 +13,26 @@ using WeiPo.Services.Models;
 
 namespace WeiPo.ViewModels.User.Tab
 {
+    public class InterestPeopleViewModel
+    {
+        public InterestPeopleViewModel(List<InterestPeopleModel> items, InterestPropleDescModel descModel)
+        {
+            Items = items;
+            DescModel = descModel;
+        }
+
+        public InterestPropleDescModel DescModel { get; }  
+        public List<InterestPeopleModel> Items { get; }
+
+        public void OnItemClicked(object sender, TappedRoutedEventArgs args)
+        {
+            if (args.OriginalSource is FrameworkElement element && element.DataContext is InterestPeopleModel model)
+            {
+                Singleton<MessagingCenter>.Instance.Send(this, "user_clicked", model.User.Id);
+            }
+        }
+    }
+
     public class WeiboTabDataSource : IIncrementalSource<object>
     {
         private readonly string _containerId;
@@ -40,8 +62,8 @@ namespace WeiPo.ViewModels.User.Tab
                         if (obj.ContainsKey("mblog")) return obj["mblog"].ToObject<StatusModel>() as object;
 
                         if (obj.ContainsKey("itemid") && obj.Value<string>("itemid") == "INTEREST_PEOPLE")
-                            return obj["card_group"].Skip(1)
-                                .Select(card => card.ToObject<InterestPeopleModel>()) as object;
+                            return new InterestPeopleViewModel(obj["card_group"].Skip(1)
+                                .Select(card => card.ToObject<InterestPeopleModel>()).ToList(), obj["card_group"].FirstOrDefault()?.ToObject<InterestPropleDescModel>()) as object;
 
                         return null;
                     })
