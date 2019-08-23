@@ -6,6 +6,8 @@
     xmlns:controls="using:WeiPo.Controls">
     <Application.Resources>
         <ResourceDictionary>
+            <x:Double x:Key="AvatarNormalSize">40</x:Double>
+            <x:Double x:Key="AvatarLargeSize">80</x:Double>
             <AcrylicBrush x:Key="statusBackground" BackgroundSource="Backdrop" TintColor="{StaticResource SystemChromeAltHighColor}" TintOpacity="0.8" FallbackColor="{StaticResource SystemChromeMediumColor}" />
             <AcrylicBrush x:Key="retweetBackground" BackgroundSource="Backdrop" TintColor="{StaticResource SystemChromeHighColor}" TintOpacity="0.8" FallbackColor="{StaticResource SystemChromeHighColor}" />
             <ResourceDictionary.MergedDictionaries>

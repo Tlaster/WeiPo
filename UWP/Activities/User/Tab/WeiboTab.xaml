@@ -5,12 +5,37 @@
     xmlns:local="using:WeiPo.Activities.User.Tab"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="using:WeiPo.ViewModels"
+    xmlns:common="using:WeiPo.Common"
+    xmlns:models="using:WeiPo.Services.Models"
+    xmlns:controls="using:WeiPo.Controls"
+    xmlns:controls1="using:Microsoft.UI.Xaml.Controls"
+    xmlns:tab="using:WeiPo.ViewModels.User.Tab"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
 
     <Grid>
+        <ScrollViewer ViewChanged="ScrollViewer_OnViewChanged">
+            <controls1:ItemsRepeater ItemsSource="{x:Bind ViewModel.(tab:WeiboTabViewModel.DataSource), Mode=OneWay}" >
+                <controls1:ItemsRepeater.Layout>
+                    <common:StaggeredLayout DesiredColumnWidth="300"/>
+                </controls1:ItemsRepeater.Layout>
+                <controls1:ItemsRepeater.ItemTemplate>
+                    <local:WeiboTabDataTemplateSelector>
+                        <local:WeiboTabDataTemplateSelector.InterestTemplate>
+                            <DataTemplate x:DataType="models:InterestPeopleModel">
 
-        <TextBlock Text="{x:Bind TabData.Title,Mode=OneWay}"></TextBlock>
+                            </DataTemplate>
+                        </local:WeiboTabDataTemplateSelector.InterestTemplate>
+                        <local:WeiboTabDataTemplateSelector.StatusTemplate>
+                            <DataTemplate x:DataType="models:StatusModel">
+                                <controls:StatusView Status="{x:Bind}"/>
+                            </DataTemplate>
+                        </local:WeiboTabDataTemplateSelector.StatusTemplate>
+                    </local:WeiboTabDataTemplateSelector>
+                </controls1:ItemsRepeater.ItemTemplate>
+            </controls1:ItemsRepeater>
+        </ScrollViewer>
     </Grid>
 </local:AbsTab>

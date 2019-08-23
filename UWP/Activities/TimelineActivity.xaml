@@ -21,7 +21,7 @@
     </paging:Activity.DataContext>
     <Grid>
         <ScrollViewer ViewChanged="ScrollViewer_OnViewChanged">
-            <controls:ItemsRepeater Name="TimelineItemsRepeater" ItemsSource="{x:Bind DataContext.(viewModels:TimelineViewModel.Timeline)}" >
+            <controls:ItemsRepeater Name="TimelineItemsRepeater" ItemsSource="{x:Bind DataContext.(viewModels:TimelineViewModel.Timeline), Mode=OneWay}" >
                 <controls:ItemsRepeater.Layout>
                     <common:StaggeredLayout DesiredColumnWidth="400"/>
                 </controls:ItemsRepeater.Layout>

@@ -15,7 +15,6 @@
     xmlns:tab="using:WeiPo.Activities.User.Tab"
     mc:Ignorable="d">
     <paging:Activity.Resources>
-        <x:Double x:Key="AvatarSize">80</x:Double>
         <x:Double x:Key="InfoContainerWidth">400</x:Double>
         <user:TabPivotDictionary x:Key="TabPivotDictionary">
             <DataTemplate x:Key="profile" x:DataType="models:Tab">
@@ -55,14 +54,14 @@
                                           Color="Black"
                                           VerticalAlignment="Center"
                                           HorizontalAlignment="Center">
-                    <Ellipse Width="{StaticResource AvatarSize}" Height="{StaticResource AvatarSize}"
+                    <Ellipse Width="{StaticResource AvatarLargeSize}" Height="{StaticResource AvatarLargeSize}"
                              Fill="{ThemeResource SystemControlAcrylicElementBrush}" />
                 </controls:DropShadowPanel>
                 <controls:ImageEx Stretch="UniformToFill" HorizontalContentAlignment="Center"
                                   VerticalContentAlignment="Center"
                                   HorizontalAlignment="Center" VerticalAlignment="Center"
                                   Source="{x:Bind ViewModel.Profile.UserInfo.AvatarHd, Mode=OneWay}" CornerRadius="999"
-                                  Height="{StaticResource AvatarSize}" Grid.Row="0" Width="{StaticResource AvatarSize}" />
+                                  Height="{StaticResource AvatarLargeSize}" Grid.Row="0" Width="{StaticResource AvatarLargeSize}" />
             </Grid>
             <StackPanel Padding="8" Orientation="Vertical">
                 <TextBlock Padding="4" Style="{ThemeResource TitleTextBlockStyle}"

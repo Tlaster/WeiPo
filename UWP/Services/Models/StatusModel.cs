@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Windows.Graphics.Printing.OptionDetails;
 using Newtonsoft.Json;
 
 namespace WeiPo.Services.Models

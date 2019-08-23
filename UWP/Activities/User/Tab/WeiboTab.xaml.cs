@@ -19,6 +19,23 @@ using WeiPo.ViewModels.User.Tab;
 
 namespace WeiPo.Activities.User.Tab
 {
+    public class WeiboTabDataTemplateSelector : DataTemplateSelector
+    {
+        public DataTemplate StatusTemplate { get; set; }
+        public DataTemplate InterestTemplate { get; set; }
+        protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
+        {
+            switch (item)
+            {
+                case StatusModel status:
+                    return StatusTemplate;
+                case InterestPeopleModel interest:
+                    return InterestTemplate;
+            }
+            return new DataTemplate();
+        }
+    }
+
     public sealed partial class WeiboTab
     {
         public WeiboTab()
@@ -29,6 +46,21 @@ namespace WeiPo.Activities.User.Tab
         protected override AbsTabViewModel CreateViewModel(ProfileData viewModelProfile, Services.Models.Tab tabData)
         {
             return new WeiboTabViewModel(viewModelProfile, tabData);
+        }
+
+        private async void ScrollViewer_OnViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        {
+            if (!e.IsIntermediate)
+            {
+                var scroller = (ScrollViewer)sender;
+                var distanceToEnd = scroller.ExtentHeight - (scroller.VerticalOffset + scroller.ViewportHeight);
+                // trigger if within 2 viewports of the end
+                if (ViewModel is WeiboTabViewModel viewModel && distanceToEnd <= 2.0 * scroller.ViewportHeight
+                    && viewModel.DataSource.HasMoreItems && !viewModel.DataSource.IsLoading)
+                {
+                    await viewModel.DataSource.LoadMoreItemsAsync(20);
+                }
+            }
         }
     }
 }

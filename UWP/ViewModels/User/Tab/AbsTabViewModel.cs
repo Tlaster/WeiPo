@@ -15,12 +15,7 @@ namespace WeiPo.ViewModels.User.Tab
         {
             ProfileData = profile;
             Tab = tabData;
-            Init();
         }
 
-        private void Init()
-        {
-            
-        }
     }
 }

@@ -156,6 +156,9 @@
     <Compile Include="Common\XamlHelper.cs" />
     <Compile Include="Controls\AspectRatioView.cs" />
     <Compile Include="Controls\Html\HtmlTextBlock.cs" />
+    <Compile Include="Controls\PersonCard.xaml.cs">
+      <DependentUpon>PersonCard.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\StatusView.xaml.cs">
       <DependentUpon>StatusView.xaml</DependentUpon>
     </Compile>
@@ -165,14 +168,18 @@
       <DependentUpon>RootView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\Api.cs" />
+    <Compile Include="Services\Models\Actionlog.cs" />
+    <Compile Include="Services\Models\ButtonModel.cs" />
     <Compile Include="Services\Models\DarwinTag.cs" />
     <Compile Include="Services\Models\FocusPoint.cs" />
+    <Compile Include="Services\Models\InterestPeopleModel.cs" />
     <Compile Include="Services\Models\Large.cs" />
     <Compile Include="Services\Models\LargeGeo.cs" />
     <Compile Include="Services\Models\MediaInfo.cs" />
     <Compile Include="Services\Models\NumberDisplayStrategy.cs" />
     <Compile Include="Services\Models\PageInfo.cs" />
     <Compile Include="Services\Models\PagePic.cs" />
+    <Compile Include="Services\Models\Params.cs" />
     <Compile Include="Services\Models\ParseStringConverter.cs" />
     <Compile Include="Services\Models\Pic.cs" />
     <Compile Include="Services\Models\PicFocusPoint.cs" />
@@ -182,6 +189,7 @@
     <Compile Include="Services\Models\StatusModel.cs" />
     <Compile Include="Services\Models\TimelineData.cs" />
     <Compile Include="Services\Models\Urls.cs" />
+    <Compile Include="Services\Models\User.cs" />
     <Compile Include="Services\Models\UserModel.cs" />
     <Compile Include="Services\Models\VideoDetails.cs" />
     <Compile Include="Services\Models\Visible.cs" />
@@ -244,6 +252,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\User\UserActivity.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\PersonCard.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

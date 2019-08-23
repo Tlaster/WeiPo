@@ -38,8 +38,15 @@ namespace WeiPo.Controls
 
         public static string TimeConverter(string time)
         {
-            var date = DateTime.ParseExact(time, "ddd MMM dd HH:mm:ss K yyyy", CultureInfo.InvariantCulture).ToUniversalTime();
-            return (DateTime.UtcNow - date).Hours > 3 ? date.ToString("f") : date.Humanize();
+            if (DateTime.TryParseExact(time, "ddd MMM dd HH:mm:ss K yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date))
+            {
+                date = date.ToUniversalTime();
+                return (DateTime.UtcNow - date).Hours > 3 ? date.ToString("f") : date.Humanize();
+            }
+            else
+            {
+                return time;
+            }
         }
     }
 

@@ -9,12 +9,22 @@ using WeiPo.ViewModels.User.Tab;
 
 namespace WeiPo.Activities.User.Tab
 {
-    [AddINotifyPropertyChangedInterface]
-    public abstract class AbsTab : UserControl
+    public abstract class AbsTab : UserControl, INotifyPropertyChanged
     {
-        public AbsTabViewModel ViewModel { get; set; }
+        public AbsTabViewModel ViewModel
+        {
+            get => _viewModel;
+            private set
+            {
+                _viewModel = value;
+                OnPropertyChanged();
+            }
+        }
+
         public static readonly DependencyProperty TabDataProperty = DependencyProperty.Register(
             nameof(TabData), typeof(Services.Models.Tab), typeof(AbsTab), new PropertyMetadata(default, PropertyChangedCallback));
+
+        private AbsTabViewModel _viewModel;
 
         private static void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -50,5 +60,11 @@ namespace WeiPo.Activities.User.Tab
         }
 
         protected abstract AbsTabViewModel CreateViewModel(ProfileData viewModelProfile, Services.Models.Tab tabData);
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

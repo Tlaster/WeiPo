@@ -30,7 +30,7 @@
                 <RowDefinition />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <controls:ImageEx Grid.RowSpan="2" Margin="0,0,4,4" Width="40" Height="40" CornerRadius="999"
+            <controls:ImageEx Grid.RowSpan="2" Margin="0,0,4,4" Width="{StaticResource AvatarNormalSize}" Height="{StaticResource AvatarNormalSize}" CornerRadius="999"
                               Source="{x:Bind Status.User.ProfileImageUrl, Mode=OneWay}" />
             <TextBlock Grid.Row="0" Grid.Column="1" Text="{x:Bind Status.User.ScreenName, Mode=OneWay}" />
             <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind local:StatusViewXamlHelper.TimeConverter(Status.CreatedAt), Mode=OneWay}" Foreground="Gray" />
