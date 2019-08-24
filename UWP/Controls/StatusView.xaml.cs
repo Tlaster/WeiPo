@@ -34,7 +34,7 @@ namespace WeiPo.Controls
         public static string SecondToTime(double second)
         {
             var time = new TimeSpan(0, 0, Convert.ToInt32(second));
-            return time.Humanize();
+            return time.ToString("g");
         }
 
         public static Visibility PageInfoVisibility(PageInfo pageInfo)

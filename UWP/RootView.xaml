@@ -27,5 +27,5 @@
         </paging:ActivityContainer.ContentTransitions>
     </paging:ActivityContainer>
     <Grid Grid.Row="0" Name="TitleBar" VerticalAlignment="Top"
-          Background="{ThemeResource SystemControlAcrylicElementBrush}" />
+          Background="{ThemeResource SystemControlAccentAcrylicWindowAccentMediumHighBrush}" />
 </Grid>
