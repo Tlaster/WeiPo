@@ -8,7 +8,7 @@ namespace WeiPo.ViewModels
 {
     public class ImageModel
     {
-        public ImageModel(string placeHolder, string source, double width, double height)
+        public ImageModel(string placeHolder, string source, double width = double.MaxValue, double height = double.MaxValue)
         {
             PlaceHolder = placeHolder;
             Source = source;

@@ -5,12 +5,11 @@ using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media.Animation;
+using Windows.UI.Xaml.Media;
 using Humanizer;
-using Microsoft.Toolkit.Parsers.Core;
-using Microsoft.Toolkit.Uwp.UI.Controls;
-using Microsoft.Toolkit.Uwp.UI.Extensions;
+using Microsoft.UI.Xaml.Controls;
 using WeiPo.Common;
+using WeiPo.Controls.Html;
 using WeiPo.Services.Models;
 using WeiPo.ViewModels;
 
@@ -18,16 +17,14 @@ using WeiPo.ViewModels;
 
 namespace WeiPo.Controls
 {
-
     internal class PageInfoDataTemplateSelector : DataTemplateSelector
     {
         public DataTemplate DataTemplate { get; set; }
+
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
         {
             if (item is PageInfo pageInfo && (pageInfo.Type == "video" || pageInfo.Type == "article"))
-            {
                 return DataTemplate;
-            }
             return new DataTemplate();
         }
     }
@@ -43,15 +40,14 @@ namespace WeiPo.Controls
 
         public static string TimeConverter(string time)
         {
-            if (DateTime.TryParseExact(time, "ddd MMM dd HH:mm:ss K yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date))
+            if (DateTime.TryParseExact(time, "ddd MMM dd HH:mm:ss K yyyy", CultureInfo.InvariantCulture,
+                DateTimeStyles.None, out var date))
             {
                 date = date.ToUniversalTime();
                 return (DateTime.UtcNow - date).Hours > 3 ? date.ToString("f") : date.Humanize();
             }
-            else
-            {
-                return time;
-            }
+
+            return time;
         }
     }
 
@@ -76,7 +72,7 @@ namespace WeiPo.Controls
 
         public StatusModel Status
         {
-            get => (StatusModel) GetValue(StatusProperty);  
+            get => (StatusModel) GetValue(StatusProperty);
             set => SetValue(StatusProperty, value);
         }
 
@@ -84,7 +80,6 @@ namespace WeiPo.Controls
         {
             base.OnTapped(e);
             if (e.OriginalSource is FrameworkElement element && element.DataContext != null)
-            {
                 switch (element.DataContext)
                 {
                     case StatusModel status:
@@ -96,7 +91,6 @@ namespace WeiPo.Controls
                         Singleton<MessagingCenter>.Instance.Send(this, "user_clicked", user);
                         break;
                 }
-            }
         }
 
         protected override void OnRightTapped(RightTappedRoutedEventArgs e)
@@ -122,7 +116,7 @@ namespace WeiPo.Controls
             Singleton<MessagingCenter>.Instance.Send(this, "status_like", Status);
         }
 
-        private void OnLinkClicked(object sender, WeiPo.Controls.Html.LinkClickedEventArgs e)
+        private void OnLinkClicked(object sender, LinkClickedEventArgs e)
         {
             if (e.Link.StartsWith("/n/"))
             {
@@ -134,16 +128,26 @@ namespace WeiPo.Controls
             }
             else if (e.Link.StartsWith("http"))
             {
-                Launcher.LaunchUriAsync(new Uri(e.Link));
+                var uri = new Uri(e.Link);
+                if (uri.Host.Contains("sinaimg.cn"))
+                    Singleton<MessagingCenter>.Instance.Send(this, "image_clicked",
+                        new ImageViewModel(new[] {new ImageModel(e.Link, e.Link)}));
+                else
+                    Launcher.LaunchUriAsync(new Uri(e.Link));
             }
         }
 
         private void ImageListOnTapped(object sender, TappedRoutedEventArgs e)
         {
-            if (e.OriginalSource is FrameworkElement element && element.DataContext is Pic pic && Status.Pics != null && Status.Pics.Contains(pic))
+            if (e.OriginalSource is FrameworkElement element && element.DataContext is Pic pic && Status.Pics != null &&
+                Status.Pics.Contains(pic))
             {
                 var index = Status.Pics.IndexOf(pic);
-                Singleton<MessagingCenter>.Instance.Send(this, "image_clicked", new ImageViewModel(Status.Pics.Select(it => new ImageModel(it.Url, it.Large.Url, it.Large.Geo.Width, it.Large.Geo.Height)).ToArray(), index));
+                Singleton<MessagingCenter>.Instance.Send(this, "image_clicked",
+                    new ImageViewModel(
+                        Status.Pics.Select(it =>
+                            new ImageModel(it.Url, it.Large.Url, it.Large.Geo.Width, it.Large.Geo.Height)).ToArray(),
+                        index));
             }
         }
     }
