@@ -27,13 +27,13 @@
         <local:PersonCard DataContext="{x:Bind Status.User, Mode=OneWay}" Avatar="{x:Bind Status.User.ProfileImageUrl, Mode=OneWay}" Title="{x:Bind Status.User.ScreenName, Mode=OneWay}" SubTitle="{x:Bind local:StatusViewXamlHelper.TimeConverter(Status.CreatedAt), Mode=OneWay}"/>
         <html:HtmlTextBlock LinkClicked="{x:Bind OnLinkClicked}"
                             Text="{x:Bind Status.Text, Mode=OneWay}" />
-        <controls1:ItemsRepeater ItemsSource="{x:Bind Status.Pics, Mode=OneWay}">
+        <controls1:ItemsRepeater Tapped="{x:Bind ImageListOnTapped}" ItemsSource="{x:Bind Status.Pics, Mode=OneWay}">
             <controls1:ItemsRepeater.Layout>
                 <common:NineGridLayout/>
             </controls1:ItemsRepeater.Layout>
             <controls1:ItemsRepeater.ItemTemplate>
                 <DataTemplate x:DataType="models:Pic">
-                    <controls:ImageEx Stretch="UniformToFill" Source="{x:Bind Url}"/>
+                    <controls:ImageEx DataContext="{x:Bind}" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="UniformToFill" Source="{x:Bind Url}"/>
                 </DataTemplate>
             </controls1:ItemsRepeater.ItemTemplate>
         </controls1:ItemsRepeater>

@@ -9,7 +9,7 @@ namespace WeiPo.Services.Models
         public string Pid { get; set; }
 
         [JsonProperty("url", NullValueHandling = NullValueHandling.Ignore)]
-        public Uri Url { get; set; }
+        public string Url { get; set; }
 
         [JsonProperty("size", NullValueHandling = NullValueHandling.Ignore)]
         public string Size { get; set; }

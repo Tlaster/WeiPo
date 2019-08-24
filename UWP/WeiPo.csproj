@@ -123,6 +123,9 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Activities\ImageActivity.xaml.cs">
+      <DependentUpon>ImageActivity.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Activities\User\TabPivotItemSelector.cs" />
     <Compile Include="Activities\User\Tab\AbsTab.cs" />
     <Compile Include="Activities\User\Tab\AlbumTab.xaml.cs">
@@ -195,6 +198,7 @@
     <Compile Include="Services\Models\VideoDetails.cs" />
     <Compile Include="Services\Models\Visible.cs" />
     <Compile Include="Services\Models\WeiboResponse.cs" />
+    <Compile Include="ViewModels\ImageViewModel.cs" />
     <Compile Include="ViewModels\TimelineViewModel.cs" />
     <Compile Include="ViewModels\User\Tab\AbsTabViewModel.cs" />
     <Compile Include="ViewModels\User\Tab\AlbumTabViewModel.cs" />
@@ -232,6 +236,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Activities\ImageActivity.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Activities\User\Tab\AlbumTab.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -320,6 +328,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Converters\" />
+    <Folder Include="Dialogs\" />
     <Folder Include="Model\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

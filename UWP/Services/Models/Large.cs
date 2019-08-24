@@ -9,7 +9,7 @@ namespace WeiPo.Services.Models
         public string Size { get; set; }
 
         [JsonProperty("url", NullValueHandling = NullValueHandling.Ignore)]
-        public Uri Url { get; set; }
+        public string Url { get; set; }
 
         [JsonProperty("geo", NullValueHandling = NullValueHandling.Ignore)]
         public LargeGeo Geo { get; set; }

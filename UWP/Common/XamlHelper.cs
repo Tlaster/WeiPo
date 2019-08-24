@@ -33,6 +33,16 @@ namespace WeiPo.Common
             return BoolToVisibility(IsEqual(thiz, other));
         }
         
+        public static Visibility IsIntEqualToVisibility(int thiz, int other)
+        {
+            return BoolToVisibility(thiz == other);
+        }
+
+        public static Visibility IsIntNonEqualToVisibility(int thiz, int other)
+        {
+            return BoolToVisibility(thiz != other);
+        }
+
         public static Visibility IsLongEqualToVisibility(long thiz, long other)
         {
             return BoolToVisibility(thiz == other);

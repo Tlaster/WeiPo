@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media.Animation;
 using Humanizer;
 using Microsoft.Toolkit.Parsers.Core;
 using Microsoft.Toolkit.Uwp.UI.Controls;
+using Microsoft.Toolkit.Uwp.UI.Extensions;
 using WeiPo.Common;
 using WeiPo.Services.Models;
+using WeiPo.ViewModels;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -131,6 +135,15 @@ namespace WeiPo.Controls
             else if (e.Link.StartsWith("http"))
             {
                 Launcher.LaunchUriAsync(new Uri(e.Link));
+            }
+        }
+
+        private void ImageListOnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            if (e.OriginalSource is FrameworkElement element && element.DataContext is Pic pic && Status.Pics != null && Status.Pics.Contains(pic))
+            {
+                var index = Status.Pics.IndexOf(pic);
+                Singleton<MessagingCenter>.Instance.Send(this, "image_clicked", new ImageViewModel(Status.Pics.Select(it => new ImageModel(it.Url, it.Large.Url, it.Large.Geo.Width, it.Large.Geo.Height)).ToArray(), index));
             }
         }
     }

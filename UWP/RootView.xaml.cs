@@ -80,6 +80,7 @@ namespace WeiPo
             {
                 
             });
+            Singleton<MessagingCenter>.Instance.Subscribe("image_clicked", (sender, args) => RootContainer.Navigate<ImageActivity>(args));
             RootContainer.BackStackChanged += RootContainerOnBackStackChanged;
             RootContainer.Navigate(typeof(LoginActivity));
         }
