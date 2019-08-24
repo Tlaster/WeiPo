@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace WeiPo.Services.Models
@@ -42,7 +43,7 @@ namespace WeiPo.Services.Models
         public MediaInfo MediaInfo { get; set; }
 
         [JsonProperty("urls", NullValueHandling = NullValueHandling.Ignore)]
-        public Urls Urls { get; set; }
+        public Dictionary<string, string> Urls { get; set; }
 
         [JsonProperty("video_details", NullValueHandling = NullValueHandling.Ignore)]
         public VideoDetails VideoDetails { get; set; }

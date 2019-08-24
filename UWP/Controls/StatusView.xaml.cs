@@ -31,6 +31,12 @@ namespace WeiPo.Controls
 
     internal static class StatusViewXamlHelper
     {
+        public static string SecondToTime(double second)
+        {
+            var time = new TimeSpan(0, 0, Convert.ToInt32(second));
+            return time.Humanize();
+        }
+
         public static Visibility PageInfoVisibility(PageInfo pageInfo)
         {
             return pageInfo != null && (pageInfo.Type == "video" || pageInfo.Type == "article")
@@ -89,6 +95,20 @@ namespace WeiPo.Controls
                     case UserModel user:
                         e.Handled = true;
                         Singleton<MessagingCenter>.Instance.Send(this, "user_clicked", user);
+                        break;
+                    case PageInfo info:
+                        switch (info.Type)
+                        {
+                            case "video":
+                                e.Handled = true;
+                                //trick: new [] { "mp4_720p_mp4", "mp4_hd_mp4", "mp4_ld_mp4", "mp4_1080p_mp4", "pre_ld_mp4"}.OrderBy(it => it) => OrderedEnumerable<string, string> { "mp4_1080p_mp4", "mp4_720p_mp4", "mp4_hd_mp4", "mp4_ld_mp4", "pre_ld_mp4" }
+                                var url = info.Urls?.OrderBy(it => it.Key).FirstOrDefault().Value ??
+                                          info.MediaInfo.StreamUrlHd;
+                                Singleton<MessagingCenter>.Instance.Send(this, "video_clicked", url);
+                                break;
+                            case "article":
+                                break;
+                        }
                         break;
                 }
         }

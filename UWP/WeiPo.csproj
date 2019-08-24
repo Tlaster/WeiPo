@@ -146,6 +146,9 @@
     <Compile Include="Activities\User\UserActivity.xaml.cs">
       <DependentUpon>UserActivity.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Activities\VideoActivity.xaml.cs">
+      <DependentUpon>VideoActivity.xaml</DependentUpon>
+    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
@@ -261,6 +264,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\User\UserActivity.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\VideoActivity.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

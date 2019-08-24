@@ -81,6 +81,7 @@ namespace WeiPo
                 
             });
             Singleton<MessagingCenter>.Instance.Subscribe("image_clicked", (sender, args) => RootContainer.Navigate<ImageActivity>(args));
+            Singleton<MessagingCenter>.Instance.Subscribe("video_clicked", (sender, args) => RootContainer.Navigate<VideoActivity>(args));
             RootContainer.BackStackChanged += RootContainerOnBackStackChanged;
             RootContainer.Navigate(typeof(LoginActivity));
         }

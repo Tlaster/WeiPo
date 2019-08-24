@@ -20,7 +20,7 @@
                   SelectedIndex="{x:Bind ViewModel.SelectedIndex, Mode=TwoWay}">
             <FlipView.ItemTemplate>
                 <DataTemplate x:DataType="viewModels:ImageModel">
-                    <ScrollViewer ZoomMode="Enabled">
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" HorizontalScrollMode="Auto" ZoomMode="Enabled">
                         <controls:ImageEx Style="{StaticResource DetailImageStyle}" Tapped="ImageFlipView_OnTapped"
                                           MaxWidth="{x:Bind Width}"
                                           MaxHeight="{x:Bind Height}"
