@@ -92,7 +92,7 @@ namespace WeiPo.Services
         public async Task<WeiboResponse<StatusModel>> Update(string content, params string[] pics)
         {
             var configResult = await Config();
-            return await $"{HOST}/api/statuses/update".PostUrlEncodedAsync(new
+            return await $"{HOST}/api/statuses/update".WithHeader("Referer", $"{HOST}/compose/?{(!pics.Any() ? "" : $"&pids={string.Join(",", pics)}" )}").PostUrlEncodedAsync(new
             {
                 content = content,
                 st = configResult.Data.St,
