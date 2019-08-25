@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Windows.Foundation;
 using Windows.UI.Xaml;
@@ -9,6 +8,9 @@ namespace WeiPo.Common
 {
     public class StaggeredLayout : VirtualizingLayout
     {
+        public static readonly DependencyProperty VerticalOffsetProperty = DependencyProperty.Register(
+            nameof(VerticalOffset), typeof(double), typeof(StaggeredLayout), new PropertyMetadata(default(double)));
+
         public static readonly DependencyProperty PaddingProperty = DependencyProperty.Register(
             nameof(Padding),
             typeof(Thickness),
@@ -20,6 +22,12 @@ namespace WeiPo.Common
             nameof(DesiredColumnWidth), typeof(double), typeof(StaggeredLayout), new PropertyMetadata(250D));
 
         private double _columnWidth;
+
+        public double VerticalOffset
+        {
+            get => (double) GetValue(VerticalOffsetProperty);
+            set => SetValue(VerticalOffsetProperty, value);
+        }
 
         public Thickness Padding
         {
@@ -36,10 +44,10 @@ namespace WeiPo.Common
         protected override Size MeasureOverride(VirtualizingLayoutContext context, Size availableSize)
         {
             availableSize.Width = availableSize.Width - Padding.Left - Padding.Right;
-            availableSize.Height = availableSize.Height - Padding.Top - Padding.Bottom;
+            availableSize.Height = availableSize.Height - Padding.Top - Padding.Bottom - VerticalOffset;
 
             _columnWidth = Math.Min(DesiredColumnWidth, availableSize.Width);
-            var numColumns = (int)Math.Floor(availableSize.Width / _columnWidth);
+            var numColumns = (int) Math.Floor(availableSize.Width / _columnWidth);
             _columnWidth = availableSize.Width / numColumns;
             var columnHeights = new double[numColumns];
 
@@ -62,8 +70,8 @@ namespace WeiPo.Common
         protected override Size ArrangeOverride(VirtualizingLayoutContext context, Size finalSize)
         {
             var horizontalOffset = Padding.Left;
-            var verticalOffset = Padding.Top;
-            var numColumns = (int)Math.Floor(finalSize.Width / _columnWidth);
+            var verticalOffset = Padding.Top + VerticalOffset;
+            var numColumns = (int) Math.Floor(finalSize.Width / _columnWidth);
             horizontalOffset += (finalSize.Width - numColumns * _columnWidth) / 2;
 
             var columnHeights = new double[numColumns];

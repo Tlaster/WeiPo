@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.Web.Http.Filters;
-using Flurl;
-using Flurl.Http;
 using Microsoft.Toolkit.Collections;
-using Microsoft.Toolkit.Uwp;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using Nito.Mvvm;
 using WeiPo.Common;
 using WeiPo.Common.Collection;
 using WeiPo.Services;
@@ -20,13 +12,12 @@ namespace WeiPo.ViewModels
 {
     public class TimelineDataSource : IIncrementalSource<StatusModel>
     {
-        private long _maxId = 0;
-        public async Task<IEnumerable<StatusModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new CancellationToken())
+        private long _maxId;
+
+        public async Task<IEnumerable<StatusModel>> GetPagedItemsAsync(int pageIndex, int pageSize,
+            CancellationToken cancellationToken = new CancellationToken())
         {
-            if (pageIndex == 0)
-            {
-                _maxId = 0;
-            }
+            if (pageIndex == 0) _maxId = 0;
             var result = await Singleton<Api>.Instance.Timeline(_maxId, cancellationToken);
             if (result.Ok == 1)
             {
@@ -34,20 +25,30 @@ namespace WeiPo.ViewModels
                 _maxId = result.Data.MaxId;
                 return list;
             }
-            else
-            {
-                return new List<StatusModel>();
-            }
+
+            return new List<StatusModel>();
         }
     }
+
     public class TimelineViewModel : ViewModelBase
     {
-        public LoadingCollection<TimelineDataSource, StatusModel> Timeline { get; } = new LoadingCollection<TimelineDataSource, StatusModel>();
+        public LoadingCollection<TimelineDataSource, StatusModel> Timeline { get; } =
+            new LoadingCollection<TimelineDataSource, StatusModel>();
 
-        public TimelineViewModel()
+        public NotifyTask<ProfileData> MyProfile { get; } = NotifyTask.Create(LoadMe);
+
+        private static async Task<ProfileData> LoadMe()
         {
-            Timeline.RefreshAsync();
+            var result = await Singleton<Api>.Instance.Me();
+            if (result.Ok == 1) return result.Data;
+
+            return null;
         }
 
+        public void ToMyProfile()
+        {
+            if (MyProfile.IsCompleted)
+                Singleton<MessagingCenter>.Instance.Send(this, "user_clicked", MyProfile.Result.UserInfo.Id);
+        }
     }
 }

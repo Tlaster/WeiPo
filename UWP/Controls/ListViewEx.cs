@@ -4,6 +4,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Microsoft.Toolkit.Uwp;
 using Microsoft.UI.Xaml.Controls;
+using WeiPo.Common;
 using WeiPo.Common.Collection;
 using RefreshContainer = Microsoft.UI.Xaml.Controls.RefreshContainer;
 using RefreshRequestedEventArgs = Microsoft.UI.Xaml.Controls.RefreshRequestedEventArgs;
@@ -16,7 +17,18 @@ namespace WeiPo.Controls
     public sealed class ListViewEx : Control
     {
         public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register(
-            nameof(ItemsSource), typeof(object), typeof(ListViewEx), new PropertyMetadata(default));
+            nameof(ItemsSource), typeof(object), typeof(ListViewEx), new PropertyMetadata(default, PropertyChangedCallback));
+
+        private static void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.Property == ItemsSourceProperty)
+            {
+                if (e.NewValue is ISupportRefresh refresh)
+                {
+                    refresh.Refresh().FireAndForget();
+                }
+            }
+        }
 
         public static readonly DependencyProperty ItemTemplateProperty = DependencyProperty.Register(
             nameof(ItemTemplate), typeof(object), typeof(ListViewEx), new PropertyMetadata(default));

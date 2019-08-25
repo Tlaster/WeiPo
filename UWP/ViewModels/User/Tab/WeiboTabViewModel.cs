@@ -83,7 +83,6 @@ namespace WeiPo.ViewModels.User.Tab
             DataSource =
                 new LoadingCollection<WeiboTabDataSource, object>(
                     new WeiboTabDataSource(profile.UserInfo.Id, tabData.Containerid));
-            DataSource.RefreshAsync().FireAndForget();
         }
 
         public LoadingCollection<WeiboTabDataSource, object> DataSource { get; }

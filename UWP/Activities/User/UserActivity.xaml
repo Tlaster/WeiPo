@@ -99,7 +99,7 @@
                 <controls:ImageEx Stretch="UniformToFill" HorizontalContentAlignment="Center"
                                   VerticalContentAlignment="Center"
                                   HorizontalAlignment="Center" VerticalAlignment="Center"
-                                  Source="{x:Bind ViewModel.Profile.UserInfo.AvatarHd, Mode=OneWay}" CornerRadius="999"
+                                  Source="{x:Bind ViewModel.Profile.UserInfo.ProfileImageUrl, Mode=OneWay}" CornerRadius="999"
                                   Height="{StaticResource AvatarLargeSize}" Grid.Row="0"
                                   Width="{StaticResource AvatarLargeSize}" />
             </Grid>
@@ -178,7 +178,7 @@
                     <controls:ImageEx Stretch="UniformToFill" HorizontalContentAlignment="Center"
                                       VerticalContentAlignment="Center"
                                       HorizontalAlignment="Center" VerticalAlignment="Center"
-                                      Source="{x:Bind ViewModel.Profile.UserInfo.AvatarHd, Mode=OneWay}"
+                                      Source="{x:Bind ViewModel.Profile.UserInfo.ProfileImageUrl, Mode=OneWay}"
                                       CornerRadius="999"
                                       Height="{StaticResource AvatarLargeSize}" Grid.Row="0"
                                       Width="{StaticResource AvatarLargeSize}" />

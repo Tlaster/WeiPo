@@ -63,6 +63,13 @@ namespace WeiPo.Services
                 .WithCookies(GetCookies())
                 .GetJsonAsync<WeiboResponse<JObject>>();
 
+        public async Task<WeiboResponse<ProfileData>> Me()
+        {
+            var result = await $"{HOST}/api/config".WithCookies(GetCookies()).GetJsonAsync<WeiboResponse<JObject>>();
+            var uidStr = result.Data.Value<string>("uid");
+            long.TryParse(uidStr, out var uid);
+            return await Profile(uid);
+        }
 
         private Dictionary<string, string> GetCookies()
         {

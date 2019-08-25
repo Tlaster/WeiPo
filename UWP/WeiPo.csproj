@@ -331,8 +331,11 @@
     <PackageReference Include="Newtonsoft.Json">
       <Version>12.0.2</Version>
     </PackageReference>
+    <PackageReference Include="Nito.Mvvm.Async">
+      <Version>1.0.0-pre-03</Version>
+    </PackageReference>
     <PackageReference Include="PropertyChanged.Fody">
-      <Version>3.1.0</Version>
+      <Version>3.1.1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
