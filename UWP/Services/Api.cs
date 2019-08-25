@@ -99,16 +99,30 @@ namespace WeiPo.Services
                 picId = string.Join(",", pics)
             }).ReceiveJson<WeiboResponse<StatusModel>>();
         }
-
-        public async Task<WeiboResponse<StatusModel>> Repost(string content, StatusModel status)
+        
+        public async Task<WeiboResponse<StatusModel>> Repost(string content, StatusModel status, string picId = null)
         {
             var configResult = await Config();
-            return await $"{HOST}/api/statuses/repost".WithHeader("Referer", $"{HOST}/compose/repost?id={status.Id}").PostUrlEncodedAsync(new
+            return await $"{HOST}/api/statuses/repost".WithHeader("Referer", $"{HOST}/compose/repost?id={status.Id}{(string.IsNullOrEmpty(picId) ? "" : $"&pids={picId}" )}").PostUrlEncodedAsync(new
             {
                 id = status.Id,
                 mid = status.Mid,
                 content = content,
-                st = configResult.Data.St
+                st = configResult.Data.St,
+                picId = picId
+            }).ReceiveJson<WeiboResponse<StatusModel>>();
+        }
+
+        public async Task<WeiboResponse<StatusModel>> Comment(string content, StatusModel status, string picId = null)
+        {
+            var configResult = await Config();
+            return await $"{HOST}/api/comments/create".WithHeader("Referer", $"{HOST}/compose/comment?id={status.Id}{(string.IsNullOrEmpty(picId) ? "" : $"&pids={picId}" )}").PostUrlEncodedAsync(new
+            {
+                id = status.Id,
+                mid = status.Mid,
+                content = content,
+                st = configResult.Data.St,
+                picId = picId
             }).ReceiveJson<WeiboResponse<StatusModel>>();
         }
 
