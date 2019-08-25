@@ -13,5 +13,8 @@ namespace WeiPo.Services.Models
 
         [JsonProperty("duration", NullValueHandling = NullValueHandling.Ignore)]
         public double Duration { get; set; }
+
+        [JsonProperty("mp4_720p_mp4", NullValueHandling = NullValueHandling.Ignore)]
+        public string Mp4720pMp4 { get; set; }
     }
 }

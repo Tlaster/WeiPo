@@ -27,7 +27,8 @@
                 <tab:AlbumTab TabData="{x:Bind}" />
             </DataTemplate>
             <DataTemplate x:Key="video" x:DataType="models:Tab">
-                <tab:VideoTab TabData="{x:Bind}" />
+                <tab:WeiboTab TabData="{x:Bind}" />
+                <!--<tab:VideoTab TabData="{x:Bind}" />-->
             </DataTemplate>
             <DataTemplate x:Key="headline" x:DataType="models:Tab">
                 <tab:HeadlineTab TabData="{x:Bind}" />

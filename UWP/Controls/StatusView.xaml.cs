@@ -101,9 +101,21 @@ namespace WeiPo.Controls
                             {
                                 e.Handled = true;
                                 //trick: new [] { "mp4_720p_mp4", "mp4_hd_mp4", "mp4_ld_mp4", "mp4_1080p_mp4", "pre_ld_mp4"}.OrderBy(it => it) => OrderedEnumerable<string, string> { "mp4_1080p_mp4", "mp4_720p_mp4", "mp4_hd_mp4", "mp4_ld_mp4", "pre_ld_mp4" }
-                                var url = info.Urls?.OrderBy(it => it.Key).FirstOrDefault().Value ??
-                                          info.MediaInfo.StreamUrlHd;
-                                Singleton<MessagingCenter>.Instance.Send(this, "video_clicked", url);
+                                var url = info.Urls?.OrderBy(it => it.Key).FirstOrDefault().Value;
+                                if (string.IsNullOrEmpty(url)) url = info.MediaInfo.Mp4720pMp4;
+
+                                if (string.IsNullOrEmpty(url)) url = info.MediaInfo.StreamUrlHd;
+
+                                if (string.IsNullOrEmpty(url)) url = info.MediaInfo.StreamUrl;
+
+                                if (string.IsNullOrEmpty(url))
+                                {
+                                    if (info.PageUrl != null) Launcher.LaunchUriAsync(new Uri(info.PageUrl));
+                                }
+                                else
+                                {
+                                    Singleton<MessagingCenter>.Instance.Send(this, "video_clicked", url);
+                                }
                             }
                                 break;
                             case "article":
