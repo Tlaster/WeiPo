@@ -5,9 +5,7 @@ using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Humanizer;
-using Microsoft.UI.Xaml.Controls;
 using WeiPo.Common;
 using WeiPo.Controls.Html;
 using WeiPo.Services.Models;
@@ -100,15 +98,21 @@ namespace WeiPo.Controls
                         switch (info.Type)
                         {
                             case "video":
+                            {
                                 e.Handled = true;
                                 //trick: new [] { "mp4_720p_mp4", "mp4_hd_mp4", "mp4_ld_mp4", "mp4_1080p_mp4", "pre_ld_mp4"}.OrderBy(it => it) => OrderedEnumerable<string, string> { "mp4_1080p_mp4", "mp4_720p_mp4", "mp4_hd_mp4", "mp4_ld_mp4", "pre_ld_mp4" }
                                 var url = info.Urls?.OrderBy(it => it.Key).FirstOrDefault().Value ??
                                           info.MediaInfo.StreamUrlHd;
                                 Singleton<MessagingCenter>.Instance.Send(this, "video_clicked", url);
+                            }
                                 break;
                             case "article":
+                            {
+                                if (info.PageUrl != null) Launcher.LaunchUriAsync(new Uri(info.PageUrl));
+                            }
                                 break;
                         }
+
                         break;
                 }
         }

@@ -16,7 +16,7 @@ namespace WeiPo.Services.Models
         public PagePic PagePic { get; set; }
 
         [JsonProperty("page_url", NullValueHandling = NullValueHandling.Ignore)]
-        public Uri PageUrl { get; set; }
+        public string PageUrl { get; set; }
 
         [JsonProperty("page_title", NullValueHandling = NullValueHandling.Ignore)]
         public string PageTitle { get; set; }

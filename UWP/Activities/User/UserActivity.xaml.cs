@@ -1,4 +1,5 @@
-﻿using Windows.UI.Xaml;
+﻿using Windows.UI.Core;
+using Windows.UI.Xaml;
 using WeiPo.Services.Models;
 using WeiPo.ViewModels;
 using WeiPo.ViewModels.User;
@@ -24,16 +25,22 @@ namespace WeiPo.Activities.User
             switch (parameter)
             {
                 case UserModel user:
-                    ViewModel = new UserViewModel(user);
+                    ViewModel = new UserViewModel(user, UpdatePivot);
                     break;
                 case string name:
-                    ViewModel = new UserViewModel(name);
+                    ViewModel = new UserViewModel(name, UpdatePivot);
                     break;
                 case long id:
-                    ViewModel = new UserViewModel(id);
+                    ViewModel = new UserViewModel(id, UpdatePivot);
                     break;
             }
         }
 
+        private void UpdatePivot()
+        {
+            //Don't know why data binding not work for Pivot.SelectedIndex property, here is a workaround
+            Dispatcher.RunAsync(CoreDispatcherPriority.Low,
+                () => this.ContentPivot.SelectedIndex = ViewModel.Profile.TabsInfo.SelectedTab);
+        }
     }
 }

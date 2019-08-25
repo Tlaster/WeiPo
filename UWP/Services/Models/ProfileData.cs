@@ -34,7 +34,7 @@ namespace WeiPo.Services.Models
     public partial class TabsInfo
     {
         [JsonProperty("selectedTab", NullValueHandling = NullValueHandling.Ignore)]
-        public long SelectedTab { get; set; }
+        public int SelectedTab { get; set; }
 
         [JsonProperty("tabs", NullValueHandling = NullValueHandling.Ignore)]
         public Tab[] Tabs { get; set; }

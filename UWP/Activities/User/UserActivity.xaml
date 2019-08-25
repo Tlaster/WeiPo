@@ -18,28 +18,66 @@
         <x:Double x:Key="InfoContainerWidth">400</x:Double>
         <user:TabPivotDictionary x:Key="TabPivotDictionary">
             <DataTemplate x:Key="profile" x:DataType="models:Tab">
-                <tab:ProfileTab TabData="{x:Bind}"/>
+                <tab:ProfileTab TabData="{x:Bind}" />
             </DataTemplate>
             <DataTemplate x:Key="weibo" x:DataType="models:Tab">
-                <tab:WeiboTab TabData="{x:Bind}"/>
+                <tab:WeiboTab TabData="{x:Bind}" />
             </DataTemplate>
             <DataTemplate x:Key="album" x:DataType="models:Tab">
-                <tab:AlbumTab TabData="{x:Bind}"/>
+                <tab:AlbumTab TabData="{x:Bind}" />
             </DataTemplate>
             <DataTemplate x:Key="video" x:DataType="models:Tab">
-                <tab:VideoTab TabData="{x:Bind}"/>
+                <tab:VideoTab TabData="{x:Bind}" />
             </DataTemplate>
             <DataTemplate x:Key="headline" x:DataType="models:Tab">
-                <tab:HeadlineTab TabData="{x:Bind}"/>
+                <tab:HeadlineTab TabData="{x:Bind}" />
             </DataTemplate>
         </user:TabPivotDictionary>
     </paging:Activity.Resources>
+    <VisualStateManager.VisualStateGroups>
+        <VisualStateGroup>
+            <VisualState>
+                <VisualState.StateTriggers>
+                    <AdaptiveTrigger MinWindowWidth="{StaticResource LargeWindowSnapPoint}" />
+                </VisualState.StateTriggers>
+                <VisualState.Setters>
+                    <Setter Target="TopInfoContainer.Visibility" Value="Collapsed" />
+                    <Setter Target="LeftInfoContainer.Visibility" Value="Visible" />
+                </VisualState.Setters>
+            </VisualState>
+            <VisualState>
+                <VisualState.StateTriggers>
+                    <AdaptiveTrigger MinWindowWidth="{StaticResource MediumWindowSnapPoint}" />
+                </VisualState.StateTriggers>
+                <VisualState.Setters>
+                    <Setter Target="TopInfoContainer.Visibility" Value="Collapsed" />
+                    <Setter Target="LeftInfoContainer.Visibility" Value="Visible" />
+                </VisualState.Setters>
+            </VisualState>
+            <VisualState>
+                <VisualState.StateTriggers>
+                    <AdaptiveTrigger MinWindowWidth="{StaticResource MinWindowSnapPoint}" />
+                </VisualState.StateTriggers>
+                <VisualState.Setters>
+                    <Setter Target="TopInfoContainer.Visibility" Value="Visible" />
+                    <Setter Target="LeftInfoContainer.Visibility" Value="Collapsed" />
+                </VisualState.Setters>
+            </VisualState>
+        </VisualStateGroup>
+    </VisualStateManager.VisualStateGroups>
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <StackPanel Orientation="Vertical" MaxWidth="{StaticResource InfoContainerWidth}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Name="LeftInfoContainer" Grid.RowSpan="2" Orientation="Vertical"
+                    MaxWidth="{StaticResource InfoContainerWidth}">
             <Grid>
                 <controls1:AspectRatioView HeightRequest="1" WidthRequest="1">
                     <controls:ImageEx Stretch="Uniform" HorizontalContentAlignment="Center"
@@ -61,20 +99,26 @@
                                   VerticalContentAlignment="Center"
                                   HorizontalAlignment="Center" VerticalAlignment="Center"
                                   Source="{x:Bind ViewModel.Profile.UserInfo.AvatarHd, Mode=OneWay}" CornerRadius="999"
-                                  Height="{StaticResource AvatarLargeSize}" Grid.Row="0" Width="{StaticResource AvatarLargeSize}" />
+                                  Height="{StaticResource AvatarLargeSize}" Grid.Row="0"
+                                  Width="{StaticResource AvatarLargeSize}" />
             </Grid>
             <StackPanel Padding="8" Orientation="Vertical">
                 <TextBlock Padding="4" Style="{ThemeResource TitleTextBlockStyle}"
                            Text="{x:Bind ViewModel.Profile.UserInfo.ScreenName, Mode=OneWay}" />
-                <StackPanel Visibility="{x:Bind ViewModel.Profile.UserInfo.Verified, Mode=OneWay}" Padding="4" Orientation="Horizontal">
-                    <Viewbox StretchDirection="Both" Height="{Binding ElementName=VerifyTextBlock, Path=ActualHeight}" Width="{Binding ElementName=VerifyTextBlock, Path=ActualHeight}">
+                <StackPanel Visibility="{x:Bind ViewModel.Profile.UserInfo.Verified, Mode=OneWay}" Padding="4"
+                            Orientation="Horizontal">
+                    <Viewbox StretchDirection="Both" Height="{Binding ElementName=VerifyTextBlock, Path=ActualHeight}"
+                             Width="{Binding ElementName=VerifyTextBlock, Path=ActualHeight}">
                         <Grid>
-                            <Ellipse Fill="#FFB502" Visibility="{x:Bind common:XamlHelper.IsLongEqualToVisibility(ViewModel.Profile.UserInfo.VerifiedType, 0), Mode=OneWay}"/>
-                            <Ellipse Fill="#00A4FF" Visibility="{x:Bind common:XamlHelper.IsLongNonEqualToVisibility(ViewModel.Profile.UserInfo.VerifiedType, 0), Mode=OneWay}"/>
-                            <SymbolIcon Margin="4" Symbol="Accept" Foreground="White"/>
+                            <Ellipse Fill="#FFB502"
+                                     Visibility="{x:Bind common:XamlHelper.IsLongEqualToVisibility(ViewModel.Profile.UserInfo.VerifiedType, 0), Mode=OneWay}" />
+                            <Ellipse Fill="#00A4FF"
+                                     Visibility="{x:Bind common:XamlHelper.IsLongNonEqualToVisibility(ViewModel.Profile.UserInfo.VerifiedType, 0), Mode=OneWay}" />
+                            <SymbolIcon Margin="4" Symbol="Accept" Foreground="White" />
                         </Grid>
                     </Viewbox>
-                    <TextBlock Name="VerifyTextBlock" Margin="4,0,0,0" Text="{x:Bind ViewModel.Profile.UserInfo.VerifiedReason,Mode=OneWay}" />
+                    <TextBlock Name="VerifyTextBlock" Margin="4,0,0,0"
+                               Text="{x:Bind ViewModel.Profile.UserInfo.VerifiedReason,Mode=OneWay}" />
                 </StackPanel>
                 <TextBlock Padding="4" TextWrapping="Wrap"
                            Text="{x:Bind ViewModel.Profile.UserInfo.Description, Mode=OneWay}" />
@@ -104,8 +148,104 @@
                 </Grid>
             </StackPanel>
         </StackPanel>
-        <Grid Grid.Column="1">
-            <Pivot ItemsSource="{x:Bind ViewModel.Profile.TabsInfo.Tabs, Mode=OneWay}">
+        <Grid Name="TopInfoContainer" Grid.Row="0" Grid.Column="1" RequestedTheme="Dark">
+            <controls1:AspectRatioView HeightRequest="9" WidthRequest="16">
+                <controls:ImageEx Stretch="UniformToFill" HorizontalContentAlignment="Center"
+                                  VerticalContentAlignment="Center" HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"
+                                  Source="{x:Bind ViewModel.Profile.UserInfo.CoverImagePhone, Mode=OneWay}" />
+            </controls1:AspectRatioView>
+            <StackPanel Orientation="Vertical">
+                <StackPanel.Resources>
+                    <Style TargetType="controls:DropShadowPanel">
+                        <Setter Property="BlurRadius" Value="8" />
+                        <Setter Property="ShadowOpacity" Value="0.75" />
+                        <Setter Property="Color" Value="Black" />
+                    </Style>
+                </StackPanel.Resources>
+                <Grid>
+                    <controls:DropShadowPanel BlurRadius="20"
+                                              Grid.Row="0"
+                                              Margin="16"
+                                              ShadowOpacity="0.6"
+                                              Color="Black"
+                                              VerticalAlignment="Center"
+                                              HorizontalAlignment="Center">
+                        <Ellipse Width="{StaticResource AvatarLargeSize}" Height="{StaticResource AvatarLargeSize}"
+                                 Fill="{ThemeResource SystemControlAcrylicElementBrush}" />
+                    </controls:DropShadowPanel>
+                    <controls:ImageEx Stretch="UniformToFill" HorizontalContentAlignment="Center"
+                                      VerticalContentAlignment="Center"
+                                      HorizontalAlignment="Center" VerticalAlignment="Center"
+                                      Source="{x:Bind ViewModel.Profile.UserInfo.AvatarHd, Mode=OneWay}"
+                                      CornerRadius="999"
+                                      Height="{StaticResource AvatarLargeSize}" Grid.Row="0"
+                                      Width="{StaticResource AvatarLargeSize}" />
+                </Grid>
+                <controls:DropShadowPanel HorizontalAlignment="Center">
+                    <TextBlock Padding="4" Style="{ThemeResource TitleTextBlockStyle}"
+                               Text="{x:Bind ViewModel.Profile.UserInfo.ScreenName, Mode=OneWay}" />
+                </controls:DropShadowPanel>
+                <StackPanel HorizontalAlignment="Center"
+                            Visibility="{x:Bind ViewModel.Profile.UserInfo.Verified, Mode=OneWay}" Padding="4"
+                            Orientation="Horizontal">
+                    <controls:DropShadowPanel>
+                        <Viewbox StretchDirection="Both"
+                                 Height="{Binding ElementName=VerticalVerifyTextBlock, Path=ActualHeight, Mode=OneWay}"
+                                 Width="{Binding ElementName=VerticalVerifyTextBlock, Path=ActualHeight, Mode=OneWay}">
+                            <Grid>
+                                <Ellipse Fill="#FFB502"
+                                         Visibility="{x:Bind common:XamlHelper.IsLongEqualToVisibility(ViewModel.Profile.UserInfo.VerifiedType, 0), Mode=OneWay}" />
+                                <Ellipse Fill="#00A4FF"
+                                         Visibility="{x:Bind common:XamlHelper.IsLongNonEqualToVisibility(ViewModel.Profile.UserInfo.VerifiedType, 0), Mode=OneWay}" />
+                                <SymbolIcon Margin="4" Symbol="Accept" Foreground="White" />
+                            </Grid>
+                        </Viewbox>
+                    </controls:DropShadowPanel>
+                    <controls:DropShadowPanel>
+                        <TextBlock
+                            ToolTipService.ToolTip="{x:Bind ViewModel.Profile.UserInfo.VerifiedReason, Mode=OneWay}"
+                            MaxLines="2" TextTrimming="CharacterEllipsis" TextWrapping="Wrap"
+                            Name="VerticalVerifyTextBlock" Margin="4,0,0,0"
+                            Text="{x:Bind ViewModel.Profile.UserInfo.VerifiedReason,Mode=OneWay}" />
+                    </controls:DropShadowPanel>
+                </StackPanel>
+                <controls:DropShadowPanel>
+                    <TextBlock ToolTipService.ToolTip="{x:Bind ViewModel.Profile.UserInfo.Description, Mode=OneWay}"
+                               MaxLines="2" TextTrimming="CharacterEllipsis" Padding="4" TextWrapping="Wrap"
+                               Text="{x:Bind ViewModel.Profile.UserInfo.Description, Mode=OneWay}" />
+                </controls:DropShadowPanel>
+            </StackPanel>
+            <Grid VerticalAlignment="Bottom" Padding="16">
+                <Grid.Resources>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="HorizontalAlignment" Value="Center" />
+                        <Setter Property="Padding" Value="2"/>
+                    </Style>
+                </Grid.Resources>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <TextBlock Text="Statuses" />
+                <TextBlock Grid.Row="1" Grid.Column="0"
+                           Text="{x:Bind ViewModel.Profile.UserInfo.StatusesCount, Mode=OneWay}" />
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="Following" />
+                <TextBlock Grid.Row="1" Grid.Column="1"
+                           Text="{x:Bind ViewModel.Profile.UserInfo.FollowCount, Mode=OneWay}" />
+                <TextBlock Grid.Row="0" Grid.Column="2" Text="Follower" />
+                <TextBlock Grid.Row="1" Grid.Column="2"
+                           Text="{x:Bind ViewModel.Profile.UserInfo.FollowersCount, Mode=OneWay}" />
+            </Grid>
+
+        </Grid>
+        <Grid Grid.Row="1" Grid.Column="1">
+            <Pivot Name="ContentPivot" ItemsSource="{x:Bind ViewModel.Profile.TabsInfo.Tabs, Mode=OneWay}">
                 <Pivot.HeaderTemplate>
                     <DataTemplate x:DataType="models:Tab">
                         <TextBlock Text="{x:Bind Title}" />

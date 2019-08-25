@@ -8,6 +8,7 @@
     xmlns:paging="using:Bug10.Paging"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:viewModels="using:WeiPo.ViewModels"
+    xmlns:controls1="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d">
 
     <Grid>
@@ -20,14 +21,14 @@
                   SelectedIndex="{x:Bind ViewModel.SelectedIndex, Mode=TwoWay}">
             <FlipView.ItemTemplate>
                 <DataTemplate x:DataType="viewModels:ImageModel">
-                    <ScrollViewer HorizontalScrollBarVisibility="Auto" HorizontalScrollMode="Auto" ZoomMode="Enabled">
-                        <controls:ImageEx Style="{StaticResource DetailImageStyle}" Tapped="ImageFlipView_OnTapped"
+                    <controls1:ScrollViewer DoubleTapped="UIElement_OnDoubleTapped" ZoomMode="Enabled">
+                        <controls:ImageEx Style="{StaticResource DetailImageStyle}"
+                                          Source="{x:Bind Source}"
                                           MaxWidth="{x:Bind Width}"
                                           MaxHeight="{x:Bind Height}"
-                                          Name="ImageEx" Source="{x:Bind Source}"
                                           PlaceholderSource="{x:Bind PlaceHolder}"
                                           PlaceholderStretch="Uniform" Stretch="Uniform" />
-                    </ScrollViewer>
+                    </controls1:ScrollViewer>
                 </DataTemplate>
             </FlipView.ItemTemplate>
         </FlipView>

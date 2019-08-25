@@ -1,20 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+using System.Numerics;
 using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Animation;
-using Windows.UI.Xaml.Navigation;
-using Microsoft.Toolkit.Uwp.UI.Controls;
-using Microsoft.Toolkit.Uwp.UI.Extensions;
+using Microsoft.UI.Xaml.Controls;
 using WeiPo.ViewModels;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -22,33 +10,38 @@ using WeiPo.ViewModels;
 namespace WeiPo.Activities
 {
     /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
+    ///     An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class ImageActivity 
+    public sealed partial class ImageActivity
     {
-        public ImageViewModel ViewModel { get; set; }
+        private bool _isPointerDown;
+        private Point _prevPoint;
+
         public ImageActivity()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
+
+        public ImageViewModel ViewModel { get; set; }
 
         protected override void OnCreate(object parameter)
         {
             base.OnCreate(parameter);
-            if (parameter is ImageViewModel viewModel)
-            {
-                this.ViewModel = viewModel;
-            }
-        }
-
-        private void ImageFlipView_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            Finish();
+            if (parameter is ImageViewModel viewModel) ViewModel = viewModel;
         }
 
         private void ImageFlipView_OnRightTapped(object sender, RightTappedRoutedEventArgs e)
         {
-            
+        }
+
+        private void UIElement_OnDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            if (sender is ScrollViewer scrollViewer)
+            {
+                var position = e.GetPosition(scrollViewer);
+                scrollViewer.ZoomBy(1F, new Vector2(Convert.ToSingle(position.X), Convert.ToSingle(position.Y)),
+                    new ZoomOptions(AnimationMode.Enabled));
+            }
         }
     }
 }
