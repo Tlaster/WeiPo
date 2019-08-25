@@ -20,19 +20,16 @@
         <viewModels:TimelineViewModel/>
     </paging:Activity.DataContext>
     <Grid>
-        <ScrollViewer ViewChanged="ScrollViewer_OnViewChanged">
-            <controls:ItemsRepeater Name="TimelineItemsRepeater" ItemsSource="{x:Bind DataContext.(viewModels:TimelineViewModel.Timeline), Mode=OneWay}" >
-                <controls:ItemsRepeater.Layout>
-                    <common:StaggeredLayout DesiredColumnWidth="400"/>
-                </controls:ItemsRepeater.Layout>
-                <controls:ItemsRepeater.ItemTemplate>
-                    <DataTemplate x:DataType="models:StatusModel">
-                        <controls2:StatusView Status="{x:Bind}"/>
-                    </DataTemplate>
-                </controls:ItemsRepeater.ItemTemplate>
-            </controls:ItemsRepeater>
-        </ScrollViewer>
-
+        <controls2:ListViewEx Name="TimelineItemsRepeater" ItemsSource="{x:Bind DataContext.(viewModels:TimelineViewModel.Timeline), Mode=OneWay}" >
+            <controls2:ListViewEx.Layout>
+                <common:StaggeredLayout DesiredColumnWidth="400"/>
+            </controls2:ListViewEx.Layout>
+            <controls2:ListViewEx.ItemTemplate>
+                <DataTemplate x:DataType="models:StatusModel">
+                    <controls2:StatusView Status="{x:Bind}"/>
+                </DataTemplate>
+            </controls2:ListViewEx.ItemTemplate>
+        </controls2:ListViewEx>
         <Grid HorizontalAlignment="Stretch" VerticalAlignment="Top" MaxWidth="600" Name="Header" Visibility="Collapsed">
             <controls1:DropShadowPanel
                         HorizontalAlignment="Stretch"

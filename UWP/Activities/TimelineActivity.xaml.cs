@@ -34,21 +34,5 @@ namespace WeiPo.Activities
         {
             //Header.Margin = new Thickness(0, sender.Height, 0, 0);
         }
-
-        private async void ScrollViewer_OnViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
-        {
-            if (!e.IsIntermediate)
-            {
-                var scroller = (ScrollViewer)sender;
-                var distanceToEnd = scroller.ExtentHeight - (scroller.VerticalOffset + scroller.ViewportHeight);
-                var viewModel = DataContext as TimelineViewModel;
-                // trigger if within 2 viewports of the end
-                if (distanceToEnd <= 2.0 * scroller.ViewportHeight
-                    && viewModel.Timeline.HasMoreItems && !viewModel.Timeline.IsLoading)
-                {
-                    await viewModel.Timeline.LoadMoreItemsAsync(20);
-                }
-            }
-        }
     }
 }

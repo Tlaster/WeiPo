@@ -6,7 +6,7 @@ namespace WeiPo.Services.Models
     public partial class PagePic
     {
         [JsonProperty("url", NullValueHandling = NullValueHandling.Ignore)]
-        public Uri Url { get; set; }
+        public string Url { get; set; }
 
         [JsonProperty("width", NullValueHandling = NullValueHandling.Ignore)]
         public long Width { get; set; }

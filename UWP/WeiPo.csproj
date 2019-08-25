@@ -152,6 +152,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Common\Collection\LoadingCollection.cs" />
     <Compile Include="Common\MessagingCenter.cs" />
     <Compile Include="Common\Singleton.cs" />
     <Compile Include="Common\StaggeredLayout.cs" />
@@ -162,6 +163,7 @@
     <Compile Include="Common\XamlHelper.cs" />
     <Compile Include="Controls\AspectRatioView.cs" />
     <Compile Include="Controls\Html\HtmlTextBlock.cs" />
+    <Compile Include="Controls\ListViewEx.cs" />
     <Compile Include="Controls\PersonCard.xaml.cs">
       <DependentUpon>PersonCard.xaml</DependentUpon>
     </Compile>

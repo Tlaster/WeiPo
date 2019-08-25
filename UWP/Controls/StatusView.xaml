@@ -39,7 +39,24 @@
                 </DataTemplate>
             </controls1:ItemsRepeater.ItemTemplate>
         </controls1:ItemsRepeater>
-        <ContentControl Content="{x:Bind Status.PageInfo, Mode=OneWay}">
+        <local:AspectRatioView 
+            Visibility="{x:Bind local:StatusViewXamlHelper.PageInfoVisibility(Status), Mode=OneWay}"
+            DataContext="{x:Bind Status.PageInfo, Mode=OneWay}"
+            extensions:Mouse.Cursor="Hand" WidthRequest="16" HeightRequest="9" RequestedTheme="Dark">
+            <controls:ImageEx Stretch="UniformToFill" CornerRadius="{StaticResource CardCorner}" Source="{x:Bind Status.PageInfo.PagePic.Url, Mode=OneWay}"/>
+            <Border CornerRadius="{StaticResource CardCorner}" Background="#aa000000"/>
+            <TextBlock Margin="8" Text="{x:Bind Status.PageInfo.PageTitle, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <StackPanel Margin="8" VerticalAlignment="Bottom" Orientation="Vertical">
+                <TextBlock TextTrimming="CharacterEllipsis" Visibility="{x:Bind common:XamlHelper.IsNonNullToVisibility(Status.PageInfo.Title), Mode=OneWay}" Text="{x:Bind Status.PageInfo.Title, Mode=OneWay}"/>
+                <TextBlock TextTrimming="CharacterEllipsis" Visibility="{x:Bind common:XamlHelper.IsNullToVisibility(Status.PageInfo.Title), Mode=OneWay}" Text="{x:Bind Status.PageInfo.Content1, Mode=OneWay}"/>
+                <TextBlock TextTrimming="CharacterEllipsis" FontSize="10" Text="{x:Bind Status.PageInfo.Content2, Mode=OneWay}"/>
+                <Grid Visibility="{x:Bind common:XamlHelper.IsNonNullToVisibility(Status.PageInfo.Title), Mode=OneWay}">
+                    <TextBlock HorizontalAlignment="Left" TextTrimming="CharacterEllipsis" FontSize="10" Text="{x:Bind system:String.Format('{0} 次观看', Status.PageInfo.PlayCount), Mode=OneWay}"/>
+                    <TextBlock HorizontalAlignment="Right" TextTrimming="CharacterEllipsis" FontSize="10" Text="{x:Bind local:StatusViewXamlHelper.SecondToTime(Status.PageInfo.MediaInfo.Duration), Mode=OneWay}"/>
+                </Grid>
+            </StackPanel>
+        </local:AspectRatioView>
+        <!--<ContentControl Content="{x:Bind Status.PageInfo, Mode=OneWay}">
             <ContentControl.ContentTemplateSelector>
                 <local:PageInfoDataTemplateSelector>
                     <local:PageInfoDataTemplateSelector.DataTemplate>
@@ -63,7 +80,7 @@
                     </local:PageInfoDataTemplateSelector.DataTemplate>
                 </local:PageInfoDataTemplateSelector>
             </ContentControl.ContentTemplateSelector>
-        </ContentControl>
+        </ContentControl>-->
         <ContentControl DataContext="{x:Bind Status.RetweetedStatus, Mode=OneWay}" Content="{x:Bind Status.RetweetedStatus, Mode=OneWay}">
             <ContentControl.ContentTemplateSelector>
                 <common:NonNullDataTemplateSelector>

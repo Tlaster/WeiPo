@@ -8,6 +8,7 @@ using Microsoft.Toolkit.Collections;
 using Microsoft.Toolkit.Uwp;
 using Newtonsoft.Json.Linq;
 using WeiPo.Common;
+using WeiPo.Common.Collection;
 using WeiPo.Services;
 using WeiPo.Services.Models;
 
@@ -80,11 +81,11 @@ namespace WeiPo.ViewModels.User.Tab
         public WeiboTabViewModel(ProfileData profile, Services.Models.Tab tabData) : base(profile, tabData)
         {
             DataSource =
-                new IncrementalLoadingCollection<WeiboTabDataSource, object>(
+                new LoadingCollection<WeiboTabDataSource, object>(
                     new WeiboTabDataSource(profile.UserInfo.Id, tabData.Containerid));
             DataSource.RefreshAsync().FireAndForget();
         }
 
-        public IncrementalLoadingCollection<WeiboTabDataSource, object> DataSource { get; }
+        public LoadingCollection<WeiboTabDataSource, object> DataSource { get; }
     }
 }

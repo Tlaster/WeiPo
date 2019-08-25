@@ -47,20 +47,5 @@ namespace WeiPo.Activities.User.Tab
         {
             return new WeiboTabViewModel(viewModelProfile, tabData);
         }
-
-        private async void ScrollViewer_OnViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
-        {
-            if (!e.IsIntermediate)
-            {
-                var scroller = (ScrollViewer)sender;
-                var distanceToEnd = scroller.ExtentHeight - (scroller.VerticalOffset + scroller.ViewportHeight);
-                // trigger if within 2 viewports of the end
-                if (ViewModel is WeiboTabViewModel viewModel && distanceToEnd <= 2.0 * scroller.ViewportHeight
-                    && viewModel.DataSource.HasMoreItems && !viewModel.DataSource.IsLoading)
-                {
-                    await viewModel.DataSource.LoadMoreItemsAsync(20);
-                }
-            }
-        }
     }
 }

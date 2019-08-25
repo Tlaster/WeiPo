@@ -35,9 +35,9 @@ namespace WeiPo.Controls
             return time.ToString("g");
         }
 
-        public static Visibility PageInfoVisibility(PageInfo pageInfo)
+        public static Visibility PageInfoVisibility(StatusModel status)
         {
-            return pageInfo != null && (pageInfo.Type == "video" || pageInfo.Type == "article")
+            return status.PageInfo != null && (status.PageInfo.Type == "video" || status.PageInfo.Type == "article")
                 ? Visibility.Visible
                 : Visibility.Collapsed;
         }

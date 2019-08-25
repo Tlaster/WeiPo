@@ -12,6 +12,7 @@ using Microsoft.Toolkit.Uwp;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using WeiPo.Common;
+using WeiPo.Common.Collection;
 using WeiPo.Services;
 using WeiPo.Services.Models;
 
@@ -41,7 +42,7 @@ namespace WeiPo.ViewModels
     }
     public class TimelineViewModel : ViewModelBase
     {
-        public IncrementalLoadingCollection<TimelineDataSource, StatusModel> Timeline { get; } = new IncrementalLoadingCollection<TimelineDataSource, StatusModel>();
+        public LoadingCollection<TimelineDataSource, StatusModel> Timeline { get; } = new LoadingCollection<TimelineDataSource, StatusModel>();
 
         public TimelineViewModel()
         {

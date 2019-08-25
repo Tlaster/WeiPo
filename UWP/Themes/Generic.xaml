@@ -2,7 +2,9 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:WeiPo"
-    xmlns:html="using:WeiPo.Controls.Html">
+    xmlns:html="using:WeiPo.Controls.Html"
+    xmlns:controls="using:WeiPo.Controls"
+    xmlns:controls1="using:Microsoft.UI.Xaml.Controls">
 
     <Style TargetType="html:HtmlTextBlock">
         <Setter Property="Template">
@@ -14,6 +16,29 @@
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}">
                         <RichTextBlock Name="RichTextContent" TextWrapping="Wrap" IsTextSelectionEnabled="False"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="controls:ListViewEx">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:ListViewEx">
+                    <Border
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+                        <controls1:RefreshContainer Name="RefreshContainer">
+                            <ScrollViewer x:Name="ScrollViewer">
+                                <controls1:ItemsRepeater x:Name="ItemsRepeater"
+                                                         ItemsSource="{TemplateBinding ItemsSource}"
+                                                         ItemTemplate="{TemplateBinding ItemTemplate}"
+                                                         Layout="{TemplateBinding Layout}"
+                                                         TabFocusNavigation="{TemplateBinding TabFocusNavigation}"/>
+                            </ScrollViewer>
+                        </controls1:RefreshContainer>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>

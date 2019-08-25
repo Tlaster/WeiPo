@@ -17,42 +17,45 @@
     d:DesignWidth="400">
 
     <Grid>
-        <ScrollViewer ViewChanged="ScrollViewer_OnViewChanged">
-            <controls1:ItemsRepeater ItemsSource="{x:Bind ViewModel.(tab:WeiboTabViewModel.DataSource), Mode=OneWay}" >
-                <controls1:ItemsRepeater.Layout>
-                    <common:StaggeredLayout DesiredColumnWidth="300"/>
-                </controls1:ItemsRepeater.Layout>
-                <controls1:ItemsRepeater.ItemTemplate>
-                    <local:WeiboTabDataTemplateSelector>
-                        <local:WeiboTabDataTemplateSelector.InterestTemplate>
-                            <DataTemplate x:DataType="tab:InterestPeopleViewModel">
-                                <Grid Margin="8" Padding="8" Background="{ThemeResource SystemControlAcrylicElementBrush}" CornerRadius="{StaticResource CardCorner}">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                    </Grid.RowDefinitions>
-                                    <TextBlock Margin="0,0,0,8" Text="{x:Bind DescModel.Desc}"/>
-                                    <controls1:ItemsRepeater Tapped="{x:Bind OnItemClicked}" Grid.Row="1" ItemsSource="{x:Bind Items, Mode=OneWay}">
-                                        <controls1:ItemsRepeater.Layout>
-                                            <controls1:StackLayout/>
-                                        </controls1:ItemsRepeater.Layout>
-                                        <controls1:ItemsRepeater.ItemTemplate>
-                                            <DataTemplate x:DataType="models:InterestPeopleModel">
-                                                <controls:PersonCard DataContext="{x:Bind}" Avatar="{x:Bind User.ProfileImageUrl, Mode=OneWay}" Title="{x:Bind User.ScreenName, Mode=OneWay}" SubTitle="{x:Bind Desc1, Mode=OneWay}"/>
-                                            </DataTemplate>
-                                        </controls1:ItemsRepeater.ItemTemplate>
-                                    </controls1:ItemsRepeater>
-                                </Grid>
-                            </DataTemplate>
-                        </local:WeiboTabDataTemplateSelector.InterestTemplate>
-                        <local:WeiboTabDataTemplateSelector.StatusTemplate>
-                            <DataTemplate x:DataType="models:StatusModel">
-                                <controls:StatusView Status="{x:Bind}"/>
-                            </DataTemplate>
-                        </local:WeiboTabDataTemplateSelector.StatusTemplate>
-                    </local:WeiboTabDataTemplateSelector>
-                </controls1:ItemsRepeater.ItemTemplate>
-            </controls1:ItemsRepeater>
-        </ScrollViewer>
+        <controls:ListViewEx ItemsSource="{x:Bind ViewModel.(tab:WeiboTabViewModel.DataSource), Mode=OneWay}">
+            <controls:ListViewEx.Layout>
+                <common:StaggeredLayout DesiredColumnWidth="300" />
+            </controls:ListViewEx.Layout>
+            <controls:ListViewEx.ItemTemplate>
+                <local:WeiboTabDataTemplateSelector>
+                    <local:WeiboTabDataTemplateSelector.InterestTemplate>
+                        <DataTemplate x:DataType="tab:InterestPeopleViewModel">
+                            <Grid Margin="8" Padding="8" Background="{ThemeResource SystemControlAcrylicElementBrush}"
+                                  CornerRadius="{StaticResource CardCorner}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <TextBlock Margin="0,0,0,8" Text="{x:Bind DescModel.Desc}" />
+                                <controls1:ItemsRepeater Tapped="{x:Bind OnItemClicked}" Grid.Row="1"
+                                                         ItemsSource="{x:Bind Items, Mode=OneWay}">
+                                    <controls1:ItemsRepeater.Layout>
+                                        <controls1:StackLayout />
+                                    </controls1:ItemsRepeater.Layout>
+                                    <controls1:ItemsRepeater.ItemTemplate>
+                                        <DataTemplate x:DataType="models:InterestPeopleModel">
+                                            <controls:PersonCard DataContext="{x:Bind}"
+                                                                 Avatar="{x:Bind User.ProfileImageUrl, Mode=OneWay}"
+                                                                 Title="{x:Bind User.ScreenName, Mode=OneWay}"
+                                                                 SubTitle="{x:Bind Desc1, Mode=OneWay}" />
+                                        </DataTemplate>
+                                    </controls1:ItemsRepeater.ItemTemplate>
+                                </controls1:ItemsRepeater>
+                            </Grid>
+                        </DataTemplate>
+                    </local:WeiboTabDataTemplateSelector.InterestTemplate>
+                    <local:WeiboTabDataTemplateSelector.StatusTemplate>
+                        <DataTemplate x:DataType="models:StatusModel">
+                            <controls:StatusView Status="{x:Bind}" />
+                        </DataTemplate>
+                    </local:WeiboTabDataTemplateSelector.StatusTemplate>
+                </local:WeiboTabDataTemplateSelector>
+            </controls:ListViewEx.ItemTemplate>
+        </controls:ListViewEx>
     </Grid>
 </local:AbsTab>
