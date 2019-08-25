@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.Storage;
 using Flurl;
 using Flurl.Http;
 using Newtonsoft.Json;
@@ -65,10 +66,50 @@ namespace WeiPo.Services
 
         public async Task<WeiboResponse<ProfileData>> Me()
         {
-            var result = await $"{HOST}/api/config".WithCookies(GetCookies()).GetJsonAsync<WeiboResponse<JObject>>();
-            var uidStr = result.Data.Value<string>("uid");
+            var result = await Config();
+            var uidStr = result.Data.Uid;
             long.TryParse(uidStr, out var uid);
             return await Profile(uid);
+        }
+
+        public async Task<WeiboResponse<ConfigModel>> Config()
+        {
+            return await $"{HOST}/api/config".WithCookies(GetCookies()).GetJsonAsync<WeiboResponse<ConfigModel>>();
+        }
+
+        public async Task<UploadPicModel> UploadPic(StorageFile file)
+        {
+            var configResult = await Config();
+            var st = configResult.Data.St;
+            return await $"{HOST}/api/statuses/uploadPic".PostMultipartAsync(it =>
+            {
+                it.AddString("type", "json");
+                it.AddString("st", st);
+                it.AddFile(file.Name, file.Path);
+            }).ReceiveJson<UploadPicModel>();
+        }
+
+        public async Task<WeiboResponse<StatusModel>> Update(string content, params string[] pics)
+        {
+            var configResult = await Config();
+            return await $"{HOST}/api/statuses/update".PostUrlEncodedAsync(new
+            {
+                content = content,
+                st = configResult.Data.St,
+                picId = string.Join(",", pics)
+            }).ReceiveJson<WeiboResponse<StatusModel>>();
+        }
+
+        public async Task<WeiboResponse<StatusModel>> Repost(string content, StatusModel status)
+        {
+            var configResult = await Config();
+            return await $"{HOST}/api/statuses/repost".WithHeader("Referer", $"{HOST}/compose/repost?id={status.Id}").PostUrlEncodedAsync(new
+            {
+                id = status.Id,
+                mid = status.Mid,
+                content = content,
+                st = configResult.Data.St
+            }).ReceiveJson<WeiboResponse<StatusModel>>();
         }
 
         private Dictionary<string, string> GetCookies()

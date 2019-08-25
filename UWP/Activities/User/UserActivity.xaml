@@ -211,7 +211,7 @@
                             Text="{x:Bind ViewModel.Profile.UserInfo.VerifiedReason,Mode=OneWay}" />
                     </controls:DropShadowPanel>
                 </StackPanel>
-                <controls:DropShadowPanel>
+                <controls:DropShadowPanel HorizontalAlignment="Center">
                     <TextBlock ToolTipService.ToolTip="{x:Bind ViewModel.Profile.UserInfo.Description, Mode=OneWay}"
                                MaxLines="2" TextTrimming="CharacterEllipsis" Padding="4" TextWrapping="Wrap"
                                Text="{x:Bind ViewModel.Profile.UserInfo.Description, Mode=OneWay}" />

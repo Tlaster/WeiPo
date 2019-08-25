@@ -178,6 +178,7 @@
     <Compile Include="Services\Api.cs" />
     <Compile Include="Services\Models\Actionlog.cs" />
     <Compile Include="Services\Models\ButtonModel.cs" />
+    <Compile Include="Services\Models\ConfigModel.cs" />
     <Compile Include="Services\Models\DarwinTag.cs" />
     <Compile Include="Services\Models\FocusPoint.cs" />
     <Compile Include="Services\Models\InterestPeopleModel.cs" />
@@ -197,6 +198,7 @@
     <Compile Include="Services\Models\StatusModel.cs" />
     <Compile Include="Services\Models\TimelineData.cs" />
     <Compile Include="Services\Models\TitleModel.cs" />
+    <Compile Include="Services\Models\UploadPicModel.cs" />
     <Compile Include="Services\Models\Urls.cs" />
     <Compile Include="Services\Models\User.cs" />
     <Compile Include="Services\Models\UserModel.cs" />

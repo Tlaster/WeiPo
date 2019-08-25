@@ -120,7 +120,11 @@ namespace WeiPo.Controls
                                 break;
                             case "article":
                             {
-                                if (info.PageUrl != null) Launcher.LaunchUriAsync(new Uri(info.PageUrl));
+                                if (info.PageUrl != null)
+                                {
+                                    e.Handled = true;
+                                    Launcher.LaunchUriAsync(new Uri(info.PageUrl));
+                                }
                             }
                                 break;
                         }
