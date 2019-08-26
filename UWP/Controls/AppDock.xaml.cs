@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Microsoft.Toolkit.Uwp.UI.Extensions;
 using WeiPo.Common;
 using WeiPo.ViewModels;
 
@@ -17,6 +19,7 @@ namespace WeiPo.Controls
         private bool _isTextBoxFocused;
         private bool _keepDockExpanded = true;
         private bool _isComposing = false;
+        private int _imageCount = 0;
 
         public AppDock()
         {
@@ -48,9 +51,29 @@ namespace WeiPo.Controls
             {
                 if (args is bool booArgs)
                 {
+                    StopComposing();
                     Visibility = booArgs ? Visibility.Visible : Visibility.Collapsed;
+                    ToggleImageTeachingTip();
                 }
             });
+            Singleton<MessagingCenter>.Instance.Subscribe("post_weibo_complete", (sender, args) =>
+            {
+                StopComposing();
+            });
+            Singleton<MessagingCenter>.Instance.Subscribe("dock_image_count_changed", (sender, args) =>
+            {
+                if (args is int intArgs)
+                {
+                    _imageCount = intArgs;
+                    ToggleImageTeachingTip();
+                    ToggleHeader();
+                }
+            });
+        }
+
+        private void ToggleImageTeachingTip()
+        {
+            ImageTeachTip.IsOpen = _imageCount > 0 && Visibility == Visibility.Visible;
         }
 
         public bool IsHeaderOpened { get; private set; } = true;
@@ -63,6 +86,7 @@ namespace WeiPo.Controls
             if (_prevVisibility == Visibility.Collapsed)
             {
                 Visibility = Visibility.Visible;
+                HeaderShadows.Opacity = Visibility == Visibility.Visible ? 1f: 0f;
             }
             FullBackground.Visibility = Visibility.Visible;
             ToggleHeader();
@@ -73,6 +97,7 @@ namespace WeiPo.Controls
             _isComposing = false;
             ToggleHeader();
             Visibility = _prevVisibility;
+            HeaderShadows.Opacity = Visibility == Visibility.Visible ? 1f: 0f;
             FullBackground.Visibility = Visibility.Collapsed;
             Singleton<MessagingCenter>.Instance.Send(this, "clear_dock_compose");
         }
@@ -91,7 +116,7 @@ namespace WeiPo.Controls
 
         private void ToggleHeader()
         {
-            if (_keepDockExpanded || _isPointerOverHeader || _isTextBoxFocused || _isComposing)
+            if (_keepDockExpanded || _isPointerOverHeader || _isTextBoxFocused || _isComposing || _imageCount > 0)
                 ExpandHeader();
             else
                 CloseHeader();
@@ -129,6 +154,25 @@ namespace WeiPo.Controls
         private void FullBackground_Tapped(object sender, TappedRoutedEventArgs e)
         {
             StopComposing();
+        }
+
+        private void TeachGridLoaded(object sender, RoutedEventArgs e)
+        {
+            //trick to hide close button from image picker flyout
+            if (sender is FrameworkElement element)
+            {
+                var button = element.FindAscendant<Button>();
+                if (button != null)
+                {
+                    button.Visibility = Visibility.Collapsed;
+                }
+            }
+        }
+
+        private void RemoveImageClicked(object sender, RoutedEventArgs e)
+        {
+            var file = (sender as FrameworkElement)?.DataContext as StorageFile;
+            (DataContext as DockViewModel)?.PostWeiboViewModel.Files.Remove(file);
         }
     }
 }

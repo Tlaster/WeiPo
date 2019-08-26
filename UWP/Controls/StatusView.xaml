@@ -35,7 +35,7 @@
             </controls1:ItemsRepeater.Layout>
             <controls1:ItemsRepeater.ItemTemplate>
                 <DataTemplate x:DataType="models:Pic">
-                    <controls:ImageEx IsCacheEnabled="True" DataContext="{x:Bind}" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="UniformToFill" Source="{x:Bind Url}"/>
+                    <controls:ImageEx IsCacheEnabled="True" DataContext="{x:Bind Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="UniformToFill" Source="{x:Bind Url, Mode=OneWay}"/>
                 </DataTemplate>
             </controls1:ItemsRepeater.ItemTemplate>
         </controls1:ItemsRepeater>
@@ -56,31 +56,6 @@
                 </Grid>
             </StackPanel>
         </local:AspectRatioView>
-        <!--<ContentControl Content="{x:Bind Status.PageInfo, Mode=OneWay}">
-            <ContentControl.ContentTemplateSelector>
-                <local:PageInfoDataTemplateSelector>
-                    <local:PageInfoDataTemplateSelector.DataTemplate>
-                        <DataTemplate x:DataType="models:PageInfo">
-                            <local:AspectRatioView 
-                                extensions:Mouse.Cursor="Hand" WidthRequest="16" HeightRequest="9" RequestedTheme="Dark">
-                                <controls:ImageEx Stretch="UniformToFill" CornerRadius="{StaticResource CardCorner}" Source="{x:Bind PagePic.Url, Mode=OneWay}"/>
-                                <Border CornerRadius="{StaticResource CardCorner}" Background="#aa000000"/>
-                                <TextBlock Margin="8" Text="{x:Bind PageTitle, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                                <StackPanel Margin="8" VerticalAlignment="Bottom" Orientation="Vertical">
-                                    <TextBlock TextTrimming="CharacterEllipsis" Visibility="{x:Bind common:XamlHelper.IsNonNullToVisibility(Title)}" Text="{x:Bind Title, Mode=OneWay}"/>
-                                    <TextBlock TextTrimming="CharacterEllipsis" Visibility="{x:Bind common:XamlHelper.IsNullToVisibility(Title)}" Text="{x:Bind Content1, Mode=OneWay}"/>
-                                    <TextBlock TextTrimming="CharacterEllipsis" FontSize="10" Text="{x:Bind Content2, Mode=OneWay}"/>
-                                    <Grid Visibility="{x:Bind common:XamlHelper.IsNonNullToVisibility(Title)}">
-                                        <TextBlock HorizontalAlignment="Left" TextTrimming="CharacterEllipsis" FontSize="10" Text="{x:Bind system:String.Format('{0} 次观看', PlayCount), Mode=OneWay}"/>
-                                        <TextBlock HorizontalAlignment="Right" TextTrimming="CharacterEllipsis" FontSize="10" Text="{x:Bind local:StatusViewXamlHelper.SecondToTime(MediaInfo.Duration), Mode=OneWay}"/>
-                                    </Grid>
-                                </StackPanel>
-                            </local:AspectRatioView>
-                        </DataTemplate>
-                    </local:PageInfoDataTemplateSelector.DataTemplate>
-                </local:PageInfoDataTemplateSelector>
-            </ContentControl.ContentTemplateSelector>
-        </ContentControl>-->
         <ContentControl DataContext="{x:Bind Status.RetweetedStatus, Mode=OneWay}" Content="{x:Bind Status.RetweetedStatus, Mode=OneWay}">
             <ContentControl.ContentTemplateSelector>
                 <common:NonNullDataTemplateSelector>

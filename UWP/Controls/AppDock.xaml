@@ -67,10 +67,19 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <local:StatusView Grid.Row="0" Grid.Column="1" 
-                              ShowActions="False"
-                              Visibility="{x:Bind common:XamlHelper.IsNonNullToVisibility(DataContext.(viewModels:DockViewModel.PostWeiboViewModel).StatusModel), Mode=OneWay}"
-                              Status="{x:Bind DataContext.(viewModels:DockViewModel.PostWeiboViewModel).StatusModel, Mode=OneWay}"/>
+            <ContentControl Grid.Row="0" Grid.Column="1" Content="{x:Bind ((viewModels:DockViewModel)DataContext).PostWeiboViewModel.StatusModel, Mode=OneWay}"
+                            DataContext="{x:Bind ((viewModels:DockViewModel)DataContext).PostWeiboViewModel.StatusModel, Mode=OneWay}">
+                <ContentControl.ContentTemplateSelector>
+                    <common:NonNullDataTemplateSelector>
+                        <common:NonNullDataTemplateSelector.DataTemplate>
+                            <DataTemplate x:DataType="models:StatusModel">
+                                <local:StatusView ShowActions="False"
+                                                  Status="{x:Bind}"/>
+                            </DataTemplate>
+                        </common:NonNullDataTemplateSelector.DataTemplate>
+                    </common:NonNullDataTemplateSelector>
+                </ContentControl.ContentTemplateSelector>
+            </ContentControl>
             <controls:ImageEx Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Width="{StaticResource AvatarNormalSize}"
                                Margin="8,8,0,8"
                                Source="{x:Bind DataContext.(viewModels:DockViewModel.MyProfile).Result.UserInfo.ProfileImageUrl, Mode=OneWay}"
@@ -114,31 +123,39 @@
                         <TextBlock Text="Send"/>
                     </StackPanel>
                 </Button>
-                <controls1:TeachingTip Grid.ColumnSpan="3" 
+                <controls1:TeachingTip Grid.ColumnSpan="3"
                                        Target="{x:Bind PickImageButton}"
-                                       IsOpen="{x:Bind common:XamlHelper.IsIntNonEqual(DataContext.(viewModels:DockViewModel.PostWeiboViewModel).Files.Count, 0), Mode=OneWay}"
+                                       x:Name="ImageTeachTip"
                                        PreferredPlacement="Bottom">
+                    <controls1:TeachingTip.ActionButtonContent>
+                        <Grid Loaded="TeachGridLoaded"></Grid>
+                    </controls1:TeachingTip.ActionButtonContent>
+                    <controls1:TeachingTip.CloseButtonContent>
+                        <Grid Loaded="TeachGridLoaded"></Grid>
+                    </controls1:TeachingTip.CloseButtonContent>
                     <controls1:TeachingTip.Content>
-                        <controls1:ItemsRepeater MaxWidth="400" ItemsSource="{x:Bind DataContext.(viewModels:DockViewModel.PostWeiboViewModel).Files, Mode=OneWay}">
-                            <controls1:ItemsRepeater.Layout>
-                                <common:NineGridLayout/>
-                            </controls1:ItemsRepeater.Layout>
-                            <controls1:ItemsRepeater.ItemTemplate>
+                        <GridView SelectionMode="None" AllowDrop="True" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Width="240" ReorderMode="Enabled" CanReorderItems="True" ItemsSource="{x:Bind DataContext.(viewModels:DockViewModel.PostWeiboViewModel).Files, Mode=OneWay}">
+                            <GridView.ItemTemplate>
                                 <DataTemplate x:DataType="storage:StorageFile">
-                                    <controls:ImageEx IsCacheEnabled="True" DataContext="{x:Bind}" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="UniformToFill" Source="{x:Bind Path}"/>
+                                    <Grid DataContext="{x:Bind}">
+                                        <local:StorageItemImage Width="75" Height="75" ThumbnailMode="DocumentsView" HorizontalAlignment="Center" VerticalAlignment="Center" StorageItem="{x:Bind}"/>
+                                        <Button HorizontalAlignment="Right" VerticalAlignment="Top" Style="{ThemeResource DateTimePickerFlyoutButtonStyle}" Click="RemoveImageClicked">
+                                            <SymbolIcon Symbol="Cancel"/>
+                                        </Button>
+                                    </Grid>
                                 </DataTemplate>
-                            </controls1:ItemsRepeater.ItemTemplate>
-                        </controls1:ItemsRepeater>
+                            </GridView.ItemTemplate>
+                        </GridView>
                     </controls1:TeachingTip.Content>
                 </controls1:TeachingTip>
-                <!--<animations:Implicit.ShowAnimations>
+                <animations:Implicit.ShowAnimations>
                     <animations:OpacityAnimation From="0" To="1" Duration="0:0:0.3" />
                     <animations:TranslationAnimation From="0, 20, 0" To="0" Duration="0:0:0.3" />
                 </animations:Implicit.ShowAnimations>
                 <animations:Implicit.HideAnimations>
                     <animations:OpacityAnimation To="0" From="1" Duration="0:0:0.2" />
                     <animations:TranslationAnimation To="0, 20, 0" From="0" Duration="0:0:0.2" />
-                </animations:Implicit.HideAnimations>-->
+                </animations:Implicit.HideAnimations>
             </Grid>
         </Grid>
 

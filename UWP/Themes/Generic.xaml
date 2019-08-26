@@ -4,7 +4,8 @@
     xmlns:local="using:WeiPo"
     xmlns:html="using:WeiPo.Controls.Html"
     xmlns:controls="using:WeiPo.Controls"
-    xmlns:controls1="using:Microsoft.UI.Xaml.Controls">
+    xmlns:controls1="using:Microsoft.UI.Xaml.Controls"
+    xmlns:controls2="using:Microsoft.Toolkit.Uwp.UI.Controls">
 
     <Style TargetType="html:HtmlTextBlock">
         <Setter Property="Template">
@@ -39,6 +40,21 @@
                                                          TabFocusNavigation="{TemplateBinding TabFocusNavigation}"/>
                             </ScrollViewer>
                         </controls1:RefreshContainer>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="controls:StorageItemImage">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:StorageItemImage">
+                    <Border
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+                        <Image Width="{TemplateBinding Width}" Stretch="UniformToFill" Height="{TemplateBinding Height}" Name="StorageItemImage_Image" />
                     </Border>
                 </ControlTemplate>
             </Setter.Value>

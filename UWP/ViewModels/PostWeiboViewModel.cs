@@ -58,6 +58,7 @@ namespace WeiPo.ViewModels
 
         public PostWeiboViewModel()
         {
+            Files.CollectionChanged += FilesOnCollectionChanged;
             Singleton<MessagingCenter>.Instance.Subscribe("clear_dock_compose", (sender, args) => ToCreateState());
             Singleton<MessagingCenter>.Instance.Subscribe("status_share", (sender, args) =>
             {
@@ -75,6 +76,11 @@ namespace WeiPo.ViewModels
             });
         }
 
+        private void FilesOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            Singleton<MessagingCenter>.Instance.Send(this, "dock_image_count_changed", Files.Count);
+        }
+
         public async Task PickImages()
         {
             var picker = new FileOpenPicker();
@@ -83,8 +89,12 @@ namespace WeiPo.ViewModels
             picker.FileTypeFilter.Add(".png");
             picker.FileTypeFilter.Add(".gif");
             var files = await picker.PickMultipleFilesAsync();
+            var images = Files.Concat(files).Take(MaxImageFileCount).ToList();
             Files.Clear();
-            foreach (var item in Files.Concat(files).Take(MaxImageFileCount)) Files.Add(item);
+            foreach (var item in images)
+            {
+                Files.Add(item);
+            }
         }
         
         public void ToCreateState()
@@ -115,7 +125,7 @@ namespace WeiPo.ViewModels
             PostType = PostType.Repost;
             StatusModel = model.RetweetedStatus ?? model;
             MaxImageFileCount = 1;
-            Content = model.RetweetedStatus == null ? string.Empty : model.RawText;
+            Content = model.RetweetedStatus == null ? string.Empty : $"//@{model.User.ScreenName}:{model.RawText}";
             MaxLength = 140;
             Files.Clear();
         }
@@ -159,6 +169,8 @@ namespace WeiPo.ViewModels
                 //TODO: notify send error
                 Debug.WriteLine($"Send error: {result.Data}");
             }
+
+            Singleton<MessagingCenter>.Instance.Send(this, "post_weibo_complete", result);
         }
     }
 }

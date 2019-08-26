@@ -3,7 +3,6 @@ using System.Runtime.CompilerServices;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
-using PropertyChanged;
 using WeiPo.Services.Models;
 using WeiPo.ViewModels.User.Tab;
 

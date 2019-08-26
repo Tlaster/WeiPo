@@ -39,7 +39,8 @@ namespace WeiPo
                     },
                     NullValueHandling = NullValueHandling.Ignore,
                 };
-                settings.JsonSerializer = new NewtonsoftJsonSerializer(jsonSettings);
+                
+                settings.JsonSerializer = new WeiboJsonSerializer(jsonSettings);
             });
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 

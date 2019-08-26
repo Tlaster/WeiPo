@@ -42,13 +42,13 @@ namespace WeiPo.Activities
         protected override void OnResume()
         {
             base.OnResume();
-            Singleton<MessagingCenter>.Instance.Send(this, "dock_visible", true);
+            //Singleton<MessagingCenter>.Instance.Send(this, "dock_visible", true);
         }
 
         protected override void OnPause()
         {
             base.OnPause();
-            Singleton<MessagingCenter>.Instance.Send(this, "dock_visible", false);
+            //Singleton<MessagingCenter>.Instance.Send(this, "dock_visible", false);
         }
 
         protected override void OnLoaded(object sender, RoutedEventArgs routedEventArgs)

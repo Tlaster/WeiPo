@@ -49,6 +49,13 @@ namespace WeiPo
             SystemNavigationManager.GetForCurrentView().BackRequested += OnBackRequested;
             
             Init();
+            RootContainer.Navigated += RootContainerOnNavigated;
+        }
+
+        private void RootContainerOnNavigated(object sender, EventArgs e)
+        {
+            Singleton<MessagingCenter>.Instance.Send(this, "dock_visible",
+                RootContainer.CurrentActivity is TimelineActivity);
         }
 
         private void OnBackRequested(object sender, BackRequestedEventArgs e)
