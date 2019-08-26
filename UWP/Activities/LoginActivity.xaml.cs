@@ -39,7 +39,7 @@ namespace WeiPo.Activities
             if (cookieCollection != null && cookieCollection.Any(it => it.Name == "MLOGIN" && it.Value == "1"))
             {
                 Singleton<Storage>.Instance.Save("usercookie", cookieCollection.ToDictionary(it => it.Name, it => it.Value).ToJson());
-                StartActivity<TimelineActivity>();
+                Singleton<MessagingCenter>.Instance.Send(this, "login_completed");
                 Finish();
             }
         }

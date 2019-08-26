@@ -18,7 +18,7 @@
     <Grid>
         <controls2:ListViewEx x:Name="TimelineListView" ItemsSource="{x:Bind DataContext.(viewModels:TimelineViewModel.Timeline), Mode=OneWay}">
             <controls2:ListViewEx.Layout>
-                <common:StaggeredLayout VerticalOffset="{Binding ElementName=HeaderContainer, Path=ActualHeight}" DesiredColumnWidth="400" Padding="0,24,0,0" />
+                <common:StaggeredLayout VerticalOffset="96" DesiredColumnWidth="400" Padding="0,24,0,0" />
             </controls2:ListViewEx.Layout>
             <controls2:ListViewEx.ItemTemplate>
                 <DataTemplate x:DataType="models:StatusModel">
@@ -26,78 +26,5 @@
                 </DataTemplate>
             </controls2:ListViewEx.ItemTemplate>
         </controls2:ListViewEx>
-        <controls1:DropShadowPanel
-            Name="HeaderContainer"
-            HorizontalAlignment="Stretch"
-            HorizontalContentAlignment="Stretch"
-            VerticalAlignment="Top"
-            BlurRadius="20"
-            Grid.Row="0"
-            Margin="16"
-            MaxWidth="600"
-            ShadowOpacity="0"
-            Color="Black">
-            <Grid Name="Header"
-                  PointerEntered="UIElement_OnPointerEntered" PointerExited="UIElement_OnPointerExited"
-                  Background="{ThemeResource SystemControlAcrylicElementBrush}"
-                  CornerRadius="{StaticResource CardCorner}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <controls1:ImageEx Grid.Row="0" VerticalAlignment="Center" Width="{StaticResource AvatarNormalSize}"
-                                   Margin="8,8,0,8"
-                                   Tapped="{x:Bind ((viewModels:TimelineViewModel)DataContext).ToMyProfile}"
-                                   Height="{StaticResource AvatarNormalSize}" CornerRadius="999" Source="{x:Bind DataContext.(viewModels:TimelineViewModel.MyProfile).Result.UserInfo.ProfileImageUrl, Mode=OneWay}" />
-                <TextBox GotFocus="UIElement_OnGotFocus" LostFocus="UIElement_OnLostFocus" Margin="8" Grid.Row="0"
-                         AcceptsReturn="True" VerticalContentAlignment="Center" Grid.Column="1"
-                         HorizontalAlignment="Stretch" PlaceholderText="Say sth..." />
-                <Grid Visibility="{x:Bind IsHeaderOpened, Mode=OneWay}" Name="HeaderMoreContent" Grid.Row="1" Grid.Column="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.Resources>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="Padding" Value="4,0,0,0"/>
-                        </Style>
-                    </Grid.Resources>
-                    <Button Margin="8,0,0,8">
-                        <StackPanel Orientation="Horizontal">
-                            <SymbolIcon Symbol="Emoji"/>
-                            <TextBlock Text="Emoji"/>
-                        </StackPanel>
-                    </Button>
-                    <Button Grid.Column="1" Margin="8,0,0,8">
-                        <StackPanel Orientation="Horizontal">
-                            <SymbolIcon Symbol="Pictures"/>
-                            <TextBlock Text="Image"/>
-                        </StackPanel>
-                    </Button>
-                    <Button Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="8,0,8,8">
-                        <StackPanel Orientation="Horizontal">
-                            <SymbolIcon Symbol="Send"/>
-                            <TextBlock Text="Send"/>
-                        </StackPanel>
-                    </Button>
-
-                    
-                    <!--<animations:Implicit.ShowAnimations>
-                        <animations:OpacityAnimation From="0" To="1" Duration="0:0:0.3" />
-                        <animations:TranslationAnimation From="0, 20, 0" To="0" Duration="0:0:0.3" />
-                    </animations:Implicit.ShowAnimations>
-                    <animations:Implicit.HideAnimations>
-                        <animations:OpacityAnimation To="0" From="1" Duration="0:0:0.2" />
-                        <animations:TranslationAnimation To="0, 20, 0" From="0" Duration="0:0:0.2" />
-                    </animations:Implicit.HideAnimations>-->
-                </Grid>
-                
-            </Grid>
-        </controls1:DropShadowPanel>
     </Grid>
 </paging:Activity>

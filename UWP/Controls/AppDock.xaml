@@ -1,0 +1,156 @@
+﻿<UserControl
+    x:Class="WeiPo.Controls.AppDock"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WeiPo.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:viewModels="using:WeiPo.ViewModels"
+    xmlns:extensions="using:Microsoft.Toolkit.Uwp.UI.Extensions"
+    xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
+    xmlns:controls1="using:Microsoft.UI.Xaml.Controls"
+    xmlns:common="using:WeiPo.Common"
+    xmlns:models="using:WeiPo.Services.Models"
+    xmlns:storage="using:Windows.Storage"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+    <UserControl.DataContext>
+        <viewModels:DockViewModel/>
+    </UserControl.DataContext>
+    <Grid>
+        <Border Background="{ThemeResource SystemControlChromeMediumLowAcrylicElementMediumBrush}" x:Name="FullBackground" Tapped="FullBackground_Tapped" Visibility="Collapsed">
+            <animations:Implicit.ShowAnimations>
+                <animations:OpacityAnimation From="0" To="1" Duration="0:0:0.3" />
+            </animations:Implicit.ShowAnimations>
+            <animations:Implicit.HideAnimations>
+                <animations:OpacityAnimation To="0" From="1" Duration="0:0:0.2" />
+            </animations:Implicit.HideAnimations>
+        </Border>
+        <Grid Opacity="0" Name="HeaderShadows">
+            <Grid.OpacityTransition>
+                <ScalarTransition/>
+            </Grid.OpacityTransition>
+            <controls:DropShadowPanel
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Stretch"
+                VerticalAlignment="Top"
+                BlurRadius="20"
+                Grid.Row="0"
+                Width="{Binding ElementName=Header, Path=(extensions:FrameworkElementExtensions.ActualWidth), Mode=OneWay}"
+                Height="{Binding ElementName=Header, Path=(extensions:FrameworkElementExtensions.ActualHeight), Mode=OneWay}"
+                Margin="16"
+                MaxWidth="600"
+                ShadowOpacity="0.6"
+                Color="Black">
+                <Border 
+                    Width="{Binding ElementName=Header, Path=(extensions:FrameworkElementExtensions.ActualWidth), Mode=OneWay}"
+                    Height="{Binding ElementName=Header, Path=(extensions:FrameworkElementExtensions.ActualHeight), Mode=OneWay}"/>
+            </controls:DropShadowPanel>
+        </Grid>
+        <Grid Name="Header"
+              extensions:FrameworkElementExtensions.EnableActualSizeBinding="True"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Top"
+              Margin="16"
+              MaxWidth="600"
+              PointerEntered="UIElement_OnPointerEntered" PointerExited="UIElement_OnPointerExited"
+              Background="{ThemeResource SystemControlAcrylicElementBrush}"
+              CornerRadius="{StaticResource CardCorner}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <local:StatusView Grid.Row="0" Grid.Column="1" 
+                              ShowActions="False"
+                              Visibility="{x:Bind common:XamlHelper.IsNonNullToVisibility(DataContext.(viewModels:DockViewModel.PostWeiboViewModel).StatusModel), Mode=OneWay}"
+                              Status="{x:Bind DataContext.(viewModels:DockViewModel.PostWeiboViewModel).StatusModel, Mode=OneWay}"/>
+            <controls:ImageEx Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Width="{StaticResource AvatarNormalSize}"
+                               Margin="8,8,0,8"
+                               Source="{x:Bind DataContext.(viewModels:DockViewModel.MyProfile).Result.UserInfo.ProfileImageUrl, Mode=OneWay}"
+                               Tapped="{x:Bind ((viewModels:DockViewModel)DataContext).ToMyProfile}"
+                               Height="{StaticResource AvatarNormalSize}" CornerRadius="999" />
+            <TextBox GotFocus="UIElement_OnGotFocus" LostFocus="UIElement_OnLostFocus" Margin="8" Grid.Row="1"
+                     AcceptsReturn="True" VerticalContentAlignment="Center" Grid.Column="1" TextWrapping="Wrap"                                          
+                     Text="{x:Bind DataContext.(viewModels:DockViewModel.PostWeiboViewModel).Content, Mode=TwoWay}"
+                     IsEnabled="{x:Bind DataContext.(viewModels:DockViewModel.PostWeiboViewModel).IsNotSending, Mode=OneWay}"
+                     HorizontalAlignment="Stretch" PlaceholderText="Say sth..." />
+            <Grid Visibility="{x:Bind IsHeaderOpened, Mode=OneWay}" Name="HeaderMoreContent" Grid.Row="2" Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.Resources>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Padding" Value="4,0,0,0"/>
+                    </Style>
+                </Grid.Resources>
+                <Button Margin="8,0,0,8" IsEnabled="{x:Bind DataContext.(viewModels:DockViewModel.PostWeiboViewModel).IsNotSending, Mode=OneWay}">
+                    <StackPanel Orientation="Horizontal" >
+                        <SymbolIcon Symbol="Emoji"/>
+                        <TextBlock Text="Emoji"/>
+                    </StackPanel>
+                </Button>
+                <Button Click="{x:Bind ((viewModels:DockViewModel)DataContext).PostWeiboViewModel.PickImages}"
+                        Grid.Column="1" Margin="8,0,0,8" Name="PickImageButton" 
+                        IsEnabled="{x:Bind DataContext.(viewModels:DockViewModel.PostWeiboViewModel).IsNotSending, Mode=OneWay}">
+                    <StackPanel Orientation="Horizontal">
+                        <SymbolIcon Symbol="Pictures"/>
+                        <TextBlock Text="Image"/>
+                    </StackPanel>
+                </Button>
+                <Button Click="{x:Bind ((viewModels:DockViewModel)DataContext).PostWeiboViewModel.Commit}" 
+                        IsEnabled="{x:Bind DataContext.(viewModels:DockViewModel.PostWeiboViewModel).IsNotSending, Mode=OneWay}" 
+                        Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="8,0,8,8">
+                    <StackPanel Orientation="Horizontal">
+                        <SymbolIcon Symbol="Send"/>
+                        <TextBlock Text="Send"/>
+                    </StackPanel>
+                </Button>
+                <controls1:TeachingTip Grid.ColumnSpan="3" 
+                                       Target="{x:Bind PickImageButton}"
+                                       IsOpen="{x:Bind common:XamlHelper.IsIntNonEqual(DataContext.(viewModels:DockViewModel.PostWeiboViewModel).Files.Count, 0), Mode=OneWay}"
+                                       PreferredPlacement="Bottom">
+                    <controls1:TeachingTip.Content>
+                        <controls1:ItemsRepeater MaxWidth="400" ItemsSource="{x:Bind DataContext.(viewModels:DockViewModel.PostWeiboViewModel).Files, Mode=OneWay}">
+                            <controls1:ItemsRepeater.Layout>
+                                <common:NineGridLayout/>
+                            </controls1:ItemsRepeater.Layout>
+                            <controls1:ItemsRepeater.ItemTemplate>
+                                <DataTemplate x:DataType="storage:StorageFile">
+                                    <controls:ImageEx IsCacheEnabled="True" DataContext="{x:Bind}" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="UniformToFill" Source="{x:Bind Path}"/>
+                                </DataTemplate>
+                            </controls1:ItemsRepeater.ItemTemplate>
+                        </controls1:ItemsRepeater>
+                    </controls1:TeachingTip.Content>
+                </controls1:TeachingTip>
+                <!--<animations:Implicit.ShowAnimations>
+                    <animations:OpacityAnimation From="0" To="1" Duration="0:0:0.3" />
+                    <animations:TranslationAnimation From="0, 20, 0" To="0" Duration="0:0:0.3" />
+                </animations:Implicit.ShowAnimations>
+                <animations:Implicit.HideAnimations>
+                    <animations:OpacityAnimation To="0" From="1" Duration="0:0:0.2" />
+                    <animations:TranslationAnimation To="0, 20, 0" From="0" Duration="0:0:0.2" />
+                </animations:Implicit.HideAnimations>-->
+            </Grid>
+        </Grid>
+
+        
+
+    </Grid>
+    <animations:Implicit.ShowAnimations>
+        <animations:OpacityAnimation From="0" To="1" Duration="0:0:0.3" />
+        <animations:TranslationAnimation From="0, -40, 0" To="0" Duration="0:0:0.3" />
+    </animations:Implicit.ShowAnimations>
+    <animations:Implicit.HideAnimations>
+        <animations:OpacityAnimation To="0" From="1" Duration="0:0:0.2" />
+        <animations:TranslationAnimation To="0, -40, 0" From="0" Duration="0:0:0.2" />
+    </animations:Implicit.HideAnimations>
+</UserControl>

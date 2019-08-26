@@ -61,20 +61,14 @@ namespace WeiPo
 
         private void Init()
         {
+            Singleton<MessagingCenter>.Instance.Subscribe("login_completed",
+                (sender, args) => RootContainer.Navigate<TimelineActivity>());
             Singleton<MessagingCenter>.Instance.Subscribe("status_clicked", (sender, args) =>
             {
             });
             Singleton<MessagingCenter>.Instance.Subscribe("user_clicked", (sender, args) =>
             {
                 RootContainer.Navigate(typeof(UserActivity), args);
-            });
-            Singleton<MessagingCenter>.Instance.Subscribe("status_share", (sender, args) =>
-            {
-                
-            });
-            Singleton<MessagingCenter>.Instance.Subscribe("status_comment", (sender, args) =>
-            {
-                
             });
             Singleton<MessagingCenter>.Instance.Subscribe("status_like", (sender, args) =>
             {

@@ -5,6 +5,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:paging="using:Bug10.Paging"
+    xmlns:controls="using:WeiPo.Controls"
+    xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
@@ -26,6 +28,7 @@
             </TransitionCollection>
         </paging:ActivityContainer.ContentTransitions>
     </paging:ActivityContainer>
+    <controls:AppDock Grid.Row="1" Name="AppDock" Visibility="Collapsed"/>
     <Grid Grid.Row="0" Name="TitleBar" VerticalAlignment="Top"
           Background="{ThemeResource SystemControlAccentAcrylicWindowAccentMediumHighBrush}" />
 </Grid>

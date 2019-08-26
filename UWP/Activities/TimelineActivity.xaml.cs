@@ -21,7 +21,7 @@ namespace WeiPo.Activities
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class TimelineActivity : INotifyPropertyChanged
+    public sealed partial class TimelineActivity
     {
         private ScrollViewer _scrollViewer;
 
@@ -39,6 +39,18 @@ namespace WeiPo.Activities
             });
         }
 
+        protected override void OnResume()
+        {
+            base.OnResume();
+            Singleton<MessagingCenter>.Instance.Send(this, "dock_visible", true);
+        }
+
+        protected override void OnPause()
+        {
+            base.OnPause();
+            Singleton<MessagingCenter>.Instance.Send(this, "dock_visible", false);
+        }
+
         protected override void OnLoaded(object sender, RoutedEventArgs routedEventArgs)
         {
             base.OnLoaded(sender, routedEventArgs);
@@ -53,77 +65,14 @@ namespace WeiPo.Activities
         {
             if (!e.IsIntermediate)
             {
-                ToggleHeader();
-                if (_scrollViewer.VerticalOffset < 5d)
-                {
-                    HeaderContainer.ShadowOpacity = 0f;
-                }
-                else
-                {
-                    HeaderContainer.ShadowOpacity = 0.6f;
-                }
+                Singleton<MessagingCenter>.Instance.Send(this, "dock_expand", _scrollViewer.VerticalOffset < 5d);
+                Singleton<MessagingCenter>.Instance.Send(this, "dock_shadow", _scrollViewer.VerticalOffset > 5d);
             }
         }
 
         private void OnCoreTitleBarOnLayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
         {
             //Header.Margin = new Thickness(0, sender.Height, 0, 0);
-        }
-
-        private void UIElement_OnPointerEntered(object sender, PointerRoutedEventArgs e)
-        {
-            _isPointerOverHeader = true;
-            ToggleHeader();
-        }
-
-        private void UIElement_OnPointerExited(object sender, PointerRoutedEventArgs e)
-        {
-            _isPointerOverHeader = false;
-            ToggleHeader();
-        }
-
-        public bool IsHeaderOpened { get; private set; } = true;
-        private bool _isPointerOverHeader = false;
-        private bool _isTextBoxFocused = false;
-        private void ToggleHeader()
-        {
-            if (_scrollViewer.VerticalOffset < 5d || _isPointerOverHeader || _isTextBoxFocused)
-            {
-                ExpandHeader();
-            } 
-            else
-            {
-                CloseHeader();
-            }
-        }
-
-        private void CloseHeader()
-        {
-            IsHeaderOpened = false;
-        }
-
-        private void ExpandHeader()
-        {
-            IsHeaderOpened = true;
-        }
-
-        private void UIElement_OnGotFocus(object sender, RoutedEventArgs e)
-        {
-            _isTextBoxFocused = true;
-            ToggleHeader();
-        }
-
-        private void UIElement_OnLostFocus(object sender, RoutedEventArgs e)
-        {
-            _isTextBoxFocused = false;
-            ToggleHeader();
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

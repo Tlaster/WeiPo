@@ -52,6 +52,16 @@ namespace WeiPo.Common
         {
             return BoolToVisibility(thiz != other);
         }
+        
+        public static bool IsIntEqual(int thiz, int other)
+        {
+            return thiz == other;
+        }
+
+        public static bool IsIntNonEqual(int thiz, int other)
+        {
+            return thiz != other;
+        }
 
         public static bool IsNonEqual(object thiz, object other)
         {

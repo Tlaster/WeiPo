@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
@@ -40,6 +41,7 @@ namespace WeiPo
                 };
                 settings.JsonSerializer = new NewtonsoftJsonSerializer(jsonSettings);
             });
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
             if (!(Window.Current.Content is RootView))
             {

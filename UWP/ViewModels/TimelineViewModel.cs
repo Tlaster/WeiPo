@@ -34,21 +34,5 @@ namespace WeiPo.ViewModels
     {
         public LoadingCollection<TimelineDataSource, StatusModel> Timeline { get; } =
             new LoadingCollection<TimelineDataSource, StatusModel>();
-
-        public NotifyTask<ProfileData> MyProfile { get; } = NotifyTask.Create(LoadMe);
-
-        private static async Task<ProfileData> LoadMe()
-        {
-            var result = await Singleton<Api>.Instance.Me();
-            if (result.Ok == 1) return result.Data;
-
-            return null;
-        }
-
-        public void ToMyProfile()
-        {
-            if (MyProfile.IsCompleted)
-                Singleton<MessagingCenter>.Instance.Send(this, "user_clicked", MyProfile.Result.UserInfo.Id);
-        }
     }
 }
