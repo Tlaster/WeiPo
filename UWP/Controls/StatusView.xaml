@@ -33,7 +33,21 @@
                           SubTitle="{x:Bind local:StatusViewXamlHelper.TimeConverter(Status.CreatedAt), Mode=OneWay}" />
         <html:HtmlTextBlock LinkClicked="{x:Bind OnLinkClicked}"
                             Text="{x:Bind Status.Text, Mode=OneWay}" />
-        <controls1:ItemsRepeater Tapped="{x:Bind ImageListOnTapped}" ItemsSource="{x:Bind Status.Pics, Mode=OneWay}">
+        <ItemsControl Tapped="{x:Bind ImageListOnTapped}" ItemsSource="{x:Bind Status.Pics, Mode=OneWay}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <common:NineGridPanel/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="models:Pic">
+                    <controls:ImageEx IsCacheEnabled="True" 
+                                      HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="UniformToFill"
+                                      Source="{x:Bind Url}" />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <!--<controls1:ItemsRepeater Tapped="{x:Bind ImageListOnTapped}" ItemsSource="{x:Bind Status.Pics, Mode=OneWay}">
             <controls1:ItemsRepeater.Layout>
                 <common:NineGridLayout />
             </controls1:ItemsRepeater.Layout>
@@ -44,7 +58,7 @@
                                       Source="{x:Bind Url, Mode=OneWay}" />
                 </DataTemplate>
             </controls1:ItemsRepeater.ItemTemplate>
-        </controls1:ItemsRepeater>
+        </controls1:ItemsRepeater>-->
         <local:AspectRatioView
             Visibility="{x:Bind local:StatusViewXamlHelper.PageInfoVisibility(Status), Mode=OneWay}"
             DataContext="{x:Bind Status.PageInfo, Mode=OneWay}"
