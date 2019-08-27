@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using Windows.Storage;
 using Windows.UI.Xaml;
@@ -15,11 +14,12 @@ namespace WeiPo.Controls
 {
     public sealed partial class AppDock : INotifyPropertyChanged
     {
+        private int _imageCount;
         private bool _isPointerOverHeader;
         private bool _isTextBoxFocused;
         private bool _keepDockExpanded = true;
-        private bool _isComposing = false;
-        private int _imageCount = 0;
+
+        private Visibility _prevVisibility;
 
         public AppDock()
         {
@@ -32,21 +32,8 @@ namespace WeiPo.Controls
                     ToggleHeader();
                 }
             });
-            Singleton<MessagingCenter>.Instance.Subscribe("status_share", (sender, args) =>
-            {
-                ComposingPost();
-            });
-            Singleton<MessagingCenter>.Instance.Subscribe("status_comment", (sender, args) =>
-            {
-                ComposingPost();
-            });
-            Singleton<MessagingCenter>.Instance.Subscribe("dock_shadow", (sender, args) =>
-            {
-                if (args is bool boolArgs)
-                {
-                    HeaderShadows.Opacity = boolArgs ? 1f: 0f;
-                }
-            });
+            Singleton<MessagingCenter>.Instance.Subscribe("status_share", (sender, args) => StartComposing());
+            Singleton<MessagingCenter>.Instance.Subscribe("status_comment", (sender, args) => StartComposing());
             Singleton<MessagingCenter>.Instance.Subscribe("dock_visible", (sender, args) =>
             {
                 if (args is bool booArgs)
@@ -56,10 +43,8 @@ namespace WeiPo.Controls
                     ToggleImageTeachingTip();
                 }
             });
-            Singleton<MessagingCenter>.Instance.Subscribe("post_weibo_complete", (sender, args) =>
-            {
-                StopComposing();
-            });
+            Singleton<MessagingCenter>.Instance.Subscribe("post_weibo_complete",
+                (sender, args) => StopComposing());
             Singleton<MessagingCenter>.Instance.Subscribe("dock_image_count_changed", (sender, args) =>
             {
                 if (args is int intArgs)
@@ -71,35 +56,36 @@ namespace WeiPo.Controls
             });
         }
 
+        public bool IsComposing { get; private set; }
+
+        public bool IsHeaderOpened { get; private set; } = true;
+
+        public DockViewModel ViewModel => DataContext as DockViewModel;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
         private void ToggleImageTeachingTip()
         {
             ImageTeachTip.IsOpen = _imageCount > 0 && Visibility == Visibility.Visible;
         }
 
-        public bool IsHeaderOpened { get; private set; } = true;
-
-        private Visibility _prevVisibility;
-        private void ComposingPost()
+        public void StartComposing()
         {
-            _isComposing = true;
+            IsComposing = true;
             _prevVisibility = Visibility;
-            if (_prevVisibility == Visibility.Collapsed)
-            {
-                Visibility = Visibility.Visible;
-                HeaderShadows.Opacity = Visibility == Visibility.Visible ? 1f: 0f;
-            }
+            if (_prevVisibility == Visibility.Collapsed) Visibility = Visibility.Visible;
             FullBackground.Visibility = Visibility.Visible;
             ToggleHeader();
         }
 
-        private void StopComposing()
+        public void StopComposing()
         {
-            _isComposing = false;
+            IsComposing = false;
             ToggleHeader();
             Visibility = _prevVisibility;
-            HeaderShadows.Opacity = Visibility == Visibility.Visible ? 1f: 0f;
             FullBackground.Visibility = Visibility.Collapsed;
-            Singleton<MessagingCenter>.Instance.Send(this, "clear_dock_compose");
+            ViewModel.PostWeiboViewModel.ToCreateState();
+            //Singleton<MessagingCenter>.Instance.Send(this, "clear_dock_compose");
         }
 
         private void UIElement_OnPointerEntered(object sender, PointerRoutedEventArgs e)
@@ -116,7 +102,7 @@ namespace WeiPo.Controls
 
         private void ToggleHeader()
         {
-            if (_keepDockExpanded || _isPointerOverHeader || _isTextBoxFocused || _isComposing || _imageCount > 0)
+            if (_keepDockExpanded || _isPointerOverHeader || _isTextBoxFocused || IsComposing || _imageCount > 0)
                 ExpandHeader();
             else
                 CloseHeader();
@@ -144,8 +130,6 @@ namespace WeiPo.Controls
             ToggleHeader();
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -162,17 +146,14 @@ namespace WeiPo.Controls
             if (sender is FrameworkElement element)
             {
                 var button = element.FindAscendant<Button>();
-                if (button != null)
-                {
-                    button.Visibility = Visibility.Collapsed;
-                }
+                if (button != null) button.Visibility = Visibility.Collapsed;
             }
         }
 
         private void RemoveImageClicked(object sender, RoutedEventArgs e)
         {
             var file = (sender as FrameworkElement)?.DataContext as StorageFile;
-            (DataContext as DockViewModel)?.PostWeiboViewModel.Files.Remove(file);
+            ViewModel.PostWeiboViewModel.Files.Remove(file);
         }
     }
 }

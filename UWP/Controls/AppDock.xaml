@@ -28,10 +28,7 @@
                 <animations:OpacityAnimation To="0" From="1" Duration="0:0:0.2" />
             </animations:Implicit.HideAnimations>
         </Border>
-        <Grid Opacity="0" Name="HeaderShadows">
-            <Grid.OpacityTransition>
-                <ScalarTransition/>
-            </Grid.OpacityTransition>
+        <Grid>
             <controls:DropShadowPanel
                 HorizontalAlignment="Stretch"
                 HorizontalContentAlignment="Stretch"
@@ -49,15 +46,17 @@
                     Height="{Binding ElementName=Header, Path=(extensions:FrameworkElementExtensions.ActualHeight), Mode=OneWay}"/>
             </controls:DropShadowPanel>
         </Grid>
-        <Grid Name="Header"
-              extensions:FrameworkElementExtensions.EnableActualSizeBinding="True"
-              HorizontalAlignment="Stretch"
-              VerticalAlignment="Top"
-              Margin="16"
-              MaxWidth="600"
-              PointerEntered="UIElement_OnPointerEntered" PointerExited="UIElement_OnPointerExited"
-              Background="{ThemeResource SystemControlAcrylicElementBrush}"
-              CornerRadius="{StaticResource CardCorner}">
+        <ScrollViewer Name="Header"
+                      extensions:FrameworkElementExtensions.EnableActualSizeBinding="True"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Top"
+                      Margin="16"
+                      MaxWidth="600"
+                      PointerEntered="UIElement_OnPointerEntered" PointerExited="UIElement_OnPointerExited"
+                      Background="{ThemeResource SystemControlAcrylicElementBrush}"
+                      CornerRadius="{StaticResource CardCorner}">
+
+        <Grid >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
@@ -74,13 +73,13 @@
                         <common:NonNullDataTemplateSelector.DataTemplate>
                             <DataTemplate x:DataType="models:StatusModel">
                                 <local:StatusView ShowActions="False"
-                                                  Status="{x:Bind}"/>
+                                                  Status="{x:Bind Mode=OneWay}"/>
                             </DataTemplate>
                         </common:NonNullDataTemplateSelector.DataTemplate>
                     </common:NonNullDataTemplateSelector>
                 </ContentControl.ContentTemplateSelector>
             </ContentControl>
-            <controls:ImageEx Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Width="{StaticResource AvatarNormalSize}"
+            <controls:ImageEx Grid.Row="1" Grid.Column="0" VerticalAlignment="Top" Width="{StaticResource AvatarNormalSize}"
                                Margin="8,8,0,8"
                                Source="{x:Bind DataContext.(viewModels:DockViewModel.MyProfile).Result.UserInfo.ProfileImageUrl, Mode=OneWay}"
                                Tapped="{x:Bind ((viewModels:DockViewModel)DataContext).ToMyProfile}"
@@ -158,6 +157,7 @@
                 </animations:Implicit.HideAnimations>
             </Grid>
         </Grid>
+        </ScrollViewer>
 
         
 

@@ -18,7 +18,7 @@ namespace WeiPo.Services.Models
         public object EnterpriseUid { get; set; }
 
         [JsonProperty("pc_url", NullValueHandling = NullValueHandling.Ignore)]
-        public Uri PcUrl { get; set; }
+        public string PcUrl { get; set; }
 
         [JsonProperty("mapi_url", NullValueHandling = NullValueHandling.Ignore)]
         public string MapiUrl { get; set; }

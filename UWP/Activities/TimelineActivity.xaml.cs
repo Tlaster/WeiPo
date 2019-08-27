@@ -39,18 +39,6 @@ namespace WeiPo.Activities
             });
         }
 
-        protected override void OnResume()
-        {
-            base.OnResume();
-            //Singleton<MessagingCenter>.Instance.Send(this, "dock_visible", true);
-        }
-
-        protected override void OnPause()
-        {
-            base.OnPause();
-            //Singleton<MessagingCenter>.Instance.Send(this, "dock_visible", false);
-        }
-
         protected override void OnLoaded(object sender, RoutedEventArgs routedEventArgs)
         {
             base.OnLoaded(sender, routedEventArgs);
@@ -66,7 +54,6 @@ namespace WeiPo.Activities
             if (!e.IsIntermediate)
             {
                 Singleton<MessagingCenter>.Instance.Send(this, "dock_expand", _scrollViewer.VerticalOffset < 5d);
-                Singleton<MessagingCenter>.Instance.Send(this, "dock_shadow", _scrollViewer.VerticalOffset > 5d);
             }
         }
 

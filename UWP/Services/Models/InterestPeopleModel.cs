@@ -38,7 +38,7 @@ namespace WeiPo.Services.Models
         public string Itemid { get; set; }
 
         [JsonProperty("scheme", NullValueHandling = NullValueHandling.Ignore)]
-        public Uri Scheme { get; set; }
+        public string Scheme { get; set; }
 
         [JsonProperty("background_color", NullValueHandling = NullValueHandling.Ignore)]
         public long? BackgroundColor { get; set; }

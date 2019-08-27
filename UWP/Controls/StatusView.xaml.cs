@@ -61,7 +61,7 @@ namespace WeiPo.Controls
             nameof(ShowActions), typeof(bool), typeof(StatusView), new PropertyMetadata(true));
 
         public static readonly DependencyProperty StatusProperty = DependencyProperty.Register(
-            nameof(Status), typeof(StatusModel), typeof(StatusView), new PropertyMetadata(default(StatusModel)));
+            nameof(Status), typeof(StatusModel), typeof(StatusView), new PropertyMetadata(default));
 
         public StatusView()
         {

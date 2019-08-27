@@ -9,12 +9,12 @@ namespace WeiPo.Services.Models
         public string PicId { get; set; }
 
         [JsonProperty("thumbnail_pic", NullValueHandling = NullValueHandling.Ignore)]
-        public Uri ThumbnailPic { get; set; }
+        public string ThumbnailPic { get; set; }
 
         [JsonProperty("bmiddle_pic", NullValueHandling = NullValueHandling.Ignore)]
-        public Uri BmiddlePic { get; set; }
+        public string BmiddlePic { get; set; }
 
         [JsonProperty("original_pic", NullValueHandling = NullValueHandling.Ignore)]
-        public Uri OriginalPic { get; set; }
+        public string OriginalPic { get; set; }
     }
 }

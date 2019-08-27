@@ -24,9 +24,7 @@ namespace WeiPo.Activities
         protected override void OnCreate(object parameter)
         {
             base.OnCreate(parameter);
-            
-            const string callback = "https://m.weibo.cn/";
-            var requri = new Uri($"https://m.weibo.cn/login?backURL=${callback}");
+            var requri = new Uri($"https://m.weibo.cn/login?backURL=https%253A%252F%252Fm.weibo.cn%252F");
             LoginWebView.NavigationCompleted += LoginWebViewOnNavigationCompleted;
             LoginWebView.Navigate(requri);
         }

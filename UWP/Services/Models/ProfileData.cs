@@ -16,10 +16,10 @@ namespace WeiPo.Services.Models
         public UserInfo UserInfo { get; set; }
 
         [JsonProperty("fans_scheme", NullValueHandling = NullValueHandling.Ignore)]
-        public Uri FansScheme { get; set; }
+        public string FansScheme { get; set; }
 
         [JsonProperty("follow_scheme", NullValueHandling = NullValueHandling.Ignore)]
-        public Uri FollowScheme { get; set; }
+        public string FollowScheme { get; set; }
 
         [JsonProperty("tabsInfo", NullValueHandling = NullValueHandling.Ignore)]
         public TabsInfo TabsInfo { get; set; }
@@ -97,7 +97,7 @@ namespace WeiPo.Services.Models
         public string Title { get; set; }
 
         [JsonProperty("icon", NullValueHandling = NullValueHandling.Ignore)]
-        public Uri Icon { get; set; }
+        public string Icon { get; set; }
 
         [JsonProperty("icon_name", NullValueHandling = NullValueHandling.Ignore)]
         public string IconName { get; set; }
@@ -130,7 +130,7 @@ namespace WeiPo.Services.Models
         public Actionlog Actionlog { get; set; }
 
         [JsonProperty("scheme", NullValueHandling = NullValueHandling.Ignore)]
-        public Uri Scheme { get; set; }
+        public string Scheme { get; set; }
     }
 
 
@@ -161,7 +161,7 @@ namespace WeiPo.Services.Models
         public Actionlog Actionlog { get; set; }
 
         [JsonProperty("scheme", NullValueHandling = NullValueHandling.Ignore)]
-        public Uri Scheme { get; set; }
+        public string Scheme { get; set; }
     }
     
     public partial class MenuListParams

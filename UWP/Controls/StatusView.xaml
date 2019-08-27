@@ -23,47 +23,65 @@
         Padding="8"
         Margin="{x:Bind Margin, Mode=OneWay}"
         DataContext="{x:Bind Status, Mode=OneWay}" Orientation="Vertical">
-        <Grid Visibility="{x:Bind common:XamlHelper.IsNonNullToVisibility(Status.Title), Mode=OneWay}" Margin="0,0,0,8" Padding="0,0,0,8" BorderThickness="0,0,0,1" BorderBrush="Gray">
-            <TextBlock Text="{x:Bind Status.Title.Text, Mode=OneWay}"></TextBlock>
+        <Grid Visibility="{x:Bind common:XamlHelper.IsNonNullToVisibility(Status.Title), Mode=OneWay}"
+              Margin="0,0,0,8" Padding="0,0,0,8" BorderThickness="0,0,0,1" BorderBrush="Gray">
+            <TextBlock Text="{x:Bind Status.Title.Text, Mode=OneWay}" />
         </Grid>
-        <local:PersonCard DataContext="{x:Bind Status.User, Mode=OneWay}" Avatar="{x:Bind Status.User.ProfileImageUrl, Mode=OneWay}" Title="{x:Bind Status.User.ScreenName, Mode=OneWay}" SubTitle="{x:Bind local:StatusViewXamlHelper.TimeConverter(Status.CreatedAt), Mode=OneWay}"/>
+        <local:PersonCard DataContext="{x:Bind Status.User, Mode=OneWay}"
+                          Avatar="{x:Bind Status.User.ProfileImageUrl, Mode=OneWay}"
+                          Title="{x:Bind Status.User.ScreenName, Mode=OneWay}"
+                          SubTitle="{x:Bind local:StatusViewXamlHelper.TimeConverter(Status.CreatedAt), Mode=OneWay}" />
         <html:HtmlTextBlock LinkClicked="{x:Bind OnLinkClicked}"
                             Text="{x:Bind Status.Text, Mode=OneWay}" />
         <controls1:ItemsRepeater Tapped="{x:Bind ImageListOnTapped}" ItemsSource="{x:Bind Status.Pics, Mode=OneWay}">
             <controls1:ItemsRepeater.Layout>
-                <common:NineGridLayout/>
+                <common:NineGridLayout />
             </controls1:ItemsRepeater.Layout>
             <controls1:ItemsRepeater.ItemTemplate>
                 <DataTemplate x:DataType="models:Pic">
-                    <controls:ImageEx IsCacheEnabled="True" DataContext="{x:Bind Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="UniformToFill" Source="{x:Bind Url, Mode=OneWay}"/>
+                    <controls:ImageEx IsCacheEnabled="True" DataContext="{x:Bind Mode=OneWay}"
+                                      HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="UniformToFill"
+                                      Source="{x:Bind Url, Mode=OneWay}" />
                 </DataTemplate>
             </controls1:ItemsRepeater.ItemTemplate>
         </controls1:ItemsRepeater>
-        <local:AspectRatioView 
+        <local:AspectRatioView
             Visibility="{x:Bind local:StatusViewXamlHelper.PageInfoVisibility(Status), Mode=OneWay}"
             DataContext="{x:Bind Status.PageInfo, Mode=OneWay}"
             extensions:Mouse.Cursor="Hand" WidthRequest="16" HeightRequest="9" RequestedTheme="Dark">
-            <controls:ImageEx Stretch="UniformToFill" CornerRadius="{StaticResource CardCorner}" Source="{x:Bind Status.PageInfo.PagePic.Url, Mode=OneWay}"/>
-            <Border CornerRadius="{StaticResource CardCorner}" Background="#aa000000"/>
-            <TextBlock Margin="8" Text="{x:Bind Status.PageInfo.PageTitle, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <controls:ImageEx Stretch="UniformToFill" CornerRadius="{StaticResource CardCorner}"
+                              Source="{x:Bind Status.PageInfo.PagePic.Url, Mode=OneWay}" />
+            <Border CornerRadius="{StaticResource CardCorner}" Background="#aa000000" />
+            <TextBlock Margin="8" Text="{x:Bind Status.PageInfo.PageTitle, Mode=OneWay}" HorizontalAlignment="Left"
+                       VerticalAlignment="Top" />
             <StackPanel Margin="8" VerticalAlignment="Bottom" Orientation="Vertical">
-                <TextBlock TextTrimming="CharacterEllipsis" Visibility="{x:Bind common:XamlHelper.IsNonNullToVisibility(Status.PageInfo.Title), Mode=OneWay}" Text="{x:Bind Status.PageInfo.Title, Mode=OneWay}"/>
-                <TextBlock TextTrimming="CharacterEllipsis" Visibility="{x:Bind common:XamlHelper.IsNullToVisibility(Status.PageInfo.Title), Mode=OneWay}" Text="{x:Bind Status.PageInfo.Content1, Mode=OneWay}"/>
-                <TextBlock TextTrimming="CharacterEllipsis" FontSize="10" Text="{x:Bind Status.PageInfo.Content2, Mode=OneWay}"/>
+                <TextBlock TextTrimming="CharacterEllipsis"
+                           Visibility="{x:Bind common:XamlHelper.IsNonNullToVisibility(Status.PageInfo.Title), Mode=OneWay}"
+                           Text="{x:Bind Status.PageInfo.Title, Mode=OneWay}" />
+                <TextBlock TextTrimming="CharacterEllipsis"
+                           Visibility="{x:Bind common:XamlHelper.IsNullToVisibility(Status.PageInfo.Title), Mode=OneWay}"
+                           Text="{x:Bind Status.PageInfo.Content1, Mode=OneWay}" />
+                <TextBlock TextTrimming="CharacterEllipsis" FontSize="10"
+                           Text="{x:Bind Status.PageInfo.Content2, Mode=OneWay}" />
                 <Grid Visibility="{x:Bind common:XamlHelper.IsNonNullToVisibility(Status.PageInfo.Title), Mode=OneWay}">
-                    <TextBlock HorizontalAlignment="Left" TextTrimming="CharacterEllipsis" FontSize="10" Text="{x:Bind system:String.Format('{0} 次观看', Status.PageInfo.PlayCount), Mode=OneWay}"/>
-                    <TextBlock HorizontalAlignment="Right" TextTrimming="CharacterEllipsis" FontSize="10" Text="{x:Bind local:StatusViewXamlHelper.SecondToTime(Status.PageInfo.MediaInfo.Duration), Mode=OneWay}"/>
+                    <TextBlock HorizontalAlignment="Left" TextTrimming="CharacterEllipsis" FontSize="10"
+                               Text="{x:Bind system:String.Format('{0} 次观看', Status.PageInfo.PlayCount), Mode=OneWay}" />
+                    <TextBlock HorizontalAlignment="Right" TextTrimming="CharacterEllipsis" FontSize="10"
+                               Text="{x:Bind local:StatusViewXamlHelper.SecondToTime(Status.PageInfo.MediaInfo.Duration), Mode=OneWay}" />
                 </Grid>
             </StackPanel>
         </local:AspectRatioView>
-        <ContentControl DataContext="{x:Bind Status.RetweetedStatus, Mode=OneWay}" Content="{x:Bind Status.RetweetedStatus, Mode=OneWay}">
+        <ContentControl DataContext="{x:Bind Status.RetweetedStatus, Mode=OneWay}"
+                        Content="{x:Bind Status.RetweetedStatus, Mode=OneWay}">
             <ContentControl.ContentTemplateSelector>
                 <common:NonNullDataTemplateSelector>
                     <common:NonNullDataTemplateSelector.DataTemplate>
                         <DataTemplate x:DataType="models:StatusModel">
                             <local:StatusView Margin="0, 4, 0, 0" ShowActions="False" Status="{x:Bind Mode=OneWay}">
                                 <local:StatusView.Background>
-                                    <AcrylicBrush BackgroundSource="Backdrop" TintColor="{StaticResource SystemChromeHighColor}" TintOpacity="0.8" FallbackColor="{StaticResource SystemChromeHighColor}" />
+                                    <AcrylicBrush BackgroundSource="Backdrop"
+                                                  TintColor="{StaticResource SystemChromeHighColor}" TintOpacity="0.8"
+                                                  FallbackColor="{StaticResource SystemChromeHighColor}" />
                                 </local:StatusView.Background>
                             </local:StatusView>
                         </DataTemplate>

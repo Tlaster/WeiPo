@@ -60,7 +60,11 @@ namespace WeiPo
 
         private void OnBackRequested(object sender, BackRequestedEventArgs e)
         {
-            if (RootContainer.CanGoBack)
+            if (Dock.IsComposing)
+            {
+                Dock.StopComposing();
+            } 
+            else if (RootContainer.CanGoBack)
             {
                 RootContainer.GoBack();
             }

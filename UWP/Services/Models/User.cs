@@ -13,10 +13,10 @@ namespace WeiPo.Services.Models
         public string ScreenName { get; set; }
 
         [JsonProperty("profile_image_url", NullValueHandling = NullValueHandling.Ignore)]
-        public Uri ProfileImageUrl { get; set; }
+        public string ProfileImageUrl { get; set; }
 
         [JsonProperty("avatar_large", NullValueHandling = NullValueHandling.Ignore)]
-        public Uri AvatarLarge { get; set; }
+        public string AvatarLarge { get; set; }
 
         [JsonProperty("verified", NullValueHandling = NullValueHandling.Ignore)]
         public bool? Verified { get; set; }

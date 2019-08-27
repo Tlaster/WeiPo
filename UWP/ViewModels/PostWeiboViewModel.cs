@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Newtonsoft.Json.Linq;
+using PropertyChanged;
 using WeiPo.Common;
 using WeiPo.Services;
 using WeiPo.Services.Models;
@@ -23,20 +24,24 @@ namespace WeiPo.ViewModels
 
     public class PostWeiboViewModel : ViewModelBase
     {
-        private bool _isSending;
         private StatusModel _statusModel;
 
-        public bool IsSending
+        public PostWeiboViewModel()
         {
-            get => _isSending;
-            private set
+            Files.CollectionChanged += FilesOnCollectionChanged;
+            Singleton<MessagingCenter>.Instance.Subscribe("status_share", (sender, args) =>
             {
-                _isSending = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(IsNotSending));
-            }
+                if (args is StatusModel status) ToRepostState(status);
+            });
+            Singleton<MessagingCenter>.Instance.Subscribe("status_comment", (sender, args) =>
+            {
+                if (args is StatusModel status) ToCommentState(status);
+            });
         }
 
+        public bool IsSending { get; private set; }
+
+        [DependsOn(nameof(IsSending))]
         public bool IsNotSending => !IsSending;
 
         public PostType PostType { get; set; }
@@ -56,26 +61,6 @@ namespace WeiPo.ViewModels
         public int MaxLength { get; set; } = 1000;
         public ObservableCollection<StorageFile> Files { get; } = new ObservableCollection<StorageFile>();
 
-        public PostWeiboViewModel()
-        {
-            Files.CollectionChanged += FilesOnCollectionChanged;
-            Singleton<MessagingCenter>.Instance.Subscribe("clear_dock_compose", (sender, args) => ToCreateState());
-            Singleton<MessagingCenter>.Instance.Subscribe("status_share", (sender, args) =>
-            {
-                if (args is StatusModel status)
-                {
-                    ToRepostState(status);
-                }
-            });
-            Singleton<MessagingCenter>.Instance.Subscribe("status_comment", (sender, args) =>
-            {
-                if (args is StatusModel status)
-                {
-                    ToCommentState(status);
-                }
-            });
-        }
-
         private void FilesOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             Singleton<MessagingCenter>.Instance.Send(this, "dock_image_count_changed", Files.Count);
@@ -91,12 +76,9 @@ namespace WeiPo.ViewModels
             var files = await picker.PickMultipleFilesAsync();
             var images = Files.Concat(files).Take(MaxImageFileCount).ToList();
             Files.Clear();
-            foreach (var item in images)
-            {
-                Files.Add(item);
-            }
+            foreach (var item in images) Files.Add(item);
         }
-        
+
         public void ToCreateState()
         {
             IsSending = false;
@@ -134,10 +116,8 @@ namespace WeiPo.ViewModels
         {
             var textLength = Encoding.GetEncoding("gb2312").GetByteCount(Content) / 2d;
             if (textLength > MaxLength || string.IsNullOrEmpty(Content))
-            {
                 //TODO: notify text out of range
                 return;
-            }
 
             IsSending = true;
             var picids = await Task.WhenAll(Files.Select(async it => await Singleton<Api>.Instance.UploadPic(it)));
@@ -163,12 +143,11 @@ namespace WeiPo.ViewModels
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
             IsSending = false;
             if (result.Ok != 1)
-            {
                 //TODO: notify send error
                 Debug.WriteLine($"Send error: {result.Data}");
-            }
 
             Singleton<MessagingCenter>.Instance.Send(this, "post_weibo_complete", result);
         }
