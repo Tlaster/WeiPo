@@ -60,4 +60,38 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style TargetType="controls:ChipView" >
+        <Setter Property="Background" Value="{ThemeResource SystemControlAcrylicElementBrush}"/>
+        <Setter Property="SymbolContentBackground" Value="{ThemeResource SystemColorHighlightBrush}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:ChipView">
+                    <controls2:DropShadowPanel
+                        BlurRadius="20"
+                        ShadowOpacity="{TemplateBinding ShadowOpacity}"
+                        Color="Black">
+                        <Grid CornerRadius="14" Background="{TemplateBinding Background}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Ellipse HorizontalAlignment="Left" Width="{Binding ElementName=ChipText, Path=ActualHeight}" Height="{Binding ElementName=ChipText, Path=ActualHeight}" Fill="{TemplateBinding SymbolContentBackground}"/>
+                            <Viewbox Width="14" Height="14">
+                                <SymbolIcon Symbol="{TemplateBinding Symbol}" Foreground="{ThemeResource SystemColorHighlightTextBrush}" />
+                            </Viewbox>
+                            <TextBlock Grid.Column="1" Padding="4" x:Name="ChipText" Text="{TemplateBinding Text}"/>
+                            <Button Visibility="{TemplateBinding CloseButtonVisibility}" Name="CloseButton" Grid.Column="2" VerticalAlignment="Stretch" CornerRadius="14" 
+                                    Width="{Binding ElementName=ChipText, Path=ActualHeight}" Style="{ThemeResource DateTimePickerFlyoutButtonStyle}">
+                                <Viewbox Width="10" Height="10">
+                                    <SymbolIcon Symbol="Cancel" />
+                                </Viewbox>
+                            </Button>
+                        </Grid>
+                    </controls2:DropShadowPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

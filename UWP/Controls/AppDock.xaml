@@ -13,14 +13,57 @@
     xmlns:common="using:WeiPo.Common"
     xmlns:models="using:WeiPo.Services.Models"
     xmlns:storage="using:Windows.Storage"
+    xmlns:sys="using:System"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
     <UserControl.DataContext>
         <viewModels:DockViewModel/>
     </UserControl.DataContext>
-    <Grid>
-        <Border Background="{ThemeResource SystemControlChromeMediumLowAcrylicElementMediumBrush}" x:Name="FullBackground" Tapped="FullBackground_Tapped" Visibility="Collapsed">
+    <RelativePanel>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource LargeWindowSnapPoint}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="Header.Margin" Value="16" />
+                        <Setter Target="Header.CornerRadius" Value="{StaticResource CardCorner}" />
+                        <Setter Target="DockShadow.Margin" Value="16" />
+                        <Setter Target="DockShadowContainer.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource MediumWindowSnapPoint}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="Header.Margin" Value="16" />
+                        <Setter Target="Header.CornerRadius" Value="{StaticResource CardCorner}" />
+                        <Setter Target="DockShadow.Margin" Value="16" />
+                        <Setter Target="DockShadowContainer.Visibility" Value="Visible" />
+                        <Setter Target="NotificationContainer.(RelativePanel.Below)" Value="Header" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource MinWindowSnapPoint}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>    
+                        <Setter Target="Header.Margin" Value="0" />
+                        <Setter Target="Header.CornerRadius" Value="0" />
+                        <Setter Target="DockShadow.Margin" Value="0" />
+                        <Setter Target="DockShadowContainer.Visibility" Value="Visible" />
+                        <Setter Target="NotificationContainer.(RelativePanel.Below)" Value="Header" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <Border RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignBottomWithPanel="True"
+                RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"
+                Background="{ThemeResource SystemControlChromeMediumLowAcrylicElementMediumBrush}" x:Name="FullBackground" Tapped="FullBackground_Tapped" Visibility="Collapsed">
             <animations:Implicit.ShowAnimations>
                 <animations:OpacityAnimation From="0" To="1" Duration="0:0:0.3" />
             </animations:Implicit.ShowAnimations>
@@ -28,13 +71,13 @@
                 <animations:OpacityAnimation To="0" From="1" Duration="0:0:0.2" />
             </animations:Implicit.HideAnimations>
         </Border>
-        <Grid>
+        <Grid Name="DockShadowContainer" RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
             <controls:DropShadowPanel
+                x:Name="DockShadow"
                 HorizontalAlignment="Stretch"
                 HorizontalContentAlignment="Stretch"
                 VerticalAlignment="Top"
                 BlurRadius="20"
-                Grid.Row="0"
                 Width="{Binding ElementName=Header, Path=(extensions:FrameworkElementExtensions.ActualWidth), Mode=OneWay}"
                 Height="{Binding ElementName=Header, Path=(extensions:FrameworkElementExtensions.ActualHeight), Mode=OneWay}"
                 Margin="16"
@@ -46,9 +89,79 @@
                     Height="{Binding ElementName=Header, Path=(extensions:FrameworkElementExtensions.ActualHeight), Mode=OneWay}"/>
             </controls:DropShadowPanel>
         </Grid>
+    
+        <StackPanel Margin="12" Orientation="Vertical" x:Name="NotificationContainer" RelativePanel.AlignRightWithPanel="True">
+            <StackPanel.Resources>
+                <Style TargetType="local:ChipView">
+                    <Setter Property="Margin" Value="4"/>
+                    <Setter Property="ShadowOpacity" Value="0.25"/>
+                </Style>
+            </StackPanel.Resources>
+            <local:ChipView Text="{x:Bind sys:String.Format('{0} 条@你的微博', ViewModel.NotificationViewModel.Unread.MentionStatus), Mode=OneWay}"
+                            Visibility="{x:Bind common:XamlHelper.IsLongNonZeroToVisibility(ViewModel.NotificationViewModel.Unread.MentionStatus), Mode=OneWay}"
+                            Symbol="Account">
+                <animations:Implicit.ShowAnimations>
+                    <animations:OpacityAnimation From="0" To="1" Duration="0:0:0.3" />
+                    <animations:TranslationAnimation From="0, -40, 0" To="0" Duration="0:0:0.3" />
+                </animations:Implicit.ShowAnimations>
+                <animations:Implicit.HideAnimations>
+                    <animations:OpacityAnimation To="0" From="1" Duration="0:0:0.2" />
+                    <animations:TranslationAnimation To="0, -40, 0" From="0" Duration="0:0:0.2" />
+                </animations:Implicit.HideAnimations>
+            </local:ChipView>
+            <local:ChipView Text="{x:Bind sys:String.Format('{0} 条@你的评论', ViewModel.NotificationViewModel.Unread.MentionCmt), Mode=OneWay}"
+                            Visibility="{x:Bind common:XamlHelper.IsLongNonZeroToVisibility(ViewModel.NotificationViewModel.Unread.MentionCmt), Mode=OneWay}"
+                            Symbol="Account">
+                <animations:Implicit.ShowAnimations>
+                    <animations:OpacityAnimation From="0" To="1" Duration="0:0:0.3" />
+                    <animations:TranslationAnimation From="0, -40, 0" To="0" Duration="0:0:0.3" />
+                </animations:Implicit.ShowAnimations>
+                <animations:Implicit.HideAnimations>
+                    <animations:OpacityAnimation To="0" From="1" Duration="0:0:0.2" />
+                    <animations:TranslationAnimation To="0, -40, 0" From="0" Duration="0:0:0.2" />
+                </animations:Implicit.HideAnimations>
+            </local:ChipView>
+            <local:ChipView Text="{x:Bind sys:String.Format('{0} 回复你的评论', ViewModel.NotificationViewModel.Unread.Cmt), Mode=OneWay}"
+                            Visibility="{x:Bind common:XamlHelper.IsLongNonZeroToVisibility(ViewModel.NotificationViewModel.Unread.Cmt), Mode=OneWay}"
+                            Symbol="Comment">
+                <animations:Implicit.ShowAnimations>
+                    <animations:OpacityAnimation From="0" To="1" Duration="0:0:0.3" />
+                    <animations:TranslationAnimation From="0, -40, 0" To="0" Duration="0:0:0.3" />
+                </animations:Implicit.ShowAnimations>
+                <animations:Implicit.HideAnimations>
+                    <animations:OpacityAnimation To="0" From="1" Duration="0:0:0.2" />
+                    <animations:TranslationAnimation To="0, -40, 0" From="0" Duration="0:0:0.2" />
+                </animations:Implicit.HideAnimations>
+            </local:ChipView>
+            <local:ChipView Text="{x:Bind sys:String.Format('{0} 位新粉丝', ViewModel.NotificationViewModel.Unread.Follower), Mode=OneWay}"
+                            Visibility="{x:Bind common:XamlHelper.IsLongNonZeroToVisibility(ViewModel.NotificationViewModel.Unread.Follower), Mode=OneWay}"
+                            Symbol="People">
+                <animations:Implicit.ShowAnimations>
+                    <animations:OpacityAnimation From="0" To="1" Duration="0:0:0.3" />
+                    <animations:TranslationAnimation From="0, -40, 0" To="0" Duration="0:0:0.3" />
+                </animations:Implicit.ShowAnimations>
+                <animations:Implicit.HideAnimations>
+                    <animations:OpacityAnimation To="0" From="1" Duration="0:0:0.2" />
+                    <animations:TranslationAnimation To="0, -40, 0" From="0" Duration="0:0:0.2" />
+                </animations:Implicit.HideAnimations>
+            </local:ChipView>
+            <local:ChipView Text="{x:Bind sys:String.Format('{0} 条新私信', ViewModel.NotificationViewModel.Unread.Dm), Mode=OneWay}"
+                            Visibility="{x:Bind common:XamlHelper.IsLongNonZeroToVisibility(ViewModel.NotificationViewModel.Unread.Dm), Mode=OneWay}"
+                            Symbol="Mail">
+                <animations:Implicit.ShowAnimations>
+                    <animations:OpacityAnimation From="0" To="1" Duration="0:0:0.3" />
+                    <animations:TranslationAnimation From="0, -40, 0" To="0" Duration="0:0:0.3" />
+                </animations:Implicit.ShowAnimations>
+                <animations:Implicit.HideAnimations>
+                    <animations:OpacityAnimation To="0" From="1" Duration="0:0:0.2" />
+                    <animations:TranslationAnimation To="0, -40, 0" From="0" Duration="0:0:0.2" />
+                </animations:Implicit.HideAnimations>
+            </local:ChipView>
+        </StackPanel>
         <ScrollViewer Name="Header"
                       VerticalScrollBarVisibility="Auto"
                       extensions:FrameworkElementExtensions.EnableActualSizeBinding="True"
+                      RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"
                       HorizontalAlignment="Stretch"
                       VerticalAlignment="Top"
                       Margin="16"
@@ -162,7 +275,7 @@
                 </Grid>
             </Grid>
         </ScrollViewer>
-    </Grid>
+    </RelativePanel>
     <animations:Implicit.ShowAnimations>
         <animations:OpacityAnimation From="0" To="1" Duration="0:0:0.3" />
         <animations:TranslationAnimation From="0, -40, 0" To="0" Duration="0:0:0.3" />

@@ -145,6 +145,14 @@ namespace WeiPo.Services
             }).ReceiveJson<WeiboResponse<JObject>>();
         }
 
+        public async Task<WeiboResponse<UnreadModel>> Unread()
+        {
+            return await $"{HOST}/api/remind/unread"
+                .WithCookies(GetCookies())
+                .GetAsync()
+                .ReceiveJson<WeiboResponse<UnreadModel>>();
+        }
+
         private Dictionary<string, string> GetCookies()
         {
             return Singleton<Storage>.Instance.Load("usercookie", string.Empty).FromJson<Dictionary<string, string>>();

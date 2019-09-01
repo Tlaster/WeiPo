@@ -57,7 +57,7 @@ namespace WeiPo.Common
         {
             var obj = JsonConvert.DeserializeObject<JToken>(s, this._settings);
             CheckIfError(obj);
-            return obj.ToObject<T>();
+            return obj.ToObject<T>(JsonSerializer.CreateDefault(this._settings));
         }
 
         private static void CheckIfError(JToken obj)
@@ -74,7 +74,7 @@ namespace WeiPo.Common
             using var jsonTextReader = new JsonTextReader(streamReader);
             var obj = JsonSerializer.CreateDefault(this._settings).Deserialize<JToken>(jsonTextReader);
             CheckIfError(obj);
-            return obj.ToObject<T>();
+            return obj.ToObject<T>(JsonSerializer.CreateDefault(this._settings));
         }
     }
 }

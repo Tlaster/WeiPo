@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Numerics;
 using Windows.Foundation;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Controls;
 using WeiPo.ViewModels;
@@ -39,8 +40,7 @@ namespace WeiPo.Activities
             if (sender is ScrollViewer scrollViewer)
             {
                 var position = e.GetPosition(scrollViewer);
-                scrollViewer.ZoomBy(1F, new Vector2(Convert.ToSingle(position.X), Convert.ToSingle(position.Y)),
-                    new ZoomOptions(AnimationMode.Enabled));
+                scrollViewer.ChangeView(null, null, scrollViewer.ZoomFactor + 1, false);
             }
         }
     }
