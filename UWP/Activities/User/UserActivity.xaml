@@ -33,6 +33,12 @@
             <DataTemplate x:Key="headline" x:DataType="models:Tab">
                 <tab:HeadlineTab TabData="{x:Bind}" />
             </DataTemplate>
+            <DataTemplate x:Key="follow" x:DataType="models:Tab">
+                <tab:PeopleList Type="Follow" TabData="{x:Bind}"/>
+            </DataTemplate>
+            <DataTemplate x:Key="fans" x:DataType="models:Tab">
+                <tab:PeopleList Type="Fans" TabData="{x:Bind}"/>
+            </DataTemplate>
         </user:TabPivotDictionary>
     </paging:Activity.Resources>
     <VisualStateManager.VisualStateGroups>
@@ -246,7 +252,7 @@
 
         </Grid>
         <Grid Grid.Row="1" Grid.Column="1">
-            <Pivot Name="ContentPivot" ItemsSource="{x:Bind ViewModel.Profile.TabsInfo.Tabs, Mode=OneWay}">
+            <Pivot Name="ContentPivot" ItemsSource="{x:Bind ViewModel.Tabs, Mode=OneWay}">
                 <Pivot.HeaderTemplate>
                     <DataTemplate x:DataType="models:Tab">
                         <TextBlock Text="{x:Bind Title}" />

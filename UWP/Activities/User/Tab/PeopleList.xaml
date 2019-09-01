@@ -1,0 +1,60 @@
+﻿<UserControl
+    x:Class="WeiPo.Activities.User.Tab.PeopleList"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WeiPo.Activities.User.Tab"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:WeiPo.Controls"
+    xmlns:models="using:WeiPo.Services.Models"
+    xmlns:controls1="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:common="using:WeiPo.Common"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <controls:ListViewEx ItemsSource="{x:Bind ViewModel.Source, Mode=OneWay}">
+        <controls:ListViewEx.Layout>
+            <common:StaggeredLayout DesiredColumnWidth="300" />
+        </controls:ListViewEx.Layout>
+        <controls:ListViewEx.ItemTemplate>
+            <DataTemplate x:DataType="models:UserModel">
+                <Grid Margin="8" Tapped="Grid_Tapped" DataContext="{x:Bind}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Border CornerRadius="{StaticResource CardCorner}" Grid.RowSpan="2" Grid.Row="0" Margin="0,40,0,0" Background="{ThemeResource SystemControlAcrylicElementBrush}"/>
+                    <controls1:ImageEx Grid.Row="0" Stretch="UniformToFill" HorizontalContentAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                                       Source="{x:Bind ProfileImageUrl}" CornerRadius="999"
+                                       Height="{StaticResource AvatarLargeSize}"
+                                       Width="{StaticResource AvatarLargeSize}" />
+                    <StackPanel Grid.Row="1" Padding="8" Orientation="Vertical">
+                        <TextBlock Padding="4" Style="{ThemeResource TitleTextBlockStyle}"
+                                   Text="{x:Bind ScreenName}" />
+                        <StackPanel Visibility="{x:Bind Verified}" Padding="4"
+                                    Orientation="Horizontal">
+                            <Viewbox StretchDirection="Both"
+                                     Height="{Binding ElementName=VerifyTextBlock, Path=ActualHeight}"
+                                     Width="{Binding ElementName=VerifyTextBlock, Path=ActualHeight}">
+                                <Grid>
+                                    <Ellipse Fill="#FFB502"
+                                             Visibility="{x:Bind common:XamlHelper.IsLongEqualToVisibility(VerifiedType, 0)}" />
+                                    <Ellipse Fill="#00A4FF"
+                                             Visibility="{x:Bind common:XamlHelper.IsLongNonEqualToVisibility(VerifiedType, 0)}" />
+                                    <SymbolIcon Margin="4" Symbol="Accept" Foreground="White" />
+                                </Grid>
+                            </Viewbox>
+                            <TextBlock Name="VerifyTextBlock" Margin="4,0,0,0"
+                                       Text="{x:Bind VerifiedReason}" />
+                        </StackPanel>
+                        <TextBlock Padding="4" TextWrapping="Wrap"
+                                   Text="{x:Bind Description}" />
+                    </StackPanel>
+                </Grid>
+            </DataTemplate>
+        </controls:ListViewEx.ItemTemplate>
+    </controls:ListViewEx>
+</UserControl>

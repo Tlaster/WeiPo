@@ -113,7 +113,7 @@ namespace WeiPo.Services
             }).ReceiveJson<WeiboResponse<JObject>>();
         }
         
-        public async Task<WeiboResponse<JObject>> Repost(string content, StatusModel status, string picId = null)
+        public async Task<WeiboResponse<JObject>> Repost(string content, ICanReply status, string picId = null)
         {
             var configResult = await Config();
             return await $"{HOST}/api/statuses/repost"
@@ -129,7 +129,7 @@ namespace WeiPo.Services
             }).ReceiveJson<WeiboResponse<JObject>>();
         }
 
-        public async Task<WeiboResponse<JObject>> Comment(string content, StatusModel status, string picId = null)
+        public async Task<WeiboResponse<JObject>> Comment(string content, ICanReply status, string picId = null)
         {
             var configResult = await Config();
             return await $"{HOST}/api/comments/create"
@@ -148,10 +148,111 @@ namespace WeiPo.Services
         public async Task<WeiboResponse<UnreadModel>> Unread()
         {
             return await $"{HOST}/api/remind/unread"
+                .SetQueryParam("t", DateTimeOffset.UtcNow.ToUnixTimeSeconds())
                 .WithCookies(GetCookies())
                 .GetAsync()
                 .ReceiveJson<WeiboResponse<UnreadModel>>();
         }
+        
+        public async Task<WeiboResponse<List<StatusModel>>> GetMentionsAt(int page)
+        {
+            return await $"{HOST}/message/mentionsAt"
+                .WithCookies(GetCookies())
+                .GetAsync()
+                .ReceiveJson<WeiboResponse<List<StatusModel>>>();
+        }
+        
+        public async Task<WeiboResponse<List<CommentModel>>> GetMentionsCmt(int page)
+        {
+            return await $"{HOST}/message/mentionsCmt"
+                .WithCookies(GetCookies())
+                .GetAsync()
+                .ReceiveJson<WeiboResponse<List<CommentModel>>>();
+        }
+        
+        public async Task<WeiboResponse<List<CommentModel>>> GetComment(int page)
+        {
+            return await $"{HOST}/message/cmt"
+                .WithCookies(GetCookies())
+                .GetAsync()
+                .ReceiveJson<WeiboResponse<List<CommentModel>>>();
+        }
+
+        public async Task<WeiboResponse<List<CommentModel>>> GetMyComment(int page)
+        {
+            return await $"{HOST}/message/myCmt"
+                .WithCookies(GetCookies())
+                .GetAsync()
+                .ReceiveJson<WeiboResponse<List<CommentModel>>>();
+        }
+        
+        public async Task<WeiboResponse<List<MessageListModel>>> GetMessageList(int page)
+        {
+            return await $"{HOST}/message/msglist"
+                .WithCookies(GetCookies())
+                .GetAsync()
+                .ReceiveJson<WeiboResponse<List<MessageListModel>>>();
+        }
+
+        public async Task<WeiboResponse<List<AttitudeModel>>> GetAttitude(int page)
+        {
+            return await $"{HOST}/message/attitude"
+                .WithCookies(GetCookies())
+                .GetAsync()
+                .ReceiveJson<WeiboResponse<List<AttitudeModel>>>();
+        }
+
+        public async Task<WeiboResponse<JObject>> MyFans(int since_id = 0)
+        {
+            return await $"{HOST}/api/container/getIndex"
+                .SetQueryParams(new
+                {
+                    containerid = "231016_-_selffans",
+                    since_id,
+                })
+                .WithCookies(GetCookies())
+                .GetAsync()
+                .ReceiveJson<WeiboResponse<JObject>>();
+        }
+
+        public async Task<WeiboResponse<JObject>> Fans(long uid, int page = 1)
+        {
+            var info = await $"{HOST}/profile/info"
+                .SetQueryParams(new
+                {
+                    uid
+                })
+                .WithCookies(GetCookies())
+                .GetAsync()
+                .ReceiveJson<WeiboResponse<JObject>>();
+            var container = info.Data.Value<string>("fans");
+            container = container.Substring(container.IndexOf('?') + 1);
+            return await $"{HOST}/api/container/getSecond?{container}"
+                .SetQueryParam("page", page)
+                .WithCookies(GetCookies())
+                .GetAsync()
+                .ReceiveJson<WeiboResponse<JObject>>();
+        }
+
+        public async Task<WeiboResponse<JObject>> Follow(long uid, int page = 1)
+        {
+            var info = await $"{HOST}/profile/info"
+                .SetQueryParams(new
+                {
+                    uid
+                })
+                .WithCookies(GetCookies())
+                .GetAsync()
+                .ReceiveJson<WeiboResponse<JObject>>();
+            var container = info.Data.Value<string>("follow");
+            container = container.Substring(container.IndexOf('?') + 1);
+            return await $"{HOST}/api/container/getSecond?{container}"
+                .SetQueryParam("page", page)
+                .WithCookies(GetCookies())
+                .GetAsync()
+                .ReceiveJson<WeiboResponse<JObject>>();
+        }
+
 
         private Dictionary<string, string> GetCookies()
         {

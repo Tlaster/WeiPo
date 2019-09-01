@@ -126,6 +126,9 @@
     <Compile Include="Activities\ImageActivity.xaml.cs">
       <DependentUpon>ImageActivity.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Activities\NotificationActivity.xaml.cs">
+      <DependentUpon>NotificationActivity.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Activities\User\TabPivotItemSelector.cs" />
     <Compile Include="Activities\User\Tab\AbsTab.cs" />
     <Compile Include="Activities\User\Tab\AlbumTab.xaml.cs">
@@ -133,6 +136,9 @@
     </Compile>
     <Compile Include="Activities\User\Tab\HeadlineTab.xaml.cs">
       <DependentUpon>HeadlineTab.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Activities\User\Tab\PeopleList.xaml.cs">
+      <DependentUpon>PeopleList.xaml</DependentUpon>
     </Compile>
     <Compile Include="Activities\User\Tab\ProfileTab.xaml.cs">
       <DependentUpon>ProfileTab.xaml</DependentUpon>
@@ -183,14 +189,23 @@
     </Compile>
     <Compile Include="Services\Api.cs" />
     <Compile Include="Services\Models\Actionlog.cs" />
+    <Compile Include="Services\Models\AttitudeModel.cs" />
     <Compile Include="Services\Models\ButtonModel.cs" />
+    <Compile Include="Services\Models\CommentModel.cs" />
     <Compile Include="Services\Models\ConfigModel.cs" />
     <Compile Include="Services\Models\DarwinTag.cs" />
+    <Compile Include="Services\Models\FilterGroup.cs" />
+    <Compile Include="Services\Models\FilterGroupInfo.cs" />
     <Compile Include="Services\Models\FocusPoint.cs" />
+    <Compile Include="Services\Models\ICanReply.cs" />
     <Compile Include="Services\Models\InterestPeopleModel.cs" />
+    <Compile Include="Services\Models\InterestPropleDescModel.cs" />
     <Compile Include="Services\Models\Large.cs" />
     <Compile Include="Services\Models\LargeGeo.cs" />
     <Compile Include="Services\Models\MediaInfo.cs" />
+    <Compile Include="Services\Models\MenuList.cs" />
+    <Compile Include="Services\Models\MenuListParams.cs" />
+    <Compile Include="Services\Models\MessageListModel.cs" />
     <Compile Include="Services\Models\NumberDisplayStrategy.cs" />
     <Compile Include="Services\Models\PageInfo.cs" />
     <Compile Include="Services\Models\PagePic.cs" />
@@ -202,24 +217,30 @@
     <Compile Include="Services\Models\PicRectangleObject.cs" />
     <Compile Include="Services\Models\ProfileData.cs" />
     <Compile Include="Services\Models\StatusModel.cs" />
+    <Compile Include="Services\Models\Tab.cs" />
+    <Compile Include="Services\Models\TabsInfo.cs" />
     <Compile Include="Services\Models\TimelineData.cs" />
     <Compile Include="Services\Models\TitleModel.cs" />
+    <Compile Include="Services\Models\ToolbarMenu.cs" />
+    <Compile Include="Services\Models\ToolbarMenuParams.cs" />
     <Compile Include="Services\Models\UnreadModel.cs" />
     <Compile Include="Services\Models\Unreadmsg.cs" />
     <Compile Include="Services\Models\UploadPicModel.cs" />
     <Compile Include="Services\Models\Urls.cs" />
-    <Compile Include="Services\Models\User.cs" />
+    <Compile Include="Services\Models\UserInfo.cs" />
     <Compile Include="Services\Models\UserModel.cs" />
     <Compile Include="Services\Models\VideoDetails.cs" />
     <Compile Include="Services\Models\Visible.cs" />
     <Compile Include="Services\Models\WeiboResponse.cs" />
     <Compile Include="ViewModels\DockViewModel.cs" />
     <Compile Include="ViewModels\ImageViewModel.cs" />
+    <Compile Include="ViewModels\NotificationViewModel.cs" />
     <Compile Include="ViewModels\PostWeiboViewModel.cs" />
     <Compile Include="ViewModels\TimelineViewModel.cs" />
     <Compile Include="ViewModels\User\Tab\AbsTabViewModel.cs" />
     <Compile Include="ViewModels\User\Tab\AlbumTabViewModel.cs" />
     <Compile Include="ViewModels\User\Tab\HeadlineTabViewModel.cs" />
+    <Compile Include="ViewModels\User\Tab\PeopleListViewModel.cs" />
     <Compile Include="ViewModels\User\Tab\ProfileTabViewModel.cs" />
     <Compile Include="ViewModels\User\Tab\VideoTabViewModel.cs" />
     <Compile Include="ViewModels\User\Tab\WeiboTabViewModel.cs" />
@@ -257,11 +278,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Activities\NotificationActivity.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Activities\User\Tab\AlbumTab.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\User\Tab\HeadlineTab.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\User\Tab\PeopleList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -354,11 +383,7 @@
       <Version>3.1.3</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Converters\" />
-    <Folder Include="Dialogs\" />
-    <Folder Include="Model\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

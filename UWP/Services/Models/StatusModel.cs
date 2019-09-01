@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace WeiPo.Services.Models
 {
-    public partial class StatusModel
+    public partial class StatusModel : ICanReply
     {
         [JsonProperty("created_at", NullValueHandling = NullValueHandling.Ignore)]
         public string CreatedAt { get; set; }

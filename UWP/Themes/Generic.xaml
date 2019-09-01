@@ -31,7 +31,7 @@
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}">
-                        <controls1:RefreshContainer Name="RefreshContainer">
+                        <RefreshContainer Name="RefreshContainer">
                             <ScrollViewer x:Name="ScrollViewer">
                                 <controls1:ItemsRepeater x:Name="ItemsRepeater"
                                                          ItemsSource="{TemplateBinding ItemsSource}"
@@ -39,7 +39,7 @@
                                                          Layout="{TemplateBinding Layout}"
                                                          TabFocusNavigation="{TemplateBinding TabFocusNavigation}"/>
                             </ScrollViewer>
-                        </controls1:RefreshContainer>
+                        </RefreshContainer>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
@@ -81,7 +81,7 @@
                             <Viewbox Width="14" Height="14">
                                 <SymbolIcon Symbol="{TemplateBinding Symbol}" Foreground="{ThemeResource SystemColorHighlightTextBrush}" />
                             </Viewbox>
-                            <TextBlock Grid.Column="1" Padding="4" x:Name="ChipText" Text="{TemplateBinding Text}"/>
+                            <TextBlock Margin="0,0,4,0" Grid.Column="1" Padding="4" x:Name="ChipText" Text="{TemplateBinding Text}"/>
                             <Button Visibility="{TemplateBinding CloseButtonVisibility}" Name="CloseButton" Grid.Column="2" VerticalAlignment="Stretch" CornerRadius="14" 
                                     Width="{Binding ElementName=ChipText, Path=ActualHeight}" Style="{ThemeResource DateTimePickerFlyoutButtonStyle}">
                                 <Viewbox Width="10" Height="10">

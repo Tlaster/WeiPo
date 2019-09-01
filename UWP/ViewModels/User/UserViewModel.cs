@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
+using PropertyChanged;
 using WeiPo.Common;
 using WeiPo.Services;
 using WeiPo.Services.Models;
@@ -27,7 +29,30 @@ namespace WeiPo.ViewModels.User
         }
 
         public bool IsLoading { get; private set; }
+
         public ProfileData Profile { get; private set; }
+        [DependsOn(nameof(Profile))]
+        public Services.Models.Tab[] Tabs
+        {
+            get
+            {
+                return Profile?.TabsInfo?.Tabs?.Concat(new[]
+                {
+                    new Services.Models.Tab()
+                    {
+                        Title = "Follow",
+                        TabType = "follow",
+                        Containerid = Profile.UserInfo.Id.ToString()
+                    }, 
+                    new Services.Models.Tab()
+                    {
+                        Title = "Fans",
+                        TabType = "fans",
+                        Containerid = Profile.UserInfo.Id.ToString()
+                    }, 
+                }).ToArray();
+            }
+        }
 
         public Action UpdatePivot { get; }
 
