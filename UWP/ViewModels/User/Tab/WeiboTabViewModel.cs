@@ -55,7 +55,8 @@ namespace WeiPo.ViewModels.User.Tab
             var result = await Singleton<Api>.Instance.ProfileTab(_userId, _containerId, _sinceId);
             if (result.Ok == 1)
             {
-                _sinceId = result.Data.SelectToken("cardlistInfo.since_id").Value<long>();
+                _sinceId = result.Data["cardlistInfo"].Value<long>("since_id");
+                //_sinceId = result.Data.SelectToken("cardlistInfo.since_id").Value<long>();
                 var items = result.Data["cards"]
                     .Select(it =>
                     {

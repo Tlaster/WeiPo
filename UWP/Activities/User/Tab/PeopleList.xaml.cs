@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Input;
 using WeiPo.Common;
 using WeiPo.Services.Models;
 using WeiPo.ViewModels.User.Tab;
@@ -11,7 +12,6 @@ namespace WeiPo.Activities.User.Tab
 {
     public sealed partial class PeopleList : INotifyPropertyChanged
     {
-        public PeopleListViewModel ViewModel { get; private set; }
         public enum ListType
         {
             Follow,
@@ -30,6 +30,8 @@ namespace WeiPo.Activities.User.Tab
             InitializeComponent();
         }
 
+        public PeopleListViewModel ViewModel { get; private set; }
+
         public Services.Models.Tab TabData
         {
             get => (Services.Models.Tab) GetValue(TabDataProperty);
@@ -42,6 +44,8 @@ namespace WeiPo.Activities.User.Tab
             set => SetValue(TypeProperty, value);
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         private static void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (e.Property == TabDataProperty) (d as PeopleList).OnTabDataChanged();
@@ -53,19 +57,15 @@ namespace WeiPo.Activities.User.Tab
             ViewModel = new PeopleListViewModel(Type, uid);
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private void Grid_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        private void Grid_Tapped(object sender, TappedRoutedEventArgs e)
         {
             if (sender is FrameworkElement element && element.DataContext is UserModel user)
-            {
                 Singleton<MessagingCenter>.Instance.Send(this, "user_clicked", user);
-            }
         }
     }
 }

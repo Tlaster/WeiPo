@@ -86,18 +86,13 @@
             </StackPanel>
         </local:AspectRatioView>
         <ContentControl DataContext="{x:Bind Status.RetweetedStatus, Mode=OneWay}"
-                        Content="{x:Bind Status.RetweetedStatus, Mode=OneWay}">
+                        Content="{x:Bind Status.RetweetedStatus, Mode=OneWay}"
+                        Visibility="{x:Bind ShowRetweet, Mode=OneWay}">
             <ContentControl.ContentTemplateSelector>
                 <common:NonNullDataTemplateSelector>
                     <common:NonNullDataTemplateSelector.DataTemplate>
                         <DataTemplate x:DataType="models:StatusModel">
-                            <local:StatusView Margin="0, 4, 0, 0" ShowActions="False" Status="{x:Bind Mode=OneWay}">
-                                <local:StatusView.Background>
-                                    <AcrylicBrush BackgroundSource="Backdrop"
-                                                  TintColor="{StaticResource SystemChromeHighColor}" TintOpacity="0.8"
-                                                  FallbackColor="{StaticResource SystemChromeHighColor}" />
-                                </local:StatusView.Background>
-                            </local:StatusView>
+                            <local:StatusView Margin="0, 4, 0, 0" ShowActions="False" Status="{x:Bind Mode=OneWay}" Background="{StaticResource RetweetBackground}"/>
                         </DataTemplate>
                     </common:NonNullDataTemplateSelector.DataTemplate>
                 </common:NonNullDataTemplateSelector>

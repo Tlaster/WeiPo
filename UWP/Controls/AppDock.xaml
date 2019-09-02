@@ -17,9 +17,6 @@
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
-    <UserControl.DataContext>
-        <viewModels:DockViewModel/>
-    </UserControl.DataContext>
     <RelativePanel>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
@@ -183,8 +180,8 @@
                 <Button HorizontalAlignment="Stretch" Margin="8,0,0,8" VerticalAlignment="Stretch" Visibility="{x:Bind IsHeaderOpened, Mode=OneWay}" Grid.Column="0" Grid.Row="2" Style="{ThemeResource DateTimePickerFlyoutButtonStyle}">
                     <SymbolIcon Symbol="Mail" />
                 </Button>
-                <ContentControl Grid.Row="0" Grid.Column="1" Content="{x:Bind ((viewModels:DockViewModel)DataContext).PostWeiboViewModel.StatusModel, Mode=OneWay}"
-                                DataContext="{x:Bind ((viewModels:DockViewModel)DataContext).PostWeiboViewModel.StatusModel, Mode=OneWay}">
+                <ContentControl Grid.Row="0" Grid.Column="1" Content="{x:Bind ViewModel.PostWeiboViewModel.StatusModel, Mode=OneWay}"
+                                DataContext="{x:Bind ViewModel.PostWeiboViewModel.StatusModel, Mode=OneWay}">
                     <ContentControl.ContentTemplateSelector>
                         <common:NonNullDataTemplateSelector>
                             <common:NonNullDataTemplateSelector.DataTemplate>
@@ -198,13 +195,13 @@
                 </ContentControl>
                 <controls:ImageEx Grid.Row="1" Grid.Column="0" VerticalAlignment="Top" Width="{StaticResource AvatarNormalSize}"
                                   Margin="8,8,0,8"
-                                  Source="{x:Bind DataContext.(viewModels:DockViewModel.MyProfile).Result.UserInfo.ProfileImageUrl, Mode=OneWay}"
-                                  Tapped="{x:Bind ((viewModels:DockViewModel)DataContext).ToMyProfile}"
+                                  Source="{x:Bind ViewModel.MyProfile.Result.UserInfo.ProfileImageUrl, Mode=OneWay}"
+                                  Tapped="{x:Bind ViewModel.ToMyProfile}"
                                   Height="{StaticResource AvatarNormalSize}" CornerRadius="999" />
                 <TextBox GotFocus="UIElement_OnGotFocus" LostFocus="UIElement_OnLostFocus" Margin="8" Grid.Row="1"
                          AcceptsReturn="True" VerticalContentAlignment="Center" Grid.Column="1" TextWrapping="Wrap"                                          
-                         Text="{x:Bind DataContext.(viewModels:DockViewModel.PostWeiboViewModel).Content, Mode=TwoWay}"
-                         IsEnabled="{x:Bind DataContext.(viewModels:DockViewModel.PostWeiboViewModel).IsNotSending, Mode=OneWay}"
+                         Text="{x:Bind ViewModel.PostWeiboViewModel.Content, Mode=TwoWay}"
+                         IsEnabled="{x:Bind ViewModel.PostWeiboViewModel.IsNotSending, Mode=OneWay}"
                          HorizontalAlignment="Stretch" PlaceholderText="Say sth..." />
                 <Grid Visibility="{x:Bind IsHeaderOpened, Mode=OneWay}" Name="HeaderMoreContent" Grid.Row="2" Grid.Column="1">
                     <Grid.ColumnDefinitions>
@@ -217,22 +214,22 @@
                             <Setter Property="Padding" Value="4,0,0,0"/>
                         </Style>
                     </Grid.Resources>
-                    <Button Margin="8,0,0,8" IsEnabled="{x:Bind DataContext.(viewModels:DockViewModel.PostWeiboViewModel).IsNotSending, Mode=OneWay}">
+                    <Button Margin="8,0,0,8" IsEnabled="{x:Bind ViewModel.PostWeiboViewModel.IsNotSending, Mode=OneWay}">
                         <StackPanel Orientation="Horizontal" >
                             <SymbolIcon Symbol="Emoji"/>
                             <TextBlock Text="Emoji"/>
                         </StackPanel>
                     </Button>
-                    <Button Click="{x:Bind ((viewModels:DockViewModel)DataContext).PostWeiboViewModel.PickImages}"
+                    <Button Click="{x:Bind ViewModel.PostWeiboViewModel.PickImages}"
                             Grid.Column="1" Margin="8,0,0,8" Name="PickImageButton" 
-                            IsEnabled="{x:Bind DataContext.(viewModels:DockViewModel.PostWeiboViewModel).IsNotSending, Mode=OneWay}">
+                            IsEnabled="{x:Bind ViewModel.PostWeiboViewModel.IsNotSending, Mode=OneWay}">
                         <StackPanel Orientation="Horizontal">
                             <SymbolIcon Symbol="Pictures"/>
                             <TextBlock Text="Image"/>
                         </StackPanel>
                     </Button>
-                    <Button Click="{x:Bind ((viewModels:DockViewModel)DataContext).PostWeiboViewModel.Commit}" 
-                            IsEnabled="{x:Bind DataContext.(viewModels:DockViewModel.PostWeiboViewModel).IsNotSending, Mode=OneWay}" 
+                    <Button Click="{x:Bind ViewModel.PostWeiboViewModel.Commit}" 
+                            IsEnabled="{x:Bind ViewModel.PostWeiboViewModel.IsNotSending, Mode=OneWay}" 
                             Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="8,0,8,8">
                         <StackPanel Orientation="Horizontal">
                             <SymbolIcon Symbol="Send"/>
@@ -250,7 +247,7 @@
                             <Grid Loaded="TeachGridLoaded"></Grid>
                         </controls1:TeachingTip.CloseButtonContent>
                         <controls1:TeachingTip.Content>
-                            <GridView SelectionMode="None" AllowDrop="True" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Width="240" ReorderMode="Enabled" CanReorderItems="True" ItemsSource="{x:Bind DataContext.(viewModels:DockViewModel.PostWeiboViewModel).Files, Mode=OneWay}">
+                            <GridView SelectionMode="None" AllowDrop="True" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Width="240" ReorderMode="Enabled" CanReorderItems="True" ItemsSource="{x:Bind ViewModel.PostWeiboViewModel.Files, Mode=OneWay}">
                                 <GridView.ItemTemplate>
                                     <DataTemplate x:DataType="storage:StorageFile">
                                         <Grid DataContext="{x:Bind}">

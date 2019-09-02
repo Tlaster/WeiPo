@@ -57,6 +57,9 @@ namespace WeiPo.Controls
 
     public sealed partial class StatusView : UserControl
     {
+        public static readonly DependencyProperty ShowRetweetProperty = DependencyProperty.Register(
+            nameof(ShowRetweet), typeof(bool), typeof(StatusView), new PropertyMetadata(true));
+
         public static readonly DependencyProperty ShowActionsProperty = DependencyProperty.Register(
             nameof(ShowActions), typeof(bool), typeof(StatusView), new PropertyMetadata(true));
 
@@ -66,6 +69,12 @@ namespace WeiPo.Controls
         public StatusView()
         {
             InitializeComponent();
+        }
+
+        public bool ShowRetweet
+        {
+            get => (bool) GetValue(ShowRetweetProperty);
+            set => SetValue(ShowRetweetProperty, value);
         }
 
         public bool ShowActions

@@ -8,13 +8,13 @@ namespace WeiPo.ViewModels
 {
     public class DockViewModel : ViewModelBase
     {
-        public DockViewModel()
+        public static DockViewModel Instance { get; } = new DockViewModel();
+        private DockViewModel()
         {
             Singleton<MessagingCenter>.Instance.Subscribe("login_completed",
                 (sender, args) =>
                 {
                     MyProfile = NotifyTask.Create(LoadMe);
-
                 });
         }
 

@@ -81,7 +81,7 @@
                             <Viewbox Width="14" Height="14">
                                 <SymbolIcon Symbol="{TemplateBinding Symbol}" Foreground="{ThemeResource SystemColorHighlightTextBrush}" />
                             </Viewbox>
-                            <TextBlock Margin="0,0,4,0" Grid.Column="1" Padding="4" x:Name="ChipText" Text="{TemplateBinding Text}"/>
+                            <TextBlock VerticalAlignment="Center" Margin="0,0,4,0" Grid.Column="1" Padding="4" x:Name="ChipText" Text="{TemplateBinding Text}"/>
                             <Button Visibility="{TemplateBinding CloseButtonVisibility}" Name="CloseButton" Grid.Column="2" VerticalAlignment="Stretch" CornerRadius="14" 
                                     Width="{Binding ElementName=ChipText, Path=ActualHeight}" Style="{ThemeResource DateTimePickerFlyoutButtonStyle}">
                                 <Viewbox Width="10" Height="10">

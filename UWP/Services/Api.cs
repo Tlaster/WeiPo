@@ -29,7 +29,7 @@ namespace WeiPo.Services
                 {
                     max_id = maxid,
                 })
-                .WithCookies(GetCookies())
+                .WithHeader("Cookie", string.Join(";", GetCookies().Select(it => $"{it.Key}={it.Value}")))
                 .GetAsync(cancellationToken)
                 .ReceiveJson<WeiboResponse<TimelineData>>();
 
@@ -39,7 +39,7 @@ namespace WeiPo.Services
                     type = "uid",
                     value = id,
                 })
-                .WithCookies(GetCookies())
+                .WithHeader("Cookie", string.Join(";", GetCookies().Select(it => $"{it.Key}={it.Value}")))
                 .GetAsync()
                 .ReceiveJson<WeiboResponse<ProfileData>>();
 
@@ -65,7 +65,7 @@ namespace WeiPo.Services
                     containerid = containerid,
                     since_id = since_id,
                 })
-                .WithCookies(GetCookies())
+                .WithHeader("Cookie", string.Join(";", GetCookies().Select(it => $"{it.Key}={it.Value}")))
                 .GetAsync()
                 .ReceiveJson<WeiboResponse<JObject>>();
 
@@ -79,7 +79,7 @@ namespace WeiPo.Services
 
         public async Task<WeiboResponse<ConfigModel>> Config()
         {
-            return await $"{HOST}/api/config".WithCookies(GetCookies()).GetAsync().ReceiveJson<WeiboResponse<ConfigModel>>();
+            return await $"{HOST}/api/config".WithHeader("Cookie", string.Join(";", GetCookies().Select(it => $"{it.Key}={it.Value}"))).GetAsync().ReceiveJson<WeiboResponse<ConfigModel>>();
         }
 
         public async Task<UploadPicModel> UploadPic(StorageFile file)
@@ -149,7 +149,7 @@ namespace WeiPo.Services
         {
             return await $"{HOST}/api/remind/unread"
                 .SetQueryParam("t", DateTimeOffset.UtcNow.ToUnixTimeSeconds())
-                .WithCookies(GetCookies())
+                .WithHeader("Cookie", string.Join(";", GetCookies().Select(it => $"{it.Key}={it.Value}")))
                 .GetAsync()
                 .ReceiveJson<WeiboResponse<UnreadModel>>();
         }
@@ -157,7 +157,7 @@ namespace WeiPo.Services
         public async Task<WeiboResponse<List<StatusModel>>> GetMentionsAt(int page)
         {
             return await $"{HOST}/message/mentionsAt"
-                .WithCookies(GetCookies())
+                .WithHeader("Cookie", string.Join(";", GetCookies().Select(it => $"{it.Key}={it.Value}")))
                 .GetAsync()
                 .ReceiveJson<WeiboResponse<List<StatusModel>>>();
         }
@@ -165,7 +165,7 @@ namespace WeiPo.Services
         public async Task<WeiboResponse<List<CommentModel>>> GetMentionsCmt(int page)
         {
             return await $"{HOST}/message/mentionsCmt"
-                .WithCookies(GetCookies())
+                .WithHeader("Cookie", string.Join(";", GetCookies().Select(it => $"{it.Key}={it.Value}")))
                 .GetAsync()
                 .ReceiveJson<WeiboResponse<List<CommentModel>>>();
         }
@@ -173,7 +173,7 @@ namespace WeiPo.Services
         public async Task<WeiboResponse<List<CommentModel>>> GetComment(int page)
         {
             return await $"{HOST}/message/cmt"
-                .WithCookies(GetCookies())
+                .WithHeader("Cookie", string.Join(";", GetCookies().Select(it => $"{it.Key}={it.Value}")))
                 .GetAsync()
                 .ReceiveJson<WeiboResponse<List<CommentModel>>>();
         }
@@ -181,7 +181,7 @@ namespace WeiPo.Services
         public async Task<WeiboResponse<List<CommentModel>>> GetMyComment(int page)
         {
             return await $"{HOST}/message/myCmt"
-                .WithCookies(GetCookies())
+                .WithHeader("Cookie", string.Join(";", GetCookies().Select(it => $"{it.Key}={it.Value}")))
                 .GetAsync()
                 .ReceiveJson<WeiboResponse<List<CommentModel>>>();
         }
@@ -189,7 +189,7 @@ namespace WeiPo.Services
         public async Task<WeiboResponse<List<MessageListModel>>> GetMessageList(int page)
         {
             return await $"{HOST}/message/msglist"
-                .WithCookies(GetCookies())
+                .WithHeader("Cookie", string.Join(";", GetCookies().Select(it => $"{it.Key}={it.Value}")))
                 .GetAsync()
                 .ReceiveJson<WeiboResponse<List<MessageListModel>>>();
         }
@@ -197,7 +197,7 @@ namespace WeiPo.Services
         public async Task<WeiboResponse<List<AttitudeModel>>> GetAttitude(int page)
         {
             return await $"{HOST}/message/attitude"
-                .WithCookies(GetCookies())
+                .WithHeader("Cookie", string.Join(";", GetCookies().Select(it => $"{it.Key}={it.Value}")))
                 .GetAsync()
                 .ReceiveJson<WeiboResponse<List<AttitudeModel>>>();
         }
@@ -210,7 +210,7 @@ namespace WeiPo.Services
                     containerid = "231016_-_selffans",
                     since_id,
                 })
-                .WithCookies(GetCookies())
+                .WithHeader("Cookie", string.Join(";", GetCookies().Select(it => $"{it.Key}={it.Value}")))
                 .GetAsync()
                 .ReceiveJson<WeiboResponse<JObject>>();
         }
@@ -222,14 +222,14 @@ namespace WeiPo.Services
                 {
                     uid
                 })
-                .WithCookies(GetCookies())
+                .WithHeader("Cookie", string.Join(";", GetCookies().Select(it => $"{it.Key}={it.Value}")))
                 .GetAsync()
                 .ReceiveJson<WeiboResponse<JObject>>();
             var container = info.Data.Value<string>("fans");
             container = container.Substring(container.IndexOf('?') + 1);
             return await $"{HOST}/api/container/getSecond?{container}"
                 .SetQueryParam("page", page)
-                .WithCookies(GetCookies())
+                .WithHeader("Cookie", string.Join(";", GetCookies().Select(it => $"{it.Key}={it.Value}")))
                 .GetAsync()
                 .ReceiveJson<WeiboResponse<JObject>>();
         }
@@ -241,14 +241,14 @@ namespace WeiPo.Services
                 {
                     uid
                 })
-                .WithCookies(GetCookies())
+                .WithHeader("Cookie", string.Join(";", GetCookies().Select(it => $"{it.Key}={it.Value}")))
                 .GetAsync()
                 .ReceiveJson<WeiboResponse<JObject>>();
             var container = info.Data.Value<string>("follow");
             container = container.Substring(container.IndexOf('?') + 1);
             return await $"{HOST}/api/container/getSecond?{container}"
                 .SetQueryParam("page", page)
-                .WithCookies(GetCookies())
+                .WithHeader("Cookie", string.Join(";", GetCookies().Select(it => $"{it.Key}={it.Value}")))
                 .GetAsync()
                 .ReceiveJson<WeiboResponse<JObject>>();
         }

@@ -39,9 +39,11 @@ namespace WeiPo.ViewModels.User.Tab
                 {
                     if (pageIndex == 0)
                     {
-                        //Check if user is me
-                        var uconfig = await Singleton<Api>.Instance.Config();
-                        long.TryParse(uconfig.Data.Uid, out var ucid);
+                        ////Check if user is me
+                        //var uconfig = await Singleton<Api>.Instance.Config();
+                        //long.TryParse(uconfig.Data.Uid, out var ucid);
+                        //TODO:Not a good idea
+                        var ucid = DockViewModel.Instance.MyProfile.Result.UserInfo.Id;
                         if (ucid == _uid)
                             //clear notification
                             await Singleton<Api>.Instance.MyFans();

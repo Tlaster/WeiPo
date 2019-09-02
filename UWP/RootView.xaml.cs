@@ -25,6 +25,7 @@ using WeiPo.Activities;
 using WeiPo.Activities.User;
 using WeiPo.Common;
 using WeiPo.Controls;
+using WeiPo.ViewModels;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -60,11 +61,7 @@ namespace WeiPo
 
         private void OnBackRequested(object sender, BackRequestedEventArgs e)
         {
-            if (Dock.IsComposing)
-            {
-                Dock.StopComposing();
-            } 
-            else if (RootContainer.CanGoBack)
+            if (!Dock.OnBackPress() && RootContainer.CanGoBack)
             {
                 RootContainer.GoBack();
             }

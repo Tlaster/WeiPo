@@ -24,6 +24,7 @@ namespace WeiPo.Controls
         public AppDock()
         {
             InitializeComponent();
+            DataContext = DockViewModel.Instance;
             Singleton<MessagingCenter>.Instance.Subscribe("dock_expand", (sender, args) =>
             {
                 if (args is bool boolArgs)
@@ -60,13 +61,24 @@ namespace WeiPo.Controls
 
         public bool IsHeaderOpened { get; private set; } = true;
 
-        public DockViewModel ViewModel => DataContext as DockViewModel;
+        public DockViewModel ViewModel => DockViewModel.Instance;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void ToggleImageTeachingTip()
         {
             ImageTeachTip.IsOpen = _imageCount > 0 && Visibility == Visibility.Visible;
+        }
+
+        public bool OnBackPress()
+        {
+            if (IsComposing)
+            {
+                StopComposing();
+                return true;
+            }
+
+            return false;
         }
 
         public void StartComposing()

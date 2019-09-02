@@ -129,6 +129,9 @@
     <Compile Include="Activities\NotificationActivity.xaml.cs">
       <DependentUpon>NotificationActivity.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Activities\StatusActivity.xaml.cs">
+      <DependentUpon>StatusActivity.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Activities\User\TabPivotItemSelector.cs" />
     <Compile Include="Activities\User\Tab\AbsTab.cs" />
     <Compile Include="Activities\User\Tab\AlbumTab.xaml.cs">
@@ -173,8 +176,14 @@
     </Compile>
     <Compile Include="Controls\AspectRatioView.cs" />
     <Compile Include="Controls\ChipView.cs" />
+    <Compile Include="Controls\CommentView.xaml.cs">
+      <DependentUpon>CommentView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Html\HtmlTextBlock.cs" />
     <Compile Include="Controls\ListViewEx.cs" />
+    <Compile Include="Controls\NotificationDockView.xaml.cs">
+      <DependentUpon>NotificationDockView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\PersonCard.xaml.cs">
       <DependentUpon>PersonCard.xaml</DependentUpon>
     </Compile>
@@ -191,12 +200,14 @@
     <Compile Include="Services\Models\Actionlog.cs" />
     <Compile Include="Services\Models\AttitudeModel.cs" />
     <Compile Include="Services\Models\ButtonModel.cs" />
+    <Compile Include="Services\Models\CommentBadge.cs" />
     <Compile Include="Services\Models\CommentModel.cs" />
     <Compile Include="Services\Models\ConfigModel.cs" />
     <Compile Include="Services\Models\DarwinTag.cs" />
     <Compile Include="Services\Models\FilterGroup.cs" />
     <Compile Include="Services\Models\FilterGroupInfo.cs" />
     <Compile Include="Services\Models\FocusPoint.cs" />
+    <Compile Include="Services\Models\Geo.cs" />
     <Compile Include="Services\Models\ICanReply.cs" />
     <Compile Include="Services\Models\InterestPeopleModel.cs" />
     <Compile Include="Services\Models\InterestPropleDescModel.cs" />
@@ -234,6 +245,7 @@
     <Compile Include="Services\Models\WeiboResponse.cs" />
     <Compile Include="ViewModels\DockViewModel.cs" />
     <Compile Include="ViewModels\ImageViewModel.cs" />
+    <Compile Include="ViewModels\NavigationDockViewModel.cs" />
     <Compile Include="ViewModels\NotificationViewModel.cs" />
     <Compile Include="ViewModels\PostWeiboViewModel.cs" />
     <Compile Include="ViewModels\TimelineViewModel.cs" />
@@ -282,6 +294,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Activities\StatusActivity.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Activities\User\Tab\AlbumTab.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -315,6 +331,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\AppDock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\CommentView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\NotificationDockView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
