@@ -11,7 +11,6 @@ using WeiPo.Common;
 using WeiPo.Common.Collection;
 using WeiPo.Services;
 using WeiPo.Services.Models;
-
 namespace WeiPo.ViewModels.User.Tab
 {
     public class InterestPeopleViewModel
@@ -50,30 +49,29 @@ namespace WeiPo.ViewModels.User.Tab
         public async Task<IEnumerable<object>> GetPagedItemsAsync(int pageIndex, int pageSize,
             CancellationToken cancellationToken = new CancellationToken())
         {
+            if (pageIndex != 0 && _sinceId == 0)
+            {
+                return new List<object>();
+            }
             if (pageIndex == 0) _sinceId = 0;
 
             var result = await Singleton<Api>.Instance.ProfileTab(_userId, _containerId, _sinceId);
-            if (result.Ok == 1)
-            {
-                _sinceId = result.Data["cardlistInfo"].Value<long>("since_id");
-                //_sinceId = result.Data.SelectToken("cardlistInfo.since_id").Value<long>();
-                var items = result.Data["cards"]
-                    .Select(it =>
-                    {
-                        if (!(it is JObject obj)) return null;
-                        if (obj.ContainsKey("mblog")) return obj["mblog"].ToObject<StatusModel>() as object;
+            _sinceId = result["cardlistInfo"].Value<long>("since_id");
+            //_sinceId = result.Data.SelectToken("cardlistInfo.since_id").Value<long>();
+            return result["cards"]
+                .Select(it =>
+                {
+                    if (!(it is JObject obj)) return null;
+                    if (obj.ContainsKey("mblog")) return obj["mblog"].ToObject<StatusModel>() as object;
 
-                        if (obj.ContainsKey("itemid") && obj.Value<string>("itemid") == "INTEREST_PEOPLE")
-                            return new InterestPeopleViewModel(obj["card_group"].Skip(1)
-                                .Select(card => card.ToObject<InterestPeopleModel>()).ToList(), obj["card_group"].FirstOrDefault()?.ToObject<InterestPropleDescModel>()) as object;
+                    if (obj.ContainsKey("itemid") && obj.Value<string>("itemid") == "INTEREST_PEOPLE")
+                        return new InterestPeopleViewModel(obj["card_group"].Skip(1)
+                                .Select(card => card.ToObject<InterestPeopleModel>()).ToList(),
+                            obj["card_group"].FirstOrDefault()?.ToObject<InterestPropleDescModel>()) as object;
 
-                        return null;
-                    })
-                    .Where(it => it != null);
-                return items;
-            }
-
-            return new List<StatusModel>();
+                    return null;
+                })
+                .Where(it => it != null);
         }
     }
 

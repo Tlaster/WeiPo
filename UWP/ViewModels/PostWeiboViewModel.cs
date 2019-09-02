@@ -12,7 +12,6 @@ using PropertyChanged;
 using WeiPo.Common;
 using WeiPo.Services;
 using WeiPo.Services.Models;
-
 namespace WeiPo.ViewModels
 {
     public enum PostType
@@ -121,7 +120,7 @@ namespace WeiPo.ViewModels
 
             IsSending = true;
             var picids = await Task.WhenAll(Files.Select(async it => await Singleton<Api>.Instance.UploadPic(it)));
-            WeiboResponse<JObject> result;
+            JObject result;
             switch (PostType)
             {
                 case PostType.Create:
@@ -145,10 +144,6 @@ namespace WeiPo.ViewModels
             }
 
             IsSending = false;
-            if (result.Ok != 1)
-                //TODO: notify send error
-                Debug.WriteLine($"Send error: {result.Data}");
-
             Singleton<MessagingCenter>.Instance.Send(this, "post_weibo_complete", result);
         }
     }

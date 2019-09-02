@@ -7,7 +7,6 @@ using WeiPo.Common;
 using WeiPo.Common.Collection;
 using WeiPo.Services;
 using WeiPo.Services.Models;
-
 namespace WeiPo.ViewModels
 {
     public class TimelineDataSource : IIncrementalSource<StatusModel>
@@ -19,14 +18,9 @@ namespace WeiPo.ViewModels
         {
             if (pageIndex == 0) _maxId = 0;
             var result = await Singleton<Api>.Instance.Timeline(_maxId, cancellationToken);
-            if (result.Ok == 1)
-            {
-                var list = result.Data.Statuses;
-                _maxId = result.Data.MaxId;
-                return list;
-            }
-
-            return new List<StatusModel>();
+            var list = result.Statuses;
+            _maxId = result.MaxId;
+            return list;
         }
     }
 

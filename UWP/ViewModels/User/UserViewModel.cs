@@ -71,18 +71,17 @@ namespace WeiPo.ViewModels.User
 
             IsLoading = true;
             var id = await Singleton<Api>.Instance.UserId(name);
-            await InitProfile(id);
+            if (id != null)
+            {
+                await InitProfile(id.Value);
+            }
             IsLoading = false;
         }
 
         private async Task InitProfile(long id)
         {
-            var response = await Singleton<Api>.Instance.Profile(id);
-            if (response.Ok == 1)
-            {
-                Profile = response.Data;
-                UpdatePivot.Invoke();
-            }
+            Profile = await Singleton<Api>.Instance.Profile(id);
+            UpdatePivot.Invoke();
         }
     }
 }

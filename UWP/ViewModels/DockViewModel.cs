@@ -3,7 +3,6 @@ using Nito.Mvvm;
 using WeiPo.Common;
 using WeiPo.Services;
 using WeiPo.Services.Models;
-
 namespace WeiPo.ViewModels
 {
     public class DockViewModel : ViewModelBase
@@ -24,7 +23,7 @@ namespace WeiPo.ViewModels
 
         public void ToMyProfile()
         {
-            if (MyProfile.IsCompleted)
+            if (MyProfile.IsCompleted && MyProfile.Result != null)
             {
                 Singleton<MessagingCenter>.Instance.Send(this, "user_clicked", MyProfile.Result.UserInfo.Id);
             }
@@ -32,9 +31,7 @@ namespace WeiPo.ViewModels
 
         private async Task<ProfileData> LoadMe()
         {
-            var result = await Singleton<Api>.Instance.Me();
-            if (result.Ok == 1) return result.Data;
-            return null;
+            return await Singleton<Api>.Instance.Me();
         }
     }
 }

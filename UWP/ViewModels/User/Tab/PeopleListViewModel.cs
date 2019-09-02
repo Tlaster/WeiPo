@@ -31,7 +31,7 @@ namespace WeiPo.ViewModels.User.Tab
                 case PeopleList.ListType.Follow:
                 {
                     var result = await Singleton<Api>.Instance.Follow(_uid, pageIndex + 1);
-                    var items = result.Data["cards"].Select(it => it["user"].ToObject<UserModel>()).ToList();
+                    var items = result["cards"].Select(it => it["user"].ToObject<UserModel>()).ToList();
                     return items;
                 }
                     break;
@@ -50,7 +50,7 @@ namespace WeiPo.ViewModels.User.Tab
                     }
 
                     var result = await Singleton<Api>.Instance.Fans(_uid, pageIndex + 1);
-                    var items = result.Data["cards"].Select(it => it["user"].ToObject<UserModel>()).ToList();
+                    var items = result["cards"].Select(it => it["user"].ToObject<UserModel>()).ToList();
                     return items;
                 }
                     break;

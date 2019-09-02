@@ -48,7 +48,7 @@ namespace WeiPo.ViewModels
         {
             Debug.WriteLine("fetching notification...");
             var result = await Singleton<Api>.Instance.Unread();
-            await DispatcherHelper.ExecuteOnUIThreadAsync(() => Unread = result.Data);
+            await DispatcherHelper.ExecuteOnUIThreadAsync(() => Unread = result);
             Debug.WriteLine("fetching complete!");
         }
     }
