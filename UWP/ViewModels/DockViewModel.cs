@@ -18,7 +18,6 @@ namespace WeiPo.ViewModels
         }
 
         public PostWeiboViewModel PostWeiboViewModel { get; } = new PostWeiboViewModel();
-        public NotificationViewModel NotificationViewModel { get; } = new NotificationViewModel();
         public NotifyTask<ProfileData> MyProfile { get; private set; }
 
         public void ToMyProfile()

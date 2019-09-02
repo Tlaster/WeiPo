@@ -10,12 +10,13 @@ namespace WeiPo.ViewModels
 {
     public class NotificationViewModel : ViewModelBase
     {
+        public static NotificationViewModel Instance { get; } = new NotificationViewModel();
         private int _duration = 60 * 1000;
         private bool _isLoginCompleted = false;
         private Task _task;
         public UnreadModel Unread { get; set; }
 
-        public NotificationViewModel()
+        private NotificationViewModel()
         {
             Singleton<MessagingCenter>.Instance.Subscribe("login_completed", delegate
             {

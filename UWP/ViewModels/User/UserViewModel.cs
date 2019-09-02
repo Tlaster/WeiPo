@@ -71,10 +71,7 @@ namespace WeiPo.ViewModels.User
 
             IsLoading = true;
             var id = await Singleton<Api>.Instance.UserId(name);
-            if (id != null)
-            {
-                await InitProfile(id.Value);
-            }
+            await InitProfile(id);
             IsLoading = false;
         }
 

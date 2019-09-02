@@ -18,7 +18,7 @@
     <Grid>
         <controls2:ListViewEx x:Name="TimelineListView" ItemsSource="{x:Bind DataContext.(viewModels:TimelineViewModel.Timeline), Mode=OneWay}">
             <controls2:ListViewEx.Layout>
-                <common:StaggeredLayout VerticalOffset="96" DesiredColumnWidth="400" Padding="0,24,0,0" />
+                <common:StaggeredLayout VerticalOffset="120" DesiredColumnWidth="400" />
             </controls2:ListViewEx.Layout>
             <controls2:ListViewEx.ItemTemplate>
                 <DataTemplate x:DataType="models:StatusModel">
