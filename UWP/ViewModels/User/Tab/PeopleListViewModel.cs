@@ -45,8 +45,11 @@ namespace WeiPo.ViewModels.User.Tab
                         //TODO:Not a good idea
                         var ucid = DockViewModel.Instance.MyProfile.Result.UserInfo.Id;
                         if (ucid == _uid)
+                        {
                             //clear notification
                             await Singleton<Api>.Instance.MyFans();
+                            Singleton<MessagingCenter>.Instance.Send(this, "notification_clear_fans");
+                        }
                     }
 
                     var result = await Singleton<Api>.Instance.Fans(_uid, pageIndex + 1);

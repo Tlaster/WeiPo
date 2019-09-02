@@ -43,6 +43,14 @@ namespace WeiPo.ViewModels
                     }
                 });
             });
+            Singleton<MessagingCenter>.Instance.Subscribe("notification_clear_fans", delegate
+            {
+                DispatcherHelper.ExecuteOnUIThreadAsync(() =>
+                {
+                    Unread.Follower = 0;
+                    OnPropertyChanged(nameof(Unread));
+                });
+            });
         }
 
         private async Task FetchUnread()

@@ -165,6 +165,9 @@
     <Compile Include="Common\StringExtensions.cs" />
     <Compile Include="Common\NineGridLayout.cs" />
     <Compile Include="Common\XamlHelper.cs" />
+    <Compile Include="Controls\AccountMessagingCenterDock.xaml.cs">
+      <DependentUpon>AccountMessagingCenterDock.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\AppDock.xaml.cs">
       <DependentUpon>AppDock.xaml</DependentUpon>
     </Compile>
@@ -321,6 +324,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\VideoActivity.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\AccountMessagingCenterDock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
