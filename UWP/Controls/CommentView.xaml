@@ -63,7 +63,7 @@
             <Grid.Resources>
                 <Style TargetType="Button" BasedOn="{StaticResource DateTimePickerFlyoutButtonStyle}">
                     <Setter Property="Margin" Value="0,8,0,0" />
-                    <Setter Property="HorizontalAlignment" Value="Center" />
+                    <Setter Property="HorizontalAlignment" Value="Stretch" />
                 </Style>
             </Grid.Resources>
             <Grid.ColumnDefinitions>
