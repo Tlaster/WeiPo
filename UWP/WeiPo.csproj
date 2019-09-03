@@ -157,6 +157,7 @@
     </Compile>
     <Compile Include="Common\Collection\LoadingCollection.cs" />
     <Compile Include="Common\MessagingCenter.cs" />
+    <Compile Include="Common\StatusCommentDataTemplateSelector.cs" />
     <Compile Include="Common\WeiboJsonSerializer.cs" />
     <Compile Include="Common\Singleton.cs" />
     <Compile Include="Common\StaggeredLayout.cs" />
@@ -240,6 +241,7 @@
     <Compile Include="Services\Models\VideoDetails.cs" />
     <Compile Include="Services\Models\Visible.cs" />
     <Compile Include="Services\Models\WeiboResponse.cs" />
+    <Compile Include="ViewModels\AccountMessagingCenterDockViewModel.cs" />
     <Compile Include="ViewModels\DockViewModel.cs" />
     <Compile Include="ViewModels\ImageViewModel.cs" />
     <Compile Include="ViewModels\NavigationDockViewModel.cs" />

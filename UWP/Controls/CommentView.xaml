@@ -11,6 +11,7 @@
     xmlns:models="using:WeiPo.Services.Models"
     xmlns:controls1="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
+    Margin="4"
     Background="{ThemeResource SystemControlAcrylicElementBrush}"
     d:DesignHeight="300"
     d:DesignWidth="400">
@@ -27,7 +28,7 @@
                           SubTitle="{x:Bind local:StatusViewXamlHelper.TimeConverter(Comment.CreatedAt), Mode=OneWay}"/>
         <html:HtmlTextBlock Text="{x:Bind Comment.Text, Mode=OneWay}"
                             LinkClicked="HtmlTextBlock_LinkClicked"/>
-        <local:AspectRatioView WidthRequest="1" HeightRequest="1" Visibility="{x:Bind common:XamlHelper.IsNonNullToVisibility(Comment.Pic.Url), Mode=OneWay}">
+        <local:AspectRatioView WidthRequest="1" HeightRequest="1" Visibility="{x:Bind local:CommentViewXamlHelper.PicVisibility(Comment), Mode=OneWay}">
             <controls1:ImageEx Source="{x:Bind Comment.Pic.Url, Mode=OneWay}"/>
         </local:AspectRatioView>
         <Grid Background="{StaticResource RetweetBackground}" CornerRadius="{StaticResource CardCorner}" Margin="40,0,0,0">
@@ -57,7 +58,7 @@
                 </ContentControl.ContentTemplateSelector>
             </ContentControl>
         </Grid>
-        <local:StatusView Margin="0, 4, 0, 0" ShowActions="False" Status="{x:Bind Comment.Status}" ShowRetweet="False" Background="{StaticResource RetweetBackground}"/>
+        <local:StatusView Margin="0, 4, 0, 0" ShowActions="False" Status="{x:Bind Comment.Status, Mode=OneWay}" ShowRetweet="False" Background="{StaticResource RetweetBackground}"/>
         <Grid Visibility="{x:Bind ShowActions, Mode=OneWay}">
             <Grid.Resources>
                 <Style TargetType="Button" BasedOn="{StaticResource DateTimePickerFlyoutButtonStyle}">

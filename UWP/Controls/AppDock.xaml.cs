@@ -167,5 +167,11 @@ namespace WeiPo.Controls
             var file = (sender as FrameworkElement)?.DataContext as StorageFile;
             ViewModel.PostWeiboViewModel.Files.Remove(file);
         }
+
+        private void NotificationClick(object sender, RoutedEventArgs e)
+        {
+            Singleton<MessagingCenter>.Instance.Send(this, "message_center_visible", true);
+            Singleton<MessagingCenter>.Instance.Send(this, "dock_visible", false);
+        }
     }
 }

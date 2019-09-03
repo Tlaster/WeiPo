@@ -106,7 +106,9 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <Button HorizontalAlignment="Stretch" Margin="8,0,0,8" VerticalAlignment="Stretch" Visibility="{x:Bind IsHeaderOpened, Mode=OneWay}" Grid.Column="0" Grid.Row="2" Style="{ThemeResource DateTimePickerFlyoutButtonStyle}">
+                <Button HorizontalAlignment="Stretch" Margin="8,0,0,8" VerticalAlignment="Stretch" 
+                        Click="NotificationClick"
+                        Visibility="{x:Bind IsHeaderOpened, Mode=OneWay}" Grid.Column="0" Grid.Row="2" Style="{ThemeResource DateTimePickerFlyoutButtonStyle}">
                     <SymbolIcon Symbol="Mail" />
                 </Button>
                 <ContentControl Grid.Row="0" Grid.Column="1" Content="{x:Bind ViewModel.PostWeiboViewModel.StatusModel, Mode=OneWay}"

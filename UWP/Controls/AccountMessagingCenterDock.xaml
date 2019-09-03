@@ -5,11 +5,66 @@
     xmlns:local="using:WeiPo.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Microsoft.UI.Xaml.Controls"
+    xmlns:viewModels="using:WeiPo.ViewModels"
+    xmlns:common="using:WeiPo.Common"
+    xmlns:models="using:WeiPo.Services.Models"
+    xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
 
     <Grid>
-
+        <Border Background="Transparent" x:Name="DockBackground" Tapped="DockBackground_Tapped"/>
+        <Grid MaxWidth="600" HorizontalAlignment="Right" >
+            <controls:NavigationView IsSettingsVisible="False" IsBackButtonVisible="Collapsed"
+                                     Background="{ThemeResource SystemControlAcrylicElementBrush}"
+                                     PaneDisplayMode="LeftCompact"
+                                     AlwaysShowHeader="True"
+                                     x:Name="MessageNavigationView"
+                                     MenuItemsSource="{x:Bind ViewModel.Source}">
+                <controls:NavigationView.MenuItemTemplate>
+                    <DataTemplate x:DataType="viewModels:MessagingCenterDockItemViewModel">
+                        <controls:NavigationViewItem Content="{x:Bind Title}" >
+                            <controls:NavigationViewItem.Icon>
+                                <SymbolIcon Symbol="{x:Bind Symbol}"/>
+                            </controls:NavigationViewItem.Icon>
+                        </controls:NavigationViewItem>
+                    </DataTemplate>
+                </controls:NavigationView.MenuItemTemplate>
+                <controls:NavigationView.HeaderTemplate>
+                    <DataTemplate x:DataType="viewModels:MessagingCenterDockItemViewModel">
+                        <TextBlock Text="{x:Bind Title}"/>
+                    </DataTemplate>
+                </controls:NavigationView.HeaderTemplate>
+                <local:ListViewEx ItemsSource="{x:Bind MessageNavigationView.SelectedItem.(viewModels:MessagingCenterDockItemViewModel.Source), Mode=OneWay}">
+                    <local:ListViewEx.Layout>
+                        <common:StaggeredLayout DesiredColumnWidth="300" />
+                    </local:ListViewEx.Layout>
+                    <local:ListViewEx.ItemTemplate>
+                        <common:StatusCommentDataTemplateSelector>
+                            <common:StatusCommentDataTemplateSelector.CommentTemplate>
+                                <DataTemplate x:DataType="models:CommentModel">
+                                    <local:CommentView ShowActions="True" Comment="{x:Bind}"/>
+                                </DataTemplate>
+                            </common:StatusCommentDataTemplateSelector.CommentTemplate>
+                            <common:StatusCommentDataTemplateSelector.StatusTemplate>
+                                <DataTemplate x:DataType="models:StatusModel">
+                                    <local:StatusView ShowActions="True" Status="{x:Bind}"/>
+                                </DataTemplate>
+                            </common:StatusCommentDataTemplateSelector.StatusTemplate>
+                        </common:StatusCommentDataTemplateSelector>
+                    </local:ListViewEx.ItemTemplate>
+                </local:ListViewEx>
+            </controls:NavigationView>
+        </Grid>
     </Grid>
+    <animations:Implicit.ShowAnimations>
+        <animations:OpacityAnimation From="0" To="1" Duration="0:0:0.3" />
+        <animations:TranslationAnimation From="-100, 0, 0" To="0" Duration="0:0:0.3" />
+    </animations:Implicit.ShowAnimations>
+    <animations:Implicit.HideAnimations>
+        <animations:OpacityAnimation To="0" From="1" Duration="0:0:0.2" />
+        <animations:TranslationAnimation To="-100, 0, 0" From="0" Duration="0:0:0.2" />
+    </animations:Implicit.HideAnimations>
 </UserControl>

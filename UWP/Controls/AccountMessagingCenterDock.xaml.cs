@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
+using WeiPo.Common;
+using WeiPo.ViewModels;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -21,7 +11,25 @@ namespace WeiPo.Controls
     {
         public AccountMessagingCenterDock()
         {
-            this.InitializeComponent();
+            InitializeComponent();
+            Singleton<MessagingCenter>.Instance.Subscribe("message_center_visible", (sender, args) =>
+            {
+                if (args is bool boolArgs)
+                {
+                    Visibility = boolArgs ? Visibility.Visible : Visibility.Collapsed;
+                }
+            });
+            DataContext = ViewModel;
+        }
+
+        public AccountMessagingCenterDockViewModel ViewModel { get; } = new AccountMessagingCenterDockViewModel();
+
+        private void DockBackground_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            e.Handled = true;
+            
+            Singleton<MessagingCenter>.Instance.Send(this, "message_center_visible", false);
+            Singleton<MessagingCenter>.Instance.Send(this, "dock_visible", true);
         }
     }
 }

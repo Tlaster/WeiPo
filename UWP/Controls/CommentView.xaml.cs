@@ -7,6 +7,15 @@ using WeiPo.Services.Models;
 
 namespace WeiPo.Controls
 {
+
+    internal static class CommentViewXamlHelper
+    {
+        public static Visibility PicVisibility(CommentModel comment)
+        {
+            return comment?.Pic?.Url == null ? Visibility.Collapsed : Visibility.Visible;
+        }
+    }
+
     public sealed partial class CommentView
     {
         public static readonly DependencyProperty ShowStatusProperty = DependencyProperty.Register(

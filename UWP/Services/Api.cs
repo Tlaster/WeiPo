@@ -191,7 +191,7 @@ namespace WeiPo.Services
                 .GetData();
         }
         
-        public async Task<List<StatusModel>> GetMentionsAt(int page)
+        public async Task<List<StatusModel>> GetMentionsAt(int page = 1)
         {
             return await $"{HOST}/message/mentionsAt"
                 .WithHeader("Cookie", string.Join(";", GetCookies().Select(it => $"{it.Key}={it.Value}")))
@@ -200,7 +200,7 @@ namespace WeiPo.Services
                 .GetData();
         }
         
-        public async Task<List<CommentModel>> GetMentionsCmt(int page)
+        public async Task<List<CommentModel>> GetMentionsCmt(int page = 1)
         {
             return await $"{HOST}/message/mentionsCmt"
                 .WithHeader("Cookie", string.Join(";", GetCookies().Select(it => $"{it.Key}={it.Value}")))
@@ -209,7 +209,7 @@ namespace WeiPo.Services
                 .GetData();
         }
         
-        public async Task<List<CommentModel>> GetComment(int page)
+        public async Task<List<CommentModel>> GetComment(int page = 1)
         {
             return await $"{HOST}/message/cmt"
                 .WithHeader("Cookie", string.Join(";", GetCookies().Select(it => $"{it.Key}={it.Value}")))
@@ -218,7 +218,7 @@ namespace WeiPo.Services
                 .GetData();
         }
 
-        public async Task<List<CommentModel>> GetMyComment(int page)
+        public async Task<List<CommentModel>> GetMyComment(int page = 1)
         {
             return await $"{HOST}/message/myCmt"
                 .WithHeader("Cookie", string.Join(";", GetCookies().Select(it => $"{it.Key}={it.Value}")))
@@ -227,7 +227,7 @@ namespace WeiPo.Services
                 .GetData();
         }
         
-        public async Task<List<MessageListModel>> GetMessageList(int page)
+        public async Task<List<MessageListModel>> GetMessageList(int page = 1)
         {
             return await $"{HOST}/message/msglist"
                 .WithHeader("Cookie", string.Join(";", GetCookies().Select(it => $"{it.Key}={it.Value}")))
@@ -236,7 +236,7 @@ namespace WeiPo.Services
                 .GetData();
         }
 
-        public async Task<List<AttitudeModel>> GetAttitude(int page)
+        public async Task<List<AttitudeModel>> GetAttitude(int page = 1)
         {
             return await $"{HOST}/message/attitude"
                 .WithHeader("Cookie", string.Join(";", GetCookies().Select(it => $"{it.Key}={it.Value}")))
