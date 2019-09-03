@@ -55,13 +55,14 @@ namespace WeiPo
 
         private void RootContainerOnNavigated(object sender, EventArgs e)
         {
+            Singleton<MessagingCenter>.Instance.Send(this, "message_center_visible", false);
             Singleton<MessagingCenter>.Instance.Send(this, "dock_visible",
                 RootContainer.CurrentActivity is TimelineActivity);
         }
 
         private void OnBackRequested(object sender, BackRequestedEventArgs e)
         {
-            if (!Dock.OnBackPress() && RootContainer.CanGoBack)
+            if (!Dock.OnBackPress() && !MessageCenterDock.OnBackPress() && RootContainer.CanGoBack)
             {
                 RootContainer.GoBack();
             }

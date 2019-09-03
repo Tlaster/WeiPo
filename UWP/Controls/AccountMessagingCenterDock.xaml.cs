@@ -31,5 +31,15 @@ namespace WeiPo.Controls
             Singleton<MessagingCenter>.Instance.Send(this, "message_center_visible", false);
             Singleton<MessagingCenter>.Instance.Send(this, "dock_visible", true);
         }
+
+        public bool OnBackPress()
+        {
+            if (Visibility == Visibility.Visible)
+            {
+                Visibility = Visibility.Collapsed;
+                return true;
+            }
+            return false;
+        }
     }
 }
