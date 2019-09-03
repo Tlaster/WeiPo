@@ -48,9 +48,8 @@ namespace WeiPo
                 it.ButtonInactiveBackgroundColor = Colors.Transparent;
             });
             SystemNavigationManager.GetForCurrentView().BackRequested += OnBackRequested;
-            
-            Init();
             RootContainer.Navigated += RootContainerOnNavigated;
+            Init();
         }
 
         private void RootContainerOnNavigated(object sender, EventArgs e)
@@ -70,6 +69,10 @@ namespace WeiPo
 
         private void Init()
         {
+            MessageCenterDock.RegisterPropertyChangedCallback(UIElement.VisibilityProperty, (sender, e) =>
+            {
+                UpdateNavigationBackButton();
+            });
             Singleton<MessagingCenter>.Instance.Subscribe("login_completed",
                 (sender, args) => RootContainer.Navigate<TimelineActivity>());
             Singleton<MessagingCenter>.Instance.Subscribe("status_clicked", (sender, args) =>
@@ -81,7 +84,7 @@ namespace WeiPo
             });
             Singleton<MessagingCenter>.Instance.Subscribe("status_like", (sender, args) =>
             {
-                
+
             });
             Singleton<MessagingCenter>.Instance.Subscribe("image_clicked", (sender, args) => RootContainer.Navigate<ImageActivity>(args));
             Singleton<MessagingCenter>.Instance.Subscribe("video_clicked", (sender, args) => RootContainer.Navigate<VideoActivity>(args));
@@ -89,10 +92,16 @@ namespace WeiPo
             RootContainer.Navigate(typeof(LoginActivity));
         }
 
+        private void UpdateNavigationBackButton()
+        {
+            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = 
+                RootContainer.CanGoBack || MessageCenterDock.Visibility == Visibility.Visible ?
+                AppViewBackButtonVisibility.Visible : AppViewBackButtonVisibility.Collapsed;
+        }
 
         private void RootContainerOnBackStackChanged(object sender, EventArgs e)
         {
-            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = RootContainer.CanGoBack ? AppViewBackButtonVisibility.Visible : AppViewBackButtonVisibility.Collapsed;
+            UpdateNavigationBackButton();
         }
 
 

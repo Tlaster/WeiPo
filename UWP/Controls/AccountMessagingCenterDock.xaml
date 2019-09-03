@@ -10,13 +10,32 @@
     xmlns:common="using:WeiPo.Common"
     xmlns:models="using:WeiPo.Services.Models"
     xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
+    xmlns:controls1="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:extensions="using:Microsoft.Toolkit.Uwp.UI.Extensions"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
 
     <Grid>
         <Border Background="Transparent" x:Name="DockBackground" Tapped="DockBackground_Tapped"/>
-        <Grid MaxWidth="600" HorizontalAlignment="Right" >
+        <Grid HorizontalAlignment="Right" Name="DockShadowContainer">
+            <controls1:DropShadowPanel
+                x:Name="DockShadow"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Stretch"
+                VerticalAlignment="Top"
+                BlurRadius="20"
+                Width="{Binding ElementName=MessageCenterContainer, Path=(extensions:FrameworkElementExtensions.ActualWidth), Mode=OneWay}"
+                Height="{Binding ElementName=MessageCenterContainer, Path=(extensions:FrameworkElementExtensions.ActualHeight), Mode=OneWay}"
+                ShadowOpacity="0.6"
+                Color="Black">
+                <Border 
+                    Width="{Binding ElementName=MessageCenterContainer, Path=(extensions:FrameworkElementExtensions.ActualWidth), Mode=OneWay}"
+                    Height="{Binding ElementName=MessageCenterContainer, Path=(extensions:FrameworkElementExtensions.ActualHeight), Mode=OneWay}"/>
+            </controls1:DropShadowPanel>
+        </Grid>
+        <Grid MaxWidth="600" HorizontalAlignment="Right" x:Name="MessageCenterContainer"
+                      extensions:FrameworkElementExtensions.EnableActualSizeBinding="True">
             <controls:NavigationView IsSettingsVisible="False" IsBackButtonVisible="Collapsed"
                                      Background="{ThemeResource SystemControlAcrylicElementBrush}"
                                      PaneDisplayMode="LeftCompact"

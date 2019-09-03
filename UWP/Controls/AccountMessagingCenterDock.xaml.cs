@@ -36,7 +36,8 @@ namespace WeiPo.Controls
         {
             if (Visibility == Visibility.Visible)
             {
-                Visibility = Visibility.Collapsed;
+                Singleton<MessagingCenter>.Instance.Send(this, "message_center_visible", false);
+                Singleton<MessagingCenter>.Instance.Send(this, "dock_visible", true);
                 return true;
             }
             return false;
