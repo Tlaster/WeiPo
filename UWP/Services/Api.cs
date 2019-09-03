@@ -194,6 +194,10 @@ namespace WeiPo.Services
         public async Task<List<StatusModel>> GetMentionsAt(int page = 1)
         {
             return await $"{HOST}/message/mentionsAt"
+                .SetQueryParams(new
+                {
+                    page
+                })
                 .WithHeader("Cookie", string.Join(";", GetCookies().Select(it => $"{it.Key}={it.Value}")))
                 .GetAsync()
                 .ReceiveJson<WeiboResponse<List<StatusModel>>>()
@@ -203,6 +207,10 @@ namespace WeiPo.Services
         public async Task<List<CommentModel>> GetMentionsCmt(int page = 1)
         {
             return await $"{HOST}/message/mentionsCmt"
+                .SetQueryParams(new
+                {
+                    page
+                })
                 .WithHeader("Cookie", string.Join(";", GetCookies().Select(it => $"{it.Key}={it.Value}")))
                 .GetAsync()
                 .ReceiveJson<WeiboResponse<List<CommentModel>>>()
@@ -212,6 +220,10 @@ namespace WeiPo.Services
         public async Task<List<CommentModel>> GetComment(int page = 1)
         {
             return await $"{HOST}/message/cmt"
+                .SetQueryParams(new
+                {
+                    page
+                })
                 .WithHeader("Cookie", string.Join(";", GetCookies().Select(it => $"{it.Key}={it.Value}")))
                 .GetAsync()
                 .ReceiveJson<WeiboResponse<List<CommentModel>>>()
@@ -221,6 +233,10 @@ namespace WeiPo.Services
         public async Task<List<CommentModel>> GetMyComment(int page = 1)
         {
             return await $"{HOST}/message/myCmt"
+                .SetQueryParams(new
+                {
+                    page
+                })
                 .WithHeader("Cookie", string.Join(";", GetCookies().Select(it => $"{it.Key}={it.Value}")))
                 .GetAsync()
                 .ReceiveJson<WeiboResponse<List<CommentModel>>>()
@@ -230,6 +246,10 @@ namespace WeiPo.Services
         public async Task<List<MessageListModel>> GetMessageList(int page = 1)
         {
             return await $"{HOST}/message/msglist"
+                .SetQueryParams(new
+                {
+                    page
+                })
                 .WithHeader("Cookie", string.Join(";", GetCookies().Select(it => $"{it.Key}={it.Value}")))
                 .GetAsync()
                 .ReceiveJson<WeiboResponse<List<MessageListModel>>>()
@@ -239,6 +259,10 @@ namespace WeiPo.Services
         public async Task<List<AttitudeModel>> GetAttitude(int page = 1)
         {
             return await $"{HOST}/message/attitude"
+                .SetQueryParams(new
+                {
+                    page
+                })
                 .WithHeader("Cookie", string.Join(";", GetCookies().Select(it => $"{it.Key}={it.Value}")))
                 .GetAsync()
                 .ReceiveJson<WeiboResponse<List<AttitudeModel>>>()
