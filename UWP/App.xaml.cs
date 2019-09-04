@@ -1,9 +1,11 @@
-﻿using System.Text;
+﻿using System.Linq;
+using System.Text;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 using Flurl.Http;
 using Newtonsoft.Json;
 using WeiPo.Common;
+using WeiPo.Services;
 
 namespace WeiPo
 {
@@ -26,8 +28,13 @@ namespace WeiPo
                     },
                     NullValueHandling = NullValueHandling.Ignore
                 };
-
                 settings.JsonSerializer = new WeiboJsonSerializer(jsonSettings);
+                settings.BeforeCall = call =>
+                {
+                    call.Request.Headers.Add("Cookie",
+                        string.Join(";",
+                            Singleton<Api>.Instance.GetCookies().Select(it => $"{it.Key}={it.Value}")));
+                };
             });
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 

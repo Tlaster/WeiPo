@@ -200,6 +200,7 @@
     <Compile Include="Services\Models\AttitudeModel.cs" />
     <Compile Include="Services\Models\ButtonModel.cs" />
     <Compile Include="Services\Models\CommentBadge.cs" />
+    <Compile Include="Services\Models\CommentManageInfo.cs" />
     <Compile Include="Services\Models\CommentModel.cs" />
     <Compile Include="Services\Models\ConfigModel.cs" />
     <Compile Include="Services\Models\DarwinTag.cs" />
@@ -207,11 +208,14 @@
     <Compile Include="Services\Models\FilterGroupInfo.cs" />
     <Compile Include="Services\Models\FocusPoint.cs" />
     <Compile Include="Services\Models\Geo.cs" />
+    <Compile Include="Services\Models\HotflowChildModel.cs" />
+    <Compile Include="Services\Models\HotflowModel.cs" />
     <Compile Include="Services\Models\ICanReply.cs" />
     <Compile Include="Services\Models\InterestPeopleModel.cs" />
     <Compile Include="Services\Models\InterestPropleDescModel.cs" />
     <Compile Include="Services\Models\Large.cs" />
     <Compile Include="Services\Models\LargeGeo.cs" />
+    <Compile Include="Services\Models\LongTextModel.cs" />
     <Compile Include="Services\Models\MediaInfo.cs" />
     <Compile Include="Services\Models\MenuList.cs" />
     <Compile Include="Services\Models\MenuListParams.cs" />
@@ -226,6 +230,8 @@
     <Compile Include="Services\Models\PicGeo.cs" />
     <Compile Include="Services\Models\PicRectangleObject.cs" />
     <Compile Include="Services\Models\ProfileData.cs" />
+    <Compile Include="Services\Models\RepostTimelineModel.cs" />
+    <Compile Include="Services\Models\Status.cs" />
     <Compile Include="Services\Models\StatusModel.cs" />
     <Compile Include="Services\Models\Tab.cs" />
     <Compile Include="Services\Models\TabsInfo.cs" />
@@ -248,6 +254,7 @@
     <Compile Include="ViewModels\NavigationDockViewModel.cs" />
     <Compile Include="ViewModels\NotificationViewModel.cs" />
     <Compile Include="ViewModels\PostWeiboViewModel.cs" />
+    <Compile Include="ViewModels\StatusViewModel.cs" />
     <Compile Include="ViewModels\TimelineViewModel.cs" />
     <Compile Include="ViewModels\User\Tab\AbsTabViewModel.cs" />
     <Compile Include="ViewModels\User\Tab\AlbumTabViewModel.cs" />
