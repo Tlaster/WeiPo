@@ -3,11 +3,16 @@ using System.Linq;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using System.Collections.Generic;
 
 namespace WeiPo.Common
 {
     public class StaggeredLayout : VirtualizingLayout
     {
+        private class State
+        {
+            public Dictionary<int, Size> ChildSize { get; } = new Dictionary<int, Size>();
+        }
         public static readonly DependencyProperty DesiredColumnWidthProperty = DependencyProperty.Register(
             nameof(DesiredColumnWidth), typeof(double), typeof(StaggeredLayout), new PropertyMetadata(250D));
 
@@ -40,6 +45,16 @@ namespace WeiPo.Common
             set => SetValue(DesiredColumnWidthProperty, value);
         }
 
+        protected override void InitializeForContextCore(VirtualizingLayoutContext context)
+        {
+            base.InitializeForContextCore(context);
+            context.LayoutState = new State();
+        }
+
+        protected override void UninitializeForContextCore(VirtualizingLayoutContext context)
+        {
+            base.UninitializeForContextCore(context);
+        }
 
         protected override Size ArrangeOverride(VirtualizingLayoutContext context, Size finalSize)
         {
@@ -56,9 +71,7 @@ namespace WeiPo.Common
 
                 var child = context.GetOrCreateElementAt(i);
                 var elementSize = child.DesiredSize;
-
                 var elementHeight = elementSize.Height;
-
                 var bounds = new Rect(horizontalOffset + _columnWidth * columnIndex,
                     columnHeights[columnIndex] + verticalOffset, _columnWidth, elementHeight);
                 child.Arrange(bounds);
@@ -71,6 +84,7 @@ namespace WeiPo.Common
 
         protected override Size MeasureOverride(VirtualizingLayoutContext context, Size availableSize)
         {
+            var state = context.LayoutState as State;
             availableSize.Width = availableSize.Width - Padding.Left - Padding.Right;
             availableSize.Height = availableSize.Height - Padding.Top - Padding.Bottom - VerticalOffset;
 
@@ -83,9 +97,20 @@ namespace WeiPo.Common
             {
                 var columnIndex = GetColumnIndex(columnHeights);
 
-                var child = context.GetOrCreateElementAt(i);
-                child.Measure(new Size(_columnWidth, availableSize.Height));
-                var elementSize = child.DesiredSize;
+                if (!state.ChildSize.ContainsKey(i) || state.ChildSize[i].Width != _columnWidth)
+                {
+                    var child = context.GetOrCreateElementAt(i);
+                    child.Measure(new Size(_columnWidth, availableSize.Height));
+                    if (!state.ChildSize.ContainsKey(i))
+                    {
+                        state.ChildSize.Add(i, child.DesiredSize);
+                    }
+                    else
+                    {
+                        state.ChildSize[i] = child.DesiredSize;
+                    }
+                }
+                var elementSize = state.ChildSize[i];
                 columnHeights[columnIndex] += elementSize.Height;
             }
 
