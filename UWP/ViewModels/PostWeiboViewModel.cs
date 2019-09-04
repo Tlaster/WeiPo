@@ -1,16 +1,16 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using PropertyChanged;
+using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.Storage;
-using Windows.Storage.Pickers;
-using Newtonsoft.Json.Linq;
-using PropertyChanged;
 using WeiPo.Common;
 using WeiPo.Services;
 using WeiPo.Services.Models;
+using Windows.Storage;
+using Windows.Storage.Pickers;
 
 namespace WeiPo.ViewModels
 {
@@ -58,7 +58,7 @@ namespace WeiPo.ViewModels
         {
             var textLength = Encoding.GetEncoding("gb2312").GetByteCount(Content) / 2d;
             if (textLength > MaxLength || string.IsNullOrEmpty(Content))
-                //TODO: notify text out of range
+            //TODO: notify text out of range
             {
                 return;
             }
@@ -69,20 +69,28 @@ namespace WeiPo.ViewModels
             switch (PostType)
             {
                 case PostType.Create:
-                {
-                    result = await Singleton<Api>.Instance.Update(Content, picids.Select(it => it.PicId).ToArray());
-                }
+                    {
+                        result = await Singleton<Api>.Instance.Update(Content, picids.Select(it => it.PicId).ToArray());
+                    }
                     break;
                 case PostType.Repost:
-                {
-                    result = await Singleton<Api>.Instance.Repost(Content, ReplyModel, picids.FirstOrDefault()?.PicId);
-                }
+                    {
+                        result = await Singleton<Api>.Instance.Repost(Content, ReplyModel, picids.FirstOrDefault()?.PicId);
+                    }
                     break;
                 case PostType.Comment:
-                {
-                    result =
-                        await Singleton<Api>.Instance.Comment(Content, ReplyModel, picids.FirstOrDefault()?.PicId);
-                }
+                    {
+                        if (ReplyModel is CommentModel comment)
+                        {
+                            result =
+                                await Singleton<Api>.Instance.Reply(Content, comment, picids.FirstOrDefault()?.PicId);
+                        }
+                        else
+                        {
+                            result =
+                                await Singleton<Api>.Instance.Comment(Content, ReplyModel, picids.FirstOrDefault()?.PicId);
+                        }
+                    }
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

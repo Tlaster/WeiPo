@@ -61,6 +61,26 @@ namespace WeiPo.Services
                 .GetData();
         }
 
+        public async Task<JObject> Reply(string content, CommentModel item, string picId = null)
+        {
+            var configResult = await Config();
+            return await $"{HOST}/api/comments/reply"
+                .WithHeader("Referer",
+                    $"{HOST}/compose/reply?id={item.Id}{(string.IsNullOrEmpty(picId) ? "" : $"&pids={picId}")}")
+                .PostUrlEncodedAsync(new
+                {
+                    id = item.Status.Id,
+                    mid = item.Status.Id,
+                    content,
+                    cid = item.Id,
+                    reply = item.Id,
+                    st = configResult.St,
+                    picId
+                })
+                .ReceiveJson<WeiboResponse<JObject>>()
+                .GetData();
+        }
+
         public async Task<ConfigModel> Config()
         {
             return await $"{HOST}/api/config"
