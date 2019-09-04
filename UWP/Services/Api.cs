@@ -377,7 +377,6 @@ namespace WeiPo.Services
                 }).ReceiveJson<UploadPicModel>();
         }
 
-        //TODO: test when user not exist
         public async Task<long> UserId(string name)
         {
             using var client = new HttpClient();
@@ -386,7 +385,10 @@ namespace WeiPo.Services
             response.EnsureSuccessStatusCode();
             var redirectUri = response.RequestMessage.RequestUri.ToString();
             var uidStr = Regex.Match(redirectUri, "\\/u\\/(\\d+)").Groups[1].Value;
-            long.TryParse(uidStr, out var uid);
+            if (!long.TryParse(uidStr, out var uid))
+            {
+                throw new WeiboException("user not found");
+            }
             return uid;
         }
     }
