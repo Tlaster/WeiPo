@@ -21,7 +21,7 @@ namespace WeiPo.Common
         {
             var currentY = 0D;
             var currentX = 0D;
-            var itemSize = finalSize.Width / 3D - Padding;
+            var itemSize = Math.Max(finalSize.Width / 3D - Padding, 0);
             foreach (var child in Children)
             {
                 var bounds = new Rect(currentX, currentY, itemSize, itemSize);
@@ -40,7 +40,7 @@ namespace WeiPo.Common
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            var itemSize = availableSize.Width / 3D - Padding;
+            var itemSize = Math.Max(availableSize.Width / 3D - Padding, 0);
             var rowCount = Math.Ceiling(Convert.ToDouble(Children.Count) / 3D);
             if (rowCount == 0d)
             {
