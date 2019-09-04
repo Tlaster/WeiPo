@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.System;
 using WeiPo.ViewModels;
 
 namespace WeiPo.Common
 {
-    static class WeiboLinkHelper
+    internal static class WeiboLinkHelper
     {
         public static void LinkClicked(string link)
         {
@@ -25,10 +20,14 @@ namespace WeiPo.Common
             {
                 var uri = new Uri(link);
                 if (uri.Host.Contains("sinaimg.cn"))
+                {
                     Singleton<MessagingCenter>.Instance.Send(null, "image_clicked",
                         new ImageViewModel(new[] {new ImageModel(link, link)}));
+                }
                 else
+                {
                     Launcher.LaunchUriAsync(new Uri(link));
+                }
             }
         }
     }

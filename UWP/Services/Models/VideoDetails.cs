@@ -2,7 +2,7 @@
 
 namespace WeiPo.Services.Models
 {
-    public partial class VideoDetails
+    public class VideoDetails
     {
         [JsonProperty("size", NullValueHandling = NullValueHandling.Ignore)]
         public long Size { get; set; }

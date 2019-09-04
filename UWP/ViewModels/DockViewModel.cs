@@ -3,19 +3,18 @@ using Nito.Mvvm;
 using WeiPo.Common;
 using WeiPo.Services;
 using WeiPo.Services.Models;
+
 namespace WeiPo.ViewModels
 {
     public class DockViewModel : ViewModelBase
     {
-        public static DockViewModel Instance { get; } = new DockViewModel();
         private DockViewModel()
         {
             Singleton<MessagingCenter>.Instance.Subscribe("login_completed",
-                (sender, args) =>
-                {
-                    MyProfile = NotifyTask.Create(LoadMe);
-                });
+                (sender, args) => { MyProfile = NotifyTask.Create(LoadMe); });
         }
+
+        public static DockViewModel Instance { get; } = new DockViewModel();
 
         public PostWeiboViewModel PostWeiboViewModel { get; } = new PostWeiboViewModel();
         public NotifyTask<ProfileData> MyProfile { get; private set; }

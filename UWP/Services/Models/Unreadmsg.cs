@@ -2,7 +2,7 @@
 
 namespace WeiPo.Services.Models
 {
-    public partial class Unreadmsg
+    public class Unreadmsg
     {
         [JsonProperty("1", NullValueHandling = NullValueHandling.Ignore)]
         public long? The1 { get; set; }

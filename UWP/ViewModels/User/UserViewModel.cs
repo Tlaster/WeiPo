@@ -31,6 +31,7 @@ namespace WeiPo.ViewModels.User
         public bool IsLoading { get; private set; }
 
         public ProfileData Profile { get; private set; }
+
         [DependsOn(nameof(Profile))]
         public Services.Models.Tab[] Tabs
         {
@@ -38,18 +39,18 @@ namespace WeiPo.ViewModels.User
             {
                 return Profile?.TabsInfo?.Tabs?.Concat(new[]
                 {
-                    new Services.Models.Tab()
+                    new Services.Models.Tab
                     {
                         Title = "Follow",
                         TabType = "follow",
                         Containerid = Profile.UserInfo.Id.ToString()
-                    }, 
-                    new Services.Models.Tab()
+                    },
+                    new Services.Models.Tab
                     {
                         Title = "Fans",
                         TabType = "fans",
                         Containerid = Profile.UserInfo.Id.ToString()
-                    }, 
+                    }
                 }).ToArray();
             }
         }
@@ -58,7 +59,10 @@ namespace WeiPo.ViewModels.User
 
         private async void Init(long id)
         {
-            if (IsLoading) return;
+            if (IsLoading)
+            {
+                return;
+            }
 
             IsLoading = true;
             await InitProfile(id);
@@ -67,7 +71,10 @@ namespace WeiPo.ViewModels.User
 
         private async void Init(string name)
         {
-            if (IsLoading) return;
+            if (IsLoading)
+            {
+                return;
+            }
 
             IsLoading = true;
             var id = await Singleton<Api>.Instance.UserId(name);

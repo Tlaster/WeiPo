@@ -1,19 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Storage;
+﻿using Windows.Storage;
 
 namespace WeiPo.Common
 {
-    class Storage
+    internal class Storage
     {
-        public void Save<T>(string name, T value)
-        {
-            ApplicationData.Current.LocalSettings.Values[name] = value;
-        }
-
         public T Load<T>(string name, T defaultValue = default)
         {
             var result = ApplicationData.Current.LocalSettings.Values[name];
@@ -23,6 +13,11 @@ namespace WeiPo.Common
             }
 
             return defaultValue;
+        }
+
+        public void Save<T>(string name, T value)
+        {
+            ApplicationData.Current.LocalSettings.Values[name] = value;
         }
     }
 }

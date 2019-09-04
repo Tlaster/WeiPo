@@ -65,11 +65,6 @@ namespace WeiPo.Controls
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void ToggleImageTeachingTip()
-        {
-            ImageTeachTip.IsOpen = _imageCount > 0 && Visibility == Visibility.Visible;
-        }
-
         public bool OnBackPress()
         {
             if (IsComposing)
@@ -85,7 +80,11 @@ namespace WeiPo.Controls
         {
             IsComposing = true;
             _prevVisibility = Visibility;
-            if (_prevVisibility == Visibility.Collapsed) Visibility = Visibility.Visible;
+            if (_prevVisibility == Visibility.Collapsed)
+            {
+                Visibility = Visibility.Visible;
+            }
+
             FullBackground.Visibility = Visibility.Visible;
             ToggleHeader();
         }
@@ -100,26 +99,6 @@ namespace WeiPo.Controls
             //Singleton<MessagingCenter>.Instance.Send(this, "clear_dock_compose");
         }
 
-        private void UIElement_OnPointerEntered(object sender, PointerRoutedEventArgs e)
-        {
-            _isPointerOverHeader = true;
-            ToggleHeader();
-        }
-
-        private void UIElement_OnPointerExited(object sender, PointerRoutedEventArgs e)
-        {
-            _isPointerOverHeader = false;
-            ToggleHeader();
-        }
-
-        private void ToggleHeader()
-        {
-            if (_keepDockExpanded || _isPointerOverHeader || _isTextBoxFocused || IsComposing || _imageCount > 0)
-                ExpandHeader();
-            else
-                CloseHeader();
-        }
-
         private void CloseHeader()
         {
             IsHeaderOpened = false;
@@ -128,6 +107,58 @@ namespace WeiPo.Controls
         private void ExpandHeader()
         {
             IsHeaderOpened = true;
+        }
+
+        private void FullBackground_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            StopComposing();
+        }
+
+        private void NotificationClick(object sender, RoutedEventArgs e)
+        {
+            Singleton<MessagingCenter>.Instance.Send(this, "message_center_visible", true);
+            Singleton<MessagingCenter>.Instance.Send(this, "dock_visible", false);
+        }
+
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void RemoveImageClicked(object sender, RoutedEventArgs e)
+        {
+            var file = (sender as FrameworkElement)?.DataContext as StorageFile;
+            ViewModel.PostWeiboViewModel.Files.Remove(file);
+        }
+
+        private void TeachGridLoaded(object sender, RoutedEventArgs e)
+        {
+            //trick to hide close button from image picker flyout
+            if (sender is FrameworkElement element)
+            {
+                var button = element.FindAscendant<Button>();
+                if (button != null)
+                {
+                    button.Visibility = Visibility.Collapsed;
+                }
+            }
+        }
+
+        private void ToggleHeader()
+        {
+            if (_keepDockExpanded || _isPointerOverHeader || _isTextBoxFocused || IsComposing || _imageCount > 0)
+            {
+                ExpandHeader();
+            }
+            else
+            {
+                CloseHeader();
+            }
+        }
+
+        private void ToggleImageTeachingTip()
+        {
+            ImageTeachTip.IsOpen = _imageCount > 0 && Visibility == Visibility.Visible;
         }
 
         private void UIElement_OnGotFocus(object sender, RoutedEventArgs e)
@@ -142,36 +173,16 @@ namespace WeiPo.Controls
             ToggleHeader();
         }
 
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void UIElement_OnPointerEntered(object sender, PointerRoutedEventArgs e)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            _isPointerOverHeader = true;
+            ToggleHeader();
         }
 
-        private void FullBackground_Tapped(object sender, TappedRoutedEventArgs e)
+        private void UIElement_OnPointerExited(object sender, PointerRoutedEventArgs e)
         {
-            StopComposing();
-        }
-
-        private void TeachGridLoaded(object sender, RoutedEventArgs e)
-        {
-            //trick to hide close button from image picker flyout
-            if (sender is FrameworkElement element)
-            {
-                var button = element.FindAscendant<Button>();
-                if (button != null) button.Visibility = Visibility.Collapsed;
-            }
-        }
-
-        private void RemoveImageClicked(object sender, RoutedEventArgs e)
-        {
-            var file = (sender as FrameworkElement)?.DataContext as StorageFile;
-            ViewModel.PostWeiboViewModel.Files.Remove(file);
-        }
-
-        private void NotificationClick(object sender, RoutedEventArgs e)
-        {
-            Singleton<MessagingCenter>.Instance.Send(this, "message_center_visible", true);
-            Singleton<MessagingCenter>.Instance.Send(this, "dock_visible", false);
+            _isPointerOverHeader = false;
+            ToggleHeader();
         }
     }
 }

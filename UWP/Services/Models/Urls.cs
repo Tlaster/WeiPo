@@ -1,9 +1,8 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace WeiPo.Services.Models
 {
-    public partial class Urls
+    public class Urls
     {
         [JsonProperty("mp4_720p_mp4", NullValueHandling = NullValueHandling.Ignore)]
         public string Mp4720PMp4 { get; set; }

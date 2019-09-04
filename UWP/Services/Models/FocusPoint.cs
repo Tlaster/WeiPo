@@ -2,7 +2,7 @@
 
 namespace WeiPo.Services.Models
 {
-    public partial class FocusPoint
+    public class FocusPoint
     {
         [JsonProperty("left", NullValueHandling = NullValueHandling.Ignore)]
         public double Left { get; set; }

@@ -21,10 +21,11 @@
             <DataTemplate x:DataType="models:UserModel">
                 <Grid Margin="8" Tapped="Grid_Tapped" DataContext="{x:Bind}">
                     <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
+                        <RowDefinition />
+                        <RowDefinition />
                     </Grid.RowDefinitions>
-                    <Border CornerRadius="{StaticResource CardCorner}" Grid.RowSpan="2" Grid.Row="0" Margin="0,40,0,0" Background="{ThemeResource SystemControlAcrylicElementBrush}"/>
+                    <Border CornerRadius="{StaticResource CardCorner}" Grid.RowSpan="2" Grid.Row="0" Margin="0,40,0,0"
+                            Background="{ThemeResource SystemControlAcrylicElementBrush}" />
                     <controls1:ImageEx Grid.Row="0" Stretch="UniformToFill" HorizontalContentAlignment="Center"
                                        VerticalContentAlignment="Center"
                                        HorizontalAlignment="Center" VerticalAlignment="Center"

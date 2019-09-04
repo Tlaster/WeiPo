@@ -1,9 +1,6 @@
-﻿using System;
-using System.Numerics;
-using Windows.Foundation;
+﻿using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Controls;
 using WeiPo.ViewModels;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -28,7 +25,10 @@ namespace WeiPo.Activities
         protected override void OnCreate(object parameter)
         {
             base.OnCreate(parameter);
-            if (parameter is ImageViewModel viewModel) ViewModel = viewModel;
+            if (parameter is ImageViewModel viewModel)
+            {
+                ViewModel = viewModel;
+            }
         }
 
         private void ImageFlipView_OnRightTapped(object sender, RightTappedRoutedEventArgs e)

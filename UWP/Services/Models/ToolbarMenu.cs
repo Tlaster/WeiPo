@@ -2,7 +2,7 @@
 
 namespace WeiPo.Services.Models
 {
-    public partial class ToolbarMenu
+    public class ToolbarMenu
     {
         [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
         public string Type { get; set; }

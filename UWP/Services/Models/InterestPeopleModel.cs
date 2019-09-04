@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace WeiPo.Services.Models
 {
-    public partial class InterestPeopleModel
+    public class InterestPeopleModel
     {
         [JsonProperty("card_type", NullValueHandling = NullValueHandling.Ignore)]
         public long? CardType { get; set; }

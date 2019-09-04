@@ -9,11 +9,11 @@ namespace WeiPo.Controls
         public static readonly DependencyProperty AvatarProperty = DependencyProperty.Register(
             nameof(Avatar), typeof(string), typeof(PersonCard), new PropertyMetadata(default(string)));
 
-        public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
-            nameof(Title), typeof(string), typeof(PersonCard), new PropertyMetadata(default(string)));
-
         public static readonly DependencyProperty SubTitleProperty = DependencyProperty.Register(
             nameof(SubTitle), typeof(string), typeof(PersonCard), new PropertyMetadata(default(string)));
+
+        public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
+            nameof(Title), typeof(string), typeof(PersonCard), new PropertyMetadata(default(string)));
 
         public PersonCard()
         {

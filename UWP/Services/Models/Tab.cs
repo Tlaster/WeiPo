@@ -2,7 +2,7 @@
 
 namespace WeiPo.Services.Models
 {
-    public partial class Tab
+    public class Tab
     {
         [JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
         public long Id { get; set; }

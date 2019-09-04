@@ -2,7 +2,7 @@
 
 namespace WeiPo.Services.Models
 {
-    public partial class MessageListModel
+    public class MessageListModel
     {
         [JsonProperty("user", NullValueHandling = NullValueHandling.Ignore)]
         public UserModel User { get; set; }

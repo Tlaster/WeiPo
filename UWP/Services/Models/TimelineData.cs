@@ -1,12 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace WeiPo.Services.Models
 {
-    public partial class TimelineData
+    public class TimelineData
     {
         [JsonProperty("statuses", NullValueHandling = NullValueHandling.Ignore)]
         public List<StatusModel> Statuses { get; set; }

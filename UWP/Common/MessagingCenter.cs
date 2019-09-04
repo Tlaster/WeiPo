@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WeiPo.Common
 {
     internal class MessagingCenter
     {
-        private readonly ConcurrentDictionary<Guid, (string message, Action<object, object> action)> _listeners = new ConcurrentDictionary<Guid, (string message, Action<object, object> action)>();
+        private readonly ConcurrentDictionary<Guid, (string message, Action<object, object> action)> _listeners =
+            new ConcurrentDictionary<Guid, (string message, Action<object, object> action)>();
 
         public void Send(object sender, string message, object args = null)
         {
@@ -18,7 +16,7 @@ namespace WeiPo.Common
                 item.Value.action.Invoke(sender, args);
             }
         }
-        
+
         public Guid Subscribe(string message, Action<object, object> action)
         {
             var id = Guid.NewGuid();
@@ -30,6 +28,5 @@ namespace WeiPo.Common
         {
             _listeners.TryRemove(id, out _);
         }
-
     }
 }

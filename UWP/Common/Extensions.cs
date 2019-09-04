@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Media.Streaming.Adaptive;
 using Windows.UI.Xaml;
 using Newtonsoft.Json;
 
@@ -13,24 +7,25 @@ namespace WeiPo.Common
 {
     internal static class Extensions
     {
-        public static bool IsVisible(this UIElement element)
+        // Kotlin: fun <T> T.also(block: (T) -> Unit): T
+        public static T Also<T>(this T self, Action<T> block)
         {
-            return element.Visibility == Visibility.Visible;
+            block(self);
+            return self;
         }
 
         public static void FireAndForget(this Task task)
         {
-
-        }
-
-        public static string ToJson<T>(this T value)
-        {
-            return JsonConvert.SerializeObject(value);
         }
 
         public static T FromJson<T>(this string value)
         {
             return JsonConvert.DeserializeObject<T>(value);
+        }
+
+        public static bool IsVisible(this UIElement element)
+        {
+            return element.Visibility == Visibility.Visible;
         }
 
         // Kotlin: fun <T, R> T.let(block: (T) -> R): R
@@ -39,11 +34,9 @@ namespace WeiPo.Common
             return block(self);
         }
 
-        // Kotlin: fun <T> T.also(block: (T) -> Unit): T
-        public static T Also<T>(this T self, Action<T> block)
+        public static string ToJson<T>(this T value)
         {
-            block(self);
-            return self;
+            return JsonConvert.SerializeObject(value);
         }
     }
 }

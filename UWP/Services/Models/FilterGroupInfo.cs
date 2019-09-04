@@ -2,7 +2,7 @@
 
 namespace WeiPo.Services.Models
 {
-    public partial class FilterGroupInfo
+    public class FilterGroupInfo
     {
         [JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
         public string Title { get; set; }

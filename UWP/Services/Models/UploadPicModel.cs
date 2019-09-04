@@ -1,9 +1,8 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace WeiPo.Services.Models
 {
-    public partial class UploadPicModel
+    public class UploadPicModel
     {
         [JsonProperty("pic_id", NullValueHandling = NullValueHandling.Ignore)]
         public string PicId { get; set; }

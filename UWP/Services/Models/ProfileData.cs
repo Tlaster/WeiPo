@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace WeiPo.Services.Models
 {
-    public partial class ProfileData
+    public class ProfileData
     {
         [JsonProperty("avatar_guide", NullValueHandling = NullValueHandling.Ignore)]
         public object[] AvatarGuide { get; set; }

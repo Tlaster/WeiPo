@@ -27,7 +27,9 @@ namespace WeiPo.ViewModels
         {
             if (pageIndex == 0 && !string.IsNullOrEmpty(_postMessageId))
                 //clear notification
+            {
                 Singleton<MessagingCenter>.Instance.Send(this, _postMessageId);
+            }
 
             var result = await _func.Invoke(pageIndex + 1);
             return result;
@@ -63,7 +65,7 @@ namespace WeiPo.ViewModels
             new MessagingCenterDockItemViewModel("Comment", Symbol.Comment,
                 new LoadingCollection<MessagingCenterDockItemDataSource<CommentModel>, CommentModel>(
                     new MessagingCenterDockItemDataSource<CommentModel>("notification_clear_comment",
-                        async page => await Singleton<Api>.Instance.GetComment(page)))),
+                        async page => await Singleton<Api>.Instance.GetComment(page))))
         };
     }
 }

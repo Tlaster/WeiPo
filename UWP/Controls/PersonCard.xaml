@@ -19,8 +19,9 @@
             <RowDefinition />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <controls:ImageEx Grid.RowSpan="2" Margin="0,0,4,4" Width="{StaticResource AvatarNormalSize}" Height="{StaticResource AvatarNormalSize}" CornerRadius="999"
-                           Source="{x:Bind Avatar, Mode=OneWay}" />
+        <controls:ImageEx Grid.RowSpan="2" Margin="0,0,4,4" Width="{StaticResource AvatarNormalSize}"
+                          Height="{StaticResource AvatarNormalSize}" CornerRadius="999"
+                          Source="{x:Bind Avatar, Mode=OneWay}" />
         <TextBlock Grid.Row="0" Grid.Column="1" Text="{x:Bind Title, Mode=OneWay}" />
         <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind SubTitle, Mode=OneWay}" Foreground="Gray" />
     </Grid>

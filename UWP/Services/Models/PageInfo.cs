@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace WeiPo.Services.Models
 {
-    public partial class PageInfo
+    public class PageInfo
     {
         [JsonProperty("object_type", NullValueHandling = NullValueHandling.Ignore)]
         public long ObjectType { get; set; }

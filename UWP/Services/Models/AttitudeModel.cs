@@ -2,7 +2,7 @@
 
 namespace WeiPo.Services.Models
 {
-    public partial class AttitudeModel
+    public class AttitudeModel
     {
         [JsonProperty("idStr", NullValueHandling = NullValueHandling.Ignore)]
         public string IdStr { get; set; }

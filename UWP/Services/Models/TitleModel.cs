@@ -2,7 +2,7 @@
 
 namespace WeiPo.Services.Models
 {
-    public partial class TitleModel
+    public class TitleModel
     {
         [JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]
         public string Text { get; set; }

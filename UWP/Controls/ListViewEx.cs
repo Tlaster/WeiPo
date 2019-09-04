@@ -53,32 +53,49 @@ namespace WeiPo.Controls
             set => SetValue(LayoutProperty, value);
         }
 
-        private static void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        protected override void OnApplyTemplate()
         {
-            if (e.Property == ItemsSourceProperty) (d as ListViewEx).OnItemsSourceChanged();
+            base.OnApplyTemplate();
+            _scrollViewer = GetTemplateChild("ScrollViewer") as ScrollViewer;
+            if (_scrollViewer != null)
+            {
+                _scrollViewer.ViewChanged += ScrollViewerOnViewChanged;
+            }
+
+            _refresher = GetTemplateChild("RefreshContainer") as RefreshContainer;
+            if (_refresher != null)
+            {
+                _refresher.RefreshRequested += RefresherOnRefreshRequested;
+            }
+
+            Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                _refresher.RequestRefresh());
         }
 
         private void OnItemsSourceChanged()
         {
             if (ItemsSource is ISupportRefresh refresh)
+            {
                 _refresher?.RequestRefresh();
+            }
+
             //refresh.Refresh();
         }
 
-        protected override void OnApplyTemplate()
+        private static void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            base.OnApplyTemplate();
-            _scrollViewer = GetTemplateChild("ScrollViewer") as ScrollViewer;
-            if (_scrollViewer != null) _scrollViewer.ViewChanged += ScrollViewerOnViewChanged;
-            _refresher = GetTemplateChild("RefreshContainer") as RefreshContainer;
-            if (_refresher != null) _refresher.RefreshRequested += RefresherOnRefreshRequested;
-            Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                _refresher.RequestRefresh());
+            if (e.Property == ItemsSourceProperty)
+            {
+                (d as ListViewEx).OnItemsSourceChanged();
+            }
         }
 
         private async void RefresherOnRefreshRequested(RefreshContainer sender, RefreshRequestedEventArgs args)
         {
-            if (_isLoading) return;
+            if (_isLoading)
+            {
+                return;
+            }
 
             if (ItemsSource is ISupportRefresh refresh)
             {
@@ -89,27 +106,6 @@ namespace WeiPo.Controls
                 _isLoading = false;
                 Task.Delay(100).ContinueWith(it => Dispatcher.RunAsync(CoreDispatcherPriority.Low, TryLoadIfNotFill));
             }
-        }
-        private async void TryLoadIfNotFill()
-        {
-            if (_isLoading)
-            {
-                return;
-            }
-
-            if (_scrollViewer.ScrollableHeight > ActualHeight)
-            {
-                return;
-            }
-
-            if (!(ItemsSource is ISupportIncrementalLoading loading) || !loading.HasMoreItems)
-            {
-                return;
-            }
-            _isLoading = true;
-            await loading.LoadMoreItemsAsync(20);
-            _isLoading = false;
-
         }
 
         private async void ScrollViewerOnViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
@@ -127,6 +123,28 @@ namespace WeiPo.Controls
                     _isLoading = false;
                 }
             }
+        }
+
+        private async void TryLoadIfNotFill()
+        {
+            if (_isLoading)
+            {
+                return;
+            }
+
+            if (_scrollViewer.ScrollableHeight > ActualHeight)
+            {
+                return;
+            }
+
+            if (!(ItemsSource is ISupportIncrementalLoading loading) || !loading.HasMoreItems)
+            {
+                return;
+            }
+
+            _isLoading = true;
+            await loading.LoadMoreItemsAsync(20);
+            _isLoading = false;
         }
     }
 }

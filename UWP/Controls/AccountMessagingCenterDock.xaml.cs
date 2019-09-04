@@ -1,5 +1,6 @@
 ﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using WeiPo.Common;
 using WeiPo.ViewModels;
 
@@ -24,14 +25,6 @@ namespace WeiPo.Controls
 
         public AccountMessagingCenterDockViewModel ViewModel { get; } = new AccountMessagingCenterDockViewModel();
 
-        private void DockBackground_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
-        {
-            e.Handled = true;
-            
-            Singleton<MessagingCenter>.Instance.Send(this, "message_center_visible", false);
-            Singleton<MessagingCenter>.Instance.Send(this, "dock_visible", true);
-        }
-
         public bool OnBackPress()
         {
             if (Visibility == Visibility.Visible)
@@ -40,7 +33,16 @@ namespace WeiPo.Controls
                 Singleton<MessagingCenter>.Instance.Send(this, "dock_visible", true);
                 return true;
             }
+
             return false;
+        }
+
+        private void DockBackground_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            e.Handled = true;
+
+            Singleton<MessagingCenter>.Instance.Send(this, "message_center_visible", false);
+            Singleton<MessagingCenter>.Instance.Send(this, "dock_visible", true);
         }
     }
 }

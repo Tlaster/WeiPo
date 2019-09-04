@@ -1,20 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using Windows.Graphics.Printing.OptionDetails;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace WeiPo.Services.Models
 {
-    public partial class StatusModel : ICanReply
+    public class StatusModel : ICanReply
     {
         [JsonProperty("created_at", NullValueHandling = NullValueHandling.Ignore)]
         public string CreatedAt { get; set; }
-
-        [JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
-        public string Id { get; set; }
-
-        [JsonProperty("mid", NullValueHandling = NullValueHandling.Ignore)]
-        public string Mid { get; set; }
 
         [JsonProperty("can_edit", NullValueHandling = NullValueHandling.Ignore)]
         public bool CanEdit { get; set; }
@@ -138,5 +130,11 @@ namespace WeiPo.Services.Models
 
         [JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
         public TitleModel Title { get; set; }
+
+        [JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
+        public string Id { get; set; }
+
+        [JsonProperty("mid", NullValueHandling = NullValueHandling.Ignore)]
+        public string Mid { get; set; }
     }
 }

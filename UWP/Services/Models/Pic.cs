@@ -2,7 +2,7 @@
 
 namespace WeiPo.Services.Models
 {
-    public partial class Pic
+    public class Pic
     {
         [JsonProperty("pid", NullValueHandling = NullValueHandling.Ignore)]
         public string Pid { get; set; }

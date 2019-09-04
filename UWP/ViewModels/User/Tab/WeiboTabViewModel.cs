@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
 using Microsoft.Toolkit.Collections;
-using Microsoft.Toolkit.Uwp;
 using Newtonsoft.Json.Linq;
 using WeiPo.Common;
 using WeiPo.Common.Collection;
 using WeiPo.Services;
 using WeiPo.Services.Models;
+
 namespace WeiPo.ViewModels.User.Tab
 {
     public class InterestPeopleViewModel
@@ -21,7 +21,7 @@ namespace WeiPo.ViewModels.User.Tab
             DescModel = descModel;
         }
 
-        public InterestPropleDescModel DescModel { get; }  
+        public InterestPropleDescModel DescModel { get; }
         public List<InterestPeopleModel> Items { get; }
 
         public void OnItemClicked(object sender, TappedRoutedEventArgs args)
@@ -36,9 +36,9 @@ namespace WeiPo.ViewModels.User.Tab
     public class WeiboTabDataSource : IIncrementalSource<object>
     {
         private readonly string _containerId;
+        private readonly long _userId;
 
         private long _sinceId;
-        private readonly long _userId;
 
         public WeiboTabDataSource(long userInfoId, string tabDataContainerid)
         {
@@ -53,7 +53,11 @@ namespace WeiPo.ViewModels.User.Tab
             {
                 return new List<object>();
             }
-            if (pageIndex == 0) _sinceId = 0;
+
+            if (pageIndex == 0)
+            {
+                _sinceId = 0;
+            }
 
             var result = await Singleton<Api>.Instance.ProfileTab(_userId, _containerId, _sinceId);
             _sinceId = result["cardlistInfo"].Value<long>("since_id");
@@ -61,13 +65,22 @@ namespace WeiPo.ViewModels.User.Tab
             return result["cards"]
                 .Select(it =>
                 {
-                    if (!(it is JObject obj)) return null;
-                    if (obj.ContainsKey("mblog")) return obj["mblog"].ToObject<StatusModel>() as object;
+                    if (!(it is JObject obj))
+                    {
+                        return null;
+                    }
+
+                    if (obj.ContainsKey("mblog"))
+                    {
+                        return obj["mblog"].ToObject<StatusModel>() as object;
+                    }
 
                     if (obj.ContainsKey("itemid") && obj.Value<string>("itemid") == "INTEREST_PEOPLE")
+                    {
                         return new InterestPeopleViewModel(obj["card_group"].Skip(1)
                                 .Select(card => card.ToObject<InterestPeopleModel>()).ToList(),
                             obj["card_group"].FirstOrDefault()?.ToObject<InterestPropleDescModel>()) as object;
+                    }
 
                     return null;
                 })

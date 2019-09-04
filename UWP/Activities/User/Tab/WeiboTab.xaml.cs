@@ -1,17 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 using WeiPo.Services.Models;
 using WeiPo.ViewModels.User.Tab;
 
@@ -23,6 +11,7 @@ namespace WeiPo.Activities.User.Tab
     {
         public DataTemplate StatusTemplate { get; set; }
         public DataTemplate InterestTemplate { get; set; }
+
         protected override DataTemplate SelectTemplateCore(object item)
         {
             switch (item)
@@ -32,6 +21,7 @@ namespace WeiPo.Activities.User.Tab
                 case InterestPeopleViewModel interest:
                     return InterestTemplate;
             }
+
             return new DataTemplate();
         }
     }
@@ -40,7 +30,7 @@ namespace WeiPo.Activities.User.Tab
     {
         public WeiboTab()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         protected override AbsTabViewModel CreateViewModel(ProfileData viewModelProfile, Services.Models.Tab tabData)

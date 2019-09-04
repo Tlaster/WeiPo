@@ -7,7 +7,5 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:paging="using:Bug10.Paging"
     mc:Ignorable="d">
-    <Grid>
-        
-    </Grid>
+    <Grid />
 </paging:Activity>

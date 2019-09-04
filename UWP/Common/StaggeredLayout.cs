@@ -8,8 +8,8 @@ namespace WeiPo.Common
 {
     public class StaggeredLayout : VirtualizingLayout
     {
-        public static readonly DependencyProperty VerticalOffsetProperty = DependencyProperty.Register(
-            nameof(VerticalOffset), typeof(double), typeof(StaggeredLayout), new PropertyMetadata(default(double)));
+        public static readonly DependencyProperty DesiredColumnWidthProperty = DependencyProperty.Register(
+            nameof(DesiredColumnWidth), typeof(double), typeof(StaggeredLayout), new PropertyMetadata(250D));
 
         public static readonly DependencyProperty PaddingProperty = DependencyProperty.Register(
             nameof(Padding),
@@ -17,9 +17,8 @@ namespace WeiPo.Common
             typeof(StaggeredLayout),
             new PropertyMetadata(default(Thickness)));
 
-
-        public static readonly DependencyProperty DesiredColumnWidthProperty = DependencyProperty.Register(
-            nameof(DesiredColumnWidth), typeof(double), typeof(StaggeredLayout), new PropertyMetadata(250D));
+        public static readonly DependencyProperty VerticalOffsetProperty = DependencyProperty.Register(
+            nameof(VerticalOffset), typeof(double), typeof(StaggeredLayout), new PropertyMetadata(default(double)));
 
         private double _columnWidth;
 
@@ -39,31 +38,6 @@ namespace WeiPo.Common
         {
             get => (double) GetValue(DesiredColumnWidthProperty);
             set => SetValue(DesiredColumnWidthProperty, value);
-        }
-
-        protected override Size MeasureOverride(VirtualizingLayoutContext context, Size availableSize)
-        {
-            availableSize.Width = availableSize.Width - Padding.Left - Padding.Right;
-            availableSize.Height = availableSize.Height - Padding.Top - Padding.Bottom - VerticalOffset;
-
-            _columnWidth = Math.Min(DesiredColumnWidth, availableSize.Width);
-            var numColumns = (int) Math.Floor(availableSize.Width / _columnWidth);
-            _columnWidth = availableSize.Width / numColumns;
-            var columnHeights = new double[numColumns];
-
-            for (var i = 0; i < context.ItemCount; i++)
-            {
-                var columnIndex = GetColumnIndex(columnHeights);
-
-                var child = context.GetOrCreateElementAt(i);
-                child.Measure(new Size(_columnWidth, availableSize.Height));
-                var elementSize = child.DesiredSize;
-                columnHeights[columnIndex] += elementSize.Height;
-            }
-
-            var desiredHeight = columnHeights.Max();
-
-            return new Size(availableSize.Width, desiredHeight);
         }
 
 
@@ -95,16 +69,43 @@ namespace WeiPo.Common
             return finalSize;
         }
 
+        protected override Size MeasureOverride(VirtualizingLayoutContext context, Size availableSize)
+        {
+            availableSize.Width = availableSize.Width - Padding.Left - Padding.Right;
+            availableSize.Height = availableSize.Height - Padding.Top - Padding.Bottom - VerticalOffset;
+
+            _columnWidth = Math.Min(DesiredColumnWidth, availableSize.Width);
+            var numColumns = (int) Math.Floor(availableSize.Width / _columnWidth);
+            _columnWidth = availableSize.Width / numColumns;
+            var columnHeights = new double[numColumns];
+
+            for (var i = 0; i < context.ItemCount; i++)
+            {
+                var columnIndex = GetColumnIndex(columnHeights);
+
+                var child = context.GetOrCreateElementAt(i);
+                child.Measure(new Size(_columnWidth, availableSize.Height));
+                var elementSize = child.DesiredSize;
+                columnHeights[columnIndex] += elementSize.Height;
+            }
+
+            var desiredHeight = columnHeights.Max();
+
+            return new Size(availableSize.Width, desiredHeight);
+        }
+
         private int GetColumnIndex(double[] columnHeights)
         {
             var columnIndex = 0;
             var height = columnHeights[0];
             for (var j = 1; j < columnHeights.Length; j++)
+            {
                 if (columnHeights[j] < height)
                 {
                     columnIndex = j;
                     height = columnHeights[j];
                 }
+            }
 
             return columnIndex;
         }

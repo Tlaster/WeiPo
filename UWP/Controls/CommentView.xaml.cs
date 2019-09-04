@@ -9,7 +9,6 @@ using WeiPo.ViewModels;
 
 namespace WeiPo.Controls
 {
-
     internal static class CommentViewXamlHelper
     {
         public static Visibility PicVisibility(CommentModel comment)
@@ -20,14 +19,14 @@ namespace WeiPo.Controls
 
     public sealed partial class CommentView
     {
-        public static readonly DependencyProperty ShowStatusProperty = DependencyProperty.Register(
-            nameof(ShowStatus), typeof(bool), typeof(CommentView), new PropertyMetadata(true));
+        public static readonly DependencyProperty CommentProperty = DependencyProperty.Register(
+            nameof(Comment), typeof(CommentModel), typeof(CommentView), new PropertyMetadata(default(CommentModel)));
 
         public static readonly DependencyProperty ShowActionsProperty = DependencyProperty.Register(
             nameof(ShowActions), typeof(bool), typeof(CommentView), new PropertyMetadata(true));
 
-        public static readonly DependencyProperty CommentProperty = DependencyProperty.Register(
-            nameof(Comment), typeof(CommentModel), typeof(CommentView), new PropertyMetadata(default(CommentModel)));
+        public static readonly DependencyProperty ShowStatusProperty = DependencyProperty.Register(
+            nameof(ShowStatus), typeof(bool), typeof(CommentView), new PropertyMetadata(true));
 
         public CommentView()
         {
@@ -52,19 +51,15 @@ namespace WeiPo.Controls
             set => SetValue(CommentProperty, value);
         }
 
-        private void HtmlTextBlock_LinkClicked(object sender, LinkClickedEventArgs e)
-        {
-            WeiboLinkHelper.LinkClicked(e.Link);
-        }
-
         private void CommentTapped(object sender, TappedRoutedEventArgs e)
         {
             e.Handled = true;
             Singleton<MessagingCenter>.Instance.Send(this, "status_comment", Comment);
         }
 
-        private void LikeTapped(object sender, TappedRoutedEventArgs e)
+        private void HtmlTextBlock_LinkClicked(object sender, LinkClickedEventArgs e)
         {
+            WeiboLinkHelper.LinkClicked(e.Link);
         }
 
         private void ImageEx_Tapped(object sender, TappedRoutedEventArgs e)
@@ -76,7 +71,15 @@ namespace WeiPo.Controls
 
             e.Handled = true;
             Singleton<MessagingCenter>.Instance.Send(this, "image_clicked",
-                new ImageViewModel(new []{new ImageModel(Comment.Pic.Url, Comment.Pic.Large.Url, Comment.Pic.Large.Geo.Width, Comment.Pic.Large.Geo.Height)}));
+                new ImageViewModel(new[]
+                {
+                    new ImageModel(Comment.Pic.Url, Comment.Pic.Large.Url, Comment.Pic.Large.Geo.Width,
+                        Comment.Pic.Large.Geo.Height)
+                }));
+        }
+
+        private void LikeTapped(object sender, TappedRoutedEventArgs e)
+        {
         }
     }
 }

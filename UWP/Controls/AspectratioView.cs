@@ -7,11 +7,11 @@ namespace WeiPo.Controls
 {
     public class AspectRatioView : Panel
     {
-        public static readonly DependencyProperty WidthRequestProperty = DependencyProperty.Register(
-            nameof(WidthRequest), typeof(int), typeof(AspectRatioView), new PropertyMetadata(default(int)));
-
         public static readonly DependencyProperty HeightRequestProperty = DependencyProperty.Register(
             nameof(HeightRequest), typeof(int), typeof(AspectRatioView), new PropertyMetadata(default(int)));
+
+        public static readonly DependencyProperty WidthRequestProperty = DependencyProperty.Register(
+            nameof(WidthRequest), typeof(int), typeof(AspectRatioView), new PropertyMetadata(default(int)));
 
         public int WidthRequest
         {
@@ -25,23 +25,6 @@ namespace WeiPo.Controls
             set => SetValue(HeightRequestProperty, value);
         }
 
-        protected override Size MeasureOverride(Size availableSize)
-        {
-            var availableWidth = availableSize.Width;
-            if (WidthRequest == 0 || HeightRequest == 0)
-            {
-                return new Size(0, 0);
-            }
-            var requestHeight = Convert.ToDouble(HeightRequest) / Convert.ToDouble(WidthRequest) * Convert.ToDouble(availableWidth);
-            var size = new Size(availableWidth, requestHeight);
-            foreach (var item in this.Children)
-            {
-                item.Measure(size);
-            }
-
-            return size;
-        }
-
         protected override Size ArrangeOverride(Size finalSize)
         {
             var availableWidth = finalSize.Width;
@@ -49,12 +32,33 @@ namespace WeiPo.Controls
             {
                 return new Size(0, 0);
             }
-            var requestHeight = Convert.ToDouble(HeightRequest) / Convert.ToDouble(WidthRequest) * Convert.ToDouble(availableWidth);
+
+            var requestHeight = Convert.ToDouble(HeightRequest) / Convert.ToDouble(WidthRequest) *
+                                Convert.ToDouble(availableWidth);
             var size = new Size(availableWidth, requestHeight);
             var rect = new Rect(0, 0, size.Width, size.Height);
-            foreach (var item in this.Children) 
+            foreach (var item in Children)
             {
                 item.Arrange(rect);
+            }
+
+            return size;
+        }
+
+        protected override Size MeasureOverride(Size availableSize)
+        {
+            var availableWidth = availableSize.Width;
+            if (WidthRequest == 0 || HeightRequest == 0)
+            {
+                return new Size(0, 0);
+            }
+
+            var requestHeight = Convert.ToDouble(HeightRequest) / Convert.ToDouble(WidthRequest) *
+                                Convert.ToDouble(availableWidth);
+            var size = new Size(availableWidth, requestHeight);
+            foreach (var item in Children)
+            {
+                item.Measure(size);
             }
 
             return size;

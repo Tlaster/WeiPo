@@ -16,7 +16,7 @@
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}">
-                        <RichTextBlock Name="RichTextContent" TextWrapping="Wrap" IsTextSelectionEnabled="False"/>
+                        <RichTextBlock Name="RichTextContent" TextWrapping="Wrap" IsTextSelectionEnabled="False" />
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
@@ -37,7 +37,7 @@
                                                          ItemsSource="{TemplateBinding ItemsSource}"
                                                          ItemTemplate="{TemplateBinding ItemTemplate}"
                                                          Layout="{TemplateBinding Layout}"
-                                                         TabFocusNavigation="{TemplateBinding TabFocusNavigation}"/>
+                                                         TabFocusNavigation="{TemplateBinding TabFocusNavigation}" />
                             </ScrollViewer>
                         </RefreshContainer>
                     </Border>
@@ -54,16 +54,17 @@
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}">
-                        <Image Width="{TemplateBinding Width}" Stretch="UniformToFill" Height="{TemplateBinding Height}" Name="StorageItemImage_Image" />
+                        <Image Width="{TemplateBinding Width}" Stretch="UniformToFill"
+                               Height="{TemplateBinding Height}" Name="StorageItemImage_Image" />
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
 
-    <Style TargetType="controls:ChipView" >
-        <Setter Property="Background" Value="{ThemeResource SystemControlAcrylicElementBrush}"/>
-        <Setter Property="SymbolContentBackground" Value="{ThemeResource SystemColorHighlightBrush}"/>
+    <Style TargetType="controls:ChipView">
+        <Setter Property="Background" Value="{ThemeResource SystemControlAcrylicElementBrush}" />
+        <Setter Property="SymbolContentBackground" Value="{ThemeResource SystemColorHighlightBrush}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="controls:ChipView">
@@ -73,17 +74,24 @@
                         Color="Black">
                         <Grid CornerRadius="14" Background="{TemplateBinding Background}">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
                             </Grid.ColumnDefinitions>
-                            <Ellipse HorizontalAlignment="Left" Width="{Binding ElementName=ChipText, Path=ActualHeight}" Height="{Binding ElementName=ChipText, Path=ActualHeight}" Fill="{TemplateBinding SymbolContentBackground}"/>
+                            <Ellipse HorizontalAlignment="Left"
+                                     Width="{Binding ElementName=ChipText, Path=ActualHeight}"
+                                     Height="{Binding ElementName=ChipText, Path=ActualHeight}"
+                                     Fill="{TemplateBinding SymbolContentBackground}" />
                             <Viewbox Width="14" Height="14">
-                                <SymbolIcon Symbol="{TemplateBinding Symbol}" Foreground="{ThemeResource SystemColorHighlightTextBrush}" />
+                                <SymbolIcon Symbol="{TemplateBinding Symbol}"
+                                            Foreground="{ThemeResource SystemColorHighlightTextBrush}" />
                             </Viewbox>
-                            <TextBlock VerticalAlignment="Center" Margin="0,0,4,0" Grid.Column="1" Padding="4" x:Name="ChipText" Text="{TemplateBinding Text}"/>
-                            <Button Visibility="{TemplateBinding CloseButtonVisibility}" Name="CloseButton" Grid.Column="2" VerticalAlignment="Stretch" CornerRadius="14" 
-                                    Width="{Binding ElementName=ChipText, Path=ActualHeight}" Style="{ThemeResource DateTimePickerFlyoutButtonStyle}">
+                            <TextBlock VerticalAlignment="Center" Margin="0,0,4,0" Grid.Column="1" Padding="4"
+                                       x:Name="ChipText" Text="{TemplateBinding Text}" />
+                            <Button Visibility="{TemplateBinding CloseButtonVisibility}" Name="CloseButton"
+                                    Grid.Column="2" VerticalAlignment="Stretch" CornerRadius="14"
+                                    Width="{Binding ElementName=ChipText, Path=ActualHeight}"
+                                    Style="{ThemeResource DateTimePickerFlyoutButtonStyle}">
                                 <Viewbox Width="10" Height="10">
                                     <SymbolIcon Symbol="Cancel" />
                                 </Viewbox>

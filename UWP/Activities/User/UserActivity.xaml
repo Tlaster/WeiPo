@@ -34,10 +34,10 @@
                 <tab:HeadlineTab TabData="{x:Bind}" />
             </DataTemplate>
             <DataTemplate x:Key="follow" x:DataType="models:Tab">
-                <tab:PeopleList Type="Follow" TabData="{x:Bind}"/>
+                <tab:PeopleList Type="Follow" TabData="{x:Bind}" />
             </DataTemplate>
             <DataTemplate x:Key="fans" x:DataType="models:Tab">
-                <tab:PeopleList Type="Fans" TabData="{x:Bind}"/>
+                <tab:PeopleList Type="Fans" TabData="{x:Bind}" />
             </DataTemplate>
         </user:TabPivotDictionary>
     </paging:Activity.Resources>
@@ -105,7 +105,8 @@
                 <controls:ImageEx Stretch="UniformToFill" HorizontalContentAlignment="Center"
                                   VerticalContentAlignment="Center"
                                   HorizontalAlignment="Center" VerticalAlignment="Center"
-                                  Source="{x:Bind ViewModel.Profile.UserInfo.ProfileImageUrl, Mode=OneWay}" CornerRadius="999"
+                                  Source="{x:Bind ViewModel.Profile.UserInfo.ProfileImageUrl, Mode=OneWay}"
+                                  CornerRadius="999"
                                   Height="{StaticResource AvatarLargeSize}" Grid.Row="0"
                                   Width="{StaticResource AvatarLargeSize}" />
             </Grid>
@@ -227,7 +228,7 @@
                 <Grid.Resources>
                     <Style TargetType="TextBlock">
                         <Setter Property="HorizontalAlignment" Value="Center" />
-                        <Setter Property="Padding" Value="2"/>
+                        <Setter Property="Padding" Value="2" />
                     </Style>
                 </Grid.Resources>
                 <Grid.ColumnDefinitions>

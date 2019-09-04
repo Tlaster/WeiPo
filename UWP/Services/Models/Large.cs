@@ -1,9 +1,8 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace WeiPo.Services.Models
 {
-    public partial class Large
+    public class Large
     {
         [JsonProperty("size", NullValueHandling = NullValueHandling.Ignore)]
         public string Size { get; set; }

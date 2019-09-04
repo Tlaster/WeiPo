@@ -2,7 +2,7 @@
 
 namespace WeiPo.Services.Models
 {
-    public partial class Visible
+    public class Visible
     {
         [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
         public long Type { get; set; }

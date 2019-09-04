@@ -2,7 +2,7 @@
 
 namespace WeiPo.Services.Models
 {
-    public partial class NumberDisplayStrategy
+    public class NumberDisplayStrategy
     {
         [JsonProperty("apply_scenario_flag", NullValueHandling = NullValueHandling.Ignore)]
         public long ApplyScenarioFlag { get; set; }

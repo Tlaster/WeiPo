@@ -1,13 +1,14 @@
 ﻿using System;
+using System.Numerics;
 using Newtonsoft.Json;
 
 namespace WeiPo.Common
 {
     public class JsonNumberConverter : JsonConverter
     {
-        readonly JsonSerializer _defaultSerializer = new JsonSerializer();
+        private readonly JsonSerializer _defaultSerializer = new JsonSerializer();
 
-        public override bool CanConvert(Type objectType) 
+        public override bool CanConvert(Type objectType)
         {
             var type = Nullable.GetUnderlyingType(objectType) ?? objectType;
             return type == typeof(long)
@@ -18,10 +19,11 @@ namespace WeiPo.Common
                    || type == typeof(ushort)
                    || type == typeof(byte)
                    || type == typeof(sbyte)
-                   || type == typeof(System.Numerics.BigInteger);
+                   || type == typeof(BigInteger);
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
+            JsonSerializer serializer)
         {
             switch (reader.TokenType)
             {
@@ -34,6 +36,7 @@ namespace WeiPo.Common
                     {
                         return Convert.ChangeType(0, objectType);
                     }
+
                     return Convert.ChangeType(reader.Value, objectType);
                 default:
                     throw new JsonSerializationException(
@@ -48,6 +51,7 @@ namespace WeiPo.Common
                 serializer.Serialize(writer, null);
                 return;
             }
+
             serializer.Serialize(writer, value.ToString());
         }
     }

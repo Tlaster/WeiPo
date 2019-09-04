@@ -2,7 +2,7 @@
 
 namespace WeiPo.Services.Models
 {
-    public partial class TabsInfo
+    public class TabsInfo
     {
         [JsonProperty("selectedTab", NullValueHandling = NullValueHandling.Ignore)]
         public int SelectedTab { get; set; }

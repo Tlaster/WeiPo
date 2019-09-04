@@ -2,7 +2,7 @@
 
 namespace WeiPo.Services.Models
 {
-    public partial class InterestPropleDescModel
+    public class InterestPropleDescModel
     {
         [JsonProperty("desc", NullValueHandling = NullValueHandling.Ignore)]
         public string Desc { get; set; }

@@ -2,7 +2,7 @@
 
 namespace WeiPo.Services.Models
 {
-    public partial class PicGeo
+    public class PicGeo
     {
         [JsonProperty("width", NullValueHandling = NullValueHandling.Ignore)]
         public long Width { get; set; }

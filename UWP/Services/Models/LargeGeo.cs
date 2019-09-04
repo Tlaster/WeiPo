@@ -2,7 +2,7 @@
 
 namespace WeiPo.Services.Models
 {
-    public partial class LargeGeo
+    public class LargeGeo
     {
         [JsonProperty("width", NullValueHandling = NullValueHandling.Ignore)]
         [JsonConverter(typeof(ParseStringConverter))]

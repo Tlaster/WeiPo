@@ -2,7 +2,7 @@
 
 namespace WeiPo.Services.Models
 {
-    public partial class ToolbarMenuParams
+    public class ToolbarMenuParams
     {
         [JsonProperty("uid", NullValueHandling = NullValueHandling.Ignore)]
         public long? Uid { get; set; }

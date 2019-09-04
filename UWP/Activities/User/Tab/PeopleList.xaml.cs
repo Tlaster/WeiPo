@@ -46,9 +46,17 @@ namespace WeiPo.Activities.User.Tab
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private static void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private void Grid_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            if (e.Property == TabDataProperty) (d as PeopleList).OnTabDataChanged();
+            if (sender is FrameworkElement element && element.DataContext is UserModel user)
+            {
+                Singleton<MessagingCenter>.Instance.Send(this, "user_clicked", user);
+            }
+        }
+
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private void OnTabDataChanged()
@@ -57,15 +65,12 @@ namespace WeiPo.Activities.User.Tab
             ViewModel = new PeopleListViewModel(Type, uid);
         }
 
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private static void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private void Grid_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            if (sender is FrameworkElement element && element.DataContext is UserModel user)
-                Singleton<MessagingCenter>.Instance.Send(this, "user_clicked", user);
+            if (e.Property == TabDataProperty)
+            {
+                (d as PeopleList).OnTabDataChanged();
+            }
         }
     }
 }

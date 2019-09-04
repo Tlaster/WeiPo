@@ -2,7 +2,7 @@
 
 namespace WeiPo.Services.Models
 {
-    public partial class ConfigModel
+    public class ConfigModel
     {
         [JsonProperty("login", NullValueHandling = NullValueHandling.Ignore)]
         public bool? Login { get; set; }

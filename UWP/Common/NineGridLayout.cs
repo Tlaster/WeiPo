@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Specialized;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -18,30 +17,12 @@ namespace WeiPo.Common
             set => SetValue(PaddingProperty, value);
         }
 
-        protected override Size MeasureOverride(Size availableSize)
-        {
-            var itemSize = availableSize.Width / 3D - Padding;
-            var rowCount = Math.Ceiling(Convert.ToDouble(this.Children.Count) / 3D);
-            if (rowCount == 0d)
-            {
-                return new Size(availableSize.Width, 0d);
-            }
-            var totalHeight = rowCount * itemSize + (rowCount - 1) * Padding;
-            for (var index = 0; index < this.Children.Count; index++)
-            {
-                var child = this.Children[index];
-                child.Measure(new Size(itemSize, itemSize));
-            }
-
-            return new Size(availableSize.Width, totalHeight);
-        }
-
         protected override Size ArrangeOverride(Size finalSize)
         {
             var currentY = 0D;
             var currentX = 0D;
             var itemSize = finalSize.Width / 3D - Padding;
-            foreach (var child in this.Children)
+            foreach (var child in Children)
             {
                 var bounds = new Rect(currentX, currentY, itemSize, itemSize);
                 child.Arrange(bounds);
@@ -56,6 +37,25 @@ namespace WeiPo.Common
 
             return finalSize;
         }
+
+        protected override Size MeasureOverride(Size availableSize)
+        {
+            var itemSize = availableSize.Width / 3D - Padding;
+            var rowCount = Math.Ceiling(Convert.ToDouble(Children.Count) / 3D);
+            if (rowCount == 0d)
+            {
+                return new Size(availableSize.Width, 0d);
+            }
+
+            var totalHeight = rowCount * itemSize + (rowCount - 1) * Padding;
+            for (var index = 0; index < Children.Count; index++)
+            {
+                var child = Children[index];
+                child.Measure(new Size(itemSize, itemSize));
+            }
+
+            return new Size(availableSize.Width, totalHeight);
+        }
     }
 
     public class NineGridLayout : VirtualizingLayout
@@ -67,23 +67,6 @@ namespace WeiPo.Common
         {
             get => (double) GetValue(PaddingProperty);
             set => SetValue(PaddingProperty, value);
-        }
-
-        protected override Size MeasureOverride(VirtualizingLayoutContext context, Size availableSize)
-        {
-            var itemSize = availableSize.Width / 3D - Padding;
-            var rowCount = Math.Ceiling(Convert.ToDouble(context.ItemCount) / 3D);
-            if (rowCount == 0d)
-            {
-                return new Size(availableSize.Width, 0d);
-            }
-            var totalHeight = rowCount * itemSize + (rowCount - 1) * Padding;
-            for (var i = 0; i < context.ItemCount; i++)
-            {
-                context.GetOrCreateElementAt(i).Measure(new Size(itemSize, itemSize));
-            }
-
-            return new Size(availableSize.Width, totalHeight);
         }
 
         protected override Size ArrangeOverride(VirtualizingLayoutContext context, Size finalSize)
@@ -106,6 +89,24 @@ namespace WeiPo.Common
             }
 
             return finalSize;
+        }
+
+        protected override Size MeasureOverride(VirtualizingLayoutContext context, Size availableSize)
+        {
+            var itemSize = availableSize.Width / 3D - Padding;
+            var rowCount = Math.Ceiling(Convert.ToDouble(context.ItemCount) / 3D);
+            if (rowCount == 0d)
+            {
+                return new Size(availableSize.Width, 0d);
+            }
+
+            var totalHeight = rowCount * itemSize + (rowCount - 1) * Padding;
+            for (var i = 0; i < context.ItemCount; i++)
+            {
+                context.GetOrCreateElementAt(i).Measure(new Size(itemSize, itemSize));
+            }
+
+            return new Size(availableSize.Width, totalHeight);
         }
     }
 }

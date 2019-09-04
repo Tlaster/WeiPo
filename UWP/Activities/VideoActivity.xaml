@@ -8,5 +8,5 @@
     xmlns:paging="using:Bug10.Paging"
     mc:Ignorable="d">
 
-    <MediaElement AreTransportControlsEnabled="True" Source="{x:Bind VideoPath, Mode=OneWay}"/>
+    <MediaElement AreTransportControlsEnabled="True" Source="{x:Bind VideoPath, Mode=OneWay}" />
 </paging:Activity>

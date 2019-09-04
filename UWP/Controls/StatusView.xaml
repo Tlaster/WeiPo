@@ -36,12 +36,12 @@
         <ItemsControl Tapped="{x:Bind ImageListOnTapped}" ItemsSource="{x:Bind Status.Pics, Mode=OneWay}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <common:NineGridPanel/>
+                    <common:NineGridPanel />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate x:DataType="models:Pic">
-                    <controls:ImageEx IsCacheEnabled="True" 
+                    <controls:ImageEx IsCacheEnabled="True"
                                       HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="UniformToFill"
                                       Source="{x:Bind Url}" />
                 </DataTemplate>
@@ -92,7 +92,8 @@
                 <common:NonNullDataTemplateSelector>
                     <common:NonNullDataTemplateSelector.DataTemplate>
                         <DataTemplate x:DataType="models:StatusModel">
-                            <local:StatusView Margin="0, 4, 0, 0" ShowActions="False" Status="{x:Bind Mode=OneWay}" Background="{StaticResource RetweetBackground}"/>
+                            <local:StatusView Margin="0, 4, 0, 0" ShowActions="False" Status="{x:Bind Mode=OneWay}"
+                                              Background="{StaticResource RetweetBackground}" />
                         </DataTemplate>
                     </common:NonNullDataTemplateSelector.DataTemplate>
                 </common:NonNullDataTemplateSelector>

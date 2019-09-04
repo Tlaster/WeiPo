@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace WeiPo.Services.Models
 {
-    public partial class PicRectangleObject
+    public class PicRectangleObject
     {
         [JsonProperty("rectangle_objects", NullValueHandling = NullValueHandling.Ignore)]
         public List<FocusPoint> RectangleObjects { get; set; }

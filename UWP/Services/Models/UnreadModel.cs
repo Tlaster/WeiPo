@@ -2,7 +2,7 @@
 
 namespace WeiPo.Services.Models
 {
-    public partial class UnreadModel
+    public class UnreadModel
     {
         [JsonProperty("cmt", NullValueHandling = NullValueHandling.Ignore)]
         public long Cmt { get; set; }
@@ -40,8 +40,7 @@ namespace WeiPo.Services.Models
         [JsonProperty("unreadmsg", NullValueHandling = NullValueHandling.Ignore)]
         public Unreadmsg Unreadmsg { get; set; }
 
-        [JsonProperty("group")]
-        public object Group { get; set; }
+        [JsonProperty("group")] public object Group { get; set; }
 
         [JsonProperty("notice", NullValueHandling = NullValueHandling.Ignore)]
         public long Notice { get; set; }

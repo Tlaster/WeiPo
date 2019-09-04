@@ -3,22 +3,17 @@ using Newtonsoft.Json;
 
 namespace WeiPo.Services.Models
 {
-    public partial class CommentModel : ICanReply
+    public class CommentModel : ICanReply
     {
-        [JsonProperty("max_id")]
-        public long MaxId { get; set; }
+        [JsonProperty("max_id")] public long MaxId { get; set; }
 
-        [JsonProperty("more_info_type")]
-        public long MoreInfoType { get; set; }
+        [JsonProperty("more_info_type")] public long MoreInfoType { get; set; }
 
-        [JsonProperty("pic")]
-        public Pic Pic { get; set; }
+        [JsonProperty("pic")] public Pic Pic { get; set; }
 
-        [JsonProperty("readtimetype")]
-        public string Readtimetype { get; set; }
+        [JsonProperty("readtimetype")] public string Readtimetype { get; set; }
 
-        [JsonProperty("comment_badge")]
-        public CommentBadge[] CommentBadge { get; set; }
+        [JsonProperty("comment_badge")] public CommentBadge[] CommentBadge { get; set; }
 
         [JsonProperty("isLikedByMblogAuthor", NullValueHandling = NullValueHandling.Ignore)]
         public bool IsLikedByMblogAuthor { get; set; }
@@ -41,9 +36,6 @@ namespace WeiPo.Services.Models
         [JsonProperty("created_at", NullValueHandling = NullValueHandling.Ignore)]
         public string CreatedAt { get; set; }
 
-        [JsonProperty("mid", NullValueHandling = NullValueHandling.Ignore)]
-        public string Mid { get; set; }
-
         [JsonProperty("floor_number", NullValueHandling = NullValueHandling.Ignore)]
         public long FloorNumber { get; set; }
 
@@ -59,9 +51,6 @@ namespace WeiPo.Services.Models
         [JsonProperty("liked", NullValueHandling = NullValueHandling.Ignore)]
         public bool Liked { get; set; }
 
-        [JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
-        public string Id { get; set; }
-
         [JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]
         public string Text { get; set; }
 
@@ -73,5 +62,11 @@ namespace WeiPo.Services.Models
 
         [JsonProperty("bid", NullValueHandling = NullValueHandling.Ignore)]
         public string Bid { get; set; }
+
+        [JsonProperty("mid", NullValueHandling = NullValueHandling.Ignore)]
+        public string Mid { get; set; }
+
+        [JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
+        public string Id { get; set; }
     }
 }

@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace WeiPo.Services.Models
 {
-    public partial class UserModel
+    public class UserModel
     {
         [JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
         public long Id { get; set; }

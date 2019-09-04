@@ -1,31 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Numerics;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel.Core;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI;
-using Windows.UI.Composition;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Animation;
-using Windows.UI.Xaml.Navigation;
-using Microsoft.Toolkit.Uwp.UI.Extensions;
 using WeiPo.Activities;
 using WeiPo.Activities.User;
 using WeiPo.Common;
-using WeiPo.Controls;
-using WeiPo.ViewModels;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -35,7 +17,7 @@ namespace WeiPo
     {
         public RootView()
         {
-            this.InitializeComponent();
+            InitializeComponent();
             CoreApplication.GetCurrentView().TitleBar.Also(it =>
             {
                 it.LayoutMetricsChanged += OnCoreTitleBarOnLayoutMetricsChanged;
@@ -52,11 +34,22 @@ namespace WeiPo
             Init();
         }
 
-        private void RootContainerOnNavigated(object sender, EventArgs e)
+        private void Init()
         {
-            Singleton<MessagingCenter>.Instance.Send(this, "message_center_visible", false);
-            Singleton<MessagingCenter>.Instance.Send(this, "dock_visible",
-                RootContainer.CurrentActivity is TimelineActivity);
+            MessageCenterDock.RegisterPropertyChangedCallback(VisibilityProperty,
+                (sender, e) => { UpdateNavigationBackButton(); });
+            Singleton<MessagingCenter>.Instance.Subscribe("login_completed",
+                (sender, args) => RootContainer.Navigate<TimelineActivity>());
+            Singleton<MessagingCenter>.Instance.Subscribe("status_clicked", (sender, args) => { });
+            Singleton<MessagingCenter>.Instance.Subscribe("user_clicked",
+                (sender, args) => { RootContainer.Navigate(typeof(UserActivity), args); });
+            Singleton<MessagingCenter>.Instance.Subscribe("status_like", (sender, args) => { });
+            Singleton<MessagingCenter>.Instance.Subscribe("image_clicked",
+                (sender, args) => RootContainer.Navigate<ImageActivity>(args));
+            Singleton<MessagingCenter>.Instance.Subscribe("video_clicked",
+                (sender, args) => RootContainer.Navigate<VideoActivity>(args));
+            RootContainer.BackStackChanged += RootContainerOnBackStackChanged;
+            RootContainer.Navigate(typeof(LoginActivity));
         }
 
         private void OnBackRequested(object sender, BackRequestedEventArgs e)
@@ -67,36 +60,10 @@ namespace WeiPo
             }
         }
 
-        private void Init()
-        {
-            MessageCenterDock.RegisterPropertyChangedCallback(UIElement.VisibilityProperty, (sender, e) =>
-            {
-                UpdateNavigationBackButton();
-            });
-            Singleton<MessagingCenter>.Instance.Subscribe("login_completed",
-                (sender, args) => RootContainer.Navigate<TimelineActivity>());
-            Singleton<MessagingCenter>.Instance.Subscribe("status_clicked", (sender, args) =>
-            {
-            });
-            Singleton<MessagingCenter>.Instance.Subscribe("user_clicked", (sender, args) =>
-            {
-                RootContainer.Navigate(typeof(UserActivity), args);
-            });
-            Singleton<MessagingCenter>.Instance.Subscribe("status_like", (sender, args) =>
-            {
 
-            });
-            Singleton<MessagingCenter>.Instance.Subscribe("image_clicked", (sender, args) => RootContainer.Navigate<ImageActivity>(args));
-            Singleton<MessagingCenter>.Instance.Subscribe("video_clicked", (sender, args) => RootContainer.Navigate<VideoActivity>(args));
-            RootContainer.BackStackChanged += RootContainerOnBackStackChanged;
-            RootContainer.Navigate(typeof(LoginActivity));
-        }
-
-        private void UpdateNavigationBackButton()
+        private void OnCoreTitleBarOnLayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
         {
-            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = 
-                RootContainer.CanGoBack || MessageCenterDock.Visibility == Visibility.Visible ?
-                AppViewBackButtonVisibility.Visible : AppViewBackButtonVisibility.Collapsed;
+            TitleBar.Height = sender.Height;
         }
 
         private void RootContainerOnBackStackChanged(object sender, EventArgs e)
@@ -104,10 +71,19 @@ namespace WeiPo
             UpdateNavigationBackButton();
         }
 
-
-        private void OnCoreTitleBarOnLayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
+        private void RootContainerOnNavigated(object sender, EventArgs e)
         {
-            TitleBar.Height = sender.Height;
+            Singleton<MessagingCenter>.Instance.Send(this, "message_center_visible", false);
+            Singleton<MessagingCenter>.Instance.Send(this, "dock_visible",
+                RootContainer.CurrentActivity is TimelineActivity);
+        }
+
+        private void UpdateNavigationBackButton()
+        {
+            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
+                RootContainer.CanGoBack || MessageCenterDock.Visibility == Visibility.Visible
+                    ? AppViewBackButtonVisibility.Visible
+                    : AppViewBackButtonVisibility.Collapsed;
         }
     }
 }

@@ -10,6 +10,17 @@ namespace WeiPo.Activities.User.Tab
 {
     public abstract class AbsTab : UserControl, INotifyPropertyChanged
     {
+        public static readonly DependencyProperty TabDataProperty = DependencyProperty.Register(
+            nameof(TabData), typeof(Services.Models.Tab), typeof(AbsTab),
+            new PropertyMetadata(default, PropertyChangedCallback));
+
+        private AbsTabViewModel _viewModel;
+
+        public AbsTab()
+        {
+            Loaded += OnLoaded;
+        }
+
         public AbsTabViewModel ViewModel
         {
             get => _viewModel;
@@ -20,22 +31,19 @@ namespace WeiPo.Activities.User.Tab
             }
         }
 
-        public static readonly DependencyProperty TabDataProperty = DependencyProperty.Register(
-            nameof(TabData), typeof(Services.Models.Tab), typeof(AbsTab), new PropertyMetadata(default, PropertyChangedCallback));
-
-        private AbsTabViewModel _viewModel;
-
-        private static void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        public Services.Models.Tab TabData
         {
-            if (e.Property == TabDataProperty)
-            {
-                (d as AbsTab).OnTabDataChanged();
-            }
+            get => (Services.Models.Tab) GetValue(TabDataProperty);
+            set => SetValue(TabDataProperty, value);
         }
 
-        public AbsTab()
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected abstract AbsTabViewModel CreateViewModel(ProfileData viewModelProfile, Services.Models.Tab tabData);
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            Loaded += OnLoaded;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)
@@ -52,18 +60,12 @@ namespace WeiPo.Activities.User.Tab
         {
         }
 
-        public Services.Models.Tab TabData
+        private static void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            get => (Services.Models.Tab) GetValue(TabDataProperty);
-            set => SetValue(TabDataProperty, value);
-        }
-
-        protected abstract AbsTabViewModel CreateViewModel(ProfileData viewModelProfile, Services.Models.Tab tabData);
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            if (e.Property == TabDataProperty)
+            {
+                (d as AbsTab).OnTabDataChanged();
+            }
         }
     }
 }

@@ -17,7 +17,7 @@
     d:DesignWidth="400">
 
     <Grid>
-        <Border Background="Transparent" x:Name="DockBackground" Tapped="DockBackground_Tapped"/>
+        <Border Background="Transparent" x:Name="DockBackground" Tapped="DockBackground_Tapped" />
         <Grid HorizontalAlignment="Right" Name="DockShadowContainer">
             <controls1:DropShadowPanel
                 x:Name="DockShadow"
@@ -29,13 +29,13 @@
                 Height="{Binding ElementName=MessageCenterContainer, Path=(extensions:FrameworkElementExtensions.ActualHeight), Mode=OneWay}"
                 ShadowOpacity="0.6"
                 Color="Black">
-                <Border 
+                <Border
                     Width="{Binding ElementName=MessageCenterContainer, Path=(extensions:FrameworkElementExtensions.ActualWidth), Mode=OneWay}"
-                    Height="{Binding ElementName=MessageCenterContainer, Path=(extensions:FrameworkElementExtensions.ActualHeight), Mode=OneWay}"/>
+                    Height="{Binding ElementName=MessageCenterContainer, Path=(extensions:FrameworkElementExtensions.ActualHeight), Mode=OneWay}" />
             </controls1:DropShadowPanel>
         </Grid>
         <Grid MaxWidth="600" HorizontalAlignment="Right" x:Name="MessageCenterContainer"
-                      extensions:FrameworkElementExtensions.EnableActualSizeBinding="True">
+              extensions:FrameworkElementExtensions.EnableActualSizeBinding="True">
             <controls:NavigationView IsSettingsVisible="False" IsBackButtonVisible="Collapsed"
                                      Background="{ThemeResource SystemControlAcrylicElementBrush}"
                                      PaneDisplayMode="LeftCompact"
@@ -44,19 +44,20 @@
                                      MenuItemsSource="{x:Bind ViewModel.Source}">
                 <controls:NavigationView.MenuItemTemplate>
                     <DataTemplate x:DataType="viewModels:MessagingCenterDockItemViewModel">
-                        <controls:NavigationViewItem Content="{x:Bind Title}" >
+                        <controls:NavigationViewItem Content="{x:Bind Title}">
                             <controls:NavigationViewItem.Icon>
-                                <SymbolIcon Symbol="{x:Bind Symbol}"/>
+                                <SymbolIcon Symbol="{x:Bind Symbol}" />
                             </controls:NavigationViewItem.Icon>
                         </controls:NavigationViewItem>
                     </DataTemplate>
                 </controls:NavigationView.MenuItemTemplate>
                 <controls:NavigationView.HeaderTemplate>
                     <DataTemplate x:DataType="viewModels:MessagingCenterDockItemViewModel">
-                        <TextBlock Text="{x:Bind Title}"/>
+                        <TextBlock Text="{x:Bind Title}" />
                     </DataTemplate>
                 </controls:NavigationView.HeaderTemplate>
-                <local:ListViewEx ItemsSource="{x:Bind MessageNavigationView.SelectedItem.(viewModels:MessagingCenterDockItemViewModel.Source), Mode=OneWay}">
+                <local:ListViewEx
+                    ItemsSource="{x:Bind MessageNavigationView.SelectedItem.(viewModels:MessagingCenterDockItemViewModel.Source), Mode=OneWay}">
                     <local:ListViewEx.Layout>
                         <common:StaggeredLayout DesiredColumnWidth="300" />
                     </local:ListViewEx.Layout>
@@ -64,12 +65,12 @@
                         <common:StatusCommentDataTemplateSelector>
                             <common:StatusCommentDataTemplateSelector.CommentTemplate>
                                 <DataTemplate x:DataType="models:CommentModel">
-                                    <local:CommentView ShowActions="True" Comment="{x:Bind}"/>
+                                    <local:CommentView ShowActions="True" Comment="{x:Bind}" />
                                 </DataTemplate>
                             </common:StatusCommentDataTemplateSelector.CommentTemplate>
                             <common:StatusCommentDataTemplateSelector.StatusTemplate>
                                 <DataTemplate x:DataType="models:StatusModel">
-                                    <local:StatusView ShowActions="True" Status="{x:Bind}"/>
+                                    <local:StatusView ShowActions="True" Status="{x:Bind}" />
                                 </DataTemplate>
                             </common:StatusCommentDataTemplateSelector.StatusTemplate>
                         </common:StatusCommentDataTemplateSelector>

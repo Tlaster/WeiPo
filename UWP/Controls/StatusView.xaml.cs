@@ -22,24 +22,27 @@ namespace WeiPo.Controls
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
         {
             if (item is PageInfo pageInfo && (pageInfo.Type == "video" || pageInfo.Type == "article"))
+            {
                 return DataTemplate;
+            }
+
             return new DataTemplate();
         }
     }
 
     internal static class StatusViewXamlHelper
     {
-        public static string SecondToTime(double second)
-        {
-            var time = new TimeSpan(0, 0, Convert.ToInt32(second));
-            return time.ToString("g");
-        }
-
         public static Visibility PageInfoVisibility(StatusModel status)
         {
             return status.PageInfo != null && (status.PageInfo.Type == "video" || status.PageInfo.Type == "article")
                 ? Visibility.Visible
                 : Visibility.Collapsed;
+        }
+
+        public static string SecondToTime(double second)
+        {
+            var time = new TimeSpan(0, 0, Convert.ToInt32(second));
+            return time.ToString("g");
         }
 
         public static string TimeConverter(string time)
@@ -57,11 +60,11 @@ namespace WeiPo.Controls
 
     public sealed partial class StatusView : UserControl
     {
-        public static readonly DependencyProperty ShowRetweetProperty = DependencyProperty.Register(
-            nameof(ShowRetweet), typeof(bool), typeof(StatusView), new PropertyMetadata(true));
-
         public static readonly DependencyProperty ShowActionsProperty = DependencyProperty.Register(
             nameof(ShowActions), typeof(bool), typeof(StatusView), new PropertyMetadata(true));
+
+        public static readonly DependencyProperty ShowRetweetProperty = DependencyProperty.Register(
+            nameof(ShowRetweet), typeof(bool), typeof(StatusView), new PropertyMetadata(true));
 
         public static readonly DependencyProperty StatusProperty = DependencyProperty.Register(
             nameof(Status), typeof(StatusModel), typeof(StatusView), new PropertyMetadata(default));
@@ -89,10 +92,16 @@ namespace WeiPo.Controls
             set => SetValue(StatusProperty, value);
         }
 
+        protected override void OnRightTapped(RightTappedRoutedEventArgs e)
+        {
+            base.OnRightTapped(e);
+        }
+
         protected override void OnTapped(TappedRoutedEventArgs e)
         {
             base.OnTapped(e);
             if (e.OriginalSource is FrameworkElement element && element.DataContext != null)
+            {
                 switch (element.DataContext)
                 {
                     case StatusModel status:
@@ -111,15 +120,27 @@ namespace WeiPo.Controls
                                 e.Handled = true;
                                 //trick: new [] { "mp4_720p_mp4", "mp4_hd_mp4", "mp4_ld_mp4", "mp4_1080p_mp4", "pre_ld_mp4"}.OrderBy(it => it) => OrderedEnumerable<string, string> { "mp4_1080p_mp4", "mp4_720p_mp4", "mp4_hd_mp4", "mp4_ld_mp4", "pre_ld_mp4" }
                                 var url = info.Urls?.OrderBy(it => it.Key).FirstOrDefault().Value;
-                                if (string.IsNullOrEmpty(url)) url = info.MediaInfo.Mp4720pMp4;
-
-                                if (string.IsNullOrEmpty(url)) url = info.MediaInfo.StreamUrlHd;
-
-                                if (string.IsNullOrEmpty(url)) url = info.MediaInfo.StreamUrl;
+                                if (string.IsNullOrEmpty(url))
+                                {
+                                    url = info.MediaInfo.Mp4720pMp4;
+                                }
 
                                 if (string.IsNullOrEmpty(url))
                                 {
-                                    if (info.PageUrl != null) Launcher.LaunchUriAsync(new Uri(info.PageUrl));
+                                    url = info.MediaInfo.StreamUrlHd;
+                                }
+
+                                if (string.IsNullOrEmpty(url))
+                                {
+                                    url = info.MediaInfo.StreamUrl;
+                                }
+
+                                if (string.IsNullOrEmpty(url))
+                                {
+                                    if (info.PageUrl != null)
+                                    {
+                                        Launcher.LaunchUriAsync(new Uri(info.PageUrl));
+                                    }
                                 }
                                 else
                                 {
@@ -140,34 +161,13 @@ namespace WeiPo.Controls
 
                         break;
                 }
-        }
-
-        protected override void OnRightTapped(RightTappedRoutedEventArgs e)
-        {
-            base.OnRightTapped(e);
-        }
-
-        private void ShareTapped(object sender, TappedRoutedEventArgs e)
-        {
-            e.Handled = true;
-            Singleton<MessagingCenter>.Instance.Send(this, "status_share", Status);
+            }
         }
 
         private void CommentTapped(object sender, TappedRoutedEventArgs e)
         {
             e.Handled = true;
             Singleton<MessagingCenter>.Instance.Send(this, "status_comment", Status);
-        }
-
-        private void LikeTapped(object sender, TappedRoutedEventArgs e)
-        {
-            e.Handled = true;
-            Singleton<MessagingCenter>.Instance.Send(this, "status_like", Status);
-        }
-
-        private void OnLinkClicked(object sender, LinkClickedEventArgs e)
-        {
-            WeiboLinkHelper.LinkClicked(e.Link);
         }
 
         private void ImageListOnTapped(object sender, TappedRoutedEventArgs e)
@@ -182,6 +182,23 @@ namespace WeiPo.Controls
                             new ImageModel(it.Url, it.Large.Url, it.Large.Geo.Width, it.Large.Geo.Height)).ToArray(),
                         index));
             }
+        }
+
+        private void LikeTapped(object sender, TappedRoutedEventArgs e)
+        {
+            e.Handled = true;
+            Singleton<MessagingCenter>.Instance.Send(this, "status_like", Status);
+        }
+
+        private void OnLinkClicked(object sender, LinkClickedEventArgs e)
+        {
+            WeiboLinkHelper.LinkClicked(e.Link);
+        }
+
+        private void ShareTapped(object sender, TappedRoutedEventArgs e)
+        {
+            e.Handled = true;
+            Singleton<MessagingCenter>.Instance.Send(this, "status_share", Status);
         }
     }
 }

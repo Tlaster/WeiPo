@@ -23,15 +23,17 @@
         Margin="{x:Bind Margin, Mode=OneWay}"
         DataContext="{x:Bind Comment, Mode=OneWay}" Orientation="Vertical">
         <local:PersonCard Avatar="{x:Bind Comment.User.ProfileImageUrl, Mode=OneWay}"
-                          DataContext="{x:Bind Comment.User, Mode=OneWay}" 
+                          DataContext="{x:Bind Comment.User, Mode=OneWay}"
                           Title="{x:Bind Comment.User.ScreenName, Mode=OneWay}"
-                          SubTitle="{x:Bind local:StatusViewXamlHelper.TimeConverter(Comment.CreatedAt), Mode=OneWay}"/>
+                          SubTitle="{x:Bind local:StatusViewXamlHelper.TimeConverter(Comment.CreatedAt), Mode=OneWay}" />
         <html:HtmlTextBlock Text="{x:Bind Comment.Text, Mode=OneWay}"
-                            LinkClicked="HtmlTextBlock_LinkClicked"/>
-        <local:AspectRatioView WidthRequest="1" HeightRequest="1" Visibility="{x:Bind local:CommentViewXamlHelper.PicVisibility(Comment), Mode=OneWay}">
-            <controls1:ImageEx Tapped="ImageEx_Tapped" Source="{x:Bind Comment.Pic.Url, Mode=OneWay}"/>
+                            LinkClicked="HtmlTextBlock_LinkClicked" />
+        <local:AspectRatioView WidthRequest="1" HeightRequest="1"
+                               Visibility="{x:Bind local:CommentViewXamlHelper.PicVisibility(Comment), Mode=OneWay}">
+            <controls1:ImageEx Tapped="ImageEx_Tapped" Source="{x:Bind Comment.Pic.Url, Mode=OneWay}" />
         </local:AspectRatioView>
-        <Grid Background="{StaticResource RetweetBackground}" CornerRadius="{StaticResource CardCorner}" Margin="40,0,0,0">
+        <Grid Background="{StaticResource RetweetBackground}" CornerRadius="{StaticResource CardCorner}"
+              Margin="40,0,0,0">
             <ContentControl DataContext="{x:Bind Comment.Comments, Mode=OneWay}"
                             Content="{x:Bind Comment.Comments, Mode=OneWay}">
                 <ContentControl.ContentTemplateSelector>
@@ -40,17 +42,19 @@
                             <DataTemplate>
                                 <Grid>
                                     <Grid.RowDefinitions>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
+                                        <RowDefinition />
+                                        <RowDefinition />
                                     </Grid.RowDefinitions>
                                     <controls:ItemsRepeater ItemsSource="{Binding}">
                                         <controls:ItemsRepeater.ItemTemplate>
                                             <DataTemplate x:DataType="models:CommentModel">
-                                                <local:CommentView Comment="{x:Bind}" ShowActions="False" ShowStatus="False"/>
+                                                <local:CommentView Comment="{x:Bind}" ShowActions="False"
+                                                                   ShowStatus="False" />
                                             </DataTemplate>
                                         </controls:ItemsRepeater.ItemTemplate>
                                     </controls:ItemsRepeater>
-                                    <Button Grid.Row="1" Content="More" Style="{ThemeResource DateTimePickerFlyoutButtonStyle}" />
+                                    <Button Grid.Row="1" Content="More"
+                                            Style="{ThemeResource DateTimePickerFlyoutButtonStyle}" />
                                 </Grid>
                             </DataTemplate>
                         </common:NonNullDataTemplateSelector.DataTemplate>
@@ -58,7 +62,8 @@
                 </ContentControl.ContentTemplateSelector>
             </ContentControl>
         </Grid>
-        <local:StatusView Margin="0, 4, 0, 0" ShowActions="False" Status="{x:Bind Comment.Status, Mode=OneWay}" ShowRetweet="False" Background="{StaticResource RetweetBackground}"/>
+        <local:StatusView Margin="0, 4, 0, 0" ShowActions="False" Status="{x:Bind Comment.Status, Mode=OneWay}"
+                          ShowRetweet="False" Background="{StaticResource RetweetBackground}" />
         <Grid Visibility="{x:Bind ShowActions, Mode=OneWay}">
             <Grid.Resources>
                 <Style TargetType="Button" BasedOn="{StaticResource DateTimePickerFlyoutButtonStyle}">

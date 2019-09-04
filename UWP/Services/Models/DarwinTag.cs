@@ -1,9 +1,8 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace WeiPo.Services.Models
 {
-    public partial class DarwinTag
+    public class DarwinTag
     {
         [JsonProperty("object_type", NullValueHandling = NullValueHandling.Ignore)]
         public string ObjectType { get; set; }
@@ -14,8 +13,7 @@ namespace WeiPo.Services.Models
         [JsonProperty("display_name", NullValueHandling = NullValueHandling.Ignore)]
         public string DisplayName { get; set; }
 
-        [JsonProperty("enterprise_uid")]
-        public object EnterpriseUid { get; set; }
+        [JsonProperty("enterprise_uid")] public object EnterpriseUid { get; set; }
 
         [JsonProperty("pc_url", NullValueHandling = NullValueHandling.Ignore)]
         public string PcUrl { get; set; }

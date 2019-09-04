@@ -66,10 +66,7 @@ namespace WeiPo.Controls.Html
             set => SetValue(TextProperty, value);
         }
 
-        private static void OnPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (e.Property == TextProperty) (d as HtmlTextBlock).RenderHtml();
-        }
+        public event EventHandler<LinkClickedEventArgs> LinkClicked;
 
         protected override void OnApplyTemplate()
         {
@@ -79,25 +76,23 @@ namespace WeiPo.Controls.Html
             RenderHtml();
         }
 
-        private void RenderHtml()
-        {
-            if (_rootElement == null || _richTextContent == null) return;
-
-            Clean();
-
-            if (string.IsNullOrEmpty(Text)) return;
-            var html = new HtmlDocument();
-            html.LoadHtml(Text);
-            _richTextContent.Blocks.Clear();
-            var paragraph = new Paragraph();
-            _richTextContent.Blocks.Add(paragraph);
-            Render(html.DocumentNode, new RenderContext(paragraph.Inlines));
-        }
-
         private void Clean()
         {
             _listeningHyperlinks.ForEach(it => it.Click -= HyperLinkOnClick);
             _listeningHyperlinks.Clear();
+        }
+
+        private void HyperLinkOnClick(Hyperlink sender, HyperlinkClickEventArgs args)
+        {
+            LinkClicked?.Invoke(this, new LinkClickedEventArgs(sender.GetValue(HyperlinkUrlProperty) as string));
+        }
+
+        private static void OnPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.Property == TextProperty)
+            {
+                (d as HtmlTextBlock).RenderHtml();
+            }
         }
 
 
@@ -121,9 +116,33 @@ namespace WeiPo.Controls.Html
                     context.InlineCollection.Add(new Run {Text = node.InnerText});
                     break;
                 default:
-                    if (node.HasChildNodes) Render(node.ChildNodes, context);
+                    if (node.HasChildNodes)
+                    {
+                        Render(node.ChildNodes, context);
+                    }
+
                     break;
             }
+        }
+
+        private void Render(HtmlNodeCollection nodeChildNodes, IHtmlRenderContext context)
+        {
+            foreach (var item in nodeChildNodes)
+            {
+                Render(item, context);
+            }
+        }
+
+        private void RenderA(HtmlNode node, IHtmlRenderContext context)
+        {
+            var link = node.GetAttributeValue("href", "");
+            var hyperLink = new Hyperlink();
+            Render(node.ChildNodes, new RenderContext(hyperLink.Inlines));
+            hyperLink.SetValue(HyperlinkUrlProperty, link);
+            ToolTipService.SetToolTip(hyperLink, link);
+            hyperLink.Click += HyperLinkOnClick;
+            _listeningHyperlinks.Add(hyperLink);
+            context.InlineCollection.Add(hyperLink);
         }
 
         private void RenderBr(HtmlNode node, IHtmlRenderContext context)
@@ -131,9 +150,47 @@ namespace WeiPo.Controls.Html
             context.InlineCollection.Add(new LineBreak());
         }
 
-        private void Render(HtmlNodeCollection nodeChildNodes, IHtmlRenderContext context)
+        private void RenderHtml()
         {
-            foreach (var item in nodeChildNodes) Render(item, context);
+            if (_rootElement == null || _richTextContent == null)
+            {
+                return;
+            }
+
+            Clean();
+
+            if (string.IsNullOrEmpty(Text))
+            {
+                return;
+            }
+
+            var html = new HtmlDocument();
+            html.LoadHtml(Text);
+            _richTextContent.Blocks.Clear();
+            var paragraph = new Paragraph();
+            _richTextContent.Blocks.Add(paragraph);
+            Render(html.DocumentNode, new RenderContext(paragraph.Inlines));
+        }
+
+        private void RenderIconImg(HtmlNode node, IHtmlRenderContext context)
+        {
+            if (node.HasAttributes && node.Attributes.Any(it => it.Name == "alt"))
+            {
+                var name = node.GetAttributeValue("alt", "").TrimStart('[').TrimEnd(']');
+                var link = node.GetAttributeValue("src", "");
+                var img = new ImageEx
+                {
+                    Source = $"https:{link}",
+                    Width = _richTextContent.FontSize,
+                    Height = _richTextContent.FontSize,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Stretch = Stretch.UniformToFill
+                };
+                var container = new InlineUIContainer {Child = img};
+                ToolTipService.SetToolTip(img, name);
+                context.InlineCollection.Add(container);
+            }
         }
 
         private void RenderImg(HtmlNode node, IHtmlRenderContext context)
@@ -157,53 +214,18 @@ namespace WeiPo.Controls.Html
             }
         }
 
-        private void RenderA(HtmlNode node, IHtmlRenderContext context)
-        {
-            var link = node.GetAttributeValue("href", "");
-            var hyperLink = new Hyperlink();
-            Render(node.ChildNodes, new RenderContext(hyperLink.Inlines));
-            hyperLink.SetValue(HyperlinkUrlProperty, link);
-            ToolTipService.SetToolTip(hyperLink, link);
-            hyperLink.Click += HyperLinkOnClick;
-            _listeningHyperlinks.Add(hyperLink);
-            context.InlineCollection.Add(hyperLink);
-        }
-
-        public event EventHandler<LinkClickedEventArgs> LinkClicked;
-
-        private void HyperLinkOnClick(Hyperlink sender, HyperlinkClickEventArgs args)
-        {
-            LinkClicked?.Invoke(this, new LinkClickedEventArgs(sender.GetValue(HyperlinkUrlProperty) as string));
-        }
-
 
         private void RenderSpan(HtmlNode node, IHtmlRenderContext context)
         {
             if (node.HasAttributes)
-                if (node.Attributes.Any(it => it.Name == "class" && it.Value == "url-icon")) // icon
-                    RenderIconImg(node.FirstChild, context);
-            context.InlineCollection.Add(new Run {Text = node.InnerText});
-        }
-
-        private void RenderIconImg(HtmlNode node, IHtmlRenderContext context)
-        {
-            if (node.HasAttributes && node.Attributes.Any(it => it.Name == "alt"))
             {
-                var name = node.GetAttributeValue("alt", "").TrimStart('[').TrimEnd(']');
-                var link = node.GetAttributeValue("src", "");
-                var img = new ImageEx
+                if (node.Attributes.Any(it => it.Name == "class" && it.Value == "url-icon")) // icon
                 {
-                    Source = $"https:{link}",
-                    Width = _richTextContent.FontSize,
-                    Height = _richTextContent.FontSize,
-                    HorizontalAlignment = HorizontalAlignment.Center,
-                    VerticalAlignment = VerticalAlignment.Center,
-                    Stretch = Stretch.UniformToFill
-                };
-                var container = new InlineUIContainer {Child = img};
-                ToolTipService.SetToolTip(img, name);
-                context.InlineCollection.Add(container);
+                    RenderIconImg(node.FirstChild, context);
+                }
             }
+
+            context.InlineCollection.Add(new Run {Text = node.InnerText});
         }
     }
 }

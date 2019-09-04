@@ -2,7 +2,7 @@
 
 namespace WeiPo.Services.Models
 {
-    public partial class Actionlog
+    public class Actionlog
     {
         [JsonProperty("act_code", NullValueHandling = NullValueHandling.Ignore)]
         public string ActCode { get; set; }

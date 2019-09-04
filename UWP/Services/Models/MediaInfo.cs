@@ -1,9 +1,8 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace WeiPo.Services.Models
 {
-    public partial class MediaInfo
+    public class MediaInfo
     {
         [JsonProperty("stream_url", NullValueHandling = NullValueHandling.Ignore)]
         public string StreamUrl { get; set; }

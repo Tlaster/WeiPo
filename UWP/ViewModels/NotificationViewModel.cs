@@ -25,6 +25,7 @@ namespace WeiPo.ViewModels
                     while (true)
                     {
                         if (_isLoginCompleted)
+                        {
                             try
                             {
                                 await FetchUnread();
@@ -35,6 +36,7 @@ namespace WeiPo.ViewModels
                                 Debug.WriteLine(e.Message);
                                 Debug.WriteLine(e.StackTrace);
                             }
+                        }
 
                         await Task.Delay(_duration);
                     }

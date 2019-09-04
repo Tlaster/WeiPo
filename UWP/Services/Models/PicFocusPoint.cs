@@ -2,7 +2,7 @@
 
 namespace WeiPo.Services.Models
 {
-    public partial class PicFocusPoint
+    public class PicFocusPoint
     {
         [JsonProperty("focus_point", NullValueHandling = NullValueHandling.Ignore)]
         public FocusPoint FocusPoint { get; set; }

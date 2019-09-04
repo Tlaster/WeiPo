@@ -2,7 +2,7 @@
 
 namespace WeiPo.Services.Models
 {
-    public partial class MenuListParams
+    public class MenuListParams
     {
         [JsonProperty("scheme", NullValueHandling = NullValueHandling.Ignore)]
         public string Scheme { get; set; }

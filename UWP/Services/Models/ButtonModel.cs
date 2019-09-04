@@ -2,7 +2,7 @@
 
 namespace WeiPo.Services.Models
 {
-    public partial class ButtonModel
+    public class ButtonModel
     {
         [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
         public string Type { get; set; }

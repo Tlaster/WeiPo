@@ -10,8 +10,12 @@ namespace WeiPo.Controls
 {
     public sealed class ChipView : Control
     {
-        public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
-            nameof(Text), typeof(string), typeof(ChipView), new PropertyMetadata(default(string)));
+        public static readonly DependencyProperty CloseButtonVisibilityProperty = DependencyProperty.Register(
+            nameof(CloseButtonVisibility), typeof(Visibility), typeof(ChipView),
+            new PropertyMetadata(Visibility.Visible));
+
+        public static readonly DependencyProperty ShadowOpacityProperty = DependencyProperty.Register(
+            nameof(ShadowOpacity), typeof(double), typeof(ChipView), new PropertyMetadata(default(double)));
 
         public static readonly DependencyProperty SymbolContentBackgroundProperty = DependencyProperty.Register(
             nameof(SymbolContentBackground), typeof(Brush), typeof(ChipView), new PropertyMetadata(default(Brush)));
@@ -22,12 +26,8 @@ namespace WeiPo.Controls
         public static readonly DependencyProperty SymbolProperty = DependencyProperty.Register(
             nameof(Symbol), typeof(Symbol), typeof(ChipView), new PropertyMetadata(default(Symbol)));
 
-        public static readonly DependencyProperty CloseButtonVisibilityProperty = DependencyProperty.Register(
-            nameof(CloseButtonVisibility), typeof(Visibility), typeof(ChipView),
-            new PropertyMetadata(Visibility.Visible));
-
-        public static readonly DependencyProperty ShadowOpacityProperty = DependencyProperty.Register(
-            nameof(ShadowOpacity), typeof(double), typeof(ChipView), new PropertyMetadata(default(double)));
+        public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
+            nameof(Text), typeof(string), typeof(ChipView), new PropertyMetadata(default(string)));
 
         private Button _closeButton;
 
@@ -79,7 +79,10 @@ namespace WeiPo.Controls
         {
             base.OnApplyTemplate();
             _closeButton = GetTemplateChild("CloseButton") as Button;
-            if (_closeButton != null) _closeButton.Tapped += CloseButtonOnTapped;
+            if (_closeButton != null)
+            {
+                _closeButton.Tapped += CloseButtonOnTapped;
+            }
         }
 
         private void CloseButtonOnTapped(object sender, TappedRoutedEventArgs e)
