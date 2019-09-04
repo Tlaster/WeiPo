@@ -1,7 +1,9 @@
 ﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
+using WeiPo.Common;
 using WeiPo.Controls.Html;
 using WeiPo.Services.Models;
+using WeiPo.ViewModels;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -52,14 +54,29 @@ namespace WeiPo.Controls
 
         private void HtmlTextBlock_LinkClicked(object sender, LinkClickedEventArgs e)
         {
+            WeiboLinkHelper.LinkClicked(e.Link);
         }
 
         private void CommentTapped(object sender, TappedRoutedEventArgs e)
         {
+            e.Handled = true;
+            Singleton<MessagingCenter>.Instance.Send(this, "status_comment", Comment);
         }
 
         private void LikeTapped(object sender, TappedRoutedEventArgs e)
         {
+        }
+
+        private void ImageEx_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            if (Comment.Pic == null)
+            {
+                return;
+            }
+
+            e.Handled = true;
+            Singleton<MessagingCenter>.Instance.Send(this, "image_clicked",
+                new ImageViewModel(new []{new ImageModel(Comment.Pic.Url, Comment.Pic.Large.Url, Comment.Pic.Large.Geo.Width, Comment.Pic.Large.Geo.Height)}));
         }
     }
 }

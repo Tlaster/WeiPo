@@ -16,6 +16,11 @@ namespace WeiPo.Common
 
         protected override DataTemplate SelectTemplateCore(object item)
         {
+            return SelectTemplateCore(item, null);
+        }
+
+        protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
+        {
             switch (item)
             {
                 case StatusModel status:

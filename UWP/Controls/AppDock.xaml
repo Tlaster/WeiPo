@@ -111,17 +111,24 @@
                         Visibility="{x:Bind IsHeaderOpened, Mode=OneWay}" Grid.Column="0" Grid.Row="2" Style="{ThemeResource DateTimePickerFlyoutButtonStyle}">
                     <SymbolIcon Symbol="Mail" />
                 </Button>
-                <ContentControl Grid.Row="0" Grid.Column="1" Content="{x:Bind ViewModel.PostWeiboViewModel.StatusModel, Mode=OneWay}"
-                                DataContext="{x:Bind ViewModel.PostWeiboViewModel.StatusModel, Mode=OneWay}">
+                <ContentControl Grid.Row="0" Grid.Column="1" Content="{x:Bind ViewModel.PostWeiboViewModel.ReplyModel, Mode=OneWay}"
+                                DataContext="{x:Bind ViewModel.PostWeiboViewModel.ReplyModel, Mode=OneWay}">
                     <ContentControl.ContentTemplateSelector>
-                        <common:NonNullDataTemplateSelector>
-                            <common:NonNullDataTemplateSelector.DataTemplate>
+                        <common:StatusCommentDataTemplateSelector>
+                            <common:StatusCommentDataTemplateSelector.StatusTemplate>
                                 <DataTemplate x:DataType="models:StatusModel">
                                     <local:StatusView ShowActions="False"
                                                       Status="{x:Bind Mode=OneWay}"/>
                                 </DataTemplate>
-                            </common:NonNullDataTemplateSelector.DataTemplate>
-                        </common:NonNullDataTemplateSelector>
+                            </common:StatusCommentDataTemplateSelector.StatusTemplate>
+                            <common:StatusCommentDataTemplateSelector.CommentTemplate>
+                                <DataTemplate x:DataType="models:CommentModel">
+                                    <local:CommentView
+                                        ShowActions="False"
+                                        Comment="{x:Bind Mode=OneWay}"/>
+                                </DataTemplate>
+                            </common:StatusCommentDataTemplateSelector.CommentTemplate>
+                        </common:StatusCommentDataTemplateSelector>
                     </ContentControl.ContentTemplateSelector>
                 </ContentControl>
                 <controls:ImageEx Grid.Row="1" Grid.Column="0" VerticalAlignment="Top" Width="{StaticResource AvatarNormalSize}"

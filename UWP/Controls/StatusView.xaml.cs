@@ -167,23 +167,7 @@ namespace WeiPo.Controls
 
         private void OnLinkClicked(object sender, LinkClickedEventArgs e)
         {
-            if (e.Link.StartsWith("/n/"))
-            {
-                Singleton<MessagingCenter>.Instance.Send(this, "user_clicked", e.Link.Substring("/n/".Length));
-            }
-            else if (e.Link.StartsWith("/status/"))
-            {
-                Singleton<MessagingCenter>.Instance.Send(this, "status_clicked", e.Link.Substring("/status/".Length));
-            }
-            else if (e.Link.StartsWith("http"))
-            {
-                var uri = new Uri(e.Link);
-                if (uri.Host.Contains("sinaimg.cn"))
-                    Singleton<MessagingCenter>.Instance.Send(this, "image_clicked",
-                        new ImageViewModel(new[] {new ImageModel(e.Link, e.Link)}));
-                else
-                    Launcher.LaunchUriAsync(new Uri(e.Link));
-            }
+            WeiboLinkHelper.LinkClicked(e.Link);
         }
 
         private void ImageListOnTapped(object sender, TappedRoutedEventArgs e)

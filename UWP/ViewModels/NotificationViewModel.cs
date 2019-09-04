@@ -10,24 +10,21 @@ namespace WeiPo.ViewModels
 {
     public class NotificationViewModel : ViewModelBase
     {
-        public static NotificationViewModel Instance { get; } = new NotificationViewModel();
-        private int _duration = 60 * 1000;
-        private bool _isLoginCompleted = false;
+        private readonly int _duration = 60 * 1000;
+        private bool _isLoginCompleted;
         private Task _task;
-        public UnreadModel Unread { get; set; }
 
         private NotificationViewModel()
         {
             Singleton<MessagingCenter>.Instance.Subscribe("login_completed", delegate
             {
                 _isLoginCompleted = true;
-                
+
                 _task = Task.Run(async () =>
                 {
                     while (true)
                     {
                         if (_isLoginCompleted)
-                        {
                             try
                             {
                                 await FetchUnread();
@@ -38,7 +35,7 @@ namespace WeiPo.ViewModels
                                 Debug.WriteLine(e.Message);
                                 Debug.WriteLine(e.StackTrace);
                             }
-                        }
+
                         await Task.Delay(_duration);
                     }
                 });
@@ -51,7 +48,36 @@ namespace WeiPo.ViewModels
                     OnPropertyChanged(nameof(Unread));
                 });
             });
+            Singleton<MessagingCenter>.Instance.Subscribe("notification_clear_mention_at", delegate
+            {
+                DispatcherHelper.ExecuteOnUIThreadAsync(() =>
+                {
+                    Unread.MentionStatus = 0;
+                    OnPropertyChanged(nameof(Unread));
+                });
+            });
+
+            Singleton<MessagingCenter>.Instance.Subscribe("notification_clear_mention_comment", delegate
+            {
+                DispatcherHelper.ExecuteOnUIThreadAsync(() =>
+                {
+                    Unread.MentionCmt = 0;
+                    OnPropertyChanged(nameof(Unread));
+                });
+            });
+
+            Singleton<MessagingCenter>.Instance.Subscribe("notification_clear_comment", delegate
+            {
+                DispatcherHelper.ExecuteOnUIThreadAsync(() =>
+                {
+                    Unread.Cmt = 0;
+                    OnPropertyChanged(nameof(Unread));
+                });
+            });
         }
+
+        public static NotificationViewModel Instance { get; } = new NotificationViewModel();
+        public UnreadModel Unread { get; set; }
 
         private async Task FetchUnread()
         {

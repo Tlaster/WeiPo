@@ -23,8 +23,6 @@ namespace WeiPo.ViewModels
 
     public class PostWeiboViewModel : ViewModelBase
     {
-        private StatusModel _statusModel;
-
         public PostWeiboViewModel()
         {
             Files.CollectionChanged += FilesOnCollectionChanged;
@@ -34,7 +32,10 @@ namespace WeiPo.ViewModels
             });
             Singleton<MessagingCenter>.Instance.Subscribe("status_comment", (sender, args) =>
             {
-                if (args is StatusModel status) ToCommentState(status);
+                if (args is ICanReply reply)
+                {
+                    ToCommentState(reply);
+                }
             });
         }
 
@@ -45,16 +46,7 @@ namespace WeiPo.ViewModels
 
         public PostType PostType { get; set; }
 
-        public StatusModel StatusModel
-        {
-            get => _statusModel;
-            private set
-            {
-                _statusModel = value;
-                OnPropertyChanged();
-            }
-        }
-
+        public ICanReply ReplyModel { get; private set; }
         public int MaxImageFileCount { get; set; } = 9;
         public string Content { get; set; } = string.Empty;
         public int MaxLength { get; set; } = 1000;
@@ -82,18 +74,18 @@ namespace WeiPo.ViewModels
         {
             IsSending = false;
             PostType = PostType.Create;
-            StatusModel = null;
+            ReplyModel = null;
             MaxImageFileCount = 9;
             Content = string.Empty;
             MaxLength = 1000;
             Files.Clear();
         }
 
-        public void ToCommentState(StatusModel model)
+        public void ToCommentState(ICanReply model)
         {
             IsSending = false;
             PostType = PostType.Comment;
-            StatusModel = model;
+            ReplyModel = model;
             MaxImageFileCount = 1;
             Content = string.Empty;
             MaxLength = 140;
@@ -104,7 +96,7 @@ namespace WeiPo.ViewModels
         {
             IsSending = false;
             PostType = PostType.Repost;
-            StatusModel = model.RetweetedStatus ?? model;
+            ReplyModel = model.RetweetedStatus ?? model;
             MaxImageFileCount = 1;
             Content = model.RetweetedStatus == null ? string.Empty : $"//@{model.User.ScreenName}:{model.RawText}";
             MaxLength = 140;
@@ -130,13 +122,13 @@ namespace WeiPo.ViewModels
                     break;
                 case PostType.Repost:
                 {
-                    result = await Singleton<Api>.Instance.Repost(Content, StatusModel, picids.FirstOrDefault()?.PicId);
+                    result = await Singleton<Api>.Instance.Repost(Content, ReplyModel, picids.FirstOrDefault()?.PicId);
                 }
                     break;
                 case PostType.Comment:
                 {
                     result =
-                        await Singleton<Api>.Instance.Comment(Content, StatusModel, picids.FirstOrDefault()?.PicId);
+                        await Singleton<Api>.Instance.Comment(Content, ReplyModel, picids.FirstOrDefault()?.PicId);
                 }
                     break;
                 default:

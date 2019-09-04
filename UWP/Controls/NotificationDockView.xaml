@@ -42,6 +42,7 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
         <StackPanel Margin="12" Orientation="Vertical" x:Name="NotificationContainer"
+                    Visibility="{x:Bind common:XamlHelper.IsNonNullToVisibility(ViewModel.Unread), Mode=OneWay}"
                     HorizontalAlignment="Right">
             <StackPanel.Resources>
                 <Style TargetType="local:ChipView">

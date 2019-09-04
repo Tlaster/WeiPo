@@ -29,7 +29,7 @@
         <html:HtmlTextBlock Text="{x:Bind Comment.Text, Mode=OneWay}"
                             LinkClicked="HtmlTextBlock_LinkClicked"/>
         <local:AspectRatioView WidthRequest="1" HeightRequest="1" Visibility="{x:Bind local:CommentViewXamlHelper.PicVisibility(Comment), Mode=OneWay}">
-            <controls1:ImageEx Source="{x:Bind Comment.Pic.Url, Mode=OneWay}"/>
+            <controls1:ImageEx Tapped="ImageEx_Tapped" Source="{x:Bind Comment.Pic.Url, Mode=OneWay}"/>
         </local:AspectRatioView>
         <Grid Background="{StaticResource RetweetBackground}" CornerRadius="{StaticResource CardCorner}" Margin="40,0,0,0">
             <ContentControl DataContext="{x:Bind Comment.Comments, Mode=OneWay}"
