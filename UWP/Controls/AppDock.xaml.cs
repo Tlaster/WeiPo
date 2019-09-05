@@ -7,6 +7,12 @@ using Windows.UI.Xaml.Input;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using WeiPo.Common;
 using WeiPo.ViewModels;
+using System;
+using Windows.Storage.Streams;
+using System.Threading.Tasks;
+using Windows.Graphics.Imaging;
+using System.IO;
+using System.Linq;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -183,6 +189,69 @@ namespace WeiPo.Controls
         {
             _isPointerOverHeader = false;
             ToggleHeader();
+        }
+
+        private async void TextBox_Paste(object sender, TextControlPasteEventArgs e)
+        {
+            var dataPackageView = Windows.ApplicationModel.DataTransfer.Clipboard.GetContent();
+            if (dataPackageView.Contains(Windows.ApplicationModel.DataTransfer.StandardDataFormats.Bitmap))
+            {
+                e.Handled = true;
+                var bitmap = await dataPackageView.GetBitmapAsync();
+                var file = await GetFileFromBitmap(bitmap);
+                ViewModel.PostWeiboViewModel.AddImage(file);
+            }
+            else if (dataPackageView.Contains(Windows.ApplicationModel.DataTransfer.StandardDataFormats.StorageItems))
+            {
+                e.Handled = true;
+                var files = (await dataPackageView.GetStorageItemsAsync())
+                    .Where(item => item is StorageFile && (item as StorageFile).ContentType.Contains("image"))
+                    .Select(it => it as StorageFile)
+                    .ToArray();
+                ViewModel.PostWeiboViewModel.AddImage(files);
+            }
+        }
+
+        private static async Task<StorageFile> GetFileFromBitmap(RandomAccessStreamReference bitmap)
+        {
+            var file = await ApplicationData.Current.LocalCacheFolder.CreateFileAsync($"{new Random().Next()}.png", CreationCollisionOption.GenerateUniqueName);
+            using (var fstream = await file.OpenStreamForWriteAsync())
+            using (var stream = await bitmap.OpenReadAsync())
+            {
+                var decoder = await BitmapDecoder.CreateAsync(stream);
+                var pixels = await decoder.GetPixelDataAsync();
+                var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, fstream.AsRandomAccessStream());
+                encoder.SetPixelData(decoder.BitmapPixelFormat, BitmapAlphaMode.Ignore,
+                    decoder.OrientedPixelWidth, decoder.OrientedPixelHeight,
+                    decoder.DpiX, decoder.DpiY,
+                    pixels.DetachPixelData());
+                await encoder.FlushAsync();
+            }
+            return file;
+        }
+
+        private bool _isCtrlDown;
+        private void TextBox_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Control)
+            {
+                _isCtrlDown = true;
+            }
+            if (_isCtrlDown && e.Key == Windows.System.VirtualKey.Enter)
+            {
+                ViewModel.PostWeiboViewModel.Commit();
+            }
+            (sender as TextBox).AcceptsReturn = !_isCtrlDown;
+        }
+
+        private void TextBox_KeyUp(object sender, KeyRoutedEventArgs e)
+        {
+
+            if (e.Key == Windows.System.VirtualKey.Control)
+            {
+                _isCtrlDown = false;
+                (sender as TextBox).AcceptsReturn = !_isCtrlDown;
+            }
         }
     }
 }

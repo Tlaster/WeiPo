@@ -143,6 +143,7 @@
                                   Tapped="{x:Bind ViewModel.ToMyProfile}"
                                   Height="{StaticResource AvatarNormalSize}" CornerRadius="999" />
                 <TextBox GotFocus="UIElement_OnGotFocus" LostFocus="UIElement_OnLostFocus" Margin="8" Grid.Row="1"
+                         Paste="TextBox_Paste" KeyDown="TextBox_KeyDown" KeyUp="TextBox_KeyUp"
                          AcceptsReturn="True" VerticalContentAlignment="Center" Grid.Column="1" TextWrapping="Wrap"
                          Text="{x:Bind ViewModel.PostWeiboViewModel.Content, Mode=TwoWay}"
                          IsEnabled="{x:Bind ViewModel.PostWeiboViewModel.IsNotSending, Mode=OneWay}"

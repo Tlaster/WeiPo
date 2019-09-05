@@ -108,6 +108,10 @@ namespace WeiPo.ViewModels
             picker.FileTypeFilter.Add(".png");
             picker.FileTypeFilter.Add(".gif");
             var files = await picker.PickMultipleFilesAsync();
+        }
+
+        public void AddImage(params StorageFile[] files)
+        {
             var images = Files.Concat(files).Take(MaxImageFileCount).ToList();
             Files.Clear();
             foreach (var item in images)
