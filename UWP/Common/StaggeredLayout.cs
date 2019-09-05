@@ -12,6 +12,7 @@ namespace WeiPo.Common
         private class State
         {
             public Dictionary<int, Size> ChildSize { get; } = new Dictionary<int, Size>();
+            public Dictionary<int, Rect> ArrangeData { get; } = new Dictionary<int, Rect>();
         }
         public static readonly DependencyProperty DesiredColumnWidthProperty = DependencyProperty.Register(
             nameof(DesiredColumnWidth), typeof(double), typeof(StaggeredLayout), new PropertyMetadata(250D));
@@ -58,27 +59,12 @@ namespace WeiPo.Common
 
         protected override Size ArrangeOverride(VirtualizingLayoutContext context, Size finalSize)
         {
-            var horizontalOffset = Padding.Left;
-            var verticalOffset = Padding.Top + VerticalOffset;
-            var numColumns = (int) Math.Floor(finalSize.Width / _columnWidth);
-            horizontalOffset += (finalSize.Width - numColumns * _columnWidth) / 2;
-
-            var columnHeights = new double[numColumns];
-
-            for (var i = 0; i < context.ItemCount; i++)
+            var state = context.LayoutState as State;
+            foreach (var item in state.ArrangeData)
             {
-                var columnIndex = GetColumnIndex(columnHeights);
-
-                var child = context.GetOrCreateElementAt(i);
-                var elementSize = child.DesiredSize;
-                var elementHeight = elementSize.Height;
-                var bounds = new Rect(horizontalOffset + _columnWidth * columnIndex,
-                    columnHeights[columnIndex] + verticalOffset, _columnWidth, elementHeight);
-                child.Arrange(bounds);
-
-                columnHeights[columnIndex] += elementSize.Height;
+                var child = context.GetOrCreateElementAt(item.Key);
+                child.Arrange(item.Value);
             }
-
             return finalSize;
         }
 
@@ -87,19 +73,22 @@ namespace WeiPo.Common
             var state = context.LayoutState as State;
             availableSize.Width = availableSize.Width - Padding.Left - Padding.Right;
             availableSize.Height = availableSize.Height - Padding.Top - Padding.Bottom - VerticalOffset;
-
             _columnWidth = Math.Min(DesiredColumnWidth, availableSize.Width);
             var numColumns = (int) Math.Floor(availableSize.Width / _columnWidth);
             _columnWidth = availableSize.Width / numColumns;
             var columnHeights = new double[numColumns];
-
+            var verticalOffset = Padding.Top + VerticalOffset;
+            var horizontalOffset = Padding.Left;
+            horizontalOffset += (availableSize.Width - numColumns * _columnWidth) / 2;
+            state.ArrangeData.Clear();
             for (var i = 0; i < context.ItemCount; i++)
             {
                 var columnIndex = GetColumnIndex(columnHeights);
-
+                var realizationRect = context.RealizationRect;
+                UIElement child = null;
                 if (!state.ChildSize.ContainsKey(i) || state.ChildSize[i].Width != _columnWidth)
                 {
-                    var child = context.GetOrCreateElementAt(i);
+                    child = context.GetOrCreateElementAt(i);
                     child.Measure(new Size(_columnWidth, availableSize.Height));
                     if (!state.ChildSize.ContainsKey(i))
                     {
@@ -109,7 +98,28 @@ namespace WeiPo.Common
                     {
                         state.ChildSize[i] = child.DesiredSize;
                     }
+                    var bounds = new Rect(horizontalOffset + _columnWidth * columnIndex,
+                        columnHeights[columnIndex] + verticalOffset, _columnWidth, child.DesiredSize.Height);
+                    state.ArrangeData.Add(i, bounds);
                 }
+
+                if (columnHeights[columnIndex] < realizationRect.Bottom && columnHeights[columnIndex] + state.ChildSize[i].Height > realizationRect.Top && child == null)
+                {
+                    child = context.GetOrCreateElementAt(i);
+                    child.Measure(new Size(_columnWidth, availableSize.Height));
+                    if (state.ChildSize[i] != child.DesiredSize)
+                    {
+                        state.ChildSize[i] = child.DesiredSize;
+                    }
+                    var bounds = new Rect(horizontalOffset + _columnWidth * columnIndex,
+                        columnHeights[columnIndex] + verticalOffset, _columnWidth, child.DesiredSize.Height);
+                    state.ArrangeData.Add(i, bounds);
+                }
+                else if (child != null)
+                {
+                    context.RecycleElement(child);
+                }
+                
                 var elementSize = state.ChildSize[i];
                 columnHeights[columnIndex] += elementSize.Height;
             }
