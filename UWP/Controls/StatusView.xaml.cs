@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Humanizer;
+using Newtonsoft.Json;
 using WeiPo.Common;
 using WeiPo.Controls.Html;
 using WeiPo.Services.Models;
@@ -32,6 +34,13 @@ namespace WeiPo.Controls
 
     internal static class StatusViewXamlHelper
     {
+        public static Visibility TitleVisibility(StatusModel status)
+        {
+            return status.Title != null
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+        }
+
         public static Visibility PageInfoVisibility(StatusModel status)
         {
             return status.PageInfo != null && (status.PageInfo.Type == "video" || status.PageInfo.Type == "article")
@@ -199,6 +208,13 @@ namespace WeiPo.Controls
         {
             e.Handled = true;
             Singleton<MessagingCenter>.Instance.Send(this, "status_share", Status);
+        }
+
+        private void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            var data =  new DataPackage();
+            data.SetText(JsonConvert.SerializeObject(Status));
+            Clipboard.SetContent(data);
         }
     }
 }
