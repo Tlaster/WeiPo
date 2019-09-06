@@ -8,6 +8,7 @@
     xmlns:viewModels="using:WeiPo.ViewModels"
     xmlns:common="using:WeiPo.Common"
     xmlns:controls1="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:extensions="using:Microsoft.Toolkit.Uwp.UI.Extensions"
     xmlns:controls2="using:WeiPo.Controls"
     xmlns:models="using:WeiPo.Services.Models"
     xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
@@ -27,5 +28,26 @@
                 </DataTemplate>
             </controls2:ListViewEx.ItemTemplate>
         </controls2:ListViewEx>
+        <controls1:DropShadowPanel
+            VerticalAlignment="Bottom"
+            HorizontalAlignment="Right"
+            BlurRadius="20"
+            Margin="16"
+            ShadowOpacity="0.6"
+            Color="Black">
+            <Ellipse Fill="{ThemeResource SystemAccentColor}" 
+                Width="{Binding ElementName=RefreshButton, Path=(extensions:FrameworkElementExtensions.ActualWidth), Mode=OneWay}"
+                Height="{Binding ElementName=RefreshButton, Path=(extensions:FrameworkElementExtensions.ActualHeight), Mode=OneWay}" />
+        </controls1:DropShadowPanel>
+        <Button 
+            extensions:FrameworkElementExtensions.EnableActualSizeBinding="True"
+            Name="RefreshButton"
+            Margin="16"
+            VerticalAlignment="Bottom"
+            HorizontalAlignment="Right"
+            CornerRadius="40" Padding="8" RequestedTheme="Dark" Style="{ThemeResource AccentButtonStyle}"
+                    Click="{x:Bind DataContext.(viewModels:TimelineViewModel.Timeline).Refresh}">
+            <SymbolIcon Width="{StaticResource AvatarNormalSize}" Height="{StaticResource AvatarNormalSize}" Symbol="Refresh"/>
+        </Button>
     </Grid>
 </paging:Activity>
