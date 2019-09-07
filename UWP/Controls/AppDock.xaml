@@ -230,6 +230,12 @@
                                            PreferredPlacement="Bottom">
                         <controls1:TeachingTip.Content>
                             <GridView SelectionMode="None" ItemsSource="{Binding Source={StaticResource EmojiGroupSource}}">
+                                <GridView.ItemContainerStyle>
+                                    <Style TargetType="GridViewItem">
+                                        <Setter Property="MinWidth" Value="0"/>
+                                        <Setter Property="MinHeight" Value="0"/>
+                                    </Style>
+                                </GridView.ItemContainerStyle>
                                 <GridView.GroupStyle>
                                     <GroupStyle>
                                         <GroupStyle.HeaderTemplate>
@@ -241,7 +247,7 @@
                                 </GridView.GroupStyle>
                                 <GridView.ItemTemplate>
                                     <DataTemplate x:DataType="models:EmojiModel">
-                                        <controls:ImageEx ToolTipService.ToolTip="{x:Bind Value}" Source="{x:Bind IconUrl}" Width="40" Height="40"/>
+                                        <controls:ImageEx ToolTipService.ToolTip="{x:Bind Value}" Source="{x:Bind IconUrl}" Width="24" Height="24"/>
                                     </DataTemplate>
                                 </GridView.ItemTemplate>
                             </GridView>
