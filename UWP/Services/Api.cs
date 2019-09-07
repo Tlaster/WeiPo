@@ -61,6 +61,13 @@ namespace WeiPo.Services
                 .GetData();
         }
 
+        public async Task<EmojiResponse> Emoji()
+        {
+            return await "https://weibo.com/aj/mblog/face?type=face"
+                .GetAsync()
+                .ReceiveJson<EmojiResponse>();
+        }
+
         public async Task<JObject> Reply(string content, CommentModel item, string picId = null)
         {
             var configResult = await Config();

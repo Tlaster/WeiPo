@@ -93,6 +93,7 @@ namespace WeiPo.Controls
 
             FullBackground.Visibility = Visibility.Visible;
             ToggleHeader();
+            DockInput.Focus(FocusState.Programmatic);
         }
 
         public void StopComposing()
@@ -252,6 +253,11 @@ namespace WeiPo.Controls
                 _isCtrlDown = false;
                 (sender as TextBox).AcceptsReturn = !_isCtrlDown;
             }
+        }
+
+        private void EmojiButton_Click(object sender, RoutedEventArgs e)
+        {
+            EmojiTeachTip.IsOpen = !EmojiTeachTip.IsOpen;
         }
     }
 }

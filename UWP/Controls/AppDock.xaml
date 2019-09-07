@@ -17,6 +17,9 @@
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
+    <UserControl.Resources>
+        <CollectionViewSource x:Key="EmojiGroupSource" IsSourceGrouped="True" Source="{x:Bind ViewModel.Emoji.Result,Mode=OneWay}"/>
+    </UserControl.Resources>
     <RelativePanel>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
@@ -144,6 +147,7 @@
                                   Height="{StaticResource AvatarNormalSize}" CornerRadius="999" />
                 <TextBox GotFocus="UIElement_OnGotFocus" LostFocus="UIElement_OnLostFocus" Margin="8" Grid.Row="1"
                          Paste="TextBox_Paste" KeyDown="TextBox_KeyDown" KeyUp="TextBox_KeyUp"
+                         x:Name="DockInput"
                          AcceptsReturn="True" VerticalContentAlignment="Center" Grid.Column="1" TextWrapping="Wrap"
                          Text="{x:Bind ViewModel.PostWeiboViewModel.Content, Mode=TwoWay}"
                          IsEnabled="{x:Bind ViewModel.PostWeiboViewModel.IsNotSending, Mode=OneWay}"
@@ -161,6 +165,8 @@
                         </Style>
                     </Grid.Resources>
                     <Button Margin="8,0,0,8"
+                            x:Name="EmojiButton"
+                            Click="EmojiButton_Click"
                             IsEnabled="{x:Bind ViewModel.PostWeiboViewModel.IsNotSending, Mode=OneWay}">
                         <StackPanel Orientation="Horizontal">
                             <SymbolIcon Symbol="Emoji" />
@@ -216,6 +222,33 @@
                             </GridView>
                         </controls1:TeachingTip.Content>
                     </controls1:TeachingTip>
+                    
+                    <controls1:TeachingTip Grid.ColumnSpan="3"
+                                           IsLightDismissEnabled="True"
+                                           Target="{x:Bind EmojiButton}"
+                                           x:Name="EmojiTeachTip"
+                                           PreferredPlacement="Bottom">
+                        <controls1:TeachingTip.Content>
+                            <GridView SelectionMode="None" ItemsSource="{Binding Source={StaticResource EmojiGroupSource}}">
+                                <GridView.GroupStyle>
+                                    <GroupStyle>
+                                        <GroupStyle.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Key}"/>
+                                            </DataTemplate>
+                                        </GroupStyle.HeaderTemplate>
+                                    </GroupStyle>
+                                </GridView.GroupStyle>
+                                <GridView.ItemTemplate>
+                                    <DataTemplate x:DataType="models:EmojiModel">
+                                        <controls:ImageEx ToolTipService.ToolTip="{x:Bind Value}" Source="{x:Bind IconUrl}" Width="40" Height="40"/>
+                                    </DataTemplate>
+                                </GridView.ItemTemplate>
+                            </GridView>
+                        </controls1:TeachingTip.Content>
+                    </controls1:TeachingTip>
+
+
                     <animations:Implicit.ShowAnimations>
                         <animations:OpacityAnimation From="0" To="1" Duration="0:0:0.3" />
                         <animations:TranslationAnimation From="0, 20, 0" To="0" Duration="0:0:0.3" />

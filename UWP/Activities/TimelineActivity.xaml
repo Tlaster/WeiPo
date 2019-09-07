@@ -29,10 +29,10 @@
             </controls2:ListViewEx.ItemTemplate>
         </controls2:ListViewEx>
         <controls1:DropShadowPanel
-            VerticalAlignment="Bottom"
-            HorizontalAlignment="Right"
+            VerticalAlignment="{Binding ElementName=RefreshButton, Path=VerticalAlignment}"
+            HorizontalAlignment="{Binding ElementName=RefreshButton, Path=HorizontalAlignment}"
             BlurRadius="20"
-            Margin="16"
+            Margin="{Binding ElementName=RefreshButton, Path=Margin}"
             ShadowOpacity="0.6"
             Color="Black">
             <Ellipse Fill="{ThemeResource SystemAccentColor}" 

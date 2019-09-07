@@ -23,6 +23,8 @@ namespace WeiPo.ViewModels
 
     public class PostWeiboViewModel : ViewModelBase
     {
+        private readonly Encoding _gb2312 = Encoding.GetEncoding("gb2312");
+
         public PostWeiboViewModel()
         {
             Files.CollectionChanged += FilesOnCollectionChanged;
@@ -56,26 +58,28 @@ namespace WeiPo.ViewModels
 
         public async Task Commit()
         {
-            var textLength = Encoding.GetEncoding("gb2312").GetByteCount(Content) / 2d;
+            var textLength = _gb2312.GetByteCount(Content) / 2d;
             if (textLength > MaxLength || string.IsNullOrEmpty(Content))
-            //TODO: notify text out of range
             {
+                //TODO: notify text out of range
                 return;
             }
 
             IsSending = true;
-            var picids = await Task.WhenAll(Files.Select(async it => await Singleton<Api>.Instance.UploadPic(it)));
+            var content = Content.Replace("\r", "\n");//multi line
+            var files = Files.ToList();
+            var picids = await Task.WhenAll(files.Select(async it => await Singleton<Api>.Instance.UploadPic(it)));
             JObject result;
             switch (PostType)
             {
                 case PostType.Create:
                     {
-                        result = await Singleton<Api>.Instance.Update(Content, picids.Select(it => it.PicId).ToArray());
+                        result = await Singleton<Api>.Instance.Update(content, picids.Select(it => it.PicId).ToArray());
                     }
                     break;
                 case PostType.Repost:
                     {
-                        result = await Singleton<Api>.Instance.Repost(Content, ReplyModel, picids.FirstOrDefault()?.PicId);
+                        result = await Singleton<Api>.Instance.Repost(content, ReplyModel, picids.FirstOrDefault()?.PicId);
                     }
                     break;
                 case PostType.Comment:
@@ -83,12 +87,12 @@ namespace WeiPo.ViewModels
                         if (ReplyModel is CommentModel comment)
                         {
                             result =
-                                await Singleton<Api>.Instance.Reply(Content, comment, picids.FirstOrDefault()?.PicId);
+                                await Singleton<Api>.Instance.Reply(content, comment, picids.FirstOrDefault()?.PicId);
                         }
                         else
                         {
                             result =
-                                await Singleton<Api>.Instance.Comment(Content, ReplyModel, picids.FirstOrDefault()?.PicId);
+                                await Singleton<Api>.Instance.Comment(content, ReplyModel, picids.FirstOrDefault()?.PicId);
                         }
                     }
                     break;
