@@ -112,6 +112,7 @@ namespace WeiPo.ViewModels
             picker.FileTypeFilter.Add(".png");
             picker.FileTypeFilter.Add(".gif");
             var files = await picker.PickMultipleFilesAsync();
+            AddImage(files.ToArray());
         }
 
         public void AddImage(params StorageFile[] files)

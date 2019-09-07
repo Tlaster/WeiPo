@@ -36,14 +36,14 @@ namespace WeiPo.Controls
     {
         public static Visibility TitleVisibility(StatusModel status)
         {
-            return status.Title != null
+            return status?.Title != null
                 ? Visibility.Visible
                 : Visibility.Collapsed;
         }
 
         public static Visibility PageInfoVisibility(StatusModel status)
         {
-            return status.PageInfo != null && (status.PageInfo.Type == "video" || status.PageInfo.Type == "article")
+            return status?.PageInfo != null && (status.PageInfo.Type == "video" || status.PageInfo.Type == "article")
                 ? Visibility.Visible
                 : Visibility.Collapsed;
         }
