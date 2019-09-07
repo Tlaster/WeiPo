@@ -229,7 +229,10 @@
                                            x:Name="EmojiTeachTip"
                                            PreferredPlacement="Bottom">
                         <controls1:TeachingTip.Content>
-                            <GridView SelectionMode="None" ItemsSource="{Binding Source={StaticResource EmojiGroupSource}}">
+                            <GridView SelectionMode="None"
+                                      IsItemClickEnabled="True"
+                                      ItemClick="EmojiGridView_ItemClick"
+                                      ItemsSource="{Binding Source={StaticResource EmojiGroupSource}}">
                                 <GridView.ItemContainerStyle>
                                     <Style TargetType="GridViewItem">
                                         <Setter Property="MinWidth" Value="0"/>

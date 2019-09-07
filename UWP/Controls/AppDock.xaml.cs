@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
 using System.IO;
 using System.Linq;
+using WeiPo.Services.Models;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -258,6 +259,13 @@ namespace WeiPo.Controls
         private void EmojiButton_Click(object sender, RoutedEventArgs e)
         {
             EmojiTeachTip.IsOpen = !EmojiTeachTip.IsOpen;
+        }
+
+        private void EmojiGridView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var item = e.ClickedItem as EmojiModel;
+            ViewModel.PostWeiboViewModel.Content = DockInput.Text.Insert(DockInput.SelectionStart, item.Value);
+            DockInput.SelectionStart += item.Value.Length;
         }
     }
 }
