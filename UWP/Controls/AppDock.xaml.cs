@@ -264,8 +264,9 @@ namespace WeiPo.Controls
         private void EmojiGridView_ItemClick(object sender, ItemClickEventArgs e)
         {
             var item = e.ClickedItem as EmojiModel;
-            ViewModel.PostWeiboViewModel.Content = DockInput.Text.Insert(DockInput.SelectionStart, item.Value);
-            DockInput.SelectionStart += item.Value.Length;
+            var index = DockInput.SelectionStart;
+            ViewModel.PostWeiboViewModel.Content = DockInput.Text.Insert(index, item.Value);
+            DockInput.SelectionStart = index + item.Value.Length;
         }
     }
 }
