@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Linq;
 using Windows.Foundation;
 using Microsoft.UI.Xaml.Controls;
@@ -99,7 +100,7 @@ namespace WeiPo.Common
                     }
                 }
 
-                child.Arrange(m_cachedBounds[currentIndex]);
+                //child.Arrange(m_cachedBounds[currentIndex]);
 
                 m_lastIndex = currentIndex;
                 currentIndex++;
@@ -161,18 +162,18 @@ namespace WeiPo.Common
             return startIndex;
         }
 
-        // The children are arranged during measure, so ArrangeOverride can be a no-op.
-        //protected override Size ArrangeOverride(VirtualizingLayoutContext context, Size finalSize)
-        //{
-        //    Debug.WriteLine("Arrange: " + context.RealizationRect);
-        //    for (int index = m_firstIndex; index <= m_lastIndex; index++)
-        //    {
-        //        Debug.WriteLine("Arranging " + index);
-        //        var child = context.GetElementAt(index);
-        //        child.Arrange(m_cachedBounds[index]);
-        //    }
-        //    return finalSize;
-        //}
+        protected override Size ArrangeOverride(VirtualizingLayoutContext context, Size finalSize)
+        {
+            if (context.RealizationRect != default && context.ItemCount > 0)
+            {
+                for (var index = m_firstIndex; index <= m_lastIndex; index++)
+                {
+                    var child = context.GetOrCreateElementAt(index);
+                    child.Arrange(m_cachedBounds[index]);
+                }
+            }
+            return finalSize;
+        }
 
         private void UpdateCachedBounds(Size availableSize)
         {
