@@ -1,148 +1,198 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using Windows.Foundation;
-using Windows.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using System.Collections.Generic;
 
 namespace WeiPo.Common
 {
     public class StaggeredLayout : VirtualizingLayout
     {
-        private class State
+        private readonly List<Rect> m_cachedBounds = new List<Rect>();
+        private readonly List<double> m_columnOffsets = new List<double>();
+
+        private int m_firstIndex;
+        private double m_lastAvailableWidth;
+        private int m_lastIndex;
+
+        //public StaggeredLayout()
+        //{
+        //    DesiredColumnWidth = 150.0;
+        //}
+
+        public double VerticalOffset { get; set; } = 0D;
+        public double DesiredColumnWidth { get; set; } = 250D;
+
+        protected override void OnItemsChangedCore(VirtualizingLayoutContext context, object source, NotifyCollectionChangedEventArgs args)
         {
-            public Dictionary<int, Size> ChildSize { get; } = new Dictionary<int, Size>();
-            public Dictionary<int, Rect> ArrangeData { get; } = new Dictionary<int, Rect>();
-        }
-        public static readonly DependencyProperty DesiredColumnWidthProperty = DependencyProperty.Register(
-            nameof(DesiredColumnWidth), typeof(double), typeof(StaggeredLayout), new PropertyMetadata(250D));
-
-        public static readonly DependencyProperty PaddingProperty = DependencyProperty.Register(
-            nameof(Padding),
-            typeof(Thickness),
-            typeof(StaggeredLayout),
-            new PropertyMetadata(default(Thickness)));
-
-        public static readonly DependencyProperty VerticalOffsetProperty = DependencyProperty.Register(
-            nameof(VerticalOffset), typeof(double), typeof(StaggeredLayout), new PropertyMetadata(default(double)));
-
-        private double _columnWidth;
-
-        public double VerticalOffset
-        {
-            get => (double) GetValue(VerticalOffsetProperty);
-            set => SetValue(VerticalOffsetProperty, value);
-        }
-
-        public Thickness Padding
-        {
-            get => (Thickness) GetValue(PaddingProperty);
-            set => SetValue(PaddingProperty, value);
-        }
-
-        public double DesiredColumnWidth
-        {
-            get => (double) GetValue(DesiredColumnWidthProperty);
-            set => SetValue(DesiredColumnWidthProperty, value);
-        }
-
-        protected override void InitializeForContextCore(VirtualizingLayoutContext context)
-        {
-            base.InitializeForContextCore(context);
-            context.LayoutState = new State();
-        }
-
-        protected override void UninitializeForContextCore(VirtualizingLayoutContext context)
-        {
-            base.UninitializeForContextCore(context);
-        }
-
-        protected override Size ArrangeOverride(VirtualizingLayoutContext context, Size finalSize)
-        {
-            var state = context.LayoutState as State;
-            foreach (var item in state.ArrangeData)
+            base.OnItemsChangedCore(context, source, args);
+            switch (args.Action)
             {
-                var child = context.GetOrCreateElementAt(item.Key);
-                child.Arrange(item.Value);
+                case NotifyCollectionChangedAction.Add:
+                    break;
+                case NotifyCollectionChangedAction.Move:
+                    break;
+                case NotifyCollectionChangedAction.Remove:
+                    break;
+                case NotifyCollectionChangedAction.Replace:
+                    break;
+                case NotifyCollectionChangedAction.Reset:
+                    m_cachedBounds.Clear();
+                    m_columnOffsets.Clear();
+                    InvalidateMeasure();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
-            return finalSize;
         }
 
         protected override Size MeasureOverride(VirtualizingLayoutContext context, Size availableSize)
         {
-            var state = context.LayoutState as State;
-            availableSize.Width = availableSize.Width - Padding.Left - Padding.Right;
-            availableSize.Height = availableSize.Height - Padding.Top - Padding.Bottom - VerticalOffset;
-            _columnWidth = Math.Min(DesiredColumnWidth, availableSize.Width);
-            var numColumns = (int) Math.Floor(availableSize.Width / _columnWidth);
-            _columnWidth = availableSize.Width / numColumns;
-            var columnHeights = new double[numColumns];
-            var verticalOffset = Padding.Top + VerticalOffset;
-            var horizontalOffset = Padding.Left;
-            horizontalOffset += (availableSize.Width - numColumns * _columnWidth) / 2;
-            state.ArrangeData.Clear();
-            for (var i = 0; i < context.ItemCount; i++)
+            var viewport = context.RealizationRect;
+
+            if (availableSize.Width != m_lastAvailableWidth)
             {
-                var columnIndex = GetColumnIndex(columnHeights);
-                var realizationRect = context.RealizationRect;
-                UIElement child = null;
-                if (!state.ChildSize.ContainsKey(i) || state.ChildSize[i].Width != _columnWidth)
+                UpdateCachedBounds(availableSize);
+                m_lastAvailableWidth = availableSize.Width;
+            }
+
+            // Initialize column offsets
+            var numColumns = (int) Math.Floor(availableSize.Width / Math.Min(DesiredColumnWidth, availableSize.Width));
+            var columnWidth = availableSize.Width / numColumns;
+            if (m_columnOffsets.Count == 0)
+            {
+                for (var i = 0; i < numColumns; i++)
                 {
-                    child = context.GetOrCreateElementAt(i);
-                    child.Measure(new Size(_columnWidth, availableSize.Height));
-                    if (!state.ChildSize.ContainsKey(i))
+                    m_columnOffsets.Add(VerticalOffset);
+                }
+            }
+
+            m_firstIndex = GetStartIndex(viewport);
+            var currentIndex = m_firstIndex;
+            var nextOffset = -1.0;
+
+            // Measure items from start index to when we hit the end of the viewport.
+            while (currentIndex < context.ItemCount && nextOffset < viewport.Bottom)
+            {
+                var child = context.GetOrCreateElementAt(currentIndex);
+                child.Measure(new Size(columnWidth, availableSize.Height));
+
+                if (currentIndex >= m_cachedBounds.Count)
+                {
+                    // We do not have bounds for this index. Lay it out and cache it.
+                    var columnIndex = GetIndexOfLowestColumn(m_columnOffsets, out nextOffset);
+                    m_cachedBounds.Add(new Rect(columnIndex * columnWidth, nextOffset, columnWidth,
+                        child.DesiredSize.Height));
+                    m_columnOffsets[columnIndex] += child.DesiredSize.Height;
+                }
+                else
+                {
+                    if (currentIndex + 1 == m_cachedBounds.Count)
                     {
-                        state.ChildSize.Add(i, child.DesiredSize);
+                        // Last element. Use the next offset.
+                        GetIndexOfLowestColumn(m_columnOffsets, out nextOffset);
                     }
                     else
                     {
-                        state.ChildSize[i] = child.DesiredSize;
+                        nextOffset = m_cachedBounds[currentIndex + 1].Top;
                     }
-                    var bounds = new Rect(horizontalOffset + _columnWidth * columnIndex,
-                        columnHeights[columnIndex] + verticalOffset, _columnWidth, child.DesiredSize.Height);
-                    state.ArrangeData.Add(i, bounds);
                 }
 
-                if (columnHeights[columnIndex] < realizationRect.Bottom && columnHeights[columnIndex] + state.ChildSize[i].Height > realizationRect.Top && child == null)
-                {
-                    child = context.GetOrCreateElementAt(i);
-                    child.Measure(new Size(_columnWidth, availableSize.Height));
-                    if (state.ChildSize[i] != child.DesiredSize)
-                    {
-                        state.ChildSize[i] = child.DesiredSize;
-                    }
-                    var bounds = new Rect(horizontalOffset + _columnWidth * columnIndex,
-                        columnHeights[columnIndex] + verticalOffset, _columnWidth, child.DesiredSize.Height);
-                    state.ArrangeData.Add(i, bounds);
-                }
-                else if (child != null)
-                {
-                    context.RecycleElement(child);
-                }
-                
-                var elementSize = state.ChildSize[i];
-                columnHeights[columnIndex] += elementSize.Height;
+                child.Arrange(m_cachedBounds[currentIndex]);
+
+                m_lastIndex = currentIndex;
+                currentIndex++;
             }
 
-            var desiredHeight = columnHeights.Max();
-
-            return new Size(availableSize.Width, desiredHeight);
+            var extent = GetExtentSize(availableSize);
+            return extent;
         }
 
-        private int GetColumnIndex(double[] columnHeights)
+        private Size GetExtentSize(Size availableSize)
         {
-            var columnIndex = 0;
-            var height = columnHeights[0];
-            for (var j = 1; j < columnHeights.Length; j++)
+            var largestColumnOffset = m_columnOffsets[0];
+            largestColumnOffset = m_columnOffsets.Concat(new[] {largestColumnOffset}).Max();
+
+            return new Size(availableSize.Width, largestColumnOffset);
+        }
+
+        private int GetIndexOfLowestColumn(IReadOnlyList<double> columnOffsets, out double lowestOffset)
+        {
+            var lowestIndex = 0;
+            lowestOffset = columnOffsets[lowestIndex];
+            for (var index = 0; index < columnOffsets.Count; index++)
             {
-                if (columnHeights[j] < height)
+                var currentOffset = columnOffsets[index];
+                if (lowestOffset > currentOffset)
                 {
-                    columnIndex = j;
-                    height = columnHeights[j];
+                    lowestOffset = currentOffset;
+                    lowestIndex = index;
                 }
             }
 
-            return columnIndex;
+            return lowestIndex;
+        }
+
+        private int GetStartIndex(Rect viewport)
+        {
+            var startIndex = 0;
+            if (m_cachedBounds.Count == 0)
+            {
+                startIndex = 0;
+            }
+            else
+            {
+                // find first index that intersects the viewport
+                // perhaps this can be done more efficiently than walking
+                // from the start of the list.
+                for (var i = 0; i < m_cachedBounds.Count; i++)
+                {
+                    var currentBounds = m_cachedBounds[i];
+                    if (currentBounds.Y < viewport.Bottom &&
+                        currentBounds.Bottom > viewport.Top)
+                    {
+                        startIndex = i;
+                        break;
+                    }
+                }
+            }
+
+            return startIndex;
+        }
+
+        // The children are arranged during measure, so ArrangeOverride can be a no-op.
+        //protected override Size ArrangeOverride(VirtualizingLayoutContext context, Size finalSize)
+        //{
+        //    Debug.WriteLine("Arrange: " + context.RealizationRect);
+        //    for (int index = m_firstIndex; index <= m_lastIndex; index++)
+        //    {
+        //        Debug.WriteLine("Arranging " + index);
+        //        var child = context.GetElementAt(index);
+        //        child.Arrange(m_cachedBounds[index]);
+        //    }
+        //    return finalSize;
+        //}
+
+        private void UpdateCachedBounds(Size availableSize)
+        {
+            var numColumns = (int) Math.Floor(availableSize.Width / Math.Min(DesiredColumnWidth, availableSize.Width));
+            var columnWidth = availableSize.Width / numColumns;
+            m_columnOffsets.Clear();
+            for (var i = 0; i < numColumns; i++)
+            {
+                m_columnOffsets.Add(VerticalOffset);
+            }
+
+            for (var index = 0; index < m_cachedBounds.Count; index++)
+            {
+                var nextOffset = 0.0;
+                var columnIndex = GetIndexOfLowestColumn(m_columnOffsets, out nextOffset);
+                var oldHeight = m_cachedBounds[index].Height;
+                m_cachedBounds[index] = new Rect(columnIndex * columnWidth, nextOffset, columnWidth,
+                    oldHeight);
+                m_columnOffsets[columnIndex] += oldHeight;
+            }
         }
     }
 }
