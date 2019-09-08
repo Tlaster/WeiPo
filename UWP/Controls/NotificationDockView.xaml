@@ -51,6 +51,7 @@
                 </Style>
             </StackPanel.Resources>
             <local:ChipView
+                Tapped="MentionTapped"
                 Text="{x:Bind sys:String.Format('{0} 条@你的微博', ViewModel.Unread.MentionStatus), Mode=OneWay}"
                 Visibility="{x:Bind common:XamlHelper.IsLongNonZeroToVisibility(ViewModel.Unread.MentionStatus), Mode=OneWay}"
                 Symbol="Account">
@@ -64,6 +65,7 @@
                 </animations:Implicit.HideAnimations>
             </local:ChipView>
             <local:ChipView
+                Tapped="MentionCommentTapped"
                 Text="{x:Bind sys:String.Format('{0} 条@你的评论', ViewModel.Unread.MentionCmt), Mode=OneWay}"
                 Visibility="{x:Bind common:XamlHelper.IsLongNonZeroToVisibility(ViewModel.Unread.MentionCmt), Mode=OneWay}"
                 Symbol="Account">
@@ -77,6 +79,7 @@
                 </animations:Implicit.HideAnimations>
             </local:ChipView>
             <local:ChipView
+                Tapped="CommentTapped"
                 Text="{x:Bind sys:String.Format('{0} 回复你的评论', ViewModel.Unread.Cmt), Mode=OneWay}"
                 Visibility="{x:Bind common:XamlHelper.IsLongNonZeroToVisibility(ViewModel.Unread.Cmt), Mode=OneWay}"
                 Symbol="Comment">
@@ -90,6 +93,7 @@
                 </animations:Implicit.HideAnimations>
             </local:ChipView>
             <local:ChipView
+                Tapped="FansTapped"
                 Text="{x:Bind sys:String.Format('{0} 位新粉丝', ViewModel.Unread.Follower), Mode=OneWay}"
                 Visibility="{x:Bind common:XamlHelper.IsLongNonZeroToVisibility(ViewModel.Unread.Follower), Mode=OneWay}"
                 Symbol="People">
@@ -103,6 +107,7 @@
                 </animations:Implicit.HideAnimations>
             </local:ChipView>
             <local:ChipView
+                Tapped="DmTapped"
                 Text="{x:Bind sys:String.Format('{0} 条新私信', ViewModel.Unread.Dm), Mode=OneWay}"
                 Visibility="{x:Bind common:XamlHelper.IsLongNonZeroToVisibility(ViewModel.Unread.Dm), Mode=OneWay}"
                 Symbol="Mail">

@@ -65,7 +65,15 @@ namespace WeiPo.ViewModels
             new MessagingCenterDockItemViewModel("Comment", Symbol.Comment,
                 new LoadingCollection<MessagingCenterDockItemDataSource<CommentModel>, CommentModel>(
                     new MessagingCenterDockItemDataSource<CommentModel>("notification_clear_comment",
-                        async page => await Singleton<Api>.Instance.GetComment(page))))
+                        async page => await Singleton<Api>.Instance.GetComment(page)))),
+            new MessagingCenterDockItemViewModel("Like", Symbol.Like,
+                new LoadingCollection<MessagingCenterDockItemDataSource<AttitudeModel>, AttitudeModel>(
+                    new MessagingCenterDockItemDataSource<AttitudeModel>("",
+                        async page => await Singleton<Api>.Instance.GetAttitude(page)))),
+            new MessagingCenterDockItemViewModel("DirectMessage", Symbol.Message,
+            new LoadingCollection<MessagingCenterDockItemDataSource<MessageListModel>, MessageListModel>(
+                new MessagingCenterDockItemDataSource<MessageListModel>("notification_clear_dm",
+                    async page => await Singleton<Api>.Instance.GetMessageList(page))))
         };
     }
 }

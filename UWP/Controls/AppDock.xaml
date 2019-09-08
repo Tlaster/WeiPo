@@ -122,21 +122,21 @@
                                 Content="{x:Bind ViewModel.PostWeiboViewModel.ReplyModel, Mode=OneWay}"
                                 DataContext="{x:Bind ViewModel.PostWeiboViewModel.ReplyModel, Mode=OneWay}">
                     <ContentControl.ContentTemplateSelector>
-                        <common:StatusCommentDataTemplateSelector>
-                            <common:StatusCommentDataTemplateSelector.StatusTemplate>
+                        <common:StatusTypeDataTemplateSelector>
+                            <common:StatusTypeDataTemplateSelector.StatusTemplate>
                                 <DataTemplate x:DataType="models:StatusModel">
                                     <local:StatusView ShowActions="False"
                                                       Status="{x:Bind Mode=OneWay}" />
                                 </DataTemplate>
-                            </common:StatusCommentDataTemplateSelector.StatusTemplate>
-                            <common:StatusCommentDataTemplateSelector.CommentTemplate>
+                            </common:StatusTypeDataTemplateSelector.StatusTemplate>
+                            <common:StatusTypeDataTemplateSelector.CommentTemplate>
                                 <DataTemplate x:DataType="models:CommentModel">
                                     <local:CommentView
                                         ShowActions="False"
                                         Comment="{x:Bind Mode=OneWay}" />
                                 </DataTemplate>
-                            </common:StatusCommentDataTemplateSelector.CommentTemplate>
-                        </common:StatusCommentDataTemplateSelector>
+                            </common:StatusTypeDataTemplateSelector.CommentTemplate>
+                        </common:StatusTypeDataTemplateSelector>
                     </ContentControl.ContentTemplateSelector>
                 </ContentControl>
                 <controls:ImageEx Grid.Row="1" Grid.Column="0" VerticalAlignment="Top"

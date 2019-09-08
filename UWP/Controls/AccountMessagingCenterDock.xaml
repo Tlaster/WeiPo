@@ -12,10 +12,10 @@
     xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
     xmlns:controls1="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:extensions="using:Microsoft.Toolkit.Uwp.UI.Extensions"
+    xmlns:html="using:WeiPo.Controls.Html"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
-
     <Grid>
         <Border Background="Transparent" x:Name="DockBackground" Tapped="DockBackground_Tapped" />
         <Grid HorizontalAlignment="Right" Name="DockShadowContainer">
@@ -62,18 +62,68 @@
                         <common:StaggeredLayout DesiredColumnWidth="300" />
                     </local:ListViewEx.Layout>
                     <local:ListViewEx.ItemTemplate>
-                        <common:StatusCommentDataTemplateSelector>
-                            <common:StatusCommentDataTemplateSelector.CommentTemplate>
+                        <common:StatusTypeDataTemplateSelector>
+                            <common:StatusTypeDataTemplateSelector.CommentTemplate>
                                 <DataTemplate x:DataType="models:CommentModel">
                                     <local:CommentView ShowActions="True" Comment="{x:Bind}" />
                                 </DataTemplate>
-                            </common:StatusCommentDataTemplateSelector.CommentTemplate>
-                            <common:StatusCommentDataTemplateSelector.StatusTemplate>
+                            </common:StatusTypeDataTemplateSelector.CommentTemplate>
+                            <common:StatusTypeDataTemplateSelector.StatusTemplate>
                                 <DataTemplate x:DataType="models:StatusModel">
                                     <local:StatusView ShowActions="True" Status="{x:Bind}" />
                                 </DataTemplate>
-                            </common:StatusCommentDataTemplateSelector.StatusTemplate>
-                        </common:StatusCommentDataTemplateSelector>
+                            </common:StatusTypeDataTemplateSelector.StatusTemplate>
+                            <common:StatusTypeDataTemplateSelector.AttitudeTemplate>
+                                <DataTemplate x:DataType="models:AttitudeModel">
+                                    <StackPanel
+                                        Background="{ThemeResource SystemControlAcrylicElementBrush}"
+                                        CornerRadius="{StaticResource CardCorner}"
+                                        Padding="8"
+                                        Margin="4"
+                                        DataContext="{x:Bind}" Orientation="Vertical">
+                                        <local:PersonCard Avatar="{x:Bind User.ProfileImageUrl, Mode=OneWay}"
+                                                          common:XamlExtensions.TappedMessage="user_clicked"
+                                                          common:XamlExtensions.TappedMessageParameter="{x:Bind User, Mode=OneWay}"
+                                                          DataContext="{x:Bind User, Mode=OneWay}"
+                                                          Title="{x:Bind User.ScreenName, Mode=OneWay}"
+                                                          SubTitle="{x:Bind local:StatusViewXamlHelper.TimeConverter(CreatedAt), Mode=OneWay}" />
+                                        <TextBlock Text="赞了你的微博"/>
+                                        <local:StatusView Margin="0, 4, 0, 0" ShowActions="False"
+                                                          Status="{x:Bind Status, Mode=OneWay}"
+                                                          ShowRetweet="False"
+                                                          Background="{StaticResource RetweetBackground}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </common:StatusTypeDataTemplateSelector.AttitudeTemplate>
+                            <common:StatusTypeDataTemplateSelector.MessageListTemplate>
+                                <DataTemplate x:DataType="models:MessageListModel">
+                                    <Grid
+                                        Padding="8"
+                                        common:XamlExtensions.TappedMessage="dm_clicked"
+                                        common:XamlExtensions.TappedMessageParameter="{x:Bind}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+                                        <controls1:ImageEx Grid.RowSpan="2" Margin="0,0,4,4" Width="{StaticResource AvatarNormalSize}"
+                                                           Height="{StaticResource AvatarNormalSize}" CornerRadius="999"
+                                                           Source="{x:Bind User.AvatarLarge}" />
+                                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{x:Bind User.ScreenName}" />
+                                        <TextBlock Grid.Row="1"  Grid.Column="1" Text="{x:Bind Text}" Foreground="Gray" />
+                                        <TextBlock Grid.Row="0" Grid.Column="2" Text="{x:Bind local:StatusViewXamlHelper.TimeConverter(CreatedAt)}"/>
+                                        <Grid Grid.Row="1" HorizontalAlignment="Right" Grid.Column="2" RequestedTheme="Dark" Visibility="{x:Bind common:XamlHelper.IsLongNonZeroToVisibility(Unread)}">
+                                            <Ellipse Fill="Red" Width="14" Height="14"/>
+                                            <TextBlock Text="{x:Bind Unread}" HorizontalAlignment="Center"/>
+                                        </Grid>
+                                    </Grid>
+                                </DataTemplate>
+                            </common:StatusTypeDataTemplateSelector.MessageListTemplate>
+                        </common:StatusTypeDataTemplateSelector>
                     </local:ListViewEx.ItemTemplate>
                 </local:ListViewEx>
             </controls:NavigationView>

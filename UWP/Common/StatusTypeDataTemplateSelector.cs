@@ -4,10 +4,12 @@ using WeiPo.Services.Models;
 
 namespace WeiPo.Common
 {
-    public class StatusCommentDataTemplateSelector : DataTemplateSelector
+    public class StatusTypeDataTemplateSelector : DataTemplateSelector
     {
         public DataTemplate StatusTemplate { get; set; }
         public DataTemplate CommentTemplate { get; set; }
+        public DataTemplate AttitudeTemplate { get; set; }
+        public DataTemplate MessageListTemplate { get; set; }
 
         protected override DataTemplate SelectTemplateCore(object item)
         {
@@ -22,6 +24,10 @@ namespace WeiPo.Common
                     return StatusTemplate;
                 case CommentModel comment:
                     return CommentTemplate;
+                case AttitudeModel attitude:
+                    return AttitudeTemplate;
+                case MessageListModel message:
+                    return MessageListTemplate;
             }
 
             return new DataTemplate();

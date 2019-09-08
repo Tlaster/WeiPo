@@ -125,7 +125,6 @@ namespace WeiPo.Controls
         private void NotificationClick(object sender, RoutedEventArgs e)
         {
             Singleton<MessagingCenter>.Instance.Send(this, "message_center_visible", true);
-            Singleton<MessagingCenter>.Instance.Send(this, "dock_visible", false);
         }
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -207,7 +206,7 @@ namespace WeiPo.Controls
             {
                 e.Handled = true;
                 var files = (await dataPackageView.GetStorageItemsAsync())
-                    .Where(item => item is StorageFile && (item as StorageFile).ContentType.Contains("image"))
+                    .Where(item => item is StorageFile file && file.ContentType.Contains("image"))
                     .Select(it => it as StorageFile)
                     .ToArray();
                 ViewModel.PostWeiboViewModel.AddImage(files);
@@ -218,8 +217,8 @@ namespace WeiPo.Controls
         {
             var file = await ApplicationData.Current.LocalCacheFolder.CreateFileAsync($"{new Random().Next()}.png", CreationCollisionOption.GenerateUniqueName);
             using (var fstream = await file.OpenStreamForWriteAsync())
-            using (var stream = await bitmap.OpenReadAsync())
             {
+                using var stream = await bitmap.OpenReadAsync();
                 var decoder = await BitmapDecoder.CreateAsync(stream);
                 var pixels = await decoder.GetPixelDataAsync();
                 var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, fstream.AsRandomAccessStream());
@@ -229,6 +228,7 @@ namespace WeiPo.Controls
                     pixels.DetachPixelData());
                 await encoder.FlushAsync();
             }
+
             return file;
         }
 

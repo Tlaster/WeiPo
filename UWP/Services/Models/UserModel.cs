@@ -68,6 +68,9 @@ namespace WeiPo.Services.Models
         [JsonProperty("avatar_hd", NullValueHandling = NullValueHandling.Ignore)]
         public string AvatarHd { get; set; }
 
+        [JsonProperty("avatar_large", NullValueHandling = NullValueHandling.Ignore)]
+        public string AvatarLarge { get; set; }
+
         [JsonProperty("like", NullValueHandling = NullValueHandling.Ignore)]
         public bool Like { get; set; }
 

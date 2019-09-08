@@ -23,6 +23,8 @@
         Margin="{x:Bind Margin, Mode=OneWay}"
         DataContext="{x:Bind Comment, Mode=OneWay}" Orientation="Vertical">
         <local:PersonCard Avatar="{x:Bind Comment.User.ProfileImageUrl, Mode=OneWay}"
+                          common:XamlExtensions.TappedMessage="user_clicked"
+                          common:XamlExtensions.TappedMessageParameter="{x:Bind Comment.User, Mode=OneWay}"
                           DataContext="{x:Bind Comment.User, Mode=OneWay}"
                           Title="{x:Bind Comment.User.ScreenName, Mode=OneWay}"
                           SubTitle="{x:Bind local:StatusViewXamlHelper.TimeConverter(Comment.CreatedAt), Mode=OneWay}" />

@@ -48,6 +48,13 @@ namespace WeiPo
                 (sender, args) => RootContainer.Navigate<ImageActivity>(args));
             Singleton<MessagingCenter>.Instance.Subscribe("video_clicked",
                 (sender, args) => RootContainer.Navigate<VideoActivity>(args));
+            Singleton<MessagingCenter>.Instance.Subscribe("request_dock_visible", (sender, args) =>
+            {
+                if (args is bool boolArgs)
+                {
+                    Singleton<MessagingCenter>.Instance.Send(this, "dock_visible", boolArgs && RootContainer.CurrentActivity is TimelineActivity);
+                }
+            });
             RootContainer.BackStackChanged += RootContainerOnBackStackChanged;
             RootContainer.Navigate(typeof(LoginActivity));
         }

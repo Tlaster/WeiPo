@@ -22,5 +22,36 @@ namespace WeiPo.Controls
         }
 
         public NotificationViewModel ViewModel => NotificationViewModel.Instance;
+
+        private void MentionTapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            SendMessage("Mention");
+        }
+
+        private void MentionCommentTapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            SendMessage("MentionComment");
+        }
+
+        private void CommentTapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            SendMessage("Comment");
+        }
+
+        private void FansTapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+
+        }
+
+        private void DmTapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            SendMessage("DirectMessage");
+        }
+
+        private void SendMessage(string message)
+        {
+            Singleton<MessagingCenter>.Instance.Send(this, "message_center_visible", true);
+            Singleton<MessagingCenter>.Instance.Send(this, "message_center_to", message);
+        }
     }
 }

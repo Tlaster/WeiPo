@@ -14,7 +14,7 @@ namespace WeiPo.Services.Models
         public string Scheme { get; set; }
 
         [JsonProperty("unread", NullValueHandling = NullValueHandling.Ignore)]
-        public long? Unread { get; set; }
+        public long Unread { get; set; }
 
         [JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]
         public string Text { get; set; }

@@ -1,4 +1,7 @@
-﻿using Windows.UI.Xaml;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using WeiPo.Common;
@@ -18,6 +21,15 @@ namespace WeiPo.Controls
                 if (args is bool boolArgs)
                 {
                     Visibility = boolArgs ? Visibility.Visible : Visibility.Collapsed;
+                    Singleton<MessagingCenter>.Instance.Send(this, "request_dock_visible", !boolArgs);
+                }
+            });
+            Singleton<MessagingCenter>.Instance.Subscribe("message_center_to", (sender, args) =>
+            {
+                if (args is string strArgs)
+                {
+                    MessageNavigationView.SelectedItem =
+                        ViewModel.Source.FirstOrDefault(it => it.Title == strArgs);
                 }
             });
             DataContext = ViewModel;
@@ -30,7 +42,6 @@ namespace WeiPo.Controls
             if (Visibility == Visibility.Visible)
             {
                 Singleton<MessagingCenter>.Instance.Send(this, "message_center_visible", false);
-                Singleton<MessagingCenter>.Instance.Send(this, "dock_visible", true);
                 return true;
             }
 
@@ -42,7 +53,6 @@ namespace WeiPo.Controls
             e.Handled = true;
 
             Singleton<MessagingCenter>.Instance.Send(this, "message_center_visible", false);
-            Singleton<MessagingCenter>.Instance.Send(this, "dock_visible", true);
         }
     }
 }

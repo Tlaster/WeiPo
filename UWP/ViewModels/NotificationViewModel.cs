@@ -67,12 +67,21 @@ namespace WeiPo.ViewModels
                     OnPropertyChanged(nameof(Unread));
                 });
             });
-
+            
             Singleton<MessagingCenter>.Instance.Subscribe("notification_clear_comment", delegate
             {
                 DispatcherHelper.ExecuteOnUIThreadAsync(() =>
                 {
                     Unread.Cmt = 0;
+                    OnPropertyChanged(nameof(Unread));
+                });
+            });
+
+            Singleton<MessagingCenter>.Instance.Subscribe("notification_clear_dm", delegate
+            {
+                DispatcherHelper.ExecuteOnUIThreadAsync(() =>
+                {
+                    Unread.Dm = 0;
                     OnPropertyChanged(nameof(Unread));
                 });
             });
