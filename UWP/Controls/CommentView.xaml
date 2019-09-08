@@ -34,8 +34,7 @@
                                Visibility="{x:Bind local:CommentViewXamlHelper.PicVisibility(Comment), Mode=OneWay}">
             <controls1:ImageEx Tapped="ImageEx_Tapped" Source="{x:Bind Comment.Pic.Url, Mode=OneWay}" />
         </local:AspectRatioView>
-        <Grid Background="{StaticResource RetweetBackground}" CornerRadius="{StaticResource CardCorner}"
-              Margin="40,0,0,0">
+        <Grid Margin="40,0,0,0">
             <ContentControl DataContext="{x:Bind Comment.Comments, Mode=OneWay}"
                             Content="{x:Bind Comment.Comments, Mode=OneWay}">
                 <ContentControl.ContentTemplateSelector>
@@ -50,7 +49,7 @@
                                     <controls:ItemsRepeater ItemsSource="{Binding}">
                                         <controls:ItemsRepeater.ItemTemplate>
                                             <DataTemplate x:DataType="models:CommentModel">
-                                                <local:CommentView Comment="{x:Bind}" ShowActions="False"
+                                                <local:CommentView Comment="{x:Bind}" Margin="0" ShowActions="False"
                                                                    ShowStatus="False" />
                                             </DataTemplate>
                                         </controls:ItemsRepeater.ItemTemplate>
@@ -65,7 +64,7 @@
             </ContentControl>
         </Grid>
         <local:StatusView Margin="0, 4, 0, 0" ShowActions="False" Status="{x:Bind Comment.Status, Mode=OneWay}"
-                          ShowRetweet="False" Background="{StaticResource RetweetBackground}" />
+                          ShowRetweet="False" Background="{StaticResource RetweetBackground}" Visibility="{x:Bind ShowStatus}" />
         <Grid Visibility="{x:Bind ShowActions, Mode=OneWay}">
             <Grid.Resources>
                 <Style TargetType="Button" BasedOn="{StaticResource DateTimePickerFlyoutButtonStyle}">

@@ -222,13 +222,14 @@ namespace WeiPo.Services
                 .GetData();
         }
 
-        public async Task<HotflowModel> Hotflow(long id, long mid)
+        public async Task<HotflowModel> Hotflow(long id, long mid, long max_id= 0)
         {
             return await $"{HOST}/comments/hotflow"
                 .SetQueryParams(new
                 {
                     id,
                     mid,
+                    max_id,
                     max_id_type = 0
                 })
                 .GetAsync()

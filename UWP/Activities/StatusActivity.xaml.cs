@@ -2,6 +2,9 @@
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
+using WeiPo.Services.Models;
+using WeiPo.ViewModels;
+
 namespace WeiPo.Activities
 {
     /// <summary>
@@ -13,5 +16,20 @@ namespace WeiPo.Activities
         {
             InitializeComponent();
         }
+
+        protected override void OnCreate(object parameter)
+        {
+            base.OnCreate(parameter);
+            switch (parameter)
+            {
+                case StatusModel status:
+                    ViewModel = new StatusViewModel(status);
+                    break;
+            }
+
+            DataContext = ViewModel;
+        }
+
+        public StatusViewModel ViewModel { get; private set; }
     }
 }

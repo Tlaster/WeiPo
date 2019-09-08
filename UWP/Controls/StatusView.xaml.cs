@@ -216,5 +216,10 @@ namespace WeiPo.Controls
             data.SetText(JsonConvert.SerializeObject(Status));
             Clipboard.SetContent(data);
         }
+
+        private void MoreTapped(object sender, TappedRoutedEventArgs e)
+        {
+            e.Handled = true;
+        }
     }
 }

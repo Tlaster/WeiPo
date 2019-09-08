@@ -6,6 +6,44 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:paging="using:Bug10.Paging"
+    xmlns:controls="using:WeiPo.Controls"
+    xmlns:common="using:WeiPo.Common"
+    xmlns:models="using:WeiPo.Services.Models"
     mc:Ignorable="d">
-    <Grid />
+    <Grid >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <controls:StatusView Status="{x:Bind ViewModel.Status, Mode=OneWay}" Width="400"/>
+        <Pivot Grid.Column="1">
+            <PivotItem Visibility="Collapsed" Header="Status">
+                <controls:StatusView Status="{x:Bind ViewModel.Status, Mode=OneWay}"/>
+            </PivotItem>
+            <PivotItem Header="Reposts">
+                <controls:ListViewEx ItemsSource="{x:Bind ViewModel.RepostSource, Mode=OneWay}">
+                    <controls:ListViewEx.Layout>
+                        <common:StaggeredLayout DesiredColumnWidth="300" />
+                    </controls:ListViewEx.Layout>
+                    <controls:ListViewEx.ItemTemplate>
+                        <DataTemplate x:DataType="models:StatusModel">
+                            <controls:StatusView Status="{x:Bind}" ShowRetweet="False" ShowActions="True" />
+                        </DataTemplate>
+                    </controls:ListViewEx.ItemTemplate>
+                </controls:ListViewEx>
+            </PivotItem>
+            <PivotItem Header="Comments">
+                <controls:ListViewEx ItemsSource="{x:Bind ViewModel.HotflowSource, Mode=OneWay}">
+                    <controls:ListViewEx.Layout>
+                        <common:StaggeredLayout DesiredColumnWidth="300" />
+                    </controls:ListViewEx.Layout>
+                    <controls:ListViewEx.ItemTemplate>
+                        <DataTemplate x:DataType="models:CommentModel">
+                            <controls:CommentView Comment="{x:Bind}" ShowActions="True" ShowStatus="False" />
+                        </DataTemplate>
+                    </controls:ListViewEx.ItemTemplate>
+                </controls:ListViewEx>
+            </PivotItem>
+        </Pivot>
+    </Grid>
 </paging:Activity>

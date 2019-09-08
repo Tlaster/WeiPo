@@ -26,8 +26,6 @@ namespace WeiPo.Controls
         private bool _isTextBoxFocused;
         private bool _keepDockExpanded = true;
 
-        private Visibility _prevVisibility;
-
         public AppDock()
         {
             InitializeComponent();
@@ -46,7 +44,7 @@ namespace WeiPo.Controls
             {
                 if (args is bool booArgs)
                 {
-                    StopComposing();
+                    ClearComposing();
                     Visibility = booArgs ? Visibility.Visible : Visibility.Collapsed;
                     ToggleImageTeachingTip();
                 }
@@ -63,7 +61,7 @@ namespace WeiPo.Controls
                 }
             });
         }
-
+        
         public bool IsComposing { get; private set; }
 
         public bool IsHeaderOpened { get; private set; } = true;
@@ -86,25 +84,24 @@ namespace WeiPo.Controls
         public void StartComposing()
         {
             IsComposing = true;
-            _prevVisibility = Visibility;
-            if (_prevVisibility == Visibility.Collapsed)
-            {
-                Visibility = Visibility.Visible;
-            }
-
+            Visibility = Visibility.Visible;
             FullBackground.Visibility = Visibility.Visible;
             ToggleHeader();
             DockInput.Focus(FocusState.Programmatic);
         }
 
-        public void StopComposing()
+        private void ClearComposing()
         {
             IsComposing = false;
             ToggleHeader();
-            Visibility = _prevVisibility;
             FullBackground.Visibility = Visibility.Collapsed;
             ViewModel.PostWeiboViewModel.ToCreateState();
-            //Singleton<MessagingCenter>.Instance.Send(this, "clear_dock_compose");
+        }
+
+        public void StopComposing()
+        {
+            ClearComposing();
+            Singleton<MessagingCenter>.Instance.Send(this, "request_dock_visible", true);
         }
 
         private void CloseHeader()
