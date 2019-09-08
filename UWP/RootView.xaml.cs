@@ -53,7 +53,7 @@ namespace WeiPo
             {
                 if (args is bool boolArgs)
                 {
-                    Singleton<MessagingCenter>.Instance.Send(this, "dock_visible", boolArgs && RootContainer.CurrentActivity is TimelineActivity);
+                    Singleton<MessagingCenter>.Instance.Send(this, "dock_visible", boolArgs && MessageCenterDock.Visibility == Visibility.Collapsed && RootContainer.CurrentActivity is TimelineActivity);
                 }
             });
             RootContainer.BackStackChanged += RootContainerOnBackStackChanged;
