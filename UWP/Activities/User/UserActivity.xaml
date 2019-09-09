@@ -143,15 +143,15 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <StackPanel Orientation="Vertical">
-                        <TextBlock Text="Statuses" />
+                        <TextBlock Text="{common:i18n Key=Statuses}" />
                         <TextBlock Text="{x:Bind ViewModel.Profile.UserInfo.StatusesCount, Mode=OneWay}" />
                     </StackPanel>
                     <StackPanel Grid.Column="1" Orientation="Vertical">
-                        <TextBlock Text="Following" />
+                        <TextBlock Text="{common:i18n Key=Following}" />
                         <TextBlock Text="{x:Bind ViewModel.Profile.UserInfo.FollowCount, Mode=OneWay}" />
                     </StackPanel>
                     <StackPanel Grid.Column="2" Orientation="Vertical">
-                        <TextBlock Text="Follower" />
+                        <TextBlock Text="{common:i18n Key=Follower}" />
                         <TextBlock Text="{x:Bind ViewModel.Profile.UserInfo.FollowersCount, Mode=OneWay}" />
                     </StackPanel>
                     <controls1:FollowStateButton 
@@ -247,13 +247,13 @@
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <TextBlock Text="Statuses" />
+                <TextBlock Text="{common:i18n Key=Statuses}" />
                 <TextBlock Grid.Row="1" Grid.Column="0"
                            Text="{x:Bind ViewModel.Profile.UserInfo.StatusesCount, Mode=OneWay}" />
-                <TextBlock Grid.Row="0" Grid.Column="1" Text="Following" />
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="{common:i18n Key=Following}" />
                 <TextBlock Grid.Row="1" Grid.Column="1"
                            Text="{x:Bind ViewModel.Profile.UserInfo.FollowCount, Mode=OneWay}" />
-                <TextBlock Grid.Row="0" Grid.Column="2" Text="Follower" />
+                <TextBlock Grid.Row="0" Grid.Column="2" Text="{common:i18n Key=Follower}" />
                 <TextBlock Grid.Row="1" Grid.Column="2"
                            Text="{x:Bind ViewModel.Profile.UserInfo.FollowersCount, Mode=OneWay}" />
                 <controls1:FollowStateButton Grid.Column="3" VerticalAlignment="Center" 
