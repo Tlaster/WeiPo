@@ -119,5 +119,10 @@ namespace WeiPo.Common
         {
             return value ? Visibility.Visible : Visibility.Collapsed;
         }
+
+        public static Visibility InvertBoolToVisibility(bool value)
+        {
+            return value ? Visibility.Collapsed : Visibility.Visible;
+        }
     }
 }

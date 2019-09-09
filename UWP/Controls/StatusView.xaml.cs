@@ -78,9 +78,18 @@ namespace WeiPo.Controls
         public static readonly DependencyProperty StatusProperty = DependencyProperty.Register(
             nameof(Status), typeof(StatusModel), typeof(StatusView), new PropertyMetadata(default));
 
+        public static readonly DependencyProperty ShowLongTextProperty =
+            DependencyProperty.Register(nameof(ShowLongText), typeof(bool), typeof(StatusView), new PropertyMetadata(false));
+
         public StatusView()
         {
             InitializeComponent();
+        }
+
+        public bool ShowLongText
+        {
+            get { return (bool)GetValue(ShowLongTextProperty); }
+            set { SetValue(ShowLongTextProperty, value); }
         }
 
         public bool ShowRetweet

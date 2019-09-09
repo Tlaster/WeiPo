@@ -22,7 +22,7 @@ namespace WeiPo.ViewModels
         public PostWeiboViewModel PostWeiboViewModel { get; } = new PostWeiboViewModel();
         public NotifyTask<ProfileData> MyProfile { get; private set; }
 
-        public NotifyTask<IEnumerable<IGrouping<string, EmojiModel>>> Emoji { get; } = NotifyTask.Create(LoadEmoji);
+        public Lazy<NotifyTask<IEnumerable<IGrouping<string, EmojiModel>>>> Emoji { get; } = new Lazy<NotifyTask<IEnumerable<IGrouping<string, EmojiModel>>>>(() => NotifyTask.Create(LoadEmoji));
 
         private static async Task<IEnumerable<IGrouping<string, EmojiModel>>> LoadEmoji()
         {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Collections;
+using Microsoft.Toolkit.Uwp.Helpers;
 using WeiPo.Common;
 using WeiPo.Common.Collection;
 using WeiPo.Services;
@@ -94,8 +95,8 @@ namespace WeiPo.ViewModels
             if (Status.IsLongText)
             {
                 var result = await Singleton<Api>.Instance.Extend(id);
-                Status.Text = result.LongTextContent;
-                OnPropertyChanged(nameof(Status));
+                Status.LongText = result.LongTextContent;
+                //OnPropertyChanged(nameof(Status));
             }
             
             HotflowSource = new LoadingCollection<HotflowDataSource, CommentModel>(new HotflowDataSource(id, mid, Status));

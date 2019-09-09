@@ -7,7 +7,7 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="9e923fb0-f0f3-44d6-9681-0fedee921531"
+    Name="moe.tlaster.weipo"
     Publisher="CN=Asahi"
     Version="1.0.0.0" />
 

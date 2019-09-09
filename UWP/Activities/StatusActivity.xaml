@@ -10,14 +10,47 @@
     xmlns:common="using:WeiPo.Common"
     xmlns:models="using:WeiPo.Services.Models"
     mc:Ignorable="d">
+    <VisualStateManager.VisualStateGroups>
+        <VisualStateGroup>
+            <VisualState>
+                <VisualState.StateTriggers>
+                    <AdaptiveTrigger MinWindowWidth="{StaticResource LargeWindowSnapPoint}" />
+                </VisualState.StateTriggers>
+                <VisualState.Setters>
+                    <Setter Target="TopInfoContainer.Visibility" Value="Collapsed" />
+                    <Setter Target="LeftInfoContainer.Visibility" Value="Visible" />
+                </VisualState.Setters>
+            </VisualState>
+            <VisualState>
+                <VisualState.StateTriggers>
+                    <AdaptiveTrigger MinWindowWidth="{StaticResource MediumWindowSnapPoint}" />
+                </VisualState.StateTriggers>
+                <VisualState.Setters>
+                    <Setter Target="TopInfoContainer.Visibility" Value="Collapsed" />
+                    <Setter Target="LeftInfoContainer.Visibility" Value="Visible" />
+                </VisualState.Setters>
+            </VisualState>
+            <VisualState>
+                <VisualState.StateTriggers>
+                    <AdaptiveTrigger MinWindowWidth="{StaticResource MinWindowSnapPoint}" />
+                </VisualState.StateTriggers>
+                <VisualState.Setters>
+                    <Setter Target="TopInfoContainer.Visibility" Value="Visible" />
+                    <Setter Target="LeftInfoContainer.Visibility" Value="Collapsed" />
+                </VisualState.Setters>
+            </VisualState>
+        </VisualStateGroup>
+    </VisualStateManager.VisualStateGroups>
     
     <Grid >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <controls:StatusView Status="{x:Bind ViewModel.Status, Mode=OneWay}" Width="400"/>
-        <Pivot Grid.Column="1">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" VerticalScrollMode="Auto">
+            <controls:StatusView x:Name="StatusView" ShowLongText="True" Status="{x:Bind ViewModel.Status, Mode=OneWay}" Width="400"/>
+        </ScrollViewer>
+        <Pivot Grid.Column="1" Name="Pivot">
             <PivotItem Header="Reposts">
                 <controls:ListViewEx ItemsSource="{x:Bind ViewModel.RepostSource, Mode=OneWay}">
                     <controls:ListViewEx.Layout>

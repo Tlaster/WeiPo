@@ -1,10 +1,14 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 
 namespace WeiPo.Services.Models
 {
-    public class StatusModel : ICanReply
+    public class StatusModel : ICanReply, INotifyPropertyChanged
     {
+        private string _longText;
+
         [JsonProperty("created_at", NullValueHandling = NullValueHandling.Ignore)]
         public string CreatedAt { get; set; }
 
@@ -16,6 +20,24 @@ namespace WeiPo.Services.Models
 
         [JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]
         public string Text { get; set; }
+
+        [JsonIgnore]
+        public string LongText
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_longText))
+                {
+                    return Text;
+                }
+                return _longText;
+            }
+            set 
+            {
+                _longText = value;
+                OnPropertyChanged();
+            }
+        }
 
         [JsonProperty("textLength", NullValueHandling = NullValueHandling.Ignore)]
         public long TextLength { get; set; }
@@ -136,5 +158,12 @@ namespace WeiPo.Services.Models
 
         [JsonProperty("mid", NullValueHandling = NullValueHandling.Ignore)]
         public string Mid { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

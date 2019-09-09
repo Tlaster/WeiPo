@@ -18,7 +18,7 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
     <UserControl.Resources>
-        <CollectionViewSource x:Key="EmojiGroupSource" IsSourceGrouped="True" Source="{x:Bind ViewModel.Emoji.Result,Mode=OneWay}"/>
+        <CollectionViewSource x:Key="EmojiGroupSource" IsSourceGrouped="True" Source="{x:Bind ViewModel.Emoji.Value.Result,Mode=OneWay}"/>
     </UserControl.Resources>
     <RelativePanel>
         <VisualStateManager.VisualStateGroups>
