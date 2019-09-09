@@ -26,7 +26,7 @@ namespace WeiPo.Services
                 var result = await task;
                 return result.Data;
             }
-            catch (WeiboException e)
+            catch (FlurlParsingException e) when (e.InnerException is WeiboException)
             {
                 //todo: show notification
                 if (Debugger.IsAttached)
@@ -34,7 +34,7 @@ namespace WeiPo.Services
                     Debugger.Break();
                 }
 
-                throw;
+                throw e.InnerException;
             }
         }
     }
