@@ -10,6 +10,7 @@
     xmlns:controls="using:Microsoft.UI.Xaml.Controls"
     xmlns:models="using:WeiPo.Services.Models"
     xmlns:controls1="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:sys="using:System"
     mc:Ignorable="d"
     Margin="4"
     Background="{ThemeResource SystemControlAcrylicElementBrush}"
@@ -34,34 +35,33 @@
                                Visibility="{x:Bind local:CommentViewXamlHelper.PicVisibility(Comment), Mode=OneWay}">
             <controls1:ImageEx Tapped="ImageEx_Tapped" Source="{x:Bind Comment.Pic.Url, Mode=OneWay}" />
         </local:AspectRatioView>
-        <Grid Margin="40,0,0,0">
+        <Grid Margin="40,0,0,0" Visibility="{x:Bind common:XamlHelper.IsNonNullToVisibility(Comment.Comments), Mode=OneWay}">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
             <ContentControl DataContext="{x:Bind Comment.Comments, Mode=OneWay}"
                             Content="{x:Bind Comment.Comments, Mode=OneWay}">
                 <ContentControl.ContentTemplateSelector>
                     <common:NonNullDataTemplateSelector>
                         <common:NonNullDataTemplateSelector.DataTemplate>
                             <DataTemplate>
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition />
-                                        <RowDefinition />
-                                    </Grid.RowDefinitions>
-                                    <controls:ItemsRepeater ItemsSource="{Binding}">
-                                        <controls:ItemsRepeater.ItemTemplate>
-                                            <DataTemplate x:DataType="models:CommentModel">
-                                                <local:CommentView Comment="{x:Bind}" Margin="0" ShowActions="False"
+                                <controls:ItemsRepeater ItemsSource="{Binding}">
+                                    <controls:ItemsRepeater.ItemTemplate>
+                                        <DataTemplate x:DataType="models:CommentModel">
+                                            <local:CommentView Comment="{x:Bind}" Margin="0" ShowActions="False"
                                                                    ShowStatus="False" />
-                                            </DataTemplate>
-                                        </controls:ItemsRepeater.ItemTemplate>
-                                    </controls:ItemsRepeater>
-                                    <Button Grid.Row="1" Content="More"
-                                            Style="{ThemeResource DateTimePickerFlyoutButtonStyle}" />
-                                </Grid>
+                                        </DataTemplate>
+                                    </controls:ItemsRepeater.ItemTemplate>
+                                </controls:ItemsRepeater>
                             </DataTemplate>
                         </common:NonNullDataTemplateSelector.DataTemplate>
                     </common:NonNullDataTemplateSelector>
                 </ContentControl.ContentTemplateSelector>
             </ContentControl>
+            <Button Grid.Row="1"  Visibility="{x:Bind common:XamlHelper.IsLongGreaterThanToVisibility(Comment.TotalNumber, 2)}"
+                    Content="{x:Bind sys:String.Format('{0} More', Comment.TotalNumber), Mode=OneWay}"
+                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Style="{ThemeResource TextBlockButtonStyle}" />
         </Grid>
         <local:StatusView Margin="0, 4, 0, 0" ShowActions="False" Status="{x:Bind Comment.Status, Mode=OneWay}"
                           ShowRetweet="False" Background="{StaticResource RetweetBackground}" Visibility="{x:Bind ShowStatus}" />

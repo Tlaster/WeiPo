@@ -14,12 +14,14 @@ namespace WeiPo.ViewModels
     {
         private readonly long _id;
         private readonly long _mid;
+        private readonly StatusModel _status;
         private long _max_id;
 
-        public HotflowDataSource(long id, long mid)
+        public HotflowDataSource(long id, long mid, StatusModel status)
         {
             _id = id;
             _mid = mid;
+            _status = status;
         }
 
         public async Task<IEnumerable<CommentModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new CancellationToken())
@@ -29,10 +31,16 @@ namespace WeiPo.ViewModels
                 _max_id = 0;
             }
 
+            if (pageIndex != 0 && _max_id == 0)
+            {
+                return new List<CommentModel>();
+            }
+
             try
             {
                 var result = await Singleton<Api>.Instance.Hotflow(_id, _mid, _max_id);
                 _max_id = result.MaxId;
+                result.Data.ForEach(it => it.Status = _status);
                 return result.Data;
             }
             catch (WeiboException e)
@@ -90,7 +98,7 @@ namespace WeiPo.ViewModels
                 OnPropertyChanged(nameof(Status));
             }
             
-            HotflowSource = new LoadingCollection<HotflowDataSource, CommentModel>(new HotflowDataSource(id, mid));
+            HotflowSource = new LoadingCollection<HotflowDataSource, CommentModel>(new HotflowDataSource(id, mid, Status));
             RepostSource = new LoadingCollection<RepostTimelineDataSource, StatusModel>(new RepostTimelineDataSource(id));
 
         }
