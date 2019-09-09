@@ -48,12 +48,12 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Pivot Grid.Column="1" Name="Pivot">
-            <PivotItem Header="Status">
+            <PivotItem Header="{common:i18n Key=Status}">
                 <ScrollViewer x:Name="StatusViewContainer" VerticalScrollBarVisibility="Auto" VerticalScrollMode="Auto">
                     <controls:StatusView ShowLongText="True" Status="{x:Bind ViewModel.Status, Mode=OneWay}"/>
                 </ScrollViewer>
             </PivotItem>
-            <PivotItem Header="Reposts">
+            <PivotItem Header="{common:i18n Key=Reposts}">
                 <controls:ListViewEx ItemsSource="{x:Bind ViewModel.RepostSource, Mode=OneWay}">
                     <controls:ListViewEx.Layout>
                         <common:StaggeredLayout DesiredColumnWidth="300" />
@@ -65,7 +65,7 @@
                     </controls:ListViewEx.ItemTemplate>
                 </controls:ListViewEx>
             </PivotItem>
-            <PivotItem Header="Comments">
+            <PivotItem Header="{common:i18n Key=Comments}">
                 <controls:ListViewEx ItemsSource="{x:Bind ViewModel.HotflowSource, Mode=OneWay}">
                     <controls:ListViewEx.Layout>
                         <common:StaggeredLayout DesiredColumnWidth="300" />

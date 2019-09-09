@@ -5,7 +5,8 @@
     xmlns:html="using:WeiPo.Controls.Html"
     xmlns:controls="using:WeiPo.Controls"
     xmlns:controls1="using:Microsoft.UI.Xaml.Controls"
-    xmlns:controls2="using:Microsoft.Toolkit.Uwp.UI.Controls">
+    xmlns:controls2="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:common="using:WeiPo.Common">
 
     <Style TargetType="html:HtmlTextBlock">
         <Setter Property="Template">
@@ -108,22 +109,22 @@
             <Setter.Value>
                 <ControlTemplate TargetType="controls:FollowStateButton">
                     <Button>
-                        <TextBlock x:Name="FollowButtonText" Text="Add Follow"/>
+                        <TextBlock x:Name="FollowButtonText" Text="{common:i18n Key=AddFollow}"/>
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
                                 <VisualState x:Name="FollowingOnly">
                                     <VisualState.Setters>
-                                        <Setter Target="FollowButtonText.Text" Value="Followed" />
+                                        <Setter Target="FollowButtonText.Text" Value="{common:i18n Key=Followed}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="FollowMeOnly">
                                     <VisualState.Setters>
-                                        <Setter Target="FollowButtonText.Text" Value="Being followed" />
+                                        <Setter Target="FollowButtonText.Text" Value="{common:i18n Key=Beingfollowed}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="FollowTwoway">
                                     <VisualState.Setters>
-                                        <Setter Target="FollowButtonText.Text" Value="FollowTwoway" />
+                                        <Setter Target="FollowButtonText.Text" Value="{common:i18n Key=FollowTwoway}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Initial" />

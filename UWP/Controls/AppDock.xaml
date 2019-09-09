@@ -170,7 +170,7 @@
                             IsEnabled="{x:Bind ViewModel.PostWeiboViewModel.IsNotSending, Mode=OneWay}">
                         <StackPanel Orientation="Horizontal">
                             <SymbolIcon Symbol="Emoji" />
-                            <TextBlock Text="Emoji" />
+                            <TextBlock Text="{common:i18n Key=Emoji}" />
                         </StackPanel>
                     </Button>
                     <Button Click="{x:Bind ViewModel.PostWeiboViewModel.PickImages}"
@@ -178,7 +178,7 @@
                             IsEnabled="{x:Bind ViewModel.PostWeiboViewModel.IsNotSending, Mode=OneWay}">
                         <StackPanel Orientation="Horizontal">
                             <SymbolIcon Symbol="Pictures" />
-                            <TextBlock Text="Image" />
+                            <TextBlock Text="{common:i18n Key=Image}" />
                         </StackPanel>
                     </Button>
                     <Button Click="{x:Bind ViewModel.PostWeiboViewModel.Commit}"
@@ -186,7 +186,7 @@
                             Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="8,0,8,8">
                         <StackPanel Orientation="Horizontal">
                             <SymbolIcon Symbol="Send" />
-                            <TextBlock Text="Send" />
+                            <TextBlock Text="{common:i18n Key=Send}" />
                         </StackPanel>
                     </Button>
                     <controls1:TeachingTip Grid.ColumnSpan="3"

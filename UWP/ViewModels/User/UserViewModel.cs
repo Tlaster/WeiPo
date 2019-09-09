@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Uwp.Extensions;
 using PropertyChanged;
 using WeiPo.Common;
 using WeiPo.Services;
@@ -41,13 +42,13 @@ namespace WeiPo.ViewModels.User
                 {
                     new Services.Models.Tab
                     {
-                        Title = "Follow",
+                        Title = "Follow".GetLocalized(),
                         TabType = "follow",
                         Containerid = Profile.UserInfo.Id.ToString()
                     },
                     new Services.Models.Tab
                     {
-                        Title = "Fans",
+                        Title = "Fans".GetLocalized(),
                         TabType = "fans",
                         Containerid = Profile.UserInfo.Id.ToString()
                     }

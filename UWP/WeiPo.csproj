@@ -156,6 +156,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common\Collection\LoadingCollection.cs" />
+    <Compile Include="Common\Localization.cs" />
     <Compile Include="Common\MessagingCenter.cs" />
     <Compile Include="Common\StatusTypeDataTemplateSelector.cs" />
     <Compile Include="Common\WeiboJsonSerializer.cs" />
@@ -477,6 +478,12 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <PRIResource Include="Strings\zh-Hans\Resources.resw" />
+  </ItemGroup>
+  <ItemGroup>
+    <PRIResource Include="Strings\en\Resources.resw" />
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
