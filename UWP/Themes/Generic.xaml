@@ -102,4 +102,36 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style TargetType="controls:FollowStateButton">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:FollowStateButton">
+                    <Button>
+                        <TextBlock x:Name="FollowButtonText" Text="Add Follow"/>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="FollowingOnly">
+                                    <VisualState.Setters>
+                                        <Setter Target="FollowButtonText.Text" Value="Followed" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="FollowMeOnly">
+                                    <VisualState.Setters>
+                                        <Setter Target="FollowButtonText.Text" Value="Being followed" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="FollowTwoway">
+                                    <VisualState.Setters>
+                                        <Setter Target="FollowButtonText.Text" Value="FollowTwoway" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Initial" />
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Button>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

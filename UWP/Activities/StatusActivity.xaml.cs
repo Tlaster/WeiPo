@@ -4,6 +4,7 @@
 
 using WeiPo.Services.Models;
 using WeiPo.ViewModels;
+using Windows.UI.Xaml.Controls;
 
 namespace WeiPo.Activities
 {

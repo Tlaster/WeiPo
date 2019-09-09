@@ -55,7 +55,38 @@ namespace WeiPo.ViewModels.User
             }
         }
 
+        [DependsOn(nameof(Profile))]
+        public bool IsNotMe
+        {
+            get
+            {
+                //TODO:Not a good idea
+                return Profile?.UserInfo?.Id != DockViewModel.Instance.MyProfile.Result.UserInfo.Id;
+            }
+        }
+
         public Action UpdatePivot { get; }
+
+        public async Task UpdateFollowState()
+        {
+            if (IsLoading)
+            {
+                return;
+            }
+            IsLoading = true;
+            UserModel model;
+            if (Profile.UserInfo.Following)
+            {
+                model = await Singleton<Api>.Instance.Unfollow(Profile.UserInfo.Id);
+            }
+            else
+            {
+                model = await Singleton<Api>.Instance.Follow(Profile.UserInfo.Id);
+            }
+            Profile.UserInfo.Following = !Profile.UserInfo.Following;
+            OnPropertyChanged(nameof(Profile));
+            IsLoading = false;
+        }
 
         private async void Init(long id)
         {

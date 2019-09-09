@@ -18,7 +18,7 @@
                 </VisualState.StateTriggers>
                 <VisualState.Setters>
                     <Setter Target="TopInfoContainer.Visibility" Value="Collapsed" />
-                    <Setter Target="LeftInfoContainer.Visibility" Value="Visible" />
+                    <Setter Target="StatusViewContainer .Visibility" Value="Visible" />
                 </VisualState.Setters>
             </VisualState>
             <VisualState>
@@ -27,7 +27,7 @@
                 </VisualState.StateTriggers>
                 <VisualState.Setters>
                     <Setter Target="TopInfoContainer.Visibility" Value="Collapsed" />
-                    <Setter Target="LeftInfoContainer.Visibility" Value="Visible" />
+                    <Setter Target="StatusViewContainer.Visibility" Value="Visible" />
                 </VisualState.Setters>
             </VisualState>
             <VisualState>
@@ -36,7 +36,7 @@
                 </VisualState.StateTriggers>
                 <VisualState.Setters>
                     <Setter Target="TopInfoContainer.Visibility" Value="Visible" />
-                    <Setter Target="LeftInfoContainer.Visibility" Value="Collapsed" />
+                    <Setter Target="StatusViewContainer.Visibility" Value="Collapsed" />
                 </VisualState.Setters>
             </VisualState>
         </VisualStateGroup>
@@ -47,10 +47,12 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <ScrollViewer VerticalScrollBarVisibility="Auto" VerticalScrollMode="Auto">
-            <controls:StatusView x:Name="StatusView" ShowLongText="True" Status="{x:Bind ViewModel.Status, Mode=OneWay}" Width="400"/>
-        </ScrollViewer>
         <Pivot Grid.Column="1" Name="Pivot">
+            <PivotItem Header="Status">
+                <ScrollViewer x:Name="StatusViewContainer" VerticalScrollBarVisibility="Auto" VerticalScrollMode="Auto">
+                    <controls:StatusView ShowLongText="True" Status="{x:Bind ViewModel.Status, Mode=OneWay}"/>
+                </ScrollViewer>
+            </PivotItem>
             <PivotItem Header="Reposts">
                 <controls:ListViewEx ItemsSource="{x:Bind ViewModel.RepostSource, Mode=OneWay}">
                     <controls:ListViewEx.Layout>

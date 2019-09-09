@@ -140,6 +140,7 @@
                         <ColumnDefinition />
                         <ColumnDefinition />
                         <ColumnDefinition />
+                        <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <StackPanel Orientation="Vertical">
                         <TextBlock Text="Statuses" />
@@ -153,6 +154,11 @@
                         <TextBlock Text="Follower" />
                         <TextBlock Text="{x:Bind ViewModel.Profile.UserInfo.FollowersCount, Mode=OneWay}" />
                     </StackPanel>
+                    <controls1:FollowStateButton 
+                        Visibility="{x:Bind ViewModel.IsNotMe, Mode=OneWay}"
+                        Tapped="{x:Bind ViewModel.UpdateFollowState}"
+                        Grid.Column="3" VerticalAlignment="Center" Following="{x:Bind ViewModel.Profile.UserInfo.Following, Mode=OneWay}" 
+                        FollowMe="{x:Bind ViewModel.Profile.UserInfo.FollowMe, Mode=OneWay}"/>
                 </Grid>
             </StackPanel>
         </StackPanel>
@@ -235,6 +241,7 @@
                     <ColumnDefinition />
                     <ColumnDefinition />
                     <ColumnDefinition />
+                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition />
@@ -249,6 +256,11 @@
                 <TextBlock Grid.Row="0" Grid.Column="2" Text="Follower" />
                 <TextBlock Grid.Row="1" Grid.Column="2"
                            Text="{x:Bind ViewModel.Profile.UserInfo.FollowersCount, Mode=OneWay}" />
+                <controls1:FollowStateButton Grid.Column="3" VerticalAlignment="Center" 
+                                             Visibility="{x:Bind ViewModel.IsNotMe, Mode=OneWay}"
+                                             Tapped="{x:Bind ViewModel.UpdateFollowState}"
+                                             Grid.RowSpan="2" Following="{x:Bind ViewModel.Profile.UserInfo.Following, Mode=OneWay}" 
+                                             FollowMe="{x:Bind ViewModel.Profile.UserInfo.FollowMe, Mode=OneWay}"/>
             </Grid>
 
         </Grid>

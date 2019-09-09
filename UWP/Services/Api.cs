@@ -399,5 +399,33 @@ namespace WeiPo.Services
             }
             return uid;
         }
+
+        public async Task<UserModel> Unfollow(long uid)
+        {
+            var configResult = await Config();
+            var st = configResult.St;
+            return await $"{HOST}/api/friendships/destory"
+                .PostUrlEncodedAsync(new
+                {
+                    st,
+                    uid,
+                })
+                .ReceiveJson<WeiboResponse<UserModel>>()
+                .GetData();
+        }
+
+        public async Task<UserModel> Follow(long uid)
+        {
+            var configResult = await Config();
+            var st = configResult.St;
+            return await $"{HOST}/api/friendships/create"
+                .PostUrlEncodedAsync(new
+                {
+                    st,
+                    uid,
+                })
+                .ReceiveJson<WeiboResponse<UserModel>>()
+                .GetData();
+        }
     }
 }
