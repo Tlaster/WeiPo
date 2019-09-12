@@ -8,6 +8,7 @@ using Microsoft.UI.Xaml.Controls;
 using WeiPo.Common.Collection;
 using RefreshContainer = Windows.UI.Xaml.Controls.RefreshContainer;
 using RefreshRequestedEventArgs = Windows.UI.Xaml.Controls.RefreshRequestedEventArgs;
+using ScrollViewer = Windows.UI.Xaml.Controls.ScrollViewer;
 
 // The Templated Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234235
 
