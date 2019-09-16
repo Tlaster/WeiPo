@@ -153,7 +153,7 @@ namespace WeiPo.Controls
                                     url = info.MediaInfo.StreamUrl;
                                 }
 
-                                if (string.IsNullOrEmpty(url))
+                                if (string.IsNullOrEmpty(url) || !url.StartsWith("http", StringComparison.InvariantCultureIgnoreCase))
                                 {
                                     if (info.PageUrl != null)
                                     {
