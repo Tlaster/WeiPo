@@ -21,12 +21,14 @@
                   SelectedIndex="{x:Bind ViewModel.SelectedIndex, Mode=TwoWay}">
             <FlipView.ItemTemplate>
                 <DataTemplate x:DataType="viewModels:ImageModel">
-                    <ScrollViewer DoubleTapped="UIElement_OnDoubleTapped" ZoomMode="Enabled"
+                    <ScrollViewer Name="Scroll" DoubleTapped="UIElement_OnDoubleTapped" ZoomMode="Enabled"
                                   HorizontalScrollMode="Auto" HorizontalScrollBarVisibility="Auto">
                         <controls:ImageEx Style="{StaticResource DetailImageStyle}"
                                           Source="{x:Bind Source}"
                                           MaxWidth="{x:Bind Width}"
                                           MaxHeight="{x:Bind Height}"
+                                          Width="{Binding ElementName=Scroll, Path=ViewportWidth}"
+                                          Height="{Binding ElementName=Scroll, Path=ViewportHeight}"
                                           PlaceholderSource="{x:Bind PlaceHolder}"
                                           PlaceholderStretch="Uniform" Stretch="Uniform" />
                     </ScrollViewer>
