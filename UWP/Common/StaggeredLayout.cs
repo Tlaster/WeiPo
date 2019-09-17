@@ -87,17 +87,23 @@ namespace WeiPo.Common
                         child.DesiredSize.Height));
                     m_columnOffsets[columnIndex] += child.DesiredSize.Height;
                 }
+                else if (child.DesiredSize.Height != m_cachedBounds[currentIndex].Height) // Item height has changed
+                {
+                    m_cachedBounds.RemoveRange(currentIndex, m_cachedBounds.Count - currentIndex);
+                    UpdateCachedBounds(availableSize);
+                    var columnIndex = GetIndexOfLowestColumn(m_columnOffsets, out nextOffset);
+                    m_cachedBounds.Add(new Rect(columnIndex * columnWidth, nextOffset, columnWidth,
+                        child.DesiredSize.Height));
+                    m_columnOffsets[columnIndex] += child.DesiredSize.Height;
+                }
+                else if (currentIndex + 1 == m_cachedBounds.Count)
+                {
+                    // Last element. Use the next offset.
+                    GetIndexOfLowestColumn(m_columnOffsets, out nextOffset);
+                }
                 else
                 {
-                    if (currentIndex + 1 == m_cachedBounds.Count)
-                    {
-                        // Last element. Use the next offset.
-                        GetIndexOfLowestColumn(m_columnOffsets, out nextOffset);
-                    }
-                    else
-                    {
-                        nextOffset = m_cachedBounds[currentIndex + 1].Top;
-                    }
+                    nextOffset = m_cachedBounds[currentIndex + 1].Top;
                 }
 
                 //child.Arrange(m_cachedBounds[currentIndex]);
@@ -187,8 +193,7 @@ namespace WeiPo.Common
 
             for (var index = 0; index < m_cachedBounds.Count; index++)
             {
-                var nextOffset = 0.0;
-                var columnIndex = GetIndexOfLowestColumn(m_columnOffsets, out nextOffset);
+                var columnIndex = GetIndexOfLowestColumn(m_columnOffsets, out var nextOffset);
                 var oldHeight = m_cachedBounds[index].Height;
                 m_cachedBounds[index] = new Rect(columnIndex * columnWidth, nextOffset, columnWidth,
                     oldHeight);
