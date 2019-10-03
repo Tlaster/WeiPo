@@ -10,38 +10,6 @@
     xmlns:common="using:WeiPo.Common"
     xmlns:models="using:WeiPo.Services.Models"
     mc:Ignorable="d">
-    <VisualStateManager.VisualStateGroups>
-        <VisualStateGroup>
-            <VisualState>
-                <VisualState.StateTriggers>
-                    <AdaptiveTrigger MinWindowWidth="{StaticResource LargeWindowSnapPoint}" />
-                </VisualState.StateTriggers>
-                <VisualState.Setters>
-                    <Setter Target="TopInfoContainer.Visibility" Value="Collapsed" />
-                    <Setter Target="StatusViewContainer .Visibility" Value="Visible" />
-                </VisualState.Setters>
-            </VisualState>
-            <VisualState>
-                <VisualState.StateTriggers>
-                    <AdaptiveTrigger MinWindowWidth="{StaticResource MediumWindowSnapPoint}" />
-                </VisualState.StateTriggers>
-                <VisualState.Setters>
-                    <Setter Target="TopInfoContainer.Visibility" Value="Collapsed" />
-                    <Setter Target="StatusViewContainer.Visibility" Value="Visible" />
-                </VisualState.Setters>
-            </VisualState>
-            <VisualState>
-                <VisualState.StateTriggers>
-                    <AdaptiveTrigger MinWindowWidth="{StaticResource MinWindowSnapPoint}" />
-                </VisualState.StateTriggers>
-                <VisualState.Setters>
-                    <Setter Target="TopInfoContainer.Visibility" Value="Visible" />
-                    <Setter Target="StatusViewContainer.Visibility" Value="Collapsed" />
-                </VisualState.Setters>
-            </VisualState>
-        </VisualStateGroup>
-    </VisualStateManager.VisualStateGroups>
-    
     <Grid >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
