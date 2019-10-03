@@ -32,6 +32,12 @@ namespace WeiPo
                     {
                         new JsonNumberConverter()
                     },
+                    Error = (sender, args) =>
+                    {
+                        var currentError = args.ErrorContext.Error.Message;
+                        Debug.WriteLine(currentError);
+                        args.ErrorContext.Handled = true;
+                    },
                     NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore
                 };
                 settings.JsonSerializer = new WeiboJsonSerializer(jsonSettings);
