@@ -15,7 +15,7 @@
         <RowDefinition Height="Auto" />
         <RowDefinition Height="*" />
     </Grid.RowDefinitions>
-    <paging:ActivityContainer Name="RootContainer" Grid.Row="1"
+    <paging:ActivityContainer x:Name="RootContainer" Grid.Row="1"
                               Background="{ThemeResource SystemControlAcrylicWindowBrush}">
         <paging:ActivityContainer.ContentTransitions>
             <TransitionCollection>
