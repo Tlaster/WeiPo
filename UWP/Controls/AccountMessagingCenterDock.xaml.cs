@@ -29,7 +29,7 @@ namespace WeiPo.Controls
                 if (args is string strArgs)
                 {
                     MessageNavigationView.SelectedItem =
-                        ViewModel.Source.FirstOrDefault(it => it.Title == strArgs);
+                        ViewModel.Source.FirstOrDefault(it => it.Id == strArgs);
                 }
             });
             DataContext = ViewModel;

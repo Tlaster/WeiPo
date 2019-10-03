@@ -39,14 +39,15 @@ namespace WeiPo.ViewModels
 
     public class MessagingCenterDockItemViewModel : ViewModelBase
     {
-        public MessagingCenterDockItemViewModel(string title, Symbol symbol, object source)
+        public MessagingCenterDockItemViewModel(string id, Symbol symbol, object source)
         {
-            Title = title;
+            Id = id;
             Symbol = symbol;
             Source = source;
         }
 
-        public string Title { get; }
+        public string Id { get; }
+        public string Title => Id.GetLocalized();
         public Symbol Symbol { get; }
         public object Source { get; }
     }
@@ -55,23 +56,23 @@ namespace WeiPo.ViewModels
     {
         public List<MessagingCenterDockItemViewModel> Source { get; } = new List<MessagingCenterDockItemViewModel>
         {
-            new MessagingCenterDockItemViewModel("Mention".GetLocalized(), Symbol.Account,
+            new MessagingCenterDockItemViewModel("Mention", Symbol.Account,
                 new LoadingCollection<MessagingCenterDockItemDataSource<StatusModel>, StatusModel>(
                     new MessagingCenterDockItemDataSource<StatusModel>("notification_clear_mention_at",
                         async page => await Singleton<Api>.Instance.GetMentionsAt(page)))),
-            new MessagingCenterDockItemViewModel("MentionComment".GetLocalized(), Symbol.Account,
+            new MessagingCenterDockItemViewModel("MentionComment", Symbol.Account,
                 new LoadingCollection<MessagingCenterDockItemDataSource<CommentModel>, CommentModel>(
                     new MessagingCenterDockItemDataSource<CommentModel>("notification_clear_mention_comment",
                         async page => await Singleton<Api>.Instance.GetMentionsCmt(page)))),
-            new MessagingCenterDockItemViewModel("Comment".GetLocalized(), Symbol.Comment,
+            new MessagingCenterDockItemViewModel("Comment", Symbol.Comment,
                 new LoadingCollection<MessagingCenterDockItemDataSource<CommentModel>, CommentModel>(
                     new MessagingCenterDockItemDataSource<CommentModel>("notification_clear_comment",
                         async page => await Singleton<Api>.Instance.GetComment(page)))),
-            new MessagingCenterDockItemViewModel("Like".GetLocalized(), Symbol.Like,
+            new MessagingCenterDockItemViewModel("Like", Symbol.Like,
                 new LoadingCollection<MessagingCenterDockItemDataSource<AttitudeModel>, AttitudeModel>(
                     new MessagingCenterDockItemDataSource<AttitudeModel>("",
                         async page => await Singleton<Api>.Instance.GetAttitude(page)))),
-            new MessagingCenterDockItemViewModel("DirectMessage".GetLocalized(), Symbol.Message,
+            new MessagingCenterDockItemViewModel("DirectMessage", Symbol.Message,
             new LoadingCollection<MessagingCenterDockItemDataSource<MessageListModel>, MessageListModel>(
                 new MessagingCenterDockItemDataSource<MessageListModel>("notification_clear_dm",
                     async page => await Singleton<Api>.Instance.GetMessageList(page))))
