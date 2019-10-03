@@ -23,7 +23,7 @@ namespace WeiPo.ViewModels
 
             var result = await Singleton<Api>.Instance.Timeline(_maxId, cancellationToken);
             var list = result.Statuses;
-            _maxId = result.MaxId;
+            _maxId = result.NextCursor;
             return list;
         }
     }
