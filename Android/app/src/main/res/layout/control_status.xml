@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="status"
+            type="moe.tlaster.weipo.services.models.Status" />
+
+        <import type="android.view.View" />
+
+        <import type="android.text.Html" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/title_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="@{status.title.text}"
+            android:visibility="@{status.title == null ? View.GONE : View.VISIBLE}"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Title text" />
+
+        <View
+            android:id="@+id/title_text_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#aaa"
+            android:visibility="@{status.title == null ? View.GONE : View.VISIBLE}"
+            app:layout_constraintTop_toBottomOf="@id/title_text" />
+
+        <moe.tlaster.weipo.controls.PersonCard
+            android:id="@+id/person_card"
+            avatar="@{status.user.profileImageURL}"
+            subTitle="@{status.createdAt}"
+            title="@{status.user.screenName}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintTop_toBottomOf="@id/title_text_divider"
+            tools:avatar="@mipmap/ic_launcher"
+            tools:subTitle="Sub title"
+            tools:title="Title" />
+
+        <TextView
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:autoLink="all"
+            android:text="@{status.text}"
+            app:layout_constraintTop_toBottomOf="@id/person_card"
+            tools:text="Content" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/image_list"
+            itemTemplate="@{@layout/item_status_image}"
+            itemsSource="@{status.pics}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            app:layoutManager=".common.NineGridLayoutManager"
+            app:layout_constraintTop_toBottomOf="@id/content"
+            tools:itemCount="3"
+            tools:listitem="@layout/item_status_image" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/page_info"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="8dp"
+            android:visibility='@{status.pageInfo.type == "video" || status.pageInfo.type == "article" ? View.VISIBLE : View.GONE}'
+            app:layout_constraintDimensionRatio="16:9"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/image_list">
+
+            <ImageView
+                source="@{status.pageInfo.pagePic.url}"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintDimensionRatio="16:9"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@mipmap/ic_launcher" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="#aa000000"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Inverse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="@{status.pageInfo.pageTitle}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Title" />
+            <LinearLayout
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_margin="8dp"
+                android:orientation="vertical"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/play_count"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:visibility="@{status.pageInfo.title == null ? View.GONE : View.VISIBLE}"
+                    style="@style/TextAppearance.AppCompat.Inverse"
+                    tools:text="Page info title"
+                    android:text="@{status.pageInfo.title}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:visibility="@{status.pageInfo.title != null ? View.GONE : View.VISIBLE}"
+                    android:layout_marginTop="8dp"
+                    tools:text="Page info content1"
+                    style="@style/TextAppearance.AppCompat.Inverse"
+                    android:text="@{status.pageInfo.content1}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:layout_marginTop="8dp"
+                    tools:text="Page info content2"
+                    android:text="@{status.pageInfo.content2}"
+                    style="@style/TextAppearance.AppCompat.Inverse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/play_count"
+                android:visibility="@{status.pageInfo.title == null ? View.GONE : View.VISIBLE}"
+                android:layout_margin="8dp"
+                style="@style/TextAppearance.AppCompat.Inverse"
+                tools:text="Play count"
+                android:text="@{String.format(`%s 次观看`, status.pageInfo.playCount)}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:visibility="@{status.pageInfo.title == null ? View.GONE : View.VISIBLE}"
+                style="@style/TextAppearance.AppCompat.Inverse"
+                android:layout_margin="8dp"
+                tools:text="Time"
+                android:text="@{String.valueOf(status.pageInfo.mediaInfo.duration)}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <LinearLayout
+            android:layout_margin="8dp"
+            app:layout_constraintTop_toBottomOf="@id/page_info"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:padding="4dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:src="@drawable/ic_reply_all_black_24dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:layout_marginStart="8dp"
+                    android:visibility="@{status.repostsCount > 0L ? View.VISIBLE : View.GONE}"
+                    tools:text="4"
+                    android:text="@{String.valueOf(status.repostsCount)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+            <LinearLayout
+                android:padding="4dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:src="@drawable/ic_comment_black_24dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:layout_marginStart="8dp"
+                    android:visibility="@{status.commentsCount > 0L ? View.VISIBLE : View.GONE}"
+                    tools:text="4"
+                    android:text="@{String.valueOf(status.commentsCount)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+            <LinearLayout
+                android:padding="4dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:src="@drawable/ic_thumb_up_black_24dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:layout_marginStart="8dp"
+                    android:visibility="@{status.attitudesCount > 0L ? View.VISIBLE : View.GONE}"
+                    tools:text="4"
+                    android:text="@{String.valueOf(status.attitudesCount)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+            <LinearLayout
+                android:padding="4dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:src="@drawable/ic_more_horiz_black_24dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

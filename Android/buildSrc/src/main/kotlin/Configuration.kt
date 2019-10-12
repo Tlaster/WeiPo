@@ -1,10 +1,10 @@
 import org.gradle.api.Project
 class Configuration(project: Project) {
     val appId = "moe.tlaster.weipo"
-    val kotlinVersion = "1.3.31"
+    val kotlinVersion = "1.3.50"
     val minSdkVersion = 21
-    val targetSdkVersion = 28
-    val compileSdkVersion = 28
+    val targetSdkVersion = 29
+    val compileSdkVersion = 29
     val versionCode = project.getConfiguration("versionCode", 1)
     val versionName = project.getConfiguration("versionName", "1.0")
     
@@ -15,6 +15,8 @@ class Configuration(project: Project) {
     val dependencyVersion = DependencyVersion()
 }
 class DependencyVersion {
+    val fuel = "2.2.1"
+    val glide = "4.9.0"
 }
 
 val Project.appConfig

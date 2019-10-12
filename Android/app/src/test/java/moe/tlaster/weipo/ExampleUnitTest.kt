@@ -1,8 +1,7 @@
 package moe.tlaster.weipo
 
+import org.junit.Assert.assertEquals
 import org.junit.Test
-
-import org.junit.Assert.*
 
 /**
  * Example local unit test, which will callFunction on the development machine (host).

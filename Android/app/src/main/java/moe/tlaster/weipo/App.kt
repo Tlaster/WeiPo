@@ -1,37 +1,24 @@
 package moe.tlaster.weipo
 
 import android.app.Application
-import com.facebook.drawee.backends.pipeline.Fresco
-import moe.tlaster.shiba.Shiba
-import moe.tlaster.weipo.shiba.extensionExecutors.JSBindExecutor
-import moe.tlaster.weipo.shiba.extensionExecutors.ResExecutor
-import moe.tlaster.weipo.shiba.mappers.*
+import android.content.Context
+import com.github.kittinunf.fuel.core.FuelManager
+import moe.tlaster.weipo.common.AndroidLogRequestInterceptor
+import moe.tlaster.weipo.common.AndroidLogResponseInterceptor
+import moe.tlaster.weipo.common.CookieRequestInterceptor
 
-
+lateinit var appContext: Context
 
 class App : Application() {
     override fun onCreate() {
         super.onCreate()
-        Fresco.initialize(this)
-
-        val script = resources.openRawResource(R.raw.bundle).let { inputStream ->
-            ByteArray(inputStream.available()).also {
-                inputStream.read(it)
+        appContext = applicationContext
+        FuelManager.instance.apply {
+            if (BuildConfig.DEBUG) {
+                addRequestInterceptor(AndroidLogRequestInterceptor)
+                addResponseInterceptor(AndroidLogResponseInterceptor)
             }
-        }.let { String(it) }
-        Shiba.apply {
-            init(this@App)
-            addExtensionExecutor(ResExecutor())
-            addExtensionExecutor(JSBindExecutor())
-            addRenderer("img", ImgMapper())
-            addRenderer("roundImg", RoundImgMapper())
-            addRenderer("weiboText", WeiboTextMapper())
-            addRenderer("items", ItemsMapper())
-            addRenderer("optional", OptionalMapper())
-            addConverter("weiboTextConverter") {
-                it.firstOrNull()
-            }
-            configuration.scriptRuntime.execute(script)
+            addRequestInterceptor(CookieRequestInterceptor)
         }
     }
 }

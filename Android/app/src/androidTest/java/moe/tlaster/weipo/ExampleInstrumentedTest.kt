@@ -2,11 +2,9 @@ package moe.tlaster.weipo
 
 import androidx.test.InstrumentationRegistry
 import androidx.test.runner.AndroidJUnit4
-
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
-
-import org.junit.Assert.*
 
 /**
  * Instrumented test, which will callFunction on an Android device.
