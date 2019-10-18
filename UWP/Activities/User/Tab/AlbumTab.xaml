@@ -5,9 +5,23 @@
     xmlns:local="using:WeiPo.Activities.User.Tab"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:WeiPo.Controls"
+    xmlns:tab="using:WeiPo.ViewModels.User.Tab"
+    xmlns:common="using:WeiPo.Common"
+    xmlns:models="using:WeiPo.Services.Models"
+    xmlns:controls1="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
 
-    <Grid />
+    <controls:ListViewEx ItemsSource="{x:Bind ViewModel.(tab:AlbumTabViewModel.DataSource), Mode=OneWay}">
+        <controls:ListViewEx.Layout>
+            <common:StaggeredLayout DesiredColumnWidth="150" />
+        </controls:ListViewEx.Layout>
+        <controls:ListViewEx.ItemTemplate>
+            <DataTemplate x:DataType="models:PicWall">
+                <controls1:ImageEx Source="{x:Bind PicMiddle}" Margin="4"/>
+            </DataTemplate>
+        </controls:ListViewEx.ItemTemplate>
+    </controls:ListViewEx>
 </local:AbsTab>

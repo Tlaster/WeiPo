@@ -427,5 +427,21 @@ namespace WeiPo.Services
                 .ReceiveJson<WeiboResponse<UserModel>>()
                 .GetData();
         }
+
+        public async Task<JObject> PhotoAll(long uid, string containerid, int page = 1)
+        {
+
+            return await $"{HOST}/api/container/getSecond"
+                .SetQueryParams(new
+                {
+                    containerid = containerid + "_-_photoall",
+                    page,
+                    type = "uid",
+                    value = uid
+                })
+                .GetAsync()
+                .ReceiveJson<WeiboResponse<JObject>>()
+                .GetData();
+        }
     }
 }

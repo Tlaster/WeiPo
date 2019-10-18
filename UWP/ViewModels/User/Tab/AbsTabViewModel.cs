@@ -10,7 +10,7 @@ namespace WeiPo.ViewModels.User.Tab
             Tab = tabData;
         }
 
-        public ProfileData ProfileData { get; set; }
-        public Services.Models.Tab Tab { get; set; }
+        public ProfileData ProfileData { get; }
+        public Services.Models.Tab Tab { get; }
     }
 }
