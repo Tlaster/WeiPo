@@ -149,7 +149,7 @@
                          Paste="TextBox_Paste" KeyDown="TextBox_KeyDown" KeyUp="TextBox_KeyUp"
                          x:Name="DockInput"
                          AcceptsReturn="True" VerticalContentAlignment="Center" Grid.Column="1" TextWrapping="Wrap"
-                         Text="{x:Bind ViewModel.PostWeiboViewModel.Content, Mode=TwoWay}"
+                         Text="{x:Bind ViewModel.PostWeiboViewModel.Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          IsEnabled="{x:Bind ViewModel.PostWeiboViewModel.IsNotSending, Mode=OneWay}"
                          HorizontalAlignment="Stretch" PlaceholderText="Say sth..." />
                 <Grid Visibility="{x:Bind IsHeaderOpened, Mode=OneWay}" Name="HeaderMoreContent" Grid.Row="2"
