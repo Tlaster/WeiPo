@@ -1,5 +1,7 @@
+using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Text;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
@@ -12,6 +14,7 @@ using WeiPo.Common;
 using WeiPo.Services;
 using Microsoft.Toolkit.Uwp.UI;
 using Microsoft.Toolkit.Uwp.UI.Controls;
+using Newtonsoft.Json.Linq;
 
 namespace WeiPo
 {
@@ -47,6 +50,22 @@ namespace WeiPo
                     call.Request.Headers.Add("Cookie",
                         string.Join(";",
                             Singleton<Api>.Instance.GetCookies().Select(it => $"{it.Key}={it.Value}")));
+                };
+                settings.OnErrorAsync = async call =>
+                {
+                    if (call.HttpStatus == HttpStatusCode.Forbidden)
+                    {
+                        //maybe errno:100005
+                        var json = await call.Response.Content.ReadAsStringAsync();
+                        try
+                        {
+                            call.FlurlRequest.Client.Settings.JsonSerializer.Deserialize<JObject>(json);
+                        }
+                        catch (FlurlParsingException e) when (e.InnerException is WeiboException)
+                        {
+                            //TODO: show notification
+                        }
+                    }
                 };
             });
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
