@@ -23,26 +23,28 @@
                 <DataTemplate x:DataType="viewModels:ImageModel">
                     <ScrollViewer Name="Scroll" DoubleTapped="UIElement_OnDoubleTapped" ZoomMode="Enabled"
                                   HorizontalScrollMode="Auto" HorizontalScrollBarVisibility="Auto">
-                        <controls:ImageEx Style="{StaticResource DetailImageStyle}"
-                                          Source="{x:Bind Source}"
-                                          MaxWidth="{x:Bind Width}"
-                                          MaxHeight="{x:Bind Height}"
-                                          Width="{Binding ElementName=Scroll, Path=ViewportWidth}"
-                                          Height="{Binding ElementName=Scroll, Path=ViewportHeight}"
-                                          PlaceholderSource="{x:Bind PlaceHolder}"
-                                          PlaceholderStretch="Uniform" Stretch="Uniform" />
+                        <local:ImageEx2 Style="{StaticResource DetailImageStyle}"
+                                        Source="{x:Bind Source}"
+                                        MaxWidth="{x:Bind Width}"
+                                        MaxHeight="{x:Bind Height}"
+                                        ImageHeight="{x:Bind Height}"
+                                        ImageWidth="{x:Bind Width}"
+                                        Width="{Binding ElementName=Scroll, Path=ViewportWidth}"
+                                        ViewportHeight="{Binding ElementName=Scroll, Path=ViewportHeight}"
+                                        PlaceholderSource="{x:Bind PlaceHolder}"
+                                        PlaceholderStretch="Uniform" Stretch="Uniform" />
                     </ScrollViewer>
                 </DataTemplate>
             </FlipView.ItemTemplate>
         </FlipView>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <controls:Carousel
-                 ItemsSource="{x:Bind ViewModel.Images, Mode=OneWay}"
-                 SelectedIndex="{x:Bind ViewModel.SelectedIndex, Mode=TwoWay}">
+                ItemsSource="{x:Bind ViewModel.Images, Mode=OneWay}"
+                SelectedIndex="{x:Bind ViewModel.SelectedIndex, Mode=TwoWay}">
                 <controls:Carousel.ItemTemplate>
                     <DataTemplate x:DataType="viewModels:ImageModel">
                         <controls:ImageEx Source="{x:Bind PlaceHolder}" Height="50" Width="50" Stretch="UniformToFill" />
@@ -50,7 +52,7 @@
                 </controls:Carousel.ItemTemplate>
             </controls:Carousel>
             <Button Grid.Column="1" Width="50" Height="50" Click="Button_Click">
-                <SymbolIcon Symbol="Save"/>
+                <SymbolIcon Symbol="Save" />
             </Button>
         </Grid>
     </Grid>
