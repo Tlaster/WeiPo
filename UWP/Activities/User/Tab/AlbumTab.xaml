@@ -20,7 +20,7 @@
         </controls:ListViewEx.Layout>
         <controls:ListViewEx.ItemTemplate>
             <DataTemplate x:DataType="models:PicWall">
-                <controls1:ImageEx Stretch="UniformToFill" Source="{x:Bind PicMiddle}" Margin="4"/>
+                <controls1:ImageEx DataContext="{x:Bind}" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="UniformToFill" Source="{x:Bind PicMiddle}" Margin="4"/>
             </DataTemplate>
         </controls:ListViewEx.ItemTemplate>
     </controls:ListViewEx>
