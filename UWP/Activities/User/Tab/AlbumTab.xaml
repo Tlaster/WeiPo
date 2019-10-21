@@ -16,11 +16,11 @@
 
     <controls:ListViewEx ItemsSource="{x:Bind ViewModel.(tab:AlbumTabViewModel.DataSource), Mode=OneWay}">
         <controls:ListViewEx.Layout>
-            <common:StaggeredLayout DesiredColumnWidth="150" />
+            <common:StretchGridLayout DesiredItemSize="150" />
         </controls:ListViewEx.Layout>
         <controls:ListViewEx.ItemTemplate>
             <DataTemplate x:DataType="models:PicWall">
-                <controls1:ImageEx Source="{x:Bind PicMiddle}" Margin="4"/>
+                <controls1:ImageEx Stretch="UniformToFill" Source="{x:Bind PicMiddle}" Margin="4"/>
             </DataTemplate>
         </controls:ListViewEx.ItemTemplate>
     </controls:ListViewEx>

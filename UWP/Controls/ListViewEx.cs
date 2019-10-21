@@ -146,6 +146,7 @@ namespace WeiPo.Controls
             _isLoading = true;
             await loading.LoadMoreItemsAsync(20);
             _isLoading = false;
+            Task.Delay(100).ContinueWith(it => Dispatcher.RunAsync(CoreDispatcherPriority.Low, TryLoadIfNotFill));
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,8 +25,15 @@ namespace WeiPo.ViewModels.User.Tab
 
         public async Task<IEnumerable<PicWall>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new CancellationToken())
         {
-            var result = await Singleton<Api>.Instance.PhotoAll(_uid, _containerId, pageIndex);
-            return result["cards"].SelectMany(it => it["pics"]).Select(it => it.ToObject<PicWall>());
+            try
+            {
+                var result = await Singleton<Api>.Instance.PhotoAll(_uid, _containerId, pageIndex + 1);
+                return result["cards"].SelectMany(it => it["pics"]).Select(it => it.ToObject<PicWall>());
+            }
+            catch (WeiboException e)
+            {
+                return new List<PicWall>();
+            }
         }
     }
 
