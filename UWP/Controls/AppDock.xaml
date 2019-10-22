@@ -194,10 +194,10 @@
                                            x:Name="ImageTeachTip"
                                            PreferredPlacement="Bottom">
                         <controls1:TeachingTip.ActionButtonContent>
-                            <Grid Loaded="TeachGridLoaded" />
+                            <Grid Loaded="TeachGridLoaded"/>
                         </controls1:TeachingTip.ActionButtonContent>
                         <controls1:TeachingTip.CloseButtonContent>
-                            <Grid Loaded="TeachGridLoaded" />
+                            <Grid Loaded="TeachGridLoaded"/>
                         </controls1:TeachingTip.CloseButtonContent>
                         <controls1:TeachingTip.Content>
                             <GridView SelectionMode="None" AllowDrop="True" HorizontalAlignment="Center"

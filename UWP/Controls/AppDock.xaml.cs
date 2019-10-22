@@ -137,14 +137,23 @@ namespace WeiPo.Controls
 
         private void TeachGridLoaded(object sender, RoutedEventArgs e)
         {
-            //trick to hide close button from image picker flyout
+            ////trick to hide close button from image picker flyout
             if (sender is FrameworkElement element)
             {
+                element.Loaded -= TeachGridLoaded;
                 var button = element.FindAscendant<Button>();
                 if (button != null)
                 {
                     button.Visibility = Visibility.Collapsed;
+                    button.RegisterPropertyChangedCallback(VisibilityProperty, (o, dp) =>
+                    {
+                        if (dp == VisibilityProperty && o is FrameworkElement frameworkElement && frameworkElement.Visibility == Visibility.Visible)
+                        {
+                            frameworkElement.Visibility = Visibility.Collapsed;
+                        }
+                    });
                 }
+                
             }
         }
 
