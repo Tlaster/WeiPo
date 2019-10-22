@@ -335,11 +335,8 @@ namespace WeiPo.Services
         public async Task<TimelineData> Timeline(long maxid = 0,
             CancellationToken cancellationToken = new CancellationToken())
         {
-            return await $"{HOST}/feed/friends"
-                .SetQueryParams(new
-                {
-                    max_id = maxid
-                })
+            
+            return await $"{HOST}/feed/friends".Let(it => maxid != 0 ? it.SetQueryParam("max_id", maxid) : new Url(it))
                 .GetAsync(cancellationToken)
                 .ReceiveJson<WeiboResponse<TimelineData>>()
                 .GetData();
