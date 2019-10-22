@@ -85,7 +85,7 @@
                     <common:NonNullDataTemplateSelector.DataTemplate>
                         <DataTemplate x:DataType="models:StatusModel">
                             <local:StatusView Margin="0, 4, 0, 0" ShowActions="False" Status="{x:Bind Mode=OneWay}"
-                                              Background="{StaticResource RetweetBackground}" />
+                                              Background="{ThemeResource RetweetBackground}" />
                         </DataTemplate>
                     </common:NonNullDataTemplateSelector.DataTemplate>
                 </common:NonNullDataTemplateSelector>

@@ -91,7 +91,7 @@
                                         <local:StatusView Margin="0, 4, 0, 0" ShowActions="False"
                                                           Status="{x:Bind Status, Mode=OneWay}"
                                                           ShowRetweet="False"
-                                                          Background="{StaticResource RetweetBackground}" />
+                                                          Background="{ThemeResource RetweetBackground}" />
                                     </StackPanel>
                                 </DataTemplate>
                             </common:StatusTypeDataTemplateSelector.AttitudeTemplate>

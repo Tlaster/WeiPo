@@ -64,7 +64,7 @@
                     HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Style="{ThemeResource TextBlockButtonStyle}" />
         </Grid>
         <local:StatusView Margin="0, 4, 0, 0" ShowActions="False" Status="{x:Bind Comment.Status, Mode=OneWay}"
-                          ShowRetweet="False" Background="{StaticResource RetweetBackground}" Visibility="{x:Bind ShowStatus}" />
+                          ShowRetweet="False" Background="{ThemeResource RetweetBackground}" Visibility="{x:Bind ShowStatus}" />
         <Grid Visibility="{x:Bind ShowActions, Mode=OneWay}">
             <Grid.Resources>
                 <Style TargetType="Button" BasedOn="{StaticResource DateTimePickerFlyoutButtonStyle}">
