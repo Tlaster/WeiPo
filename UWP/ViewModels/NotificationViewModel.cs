@@ -94,8 +94,41 @@ namespace WeiPo.ViewModels
         {
             Debug.WriteLine("fetching notification...");
             var result = await Singleton<Api>.Instance.Unread();
-            await DispatcherHelper.ExecuteOnUIThreadAsync(() => Unread = result);
+            
+            await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
+            {
+                SendToastNotification(result, Unread);
+                Unread = result;
+            });
             Debug.WriteLine("fetching complete!");
+        }
+
+        private void SendToastNotification(UnreadModel newValue, UnreadModel oldValue)
+        {
+            if (newValue.Follower != 0 && newValue.Follower != oldValue?.Follower)
+            {
+                ToastNotificationSender.SendText(Localization.Format("FollowerCount", newValue.Follower));
+            }
+
+            if (newValue.MentionStatus != 0 && newValue.MentionStatus != oldValue?.MentionStatus)
+            {
+                ToastNotificationSender.SendText(Localization.Format("MentionStatusCount", newValue.MentionStatus));
+            }
+
+            if (newValue.MentionCmt != 0 && newValue.MentionCmt != oldValue?.MentionCmt)
+            {
+                ToastNotificationSender.SendText(Localization.Format("MentionCmtCount", newValue.MentionCmt));
+            }
+
+            if (newValue.Cmt != 0 && newValue.Cmt != oldValue?.Cmt)
+            {
+                ToastNotificationSender.SendText(Localization.Format("CmtCount", newValue.Cmt));
+            }
+
+            if (newValue.Dm != 0 && newValue.Dm != oldValue?.Dm)
+            {
+                ToastNotificationSender.SendText(Localization.Format("DmCount", newValue.Dm));
+            }
         }
     }
 }
