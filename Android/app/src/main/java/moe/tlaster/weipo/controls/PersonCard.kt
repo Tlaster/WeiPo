@@ -3,24 +3,13 @@ package moe.tlaster.weipo.controls
 import android.content.Context
 import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.databinding.BindingAdapter
-import androidx.lifecycle.MutableLiveData
+import com.bumptech.glide.request.RequestOptions
+import kotlinx.android.synthetic.main.control_person_card.view.*
 import moe.tlaster.weipo.R
-import moe.tlaster.weipo.common.bindingInflate
-import moe.tlaster.weipo.databinding.ControlPersonCardBinding
+import moe.tlaster.weipo.common.extensions.load
+import moe.tlaster.weipo.common.inflate
 
 class PersonCard : ConstraintLayout {
-
-    internal data class Data(
-        var avatar: MutableLiveData<String> = MutableLiveData(),
-        var title: MutableLiveData<String> = MutableLiveData(),
-        var subTitle: MutableLiveData<String> = MutableLiveData()
-    )
-
-    internal val data by lazy {
-        Data()
-    }
-
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
@@ -37,24 +26,24 @@ class PersonCard : ConstraintLayout {
     ) : super(context, attrs, defStyleAttr, defStyleRes)
 
     init {
-        bindingInflate<ControlPersonCardBinding>(R.layout.control_person_card)
-            .also {
-                it.data = data
-            }
+        inflate(R.layout.control_person_card)
     }
-}
 
-@BindingAdapter("avatar")
-fun setAvatar(personCard: PersonCard, avatar: String?) {
-    personCard.data.avatar.value = avatar
-}
-
-@BindingAdapter("title")
-fun setTitle(personCard: PersonCard, title: String?) {
-    personCard.data.title.value = title
-}
-
-@BindingAdapter("subTitle")
-fun setSubTitle(personCard: PersonCard, subTitle: String?) {
-    personCard.data.subTitle.value = subTitle
+    var avatar: String = ""
+        set(value) {
+            field = value
+            person_avatar.load(value) {
+                apply(RequestOptions.circleCropTransform())
+            }
+        }
+    var title: String = ""
+        set(value) {
+            field = value
+            person_title.text = value
+        }
+    var subTitle: String = ""
+        set(value) {
+            field = value
+            person_sub_title.text = value
+        }
 }

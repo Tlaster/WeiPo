@@ -17,6 +17,7 @@ class Configuration(project: Project) {
 class DependencyVersion {
     val fuel = "2.2.1"
     val glide = "4.9.0"
+    val compose = "0.1.0-dev01"
 }
 
 val Project.appConfig

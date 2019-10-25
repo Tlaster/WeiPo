@@ -1,8 +1,6 @@
-package moe.tlaster.weipo.viewmodel
+package moe.tlaster.weipo.datasource
 
-import android.util.Log
-import moe.tlaster.mvvmdroid.collection.IIncrementalSource
-import moe.tlaster.mvvmdroid.collection.IncrementalLoadingCollection
+import moe.tlaster.weipo.common.collection.IIncrementalSource
 import moe.tlaster.weipo.services.Api
 import moe.tlaster.weipo.services.models.Status
 
@@ -18,16 +16,5 @@ class TimelineDataSource : IIncrementalSource<Status> {
         val result = Api.timeline(_maxId)
         _maxId = result.data.nextCursor ?: 0
         return result.data.statuses ?: listOf()
-    }
-
-}
-
-class TimelineViewModel : ViewModelBase() {
-    val timeline = IncrementalLoadingCollection(TimelineDataSource())
-    init {
-        timeline.refresh()
-        timeline.collectionChanged += { sender, args ->
-            Log.i("", "")
-        }
     }
 }

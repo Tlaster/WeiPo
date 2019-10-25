@@ -1,21 +1,106 @@
 package moe.tlaster.weipo.controls
 
 import android.content.Context
+import android.graphics.Color
+import android.os.Build
+import android.text.Html
 import android.util.AttributeSet
-import android.widget.FrameLayout
-import androidx.databinding.BindingAdapter
+import android.view.View
+import android.widget.LinearLayout
+import androidx.core.view.updateMarginsRelative
+import androidx.core.view.updatePaddingRelative
+import kotlinx.android.synthetic.main.control_status.view.*
 import moe.tlaster.weipo.R
-import moe.tlaster.weipo.common.bindingInflate
-import moe.tlaster.weipo.databinding.ControlStatusBinding
+import moe.tlaster.weipo.common.adapter.AutoAdapter
+import moe.tlaster.weipo.common.adapter.ItemSelector
+import moe.tlaster.weipo.common.extensions.dp
+import moe.tlaster.weipo.common.extensions.updateItemsSource
+import moe.tlaster.weipo.common.inflate
+import moe.tlaster.weipo.services.models.Pic
 import moe.tlaster.weipo.services.models.Status
 
-class StatusView : FrameLayout {
+class StatusView : LinearLayout {
 
-    private var binding: ControlStatusBinding
+    private lateinit var repostView: StatusView
     var status: Status? = null
         set(value) {
             field = value
-            binding.status = value
+            onStatusChanged(value)
+        }
+
+    private fun onStatusChanged(value: Status?) {
+        if (value?.title == null) {
+            View.GONE
+        } else {
+            View.VISIBLE
+        }.also {
+            status_title.visibility = it
+            status_title_divider.visibility = it
+            status_title.text = value?.title?.text ?: ""
+        }
+        value?.user?.profileImageURL?.also {
+            status_person.avatar = it
+        }
+        value?.user?.screenName?.also {
+            status_person.title = it
+        }
+        value?.createdAt?.also {
+            status_person.subTitle = it
+        }
+        value?.text?.also {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                status_content.text = Html.fromHtml(it, Html.FROM_HTML_MODE_COMPACT)
+            } else {
+                status_content.text = Html.fromHtml(it)
+            }
+        }
+        value?.pics?.also {
+            status_image.updateItemsSource(it)
+        }
+        if (value?.retweetedStatus != null) {
+            if (!this::repostView.isInitialized) {
+                repostView = StatusView(context)
+                repostView.showActions = false
+                repostView.layoutParams?.let {
+                    it as MarginLayoutParams
+                }?.also {
+                    it.updateMarginsRelative(start = 8.dp.toInt(), end = 8.dp.toInt())
+                }
+                repostView.setBackgroundColor(Color.argb(32, 0, 0, 0))
+                repost_container.addView(repostView)
+            }
+            repostView.status = value.retweetedStatus
+        }
+        repost_container.visibility = if (value?.retweetedStatus == null) {
+            View.GONE
+        } else {
+            View.VISIBLE
+        }
+        repost_count.text = if (value?.repostsCount != null && value.repostsCount > 0) {
+            value.repostsCount.toString()
+        } else {
+            ""
+        }
+        comment_count.text = if (value?.commentsCount != null && value.commentsCount > 0) {
+            value.commentsCount.toString()
+        } else {
+            ""
+        }
+        like_count.text = if (value?.attitudesCount != null && value.attitudesCount > 0) {
+            value.attitudesCount.toString()
+        } else {
+            ""
+        }
+    }
+
+    var showActions = false
+        set(value) {
+            field = value
+            action_container?.visibility = if (value) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
         }
 
     constructor(context: Context) : super(context)
@@ -26,21 +111,14 @@ class StatusView : FrameLayout {
         defStyleAttr
     )
 
-    constructor(
-        context: Context,
-        attrs: AttributeSet?,
-        defStyleAttr: Int,
-        defStyleRes: Int
-    ) : super(context, attrs, defStyleAttr, defStyleRes)
-
     init {
-        binding = bindingInflate<ControlStatusBinding>(R.layout.control_status).also {
-            it.status = status
+        orientation = VERTICAL
+        inflate(R.layout.control_status)
+        status_image.adapter = AutoAdapter<Pic>(ItemSelector(R.layout.item_image)).apply {
+            setImage(R.id.image) {
+                it.url ?: ""
+            }
         }
+        updatePaddingRelative(bottom = 8.dp.toInt())
     }
-}
-
-@BindingAdapter("status")
-fun setStatus(statusView: StatusView, status: Status) {
-    statusView.status = status
 }

@@ -3,7 +3,7 @@ package moe.tlaster.weipo.common
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import kotlin.math.ceil
+import moe.tlaster.weipo.common.extensions.dp
 
 class NineGridLayoutManager : RecyclerView.LayoutManager() {
     private var itemSize: Double = 0.0
@@ -11,12 +11,16 @@ class NineGridLayoutManager : RecyclerView.LayoutManager() {
 
     override fun generateDefaultLayoutParams(): RecyclerView.LayoutParams {
         return RecyclerView.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
     }
 
-    override fun isAutoMeasureEnabled(): Boolean {
+    override fun canScrollHorizontally(): Boolean {
+        return false
+    }
+
+    override fun canScrollVertically(): Boolean {
         return false
     }
 
@@ -26,14 +30,15 @@ class NineGridLayoutManager : RecyclerView.LayoutManager() {
         widthSpec: Int,
         heightSpec: Int
     ) {
-        super.onMeasure(recycler, state, widthSpec, heightSpec)
+//        super.onMeasure(recycler, state, widthSpec, heightSpec)
         if (itemCount == 0 || state.isPreLayout) {
+            super.onMeasure(recycler, state, widthSpec, heightSpec)
             return
         }
         val width = View.MeasureSpec.getSize(widthSpec)
 
         itemSize = width.toDouble() / 3.toDouble() - gridSpacing
-        val rowCount = ceil(itemCount.toDouble() / 3.toDouble())
+        val rowCount = kotlin.math.ceil(itemCount.toDouble() / 3.toDouble())
         val totalHeight = rowCount * itemSize + gridSpacing * (rowCount - 1)
 
         val actualHeightSpec = View.MeasureSpec.makeMeasureSpec(

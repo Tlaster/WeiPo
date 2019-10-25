@@ -18,16 +18,13 @@ android {
         versionName = appConfig.versionName
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-    dataBinding {
-        isEnabled = true
-    }
 
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                    getDefaultProguardFile("proguard-android-optimize.txt"),
+                    "proguard-rules.pro"
             )
         }
     }
@@ -35,7 +32,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-    tasks.withType<KotlinCompile> {
+    tasks.withType < KotlinCompile > {
         kotlinOptions.jvmTarget = "1.8"
     }
 }
@@ -44,7 +41,6 @@ dependencies {
     implementation(kotlin("stdlib-jdk8", appConfig.kotlinVersion))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.13.0")
-
 
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha03")
     implementation("androidx.appcompat:appcompat:1.1.0")
@@ -65,7 +61,21 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:${appConfig.dependencyVersion.glide}")
     kapt("com.github.bumptech.glide:compiler:${appConfig.dependencyVersion.glide}")
 
-    implementation("moe.tlaster:mvvm-droid:1.0.1")
+    implementation("androidx.compose:compose-runtime:${appConfig.dependencyVersion.compose}")
+    kapt("androidx.compose:compose-compiler:${appConfig.dependencyVersion.compose}")
+    implementation("androidx.ui:ui-core:${appConfig.dependencyVersion.compose}")
+    implementation("androidx.ui:ui-layout:${appConfig.dependencyVersion.compose}")
+    implementation("androidx.ui:ui-framework:${appConfig.dependencyVersion.compose}")
+    implementation("androidx.ui:ui-material:${appConfig.dependencyVersion.compose}")
+    implementation("androidx.ui:ui-foundation:${appConfig.dependencyVersion.compose}")
+    implementation("androidx.ui:ui-text:${appConfig.dependencyVersion.compose}")
+    implementation("androidx.ui:ui-android-text:${appConfig.dependencyVersion.compose}")
+    implementation("androidx.ui:ui-animation:${appConfig.dependencyVersion.compose}")
+    implementation("androidx.ui:ui-animation-core:${appConfig.dependencyVersion.compose}")
+    implementation("androidx.ui:ui-foundation:${appConfig.dependencyVersion.compose}")
+    implementation("androidx.ui:ui-platform:${appConfig.dependencyVersion.compose}")
+    implementation("androidx.ui:ui-tooling:${appConfig.dependencyVersion.compose}")
+    testImplementation("androidx.ui:ui-test:${appConfig.dependencyVersion.compose}")
 
     testImplementation("junit:junit:4.12")
     androidTestImplementation("androidx.test:runner:1.2.0")

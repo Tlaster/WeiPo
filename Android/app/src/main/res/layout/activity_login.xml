@@ -1,24 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-
-    <data>
-
-        <variable
-            name="viewmodel"
-            type="moe.tlaster.weipo.viewmodel.LoginViewModel" />
-    </data>
-
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".activity.LoginActivity">
-
-        <WebView
-            android:id="@+id/webView"
-            onPageFinished="@{viewmodel.onPageFinished}"
-            source="@{`https://m.weibo.cn/login?backURL=https%253A%252F%252Fm.weibo.cn%252F`}"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</layout>
+<WebView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/webView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />
