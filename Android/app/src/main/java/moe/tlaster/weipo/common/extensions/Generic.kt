@@ -2,6 +2,10 @@ package moe.tlaster.weipo.common.extensions
 
 import android.content.res.Resources
 import android.util.TypedValue
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProviders
 import kotlinx.coroutines.*
 
 
@@ -40,6 +44,14 @@ fun CoroutineScope.runOnDefaultThread(action: () -> Unit) {
             action.invoke()
         }
     }
+}
+
+inline fun <reified T: ViewModel> Fragment.viewModel(): T {
+    return this.activity?.let { ViewModelProviders.of(it) }?.get(T::class.java)!!
+}
+
+inline fun <reified T: ViewModel> FragmentActivity.viewModel(): T {
+    return ViewModelProviders.of(this)[T::class.java]
 }
 
 inline fun async(noinline block: suspend () -> Unit): suspend () -> Unit = block
