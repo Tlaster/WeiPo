@@ -31,6 +31,14 @@ namespace WeiPo
             });
             SystemNavigationManager.GetForCurrentView().BackRequested += OnBackRequested;
             RootContainer.Navigated += RootContainerOnNavigated;
+            Window.Current.CoreWindow.PointerPressed += (sender, args) =>
+            {
+                if (args.CurrentPoint.Properties.IsXButton1Pressed)
+                {
+                    OnBackRequested(sender, null);
+                    args.Handled = true;
+                }
+            };
             Init();
         }
 

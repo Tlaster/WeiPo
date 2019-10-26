@@ -110,13 +110,22 @@ namespace WeiPo.Controls
             set => SetValue(StatusProperty, value);
         }
 
+        private bool _isXButton1Pressed;
+
         protected override void OnRightTapped(RightTappedRoutedEventArgs e)
         {
             base.OnRightTapped(e);
         }
 
+        protected override void OnPointerPressed(PointerRoutedEventArgs e)
+        {
+            base.OnPointerPressed(e);
+            _isXButton1Pressed = e.GetCurrentPoint(this).Properties.IsXButton1Pressed;
+        }
+
         protected override void OnTapped(TappedRoutedEventArgs e)
         {
+            if (_isXButton1Pressed) return;
             base.OnTapped(e);
             if (e.OriginalSource is FrameworkElement element && element.DataContext != null)
             {
