@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Windows.System;
+using Flurl.Http;
+using HtmlAgilityPack;
 using WeiPo.ViewModels;
 
 namespace WeiPo.Common
@@ -23,11 +26,33 @@ namespace WeiPo.Common
                 {
                     Singleton<MessagingCenter>.Instance.Send(null, "image_clicked",
                         new ImageViewModel(new[] {new ImageModel(link, link)}));
+                } 
+                else if (uri.Host.Contains("photo.weibo.com"))
+                {
+                    GetImageFromWeb(link);
                 }
                 else
                 {
                     Launcher.LaunchUriAsync(new Uri(link));
                 }
+            }
+        }
+
+        private static async Task GetImageFromWeb(string link)
+        {
+            var html = await link.GetStringAsync();
+            var doc = new HtmlDocument();
+            doc.LoadHtml(html);
+            var node = doc.DocumentNode.SelectSingleNode("//img");
+            if (node != null && node.HasAttributes && !string.IsNullOrEmpty(node.GetAttributeValue("src", string.Empty)))
+            {
+                var src = node.GetAttributeValue("src", "");
+                Singleton<MessagingCenter>.Instance.Send(null, "image_clicked",
+                    new ImageViewModel(new[] {new ImageModel(src, src)}));
+            }
+            else
+            {
+                Launcher.LaunchUriAsync(new Uri(link));
             }
         }
     }
