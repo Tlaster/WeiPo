@@ -28,7 +28,7 @@ namespace WeiPo.ViewModels.User.Tab
         {
             if (args.OriginalSource is FrameworkElement element && element.DataContext is InterestPeopleModel model)
             {
-                Singleton<MessagingCenter>.Instance.Send(this, "user_clicked", model.User.Id);
+                Singleton<BroadcastCenter>.Instance.Send(this, "user_clicked", model.User.Id);
             }
         }
     }

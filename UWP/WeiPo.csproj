@@ -157,7 +157,7 @@
     </Compile>
     <Compile Include="Common\Collection\LoadingCollection.cs" />
     <Compile Include="Common\Localization.cs" />
-    <Compile Include="Common\MessagingCenter.cs" />
+    <Compile Include="Common\BroadcastCenter.cs" />
     <Compile Include="Common\StatusTypeDataTemplateSelector.cs" />
     <Compile Include="Common\StretchGridLayout.cs" />
     <Compile Include="Common\ToastNotificationSender.cs" />

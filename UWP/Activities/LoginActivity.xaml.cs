@@ -35,7 +35,7 @@ namespace WeiPo.Activities
             {
                 Singleton<Storage>.Instance.Save("usercookie",
                     cookieCollection.ToDictionary(it => it.Name, it => it.Value).ToJson());
-                Singleton<MessagingCenter>.Instance.Send(this, "login_completed");
+                Singleton<BroadcastCenter>.Instance.Send(this, "login_completed");
                 Finish();
             }
         }

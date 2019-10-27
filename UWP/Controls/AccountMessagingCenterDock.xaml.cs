@@ -16,15 +16,15 @@ namespace WeiPo.Controls
         public AccountMessagingCenterDock()
         {
             InitializeComponent();
-            Singleton<MessagingCenter>.Instance.Subscribe("message_center_visible", (sender, args) =>
+            Singleton<BroadcastCenter>.Instance.Subscribe("message_center_visible", (sender, args) =>
             {
                 if (args is bool boolArgs)
                 {
                     Visibility = boolArgs ? Visibility.Visible : Visibility.Collapsed;
-                    Singleton<MessagingCenter>.Instance.Send(this, "request_dock_visible", !boolArgs);
+                    Singleton<BroadcastCenter>.Instance.Send(this, "request_dock_visible", !boolArgs);
                 }
             });
-            Singleton<MessagingCenter>.Instance.Subscribe("message_center_to", (sender, args) =>
+            Singleton<BroadcastCenter>.Instance.Subscribe("message_center_to", (sender, args) =>
             {
                 if (args is string strArgs)
                 {
@@ -41,7 +41,7 @@ namespace WeiPo.Controls
         {
             if (Visibility == Visibility.Visible)
             {
-                Singleton<MessagingCenter>.Instance.Send(this, "message_center_visible", false);
+                Singleton<BroadcastCenter>.Instance.Send(this, "message_center_visible", false);
                 return true;
             }
 
@@ -52,7 +52,7 @@ namespace WeiPo.Controls
         {
             e.Handled = true;
 
-            Singleton<MessagingCenter>.Instance.Send(this, "message_center_visible", false);
+            Singleton<BroadcastCenter>.Instance.Send(this, "message_center_visible", false);
         }
     }
 }

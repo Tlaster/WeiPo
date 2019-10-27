@@ -50,7 +50,7 @@ namespace WeiPo.Activities.User.Tab
         {
             if (sender is FrameworkElement element && element.DataContext is UserModel user)
             {
-                Singleton<MessagingCenter>.Instance.Send(this, "user_clicked", user);
+                Singleton<BroadcastCenter>.Instance.Send(this, "user_clicked", user);
             }
         }
 

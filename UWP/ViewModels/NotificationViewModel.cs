@@ -16,7 +16,7 @@ namespace WeiPo.ViewModels
 
         private NotificationViewModel()
         {
-            Singleton<MessagingCenter>.Instance.Subscribe("login_completed", delegate
+            Singleton<BroadcastCenter>.Instance.Subscribe("login_completed", delegate
             {
                 _isLoginCompleted = true;
 
@@ -42,7 +42,7 @@ namespace WeiPo.ViewModels
                     }
                 });
             });
-            Singleton<MessagingCenter>.Instance.Subscribe("notification_clear_fans", delegate
+            Singleton<BroadcastCenter>.Instance.Subscribe("notification_clear_fans", delegate
             {
                 DispatcherHelper.ExecuteOnUIThreadAsync(() =>
                 {
@@ -50,7 +50,7 @@ namespace WeiPo.ViewModels
                     OnPropertyChanged(nameof(Unread));
                 });
             });
-            Singleton<MessagingCenter>.Instance.Subscribe("notification_clear_mention_at", delegate
+            Singleton<BroadcastCenter>.Instance.Subscribe("notification_clear_mention_at", delegate
             {
                 DispatcherHelper.ExecuteOnUIThreadAsync(() =>
                 {
@@ -59,7 +59,7 @@ namespace WeiPo.ViewModels
                 });
             });
 
-            Singleton<MessagingCenter>.Instance.Subscribe("notification_clear_mention_comment", delegate
+            Singleton<BroadcastCenter>.Instance.Subscribe("notification_clear_mention_comment", delegate
             {
                 DispatcherHelper.ExecuteOnUIThreadAsync(() =>
                 {
@@ -68,7 +68,7 @@ namespace WeiPo.ViewModels
                 });
             });
             
-            Singleton<MessagingCenter>.Instance.Subscribe("notification_clear_comment", delegate
+            Singleton<BroadcastCenter>.Instance.Subscribe("notification_clear_comment", delegate
             {
                 DispatcherHelper.ExecuteOnUIThreadAsync(() =>
                 {
@@ -77,7 +77,7 @@ namespace WeiPo.ViewModels
                 });
             });
 
-            Singleton<MessagingCenter>.Instance.Subscribe("notification_clear_dm", delegate
+            Singleton<BroadcastCenter>.Instance.Subscribe("notification_clear_dm", delegate
             {
                 DispatcherHelper.ExecuteOnUIThreadAsync(() =>
                 {

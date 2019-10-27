@@ -11,7 +11,7 @@ namespace WeiPo.Controls
         public NotificationDockView()
         {
             InitializeComponent();
-            Singleton<MessagingCenter>.Instance.Subscribe("dock_visible", (sender, args) =>
+            Singleton<BroadcastCenter>.Instance.Subscribe("dock_visible", (sender, args) =>
             {
                 if (args is bool booArgs)
                 {
@@ -50,8 +50,8 @@ namespace WeiPo.Controls
 
         private void SendMessage(string message)
         {
-            Singleton<MessagingCenter>.Instance.Send(this, "message_center_visible", true);
-            Singleton<MessagingCenter>.Instance.Send(this, "message_center_to", message);
+            Singleton<BroadcastCenter>.Instance.Send(this, "message_center_visible", true);
+            Singleton<BroadcastCenter>.Instance.Send(this, "message_center_to", message);
         }
     }
 }

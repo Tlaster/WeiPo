@@ -30,7 +30,7 @@ namespace WeiPo.Controls
         {
             InitializeComponent();
             DataContext = DockViewModel.Instance;
-            Singleton<MessagingCenter>.Instance.Subscribe("dock_expand", (sender, args) =>
+            Singleton<BroadcastCenter>.Instance.Subscribe("dock_expand", (sender, args) =>
             {
                 if (args is bool boolArgs)
                 {
@@ -38,9 +38,9 @@ namespace WeiPo.Controls
                     ToggleHeader();
                 }
             });
-            Singleton<MessagingCenter>.Instance.Subscribe("status_share", (sender, args) => StartComposing());
-            Singleton<MessagingCenter>.Instance.Subscribe("status_comment", (sender, args) => StartComposing());
-            Singleton<MessagingCenter>.Instance.Subscribe("dock_visible", (sender, args) =>
+            Singleton<BroadcastCenter>.Instance.Subscribe("status_share", (sender, args) => StartComposing());
+            Singleton<BroadcastCenter>.Instance.Subscribe("status_comment", (sender, args) => StartComposing());
+            Singleton<BroadcastCenter>.Instance.Subscribe("dock_visible", (sender, args) =>
             {
                 if (args is bool booArgs)
                 {
@@ -49,9 +49,9 @@ namespace WeiPo.Controls
                     ToggleImageTeachingTip();
                 }
             });
-            Singleton<MessagingCenter>.Instance.Subscribe("post_weibo_complete",
+            Singleton<BroadcastCenter>.Instance.Subscribe("post_weibo_complete",
                 (sender, args) => StopComposing());
-            Singleton<MessagingCenter>.Instance.Subscribe("dock_image_count_changed", (sender, args) =>
+            Singleton<BroadcastCenter>.Instance.Subscribe("dock_image_count_changed", (sender, args) =>
             {
                 if (args is int intArgs)
                 {
@@ -101,7 +101,7 @@ namespace WeiPo.Controls
         public void StopComposing()
         {
             ClearComposing();
-            Singleton<MessagingCenter>.Instance.Send(this, "request_dock_visible", true);
+            Singleton<BroadcastCenter>.Instance.Send(this, "request_dock_visible", true);
         }
 
         private void CloseHeader()
@@ -121,7 +121,7 @@ namespace WeiPo.Controls
 
         private void NotificationClick(object sender, RoutedEventArgs e)
         {
-            Singleton<MessagingCenter>.Instance.Send(this, "message_center_visible", true);
+            Singleton<BroadcastCenter>.Instance.Send(this, "message_center_visible", true);
         }
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)

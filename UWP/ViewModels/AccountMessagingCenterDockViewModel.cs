@@ -29,7 +29,7 @@ namespace WeiPo.ViewModels
             if (pageIndex == 0 && !string.IsNullOrEmpty(_postMessageId))
                 //clear notification
             {
-                Singleton<MessagingCenter>.Instance.Send(this, _postMessageId);
+                Singleton<BroadcastCenter>.Instance.Send(this, _postMessageId);
             }
 
             var result = await _func.Invoke(pageIndex + 1);

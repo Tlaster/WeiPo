@@ -38,22 +38,22 @@ namespace WeiPo
         {
             MessageCenterDock.RegisterPropertyChangedCallback(VisibilityProperty,
                 (sender, e) => { UpdateNavigationBackButton(); });
-            Singleton<MessagingCenter>.Instance.Subscribe("login_completed",
+            Singleton<BroadcastCenter>.Instance.Subscribe("login_completed",
                 (sender, args) => RootContainer.Navigate<TimelineActivity>());
-            Singleton<MessagingCenter>.Instance.Subscribe("status_clicked", 
+            Singleton<BroadcastCenter>.Instance.Subscribe("status_clicked", 
                 (sender, args) => RootContainer.Navigate<StatusActivity>(args));
-            Singleton<MessagingCenter>.Instance.Subscribe("user_clicked",
+            Singleton<BroadcastCenter>.Instance.Subscribe("user_clicked",
                 (sender, args) => { RootContainer.Navigate(typeof(UserActivity), args); });
-            Singleton<MessagingCenter>.Instance.Subscribe("status_like", (sender, args) => { });
-            Singleton<MessagingCenter>.Instance.Subscribe("image_clicked",
+            Singleton<BroadcastCenter>.Instance.Subscribe("status_like", (sender, args) => { });
+            Singleton<BroadcastCenter>.Instance.Subscribe("image_clicked",
                 (sender, args) => RootContainer.Navigate<ImageActivity>(args));
-            Singleton<MessagingCenter>.Instance.Subscribe("video_clicked",
+            Singleton<BroadcastCenter>.Instance.Subscribe("video_clicked",
                 (sender, args) => RootContainer.Navigate<VideoActivity>(args));
-            Singleton<MessagingCenter>.Instance.Subscribe("request_dock_visible", (sender, args) =>
+            Singleton<BroadcastCenter>.Instance.Subscribe("request_dock_visible", (sender, args) =>
             {
                 if (args is bool boolArgs)
                 {
-                    Singleton<MessagingCenter>.Instance.Send(this, "dock_visible", boolArgs && MessageCenterDock.Visibility == Visibility.Collapsed && RootContainer.CurrentActivity is TimelineActivity);
+                    Singleton<BroadcastCenter>.Instance.Send(this, "dock_visible", boolArgs && MessageCenterDock.Visibility == Visibility.Collapsed && RootContainer.CurrentActivity is TimelineActivity);
                 }
             });
             RootContainer.BackStackChanged += RootContainerOnBackStackChanged;
@@ -81,8 +81,8 @@ namespace WeiPo
 
         private void RootContainerOnNavigated(object sender, EventArgs e)
         {
-            Singleton<MessagingCenter>.Instance.Send(this, "message_center_visible", false);
-            Singleton<MessagingCenter>.Instance.Send(this, "dock_visible",
+            Singleton<BroadcastCenter>.Instance.Send(this, "message_center_visible", false);
+            Singleton<BroadcastCenter>.Instance.Send(this, "dock_visible",
                 RootContainer.CurrentActivity is TimelineActivity);
         }
 

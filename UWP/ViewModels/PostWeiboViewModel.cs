@@ -28,14 +28,14 @@ namespace WeiPo.ViewModels
         public PostWeiboViewModel()
         {
             Files.CollectionChanged += FilesOnCollectionChanged;
-            Singleton<MessagingCenter>.Instance.Subscribe("status_share", (sender, args) =>
+            Singleton<BroadcastCenter>.Instance.Subscribe("status_share", (sender, args) =>
             {
                 if (args is StatusModel status)
                 {
                     ToRepostState(status);
                 }
             });
-            Singleton<MessagingCenter>.Instance.Subscribe("status_comment", (sender, args) =>
+            Singleton<BroadcastCenter>.Instance.Subscribe("status_comment", (sender, args) =>
             {
                 if (args is ICanReply reply)
                 {
@@ -101,7 +101,7 @@ namespace WeiPo.ViewModels
             }
 
             IsSending = false;
-            Singleton<MessagingCenter>.Instance.Send(this, "post_weibo_complete", result);
+            Singleton<BroadcastCenter>.Instance.Send(this, "post_weibo_complete", result);
         }
 
         public async Task PickImages()
@@ -160,7 +160,7 @@ namespace WeiPo.ViewModels
 
         private void FilesOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            Singleton<MessagingCenter>.Instance.Send(this, "dock_image_count_changed", Files.Count);
+            Singleton<BroadcastCenter>.Instance.Send(this, "dock_image_count_changed", Files.Count);
         }
     }
 }

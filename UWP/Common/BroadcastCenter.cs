@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace WeiPo.Common
 {
-    internal class MessagingCenter
+    internal class BroadcastCenter
     {
         private readonly ConcurrentDictionary<Guid, (string message, Action<object, object> action)> _listeners =
             new ConcurrentDictionary<Guid, (string message, Action<object, object> action)>();

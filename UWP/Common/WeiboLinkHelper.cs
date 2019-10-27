@@ -13,18 +13,18 @@ namespace WeiPo.Common
         {
             if (link.StartsWith("/n/"))
             {
-                Singleton<MessagingCenter>.Instance.Send(null, "user_clicked", link.Substring("/n/".Length));
+                Singleton<BroadcastCenter>.Instance.Send(null, "user_clicked", link.Substring("/n/".Length));
             }
             else if (link.StartsWith("/status/"))
             {
-                Singleton<MessagingCenter>.Instance.Send(null, "status_clicked", link.Substring("/status/".Length));
+                Singleton<BroadcastCenter>.Instance.Send(null, "status_clicked", link.Substring("/status/".Length));
             }
             else if (link.StartsWith("http"))
             {
                 var uri = new Uri(link);
                 if (uri.Host.Contains("sinaimg.cn"))
                 {
-                    Singleton<MessagingCenter>.Instance.Send(null, "image_clicked",
+                    Singleton<BroadcastCenter>.Instance.Send(null, "image_clicked",
                         new ImageViewModel(new[] {new ImageModel(link, link)}));
                 } 
                 else if (uri.Host.Contains("photo.weibo.com"))
@@ -47,7 +47,7 @@ namespace WeiPo.Common
             if (node != null && node.HasAttributes && !string.IsNullOrEmpty(node.GetAttributeValue("src", string.Empty)))
             {
                 var src = node.GetAttributeValue("src", "");
-                Singleton<MessagingCenter>.Instance.Send(null, "image_clicked",
+                Singleton<BroadcastCenter>.Instance.Send(null, "image_clicked",
                     new ImageViewModel(new[] {new ImageModel(src, src)}));
             }
             else

@@ -48,7 +48,7 @@ namespace WeiPo.ViewModels.User.Tab
                         {
                             //clear notification
                             await Singleton<Api>.Instance.MyFans();
-                            Singleton<MessagingCenter>.Instance.Send(this, "notification_clear_fans");
+                            Singleton<BroadcastCenter>.Instance.Send(this, "notification_clear_fans");
                         }
                     }
 

@@ -28,7 +28,7 @@ namespace WeiPo.Activities.User.Tab
             {
                 e.Handled = true;
                 
-                Singleton<MessagingCenter>.Instance.Send(this, "image_clicked",
+                Singleton<BroadcastCenter>.Instance.Send(this, "image_clicked",
                     new ImageViewModel(new []{new ImageModel(model.PicMiddle, model.PicBig)}));
             }
         }

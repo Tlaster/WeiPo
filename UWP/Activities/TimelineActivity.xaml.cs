@@ -48,7 +48,7 @@ namespace WeiPo.Activities
         {
             if (!e.IsIntermediate)
             {
-                Singleton<MessagingCenter>.Instance.Send(this, "dock_expand", _scrollViewer.VerticalOffset < 5d);
+                Singleton<BroadcastCenter>.Instance.Send(this, "dock_expand", _scrollViewer.VerticalOffset < 5d);
             }
         }
     }

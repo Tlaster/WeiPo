@@ -124,11 +124,11 @@ namespace WeiPo.Controls
                 {
                     case StatusModel status:
                         e.Handled = true;
-                        Singleton<MessagingCenter>.Instance.Send(this, "status_clicked", status);
+                        Singleton<BroadcastCenter>.Instance.Send(this, "status_clicked", status);
                         break;
                     case UserModel user:
                         e.Handled = true;
-                        Singleton<MessagingCenter>.Instance.Send(this, "user_clicked", user);
+                        Singleton<BroadcastCenter>.Instance.Send(this, "user_clicked", user);
                         break;
                     case PageInfo info:
                         switch (info.Type)
@@ -162,7 +162,7 @@ namespace WeiPo.Controls
                                 }
                                 else
                                 {
-                                    Singleton<MessagingCenter>.Instance.Send(this, "video_clicked", url);
+                                    Singleton<BroadcastCenter>.Instance.Send(this, "video_clicked", url);
                                 }
                             }
                                 break;
@@ -185,7 +185,7 @@ namespace WeiPo.Controls
         private void CommentTapped(object sender, TappedRoutedEventArgs e)
         {
             e.Handled = true;
-            Singleton<MessagingCenter>.Instance.Send(this, "status_comment", Status);
+            Singleton<BroadcastCenter>.Instance.Send(this, "status_comment", Status);
         }
 
         private void ImageListOnTapped(object sender, TappedRoutedEventArgs e)
@@ -194,7 +194,7 @@ namespace WeiPo.Controls
                 Status.Pics.Contains(pic))
             {
                 var index = Status.Pics.IndexOf(pic);
-                Singleton<MessagingCenter>.Instance.Send(this, "image_clicked",
+                Singleton<BroadcastCenter>.Instance.Send(this, "image_clicked",
                     new ImageViewModel(
                         Status.Pics.Select(it =>
                             new ImageModel(it.Url, it.Large.Url, it.Large.Geo.Width, it.Large.Geo.Height)).ToArray(),
@@ -205,7 +205,7 @@ namespace WeiPo.Controls
         private void LikeTapped(object sender, TappedRoutedEventArgs e)
         {
             e.Handled = true;
-            Singleton<MessagingCenter>.Instance.Send(this, "status_like", Status);
+            Singleton<BroadcastCenter>.Instance.Send(this, "status_like", Status);
         }
 
         private void OnLinkClicked(object sender, LinkClickedEventArgs e)
@@ -216,7 +216,7 @@ namespace WeiPo.Controls
         private void ShareTapped(object sender, TappedRoutedEventArgs e)
         {
             e.Handled = true;
-            Singleton<MessagingCenter>.Instance.Send(this, "status_share", Status);
+            Singleton<BroadcastCenter>.Instance.Send(this, "status_share", Status);
         }
 
         private void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)

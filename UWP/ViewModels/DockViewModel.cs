@@ -13,7 +13,7 @@ namespace WeiPo.ViewModels
     {
         private DockViewModel()
         {
-            Singleton<MessagingCenter>.Instance.Subscribe("login_completed",
+            Singleton<BroadcastCenter>.Instance.Subscribe("login_completed",
                 (sender, args) => { MyProfile = NotifyTask.Create(LoadMe); });
         }
 
@@ -38,7 +38,7 @@ namespace WeiPo.ViewModels
         {
             if (MyProfile.IsCompleted && MyProfile.Result != null)
             {
-                Singleton<MessagingCenter>.Instance.Send(this, "user_clicked", MyProfile.Result.UserInfo.Id);
+                Singleton<BroadcastCenter>.Instance.Send(this, "user_clicked", MyProfile.Result.UserInfo.Id);
             }
         }
 
