@@ -10,6 +10,7 @@ var WebView.source: String
         return url
     }
     set(value) {
+        settings.javaScriptEnabled = true
         loadUrl(value)
     }
 

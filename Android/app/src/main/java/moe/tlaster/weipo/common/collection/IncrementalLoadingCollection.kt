@@ -12,11 +12,16 @@ class IncrementalLoadingCollection<TSource: IIncrementalSource<T>, T>(
     public var isLoading = false
 
     fun refresh() {
+        GlobalScope.launch {
+            refreshAsync()
+        }
+    }
+
+    suspend fun refreshAsync() {
         currentPageIndex = 0
         hasMoreItems = true
-        GlobalScope.launch {
-            loadMoreItemsAsync()
-        }
+        clear()
+        loadMoreItemsAsync()
     }
 
     override suspend fun loadMoreItemsAsync() {

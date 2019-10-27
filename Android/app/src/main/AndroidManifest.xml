@@ -20,11 +20,6 @@
 
         </activity>
         <activity
-            android:name=".activity.TimelineActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
-        <activity
             android:name=".activity.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

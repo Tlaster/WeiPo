@@ -15,7 +15,7 @@ import moe.tlaster.weipo.common.adapter.AutoAdapter
 import moe.tlaster.weipo.common.adapter.ItemSelector
 import moe.tlaster.weipo.common.extensions.dp
 import moe.tlaster.weipo.common.extensions.updateItemsSource
-import moe.tlaster.weipo.common.inflate
+import moe.tlaster.weipo.common.extensions.inflate
 import moe.tlaster.weipo.services.models.Pic
 import moe.tlaster.weipo.services.models.Status
 

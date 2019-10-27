@@ -7,7 +7,7 @@ import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.control_person_card.view.*
 import moe.tlaster.weipo.R
 import moe.tlaster.weipo.common.extensions.load
-import moe.tlaster.weipo.common.inflate
+import moe.tlaster.weipo.common.extensions.inflate
 
 class PersonCard : ConstraintLayout {
     constructor(context: Context) : super(context)

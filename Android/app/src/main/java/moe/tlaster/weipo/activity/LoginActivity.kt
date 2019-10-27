@@ -10,7 +10,7 @@ import moe.tlaster.weipo.R
 import moe.tlaster.weipo.common.Settings
 import moe.tlaster.weipo.common.extensions.onPageStarted
 import moe.tlaster.weipo.common.extensions.source
-import moe.tlaster.weipo.common.openActivity
+import moe.tlaster.weipo.common.extensions.openActivity
 
 class LoginActivity : BaseActivity() {
     override val layoutId: Int

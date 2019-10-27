@@ -5,19 +5,19 @@
     android:id="@+id/mobile_navigation"
     app:startDestination="@+id/navigation_home">
 
-    <fragment
+    <keep_state_fragment
         android:id="@+id/navigation_home"
         android:name="moe.tlaster.weipo.fragment.TimelineFragment"
         android:label="Timeline"
         tools:layout="@layout/fragment_timeline" />
 
-    <fragment
+    <keep_state_fragment
         android:id="@+id/navigation_notification"
         android:name="moe.tlaster.weipo.fragment.NotificationFragment"
         android:label="Notification"
         tools:layout="@layout/fragment_notification" />
 
-    <fragment
+    <keep_state_fragment
         android:id="@+id/navigation_me"
         android:name="moe.tlaster.weipo.fragment.MeFragment"
         android:label="Me"
