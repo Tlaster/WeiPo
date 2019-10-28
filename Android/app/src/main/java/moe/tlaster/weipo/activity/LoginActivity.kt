@@ -28,7 +28,7 @@ class LoginActivity : BaseActivity() {
                 }.toMap()
                 if (cookies.containsKey("MLOGIN") && cookies["MLOGIN"] == "1") {
                     Settings.set("user_cookie", Json.nonstrict.stringify(cookies))
-                    openActivity<HomeActivity>()
+                    openActivity<TimelineActivity>()
                     finish()
                 }
             }

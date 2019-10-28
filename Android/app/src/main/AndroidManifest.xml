@@ -16,8 +16,7 @@
         tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:theme="@style/AppTheme.NoActionBar"
-            android:name=".activity.HomeActivity">
-
+            android:name=".activity.TimelineActivity">
         </activity>
         <activity
             android:name=".activity.LoginActivity"
@@ -27,6 +26,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
     </application>
 

@@ -44,9 +44,9 @@ dependencies {
 
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha03")
     implementation("androidx.appcompat:appcompat:1.1.0")
-    implementation("com.google.android.material:material:1.1.0-beta01")
+    implementation("com.google.android.material:material:1.2.0-alpha01")
     implementation("androidx.core:core-ktx:1.1.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.0.0-beta2")
+    implementation("androidx.constraintlayout:constraintlayout:2.0.0-beta3")
     implementation("androidx.navigation:navigation-fragment:2.1.0")
     implementation("androidx.navigation:navigation-ui:2.1.0")
     implementation("androidx.lifecycle:lifecycle-extensions:2.1.0")
@@ -60,6 +60,8 @@ dependencies {
 
     implementation("com.github.bumptech.glide:glide:${appConfig.dependencyVersion.glide}")
     kapt("com.github.bumptech.glide:compiler:${appConfig.dependencyVersion.glide}")
+
+    implementation("org.jsoup:jsoup:1.12.1")
 
     implementation("androidx.compose:compose-runtime:${appConfig.dependencyVersion.compose}")
     kapt("androidx.compose:compose-compiler:${appConfig.dependencyVersion.compose}")
