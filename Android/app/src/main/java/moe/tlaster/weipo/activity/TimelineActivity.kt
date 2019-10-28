@@ -12,6 +12,7 @@ import moe.tlaster.weipo.R
 import moe.tlaster.weipo.common.adapter.IncrementalLoadingAdapter
 import moe.tlaster.weipo.common.adapter.ItemSelector
 import moe.tlaster.weipo.common.extensions.dp
+import moe.tlaster.weipo.common.extensions.openActivity
 import moe.tlaster.weipo.common.extensions.viewModel
 import moe.tlaster.weipo.controls.StatusView
 import moe.tlaster.weipo.services.models.Status
@@ -59,6 +60,9 @@ class TimelineActivity : BaseActivity() {
                 viewModel.items.refreshAsync()
                 refresh_layout.isRefreshing = false
             }
+        }
+        notification_button.setOnClickListener {
+            openActivity<NotificationActivity>()
         }
     }
 
