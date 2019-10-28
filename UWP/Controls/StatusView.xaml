@@ -52,6 +52,18 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
         <local:AspectRatioView
+            WidthRequest="16" HeightRequest="9" RequestedTheme="Dark" 
+            Visibility="{x:Bind local:StatusViewXamlHelper.PageInfoVisibleOn(Status, 'story'), Mode=OneWay}"
+            extensions:Mouse.Cursor="Hand" DataContext="{x:Bind Status.PageInfo, Mode=OneWay}">
+            <controls:ImageEx Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center" CornerRadius="{StaticResource CardCorner}"
+                              Source="{x:Bind Status.PageInfo.SlideCovers[0].Pic, Mode=OneWay}"/>
+            <Border CornerRadius="{StaticResource CardCorner}" Background="#aa000000" />
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Text="微博故事" Style="{ThemeResource TitleTextBlockStyle}" HorizontalAlignment="Center"/>
+                <TextBlock Text="{x:Bind Status.PageInfo.SlideCovers[0].NickName, Mode=OneWay}" HorizontalAlignment="Center"/>
+            </StackPanel>
+        </local:AspectRatioView>
+        <local:AspectRatioView
             Visibility="{x:Bind local:StatusViewXamlHelper.PageInfoVisibility(Status), Mode=OneWay}"
             DataContext="{x:Bind Status.PageInfo, Mode=OneWay}"
             extensions:Mouse.Cursor="Hand" WidthRequest="16" HeightRequest="9" RequestedTheme="Dark">

@@ -1,15 +1,20 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Flurl.Http;
+using HtmlAgilityPack;
 using Humanizer;
 using Newtonsoft.Json;
 using WeiPo.Common;
 using WeiPo.Controls.Html;
+using WeiPo.Services;
 using WeiPo.Services.Models;
 using WeiPo.ViewModels;
 
@@ -37,6 +42,13 @@ namespace WeiPo.Controls
         public static Visibility TitleVisibility(StatusModel status)
         {
             return status?.Title != null
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+        }
+
+        public static Visibility PageInfoVisibleOn(StatusModel status, string type)
+        {
+            return status?.PageInfo != null && (status.PageInfo.Type == type)
                 ? Visibility.Visible
                 : Visibility.Collapsed;
         }
@@ -172,6 +184,29 @@ namespace WeiPo.Controls
                                 {
                                     e.Handled = true;
                                     Launcher.LaunchUriAsync(new Uri(info.PageUrl));
+                                }
+                            }
+                                break;
+                            case "story":
+                            {
+                                if (info.PageUrl != null)
+                                {
+                                    e.Handled = true;
+                                    Task.Run(async () =>
+                                    {
+                                        var link = await Singleton<Api>.Instance.GetStoryVideoLink(info.PageUrl);
+                                        await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                                        {
+                                            if (!string.IsNullOrEmpty(link))
+                                            {
+                                                Singleton<BroadcastCenter>.Instance.Send(this, "video_clicked", link);
+                                            }
+                                            else
+                                            {
+                                                Launcher.LaunchUriAsync(new Uri(info.PageUrl));
+                                            }
+                                        });
+                                    });
                                 }
                             }
                                 break;

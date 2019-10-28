@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 using Newtonsoft.Json;
 
 namespace WeiPo.Services.Models
@@ -46,5 +47,19 @@ namespace WeiPo.Services.Models
 
         [JsonProperty("video_details", NullValueHandling = NullValueHandling.Ignore)]
         public VideoDetails VideoDetails { get; set; }
+
+        [JsonProperty("slide_cover", NullValueHandling = NullValueHandling.Ignore)]
+        public List<SlideCover> SlideCovers { get; set; }
+
+        [JsonProperty("storyNumber", NullValueHandling = NullValueHandling.Ignore)]
+        public long StoryNumber { get; set; }
+    }
+
+    public class SlideCover
+    {
+        [JsonProperty("nickname")]
+        public string NickName { get; set; }
+        [JsonProperty("pic")] 
+        public string Pic { get; set; }
     }
 }
