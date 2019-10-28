@@ -2,25 +2,34 @@ package moe.tlaster.weipo.controls
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.text.Html
+import android.text.SpannableStringBuilder
+import android.text.method.LinkMovementMethod
+import android.text.style.URLSpan
 import android.util.AttributeSet
 import android.view.View
 import android.widget.LinearLayout
+import androidx.core.text.HtmlCompat
+import androidx.core.text.set
 import androidx.core.view.updateMarginsRelative
 import androidx.core.view.updatePaddingRelative
 import kotlinx.android.synthetic.main.control_status.view.*
 import moe.tlaster.weipo.R
+import moe.tlaster.weipo.common.HtmlHttpImageGetter
 import moe.tlaster.weipo.common.adapter.AutoAdapter
 import moe.tlaster.weipo.common.adapter.ItemSelector
 import moe.tlaster.weipo.common.extensions.dp
 import moe.tlaster.weipo.common.extensions.updateItemsSource
 import moe.tlaster.weipo.common.extensions.inflate
+import moe.tlaster.weipo.common.fromHtml
 import moe.tlaster.weipo.services.models.Pic
 import moe.tlaster.weipo.services.models.Status
 
 class StatusView : LinearLayout {
 
+    private val linkClicked: ((url: String) -> Unit)? = null
     private lateinit var repostView: StatusView
     var status: Status? = null
         set(value) {
@@ -47,11 +56,9 @@ class StatusView : LinearLayout {
         value?.createdAt?.also {
             status_person.subTitle = it
         }
-        value?.text?.also {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                status_content.text = Html.fromHtml(it, Html.FROM_HTML_MODE_COMPACT)
-            } else {
-                status_content.text = Html.fromHtml(it)
+        value?.text?.also { html ->
+            status_content.text = fromHtml(html, status_content) { url ->
+                linkClicked?.invoke(url)
             }
         }
         value?.pics?.also {
@@ -119,6 +126,7 @@ class StatusView : LinearLayout {
                 it.url ?: ""
             }
         }
+        status_content.movementMethod = LinkMovementMethod.getInstance()
         updatePaddingRelative(bottom = 8.dp.toInt())
     }
 }

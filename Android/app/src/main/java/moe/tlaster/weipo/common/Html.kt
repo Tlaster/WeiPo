@@ -1,22 +1,38 @@
 package moe.tlaster.weipo.common
 
-import android.content.Context
-import android.net.Uri
-import android.text.SpannableString
+import android.graphics.drawable.Drawable
 import android.text.SpannableStringBuilder
 import android.text.Spanned
-import android.text.style.ImageSpan
-import androidx.core.text.buildSpannedString
-import org.jsoup.Jsoup
-import org.jsoup.select.Elements
+import android.text.style.URLSpan
+import android.view.View
+import android.widget.TextView
+import androidx.core.text.HtmlCompat
+import androidx.core.text.set
+import kotlinx.android.synthetic.main.control_status.view.*
 
-object Html {
-    fun toSpanned(value: String, context: Context) : Spanned {
-        val doc = Jsoup.parse(value)
-        return render(doc.body().children())
+
+class URLSpanEx(url: String?, private val linkClicked: (url: String) -> Unit) : URLSpan(url) {
+    override fun onClick(widget: View) {
+        linkClicked.invoke(url)
     }
+}
 
-    private fun render(elements: Elements): Spanned {
-        TODO()
+fun fromHtml(html: String, textView: TextView, linkClicked: (url: String) -> Unit): Spanned {
+    return HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_COMPACT, object : HtmlHttpImageGetter(textView) {
+        override fun getDrawable(source: String): Drawable {
+            return super.getDrawable("https:$source")
+        }
+    }, null).let { spanned ->
+        if (spanned is SpannableStringBuilder) {
+            spanned.getSpans(0, html.length, URLSpan::class.java)?.forEach { span ->
+                val start = spanned.getSpanStart(span)
+                val end = spanned.getSpanEnd(span)
+                spanned.removeSpan(span)
+                spanned[start, end] = URLSpanEx(span.url) { url ->
+                    linkClicked.invoke(url)
+                }
+            }
+        }
+        spanned
     }
 }

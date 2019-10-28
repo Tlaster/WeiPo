@@ -1,7 +1,10 @@
 package moe.tlaster.weipo.activity
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.google.android.material.badge.BadgeDrawable
+import com.google.android.material.badge.BadgeUtils
 import kotlinx.android.synthetic.main.activity_timeline.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -31,6 +34,7 @@ class TimelineActivity : BaseActivity() {
             }
         }
     }
+    @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val recyclerWidth = savedInstanceState?.getInt("recyclerWidth", -1) ?: -1
