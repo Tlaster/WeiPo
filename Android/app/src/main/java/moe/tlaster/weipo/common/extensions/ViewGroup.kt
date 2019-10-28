@@ -1,4 +1,4 @@
-package moe.tlaster.weipo.common
+package moe.tlaster.weipo.common.extensions
 
 import android.view.LayoutInflater
 import android.view.View
