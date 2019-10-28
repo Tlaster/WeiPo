@@ -57,27 +57,8 @@ dependencies {
     implementation("com.github.kittinunf.fuel:fuel-kotlinx-serialization:${appConfig.dependencyVersion.fuel}")
     implementation("com.github.kittinunf.fuel:fuel-coroutines:${appConfig.dependencyVersion.fuel}")
 
-
     implementation("com.github.bumptech.glide:glide:${appConfig.dependencyVersion.glide}")
     kapt("com.github.bumptech.glide:compiler:${appConfig.dependencyVersion.glide}")
-
-    implementation("org.jsoup:jsoup:1.12.1")
-
-    implementation("androidx.compose:compose-runtime:${appConfig.dependencyVersion.compose}")
-    kapt("androidx.compose:compose-compiler:${appConfig.dependencyVersion.compose}")
-    implementation("androidx.ui:ui-core:${appConfig.dependencyVersion.compose}")
-    implementation("androidx.ui:ui-layout:${appConfig.dependencyVersion.compose}")
-    implementation("androidx.ui:ui-framework:${appConfig.dependencyVersion.compose}")
-    implementation("androidx.ui:ui-material:${appConfig.dependencyVersion.compose}")
-    implementation("androidx.ui:ui-foundation:${appConfig.dependencyVersion.compose}")
-    implementation("androidx.ui:ui-text:${appConfig.dependencyVersion.compose}")
-    implementation("androidx.ui:ui-android-text:${appConfig.dependencyVersion.compose}")
-    implementation("androidx.ui:ui-animation:${appConfig.dependencyVersion.compose}")
-    implementation("androidx.ui:ui-animation-core:${appConfig.dependencyVersion.compose}")
-    implementation("androidx.ui:ui-foundation:${appConfig.dependencyVersion.compose}")
-    implementation("androidx.ui:ui-platform:${appConfig.dependencyVersion.compose}")
-    implementation("androidx.ui:ui-tooling:${appConfig.dependencyVersion.compose}")
-    testImplementation("androidx.ui:ui-test:${appConfig.dependencyVersion.compose}")
 
     testImplementation("junit:junit:4.12")
     androidTestImplementation("androidx.test:runner:1.2.0")
