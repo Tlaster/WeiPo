@@ -197,9 +197,9 @@ namespace WeiPo.Controls
                                         var link = await Singleton<Api>.Instance.GetStoryVideoLink(info.PageUrl);
                                         await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                                         {
-                                            if (!string.IsNullOrEmpty(link))
+                                            if (!string.IsNullOrEmpty(link?.StoryObject?.Stream?.Url))
                                             {
-                                                Singleton<BroadcastCenter>.Instance.Send(this, "video_clicked", link);
+                                                Singleton<BroadcastCenter>.Instance.Send(this, "video_clicked", link?.StoryObject?.Stream?.Url);
                                             }
                                             else
                                             {

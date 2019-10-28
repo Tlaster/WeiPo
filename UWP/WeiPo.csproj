@@ -207,6 +207,7 @@
     <Compile Include="Services\Models\CommentBadge.cs" />
     <Compile Include="Services\Models\CommentManageInfo.cs" />
     <Compile Include="Services\Models\CommentModel.cs" />
+    <Compile Include="Services\Models\CommentsConverter.cs" />
     <Compile Include="Services\Models\ConfigModel.cs" />
     <Compile Include="Services\Models\DarwinTag.cs" />
     <Compile Include="Services\Models\FilterGroup.cs" />
@@ -216,6 +217,7 @@
     <Compile Include="Services\Models\HotflowChildModel.cs" />
     <Compile Include="Services\Models\HotflowModel.cs" />
     <Compile Include="Services\Models\ICanReply.cs" />
+    <Compile Include="Services\Models\Image.cs" />
     <Compile Include="Services\Models\InterestPeopleModel.cs" />
     <Compile Include="Services\Models\InterestPropleDescModel.cs" />
     <Compile Include="Services\Models\Large.cs" />
@@ -239,6 +241,9 @@
     <Compile Include="Services\Models\RepostTimelineModel.cs" />
     <Compile Include="Services\Models\Status.cs" />
     <Compile Include="Services\Models\StatusModel.cs" />
+    <Compile Include="Services\Models\StoryModel.cs" />
+    <Compile Include="Services\Models\StoryObject.cs" />
+    <Compile Include="Services\Models\Stream.cs" />
     <Compile Include="Services\Models\Tab.cs" />
     <Compile Include="Services\Models\TabsInfo.cs" />
     <Compile Include="Services\Models\TimelineData.cs" />

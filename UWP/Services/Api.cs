@@ -222,13 +222,12 @@ namespace WeiPo.Services
                 .GetData();
         }
 
-        public async Task<string> GetStoryVideoLink(string pageInfoLink)
+        public async Task<StoryModel> GetStoryVideoLink(string pageInfoLink)
         {
-            var result = await pageInfoLink.Replace("/s/video/index", "/s/video/object")
+            return await pageInfoLink.Replace("/s/video/index", "/s/video/object")
                 .GetAsync()
-                .ReceiveJson<WeiboResponse<JObject>>()
+                .ReceiveJson<WeiboResponse<StoryModel>>()
                 .GetData();
-            return result["object"]["stream"]["url"].Value<string>();
         }
 
         public async Task<HotflowModel> Hotflow(long id, long mid, long max_id= 0)
