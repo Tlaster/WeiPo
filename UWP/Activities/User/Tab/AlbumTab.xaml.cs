@@ -1,4 +1,5 @@
-﻿using Windows.UI.Xaml;
+﻿using System.Linq;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
 using WeiPo.Common;
 using WeiPo.Services.Models;
@@ -24,12 +25,13 @@ namespace WeiPo.Activities.User.Tab
         protected override void OnTapped(TappedRoutedEventArgs e)
         {
             base.OnTapped(e);
-            if (e.OriginalSource is FrameworkElement element && element.DataContext is PicWall model)
+            if (e.OriginalSource is FrameworkElement element && element.DataContext is PicWall model && ViewModel is AlbumTabViewModel viewModel)
             {
                 e.Handled = true;
+                var index = viewModel.DataSource.IndexOf(model);
                 
                 Singleton<BroadcastCenter>.Instance.Send(this, "image_clicked",
-                    new ImageViewModel(new []{new ImageModel(model.PicMiddle, model.PicBig)}));
+                    new ImageViewModel(viewModel.DataSource.Select(it => new ImageModel(it.PicMiddle, it.PicBig)).ToArray(), index));
             }
         }
     }
