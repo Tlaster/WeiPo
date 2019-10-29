@@ -79,7 +79,7 @@
                                         Background="{ThemeResource SystemControlAcrylicElementBrush}"
                                         CornerRadius="{StaticResource CardCorner}"
                                         Padding="8"
-                                        Margin="4"
+                                        Margin="8"
                                         DataContext="{x:Bind}" Orientation="Vertical">
                                         <local:PersonCard Avatar="{x:Bind User.ProfileImageUrl, Mode=OneWay}"
                                                           common:XamlExtensions.TappedMessage="user_clicked"
@@ -88,7 +88,8 @@
                                                           Title="{x:Bind User.ScreenName, Mode=OneWay}"
                                                           SubTitle="{x:Bind local:StatusViewXamlHelper.TimeConverter(CreatedAt), Mode=OneWay}" />
                                         <TextBlock Text="赞了你的微博"/>
-                                        <local:StatusView Margin="0, 4, 0, 0" ShowActions="False"
+                                        <local:StatusView Margin="-4, 4, -4, 0" ShowActions="False"
+                                                          CornerRadius="0"
                                                           Status="{x:Bind Status, Mode=OneWay}"
                                                           ShowRetweet="False"
                                                           Background="{ThemeResource RetweetBackground}" />

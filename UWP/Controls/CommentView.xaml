@@ -63,7 +63,7 @@
                     Content="{x:Bind sys:String.Format('{0} More', Comment.TotalNumber), Mode=OneWay}"
                     HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Style="{ThemeResource TextBlockButtonStyle}" />
         </Grid>
-        <local:StatusView Margin="0, 4, 0, 0" ShowActions="False" Status="{x:Bind Comment.Status, Mode=OneWay}"
+        <local:StatusView Margin="-4, 4, -4, 0" CornerRadius="0" ShowActions="False" Status="{x:Bind Comment.Status, Mode=OneWay}"
                           ShowRetweet="False" Background="{ThemeResource RetweetBackground}" Visibility="{x:Bind ShowStatus}" />
         <Grid Visibility="{x:Bind ShowActions, Mode=OneWay}">
             <Grid.Resources>
