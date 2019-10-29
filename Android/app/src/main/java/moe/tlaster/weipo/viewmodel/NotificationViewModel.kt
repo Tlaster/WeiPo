@@ -19,8 +19,7 @@ class NotificationItemDataSource<T>(
 ) : IIncrementalSource<T> {
 
     override suspend fun getPagedItemAsync(page: Int, count: Int): List<T> {
-        val result = func.invoke(page + 1)
-        return result
+        return func.invoke(page + 1)
     }
 
 }
@@ -63,31 +62,6 @@ class MentionViewModel: ITabItem {
 class NotificationViewModel : ViewModel() {
     val sources = listOf(
         MentionViewModel(),
-//        NotificationItemViewModel(
-//            "Mention",
-//            R.drawable.ic_at_black_24dp,
-//            IncrementalLoadingAdapter<Status>(ItemSelector(R.layout.item_status)).apply {
-//                items = IncrementalLoadingCollection(NotificationItemDataSource {
-//                    Api.mentionsAt(it)
-//                })
-//                setView<StatusView>(R.id.item_status) { view, item, _, _ ->
-//                    view.data = item
-//                }
-//            }
-//        ),
-//        NotificationItemViewModel(
-//            "MentionComment",
-//            R.drawable.ic_at_black_24dp,
-//            IncrementalLoadingAdapter<Comment>(ItemSelector(R.layout.item_status)).apply {
-//                items = IncrementalLoadingCollection(NotificationItemDataSource {
-//                    Api.mentionsCmt(it)
-//                })
-//                setView<StatusView>(R.id.item_status) { view, item, _, _ ->
-//                    view.data = item
-//                }
-//            }
-//        ),
-
         NotificationItemViewModel(
             "Comment",
             R.drawable.ic_comment_black_24dp,
