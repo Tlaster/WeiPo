@@ -25,19 +25,19 @@ class NotificationItemDataSource<T>(
 }
 
 interface ITabItem {
-    val title: String
+    val title: Int
     val icon: Int
 }
 
 data class NotificationItemViewModel<T>(
-    override val title: String,
+    override val title: Int,
     @DrawableRes override val icon: Int,
     val adapter: IncrementalLoadingAdapter<T>
 ): ITabItem
 
 class MentionViewModel: ITabItem {
-    override val title: String
-        get() = "Mention"
+    override val title: Int
+        get() = R.string.mention
     override val icon: Int
         get() = R.drawable.ic_at_black_24dp
 
@@ -63,7 +63,7 @@ class NotificationViewModel : ViewModel() {
     val sources = listOf(
         MentionViewModel(),
         NotificationItemViewModel(
-            "Comment",
+            R.string.comment,
             R.drawable.ic_comment_black_24dp,
             IncrementalLoadingAdapter<Comment>(ItemSelector(R.layout.item_status)).apply {
                 items = IncrementalLoadingCollection(NotificationItemDataSource {
@@ -75,7 +75,7 @@ class NotificationViewModel : ViewModel() {
             }
         ),
         NotificationItemViewModel(
-            "Attitude",
+            R.string.attitude,
             R.drawable.ic_thumb_up_black_24dp,
             IncrementalLoadingAdapter<Attitude>(ItemSelector(R.layout.item_status)).apply {
                 items = IncrementalLoadingCollection(NotificationItemDataSource {
@@ -87,7 +87,7 @@ class NotificationViewModel : ViewModel() {
             }
         ),
         NotificationItemViewModel(
-            "Message",
+            R.string.direct_message,
             R.drawable.ic_message_black_24dp,
             IncrementalLoadingAdapter<MessageList>(ItemSelector(R.layout.item_person)).apply {
                 items = IncrementalLoadingCollection(NotificationItemDataSource {

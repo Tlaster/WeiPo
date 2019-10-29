@@ -106,7 +106,7 @@ class NotificationActivity : BaseActivity() {
             view_pager,
             TabLayoutMediator.TabConfigurationStrategy { tab, position ->
                 viewModel.sources[position].let {
-                    tab.text = it.title
+                    tab.text = getString(it.title)
                     tab.setIcon(it.icon)
                 }
             }).attach()
