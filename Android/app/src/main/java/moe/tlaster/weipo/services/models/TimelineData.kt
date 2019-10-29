@@ -399,6 +399,11 @@ data class StatusVisible(
 )
 
 
+@Serializable
+sealed class Comments {
+    class BoolValue(val value: Boolean)               : Comments()
+    class CommentArrayValue(val value: List<Comment>) : Comments()
+}
 
 @Serializable
 data class Comment (
@@ -410,7 +415,8 @@ data class Comment (
     val commentBadge: List<CommentBadge>? = null,
 
     val readtimetype: String? = null,
-    val comments: List<Comment>? = null,
+
+    val comments: Comments? = null,
 
     @SerialName("max_id")
     val maxID: Long? = null,
