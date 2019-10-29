@@ -52,9 +52,10 @@ open class ObservableCollection<T> : ArrayList<T>(), INotifyCollectionChanged {
     }
 
     override fun clear() {
+        val size = this.size
         super.clear()
         collectionChanged.invoke(this,
-            CollectionChangedEventArg(CollectionChangedType.Reset)
+            CollectionChangedEventArg(CollectionChangedType.Reset, 0, size)
         )
     }
 

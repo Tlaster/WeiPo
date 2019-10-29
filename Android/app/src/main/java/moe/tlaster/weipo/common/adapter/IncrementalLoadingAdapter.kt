@@ -16,7 +16,7 @@ class IncrementalLoadingAdapter<T>(layout: IItemSelector<T>) : AutoAdapter<T>(la
                 CollectionChangedType.Add -> notifyItemRangeInserted(args.index, args.count)
                 CollectionChangedType.Remove -> notifyItemRangeRemoved(args.index, args.count)
                 CollectionChangedType.Update -> notifyItemRangeChanged(args.index, args.count)
-                CollectionChangedType.Reset -> notifyDataSetChanged()
+                CollectionChangedType.Reset -> notifyItemRangeRemoved(args.index, args.count)
             }
         }
     }

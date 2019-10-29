@@ -69,6 +69,7 @@
         android:orientation="horizontal">
 
         <LinearLayout
+            android:id="@+id/repost_button"
             android:background="?android:attr/selectableItemBackground"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -94,6 +95,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/comment_button"
             android:background="?android:attr/selectableItemBackground"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -119,6 +121,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/like_button"
             android:background="?android:attr/selectableItemBackground"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -144,6 +147,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/more_button"
             android:background="?android:attr/selectableItemBackground"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

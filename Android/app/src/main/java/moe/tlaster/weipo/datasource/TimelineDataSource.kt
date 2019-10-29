@@ -14,7 +14,7 @@ class TimelineDataSource : IIncrementalSource<Status> {
         }
 
         val result = Api.timeline(_maxId)
-        _maxId = result.data.nextCursor ?: 0
-        return result.data.statuses ?: listOf()
+        _maxId = result.nextCursor ?: 0
+        return result.statuses ?: listOf()
     }
 }

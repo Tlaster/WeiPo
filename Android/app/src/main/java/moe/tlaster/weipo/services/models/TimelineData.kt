@@ -322,6 +322,9 @@ data class VideoDetails(
 
 @Serializable
 data class User(
+    @SerialName("avatar_large")
+    val avatarLarge: String? = null,
+
     val id: Long? = null,
 
     @SerialName("screen_name")
@@ -393,4 +396,124 @@ data class StatusVisible(
 
     @SerialName("list_idstr")
     val listIdstr: String? = null
+)
+
+
+
+@Serializable
+data class Comment (
+
+    @SerialName("pic")
+    val pic: Pic? = null,
+
+    @SerialName("comment_badge")
+    val commentBadge: List<CommentBadge>? = null,
+
+    val readtimetype: String? = null,
+    val comments: List<Comment>? = null,
+
+    @SerialName("max_id")
+    val maxID: Long? = null,
+
+    @SerialName("total_number")
+    val totalNumber: Long? = null,
+
+    val isLikedByMblogAuthor: Boolean? = null,
+
+    @SerialName("more_info_type")
+    val moreInfoType: Long? = null,
+
+
+    @SerialName("like_count")
+    val likeCount: Long? = null,
+
+    val rootid: String? = null,
+
+    @SerialName("disable_reply")
+    val disableReply: Long? = null,
+
+    @SerialName("created_at")
+    val createdAt: String? = null,
+
+    val mid: String? = null,
+
+    @SerialName("floor_number")
+    val floorNumber: Long? = null,
+
+    val source: String? = null,
+    val rootidstr: String? = null,
+
+    @SerialName("reply_count")
+    val replyCount: Long? = null,
+
+    val liked: Boolean? = null,
+    val id: String? = null,
+    val text: String? = null,
+    val user: User? = null,
+    val status: Status? = null,
+    val bid: String? = null
+)
+
+
+
+@Serializable
+data class CommentBadge (
+    @SerialName("pic_url")
+    val picURL: String? = null,
+
+    val name: String? = null,
+    val length: Double? = null,
+    val actionlog: Actionlog? = null,
+    val scheme: String? = null
+)
+
+@Serializable
+data class Actionlog (
+    @SerialName("act_code")
+    val actCode: String? = null,
+
+    val ext: String? = null
+)
+
+
+@Serializable
+data class Attitude (
+    val idStr: String? = null,
+
+    @SerialName("attitude_type")
+    val attitudeType: Long? = null,
+
+    @SerialName("source_allowclick")
+    val sourceAllowclick: Long? = null,
+
+    @SerialName("attitude_mask")
+    val attitudeMask: Long? = null,
+
+    @SerialName("last_attitude")
+    val lastAttitude: String? = null,
+
+    @SerialName("created_at")
+    val createdAt: String? = null,
+
+    @SerialName("source_type")
+    val sourceType: Long? = null,
+
+    val id: Long? = null,
+    val source: String? = null,
+    val user: User? = null,
+    val attitude: String? = null,
+    val status: Status? = null
+)
+
+
+@Serializable
+data class MessageList (
+    val user: User? = null,
+
+    @SerialName("created_at")
+    val createdAt: String? = null,
+
+    val scheme: String? = null,
+    val unread: Long? = null,
+    val text: String? = null
 )

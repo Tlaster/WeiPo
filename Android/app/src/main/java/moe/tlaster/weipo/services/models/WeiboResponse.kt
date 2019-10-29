@@ -8,5 +8,5 @@ data class WeiboResponse<T>(
     val data: T,
     val ok: Long,
     @SerialName("http_code")
-    val httpCode: Long
+    val httpCode: Long? = null
 )
