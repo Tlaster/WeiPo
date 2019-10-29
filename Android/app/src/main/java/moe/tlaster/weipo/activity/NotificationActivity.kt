@@ -88,12 +88,13 @@ class NotificationActivity : BaseActivity() {
                             view.setOnCheckedChangeListener { _, checkedId ->
                                 when (checkedId) {
                                     R.id.radio_mention -> {
-
+                                        item.isCmt = false
                                     }
                                     R.id.radio_mention_cmt -> {
-
+                                        item.isCmt = true
                                     }
                                 }
+                                item.source.refresh()
                             }
                         }
                     }

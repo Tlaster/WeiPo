@@ -13,7 +13,6 @@ import moe.tlaster.weipo.services.Api
 import moe.tlaster.weipo.services.models.Attitude
 import moe.tlaster.weipo.services.models.Comment
 import moe.tlaster.weipo.services.models.MessageList
-import moe.tlaster.weipo.services.models.Status
 
 class NotificationItemDataSource<T>(
     private val func: suspend (page: Int) -> List<T>
@@ -43,12 +42,17 @@ class MentionViewModel: ITabItem {
     override val icon: Int
         get() = R.drawable.ic_at_black_24dp
 
+    var isCmt = false
 
     val source = IncrementalLoadingCollection(NotificationItemDataSource {
-        Api.mentionsAt(it)
+        if (isCmt) {
+            Api.mentionsCmt(it)
+        } else {
+            Api.mentionsAt(it)
+        }
     })
 
-    val adapter = IncrementalLoadingAdapter<Status>(ItemSelector(R.layout.item_status)).apply {
+    val adapter = IncrementalLoadingAdapter<Any>(ItemSelector(R.layout.item_status)).apply {
         items = source
         setView<StatusView>(R.id.item_status) { view, item, _, _ ->
             view.data = item
