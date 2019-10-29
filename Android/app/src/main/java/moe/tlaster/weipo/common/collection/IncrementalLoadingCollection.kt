@@ -9,7 +9,7 @@ class IncrementalLoadingCollection<TSource: IIncrementalSource<T>, T>(
 ): ObservableCollection<T>(),
     ISupportIncrementalLoading {
     protected var currentPageIndex = 0
-    public var isLoading = false
+    var isLoading = false
 
     fun refresh() {
         GlobalScope.launch {

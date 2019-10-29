@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="match_parent">
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
@@ -15,50 +17,56 @@
             android:scrollbars="vertical"
             tools:listitem="@layout/item_status" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
     <FrameLayout
         android:id="@+id/frame_wrap"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
+
     <com.google.android.material.bottomappbar.BottomAppBar
-        app:fabAnimationMode="slide"
-        app:fabAlignmentMode="end"
-        app:fabCradleMargin="8dp"
-        app:fabCradleRoundedCornerRadius="8dp"
         android:id="@+id/bottom_appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
+        app:fabAlignmentMode="end"
+        app:fabAnimationMode="slide"
+        app:fabCradleMargin="8dp"
+        app:fabCradleRoundedCornerRadius="8dp"
         app:hideOnScroll="true">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <ImageButton
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 android:id="@+id/account_button"
-                android:minWidth="0dp"
                 style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="?attr/actionBarSize"
+                android:layout_height="?attr/actionBarSize"
+                android:minWidth="0dp"
                 android:src="@drawable/ic_person_black_24dp"
-                android:layout_width="?attr/actionBarSize"
-                android:layout_height="?attr/actionBarSize"/>
-            <ImageButton
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toEndOf="@id/account_button"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
                 android:id="@+id/notification_button"
-                android:minWidth="0dp"
                 style="@style/Widget.AppCompat.Button.Borderless"
-                android:src="@drawable/ic_notifications_black_24dp"
                 android:layout_width="?attr/actionBarSize"
-                android:layout_height="?attr/actionBarSize"/>
+                android:layout_height="?attr/actionBarSize"
+                android:minWidth="0dp"
+                android:src="@drawable/ic_notifications_black_24dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/account_button"
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.bottomappbar.BottomAppBar>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        app:layout_anchor="@id/bottom_appbar"
-        android:src="@drawable/ic_add_black_24dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"/>
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_add_black_24dp"
+        app:layout_anchor="@id/bottom_appbar" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

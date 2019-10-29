@@ -54,7 +54,7 @@ open class HtmlHttpImageGetter : ImageGetter {
         qualityImage = quality
     }
 
-    open override fun getDrawable(source: String): Drawable {
+    override fun getDrawable(source: String): Drawable {
         val urlDrawable = UrlDrawable()
 
         // get the actual source

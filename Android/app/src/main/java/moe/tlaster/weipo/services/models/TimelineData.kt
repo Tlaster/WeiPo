@@ -401,12 +401,12 @@ data class StatusVisible(
 
 @Serializable
 sealed class Comments {
-    class BoolValue(val value: Boolean)               : Comments()
+    class BoolValue(val value: Boolean) : Comments()
     class CommentArrayValue(val value: List<Comment>) : Comments()
 }
 
 @Serializable
-data class Comment (
+data class Comment(
 
     @SerialName("pic")
     val pic: Pic? = null,
@@ -461,9 +461,8 @@ data class Comment (
 )
 
 
-
 @Serializable
-data class CommentBadge (
+data class CommentBadge(
     @SerialName("pic_url")
     val picURL: String? = null,
 
@@ -474,7 +473,7 @@ data class CommentBadge (
 )
 
 @Serializable
-data class Actionlog (
+data class Actionlog(
     @SerialName("act_code")
     val actCode: String? = null,
 
@@ -483,7 +482,7 @@ data class Actionlog (
 
 
 @Serializable
-data class Attitude (
+data class Attitude(
     val idStr: String? = null,
 
     @SerialName("attitude_type")
@@ -513,7 +512,7 @@ data class Attitude (
 
 
 @Serializable
-data class MessageList (
+data class MessageList(
     val user: User? = null,
 
     @SerialName("created_at")
