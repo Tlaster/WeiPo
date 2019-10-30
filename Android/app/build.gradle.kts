@@ -47,11 +47,7 @@ dependencies {
     implementation("com.google.android.material:material:1.2.0-alpha01")
     implementation("androidx.core:core-ktx:1.1.0")
     implementation("androidx.constraintlayout:constraintlayout:2.0.0-beta3")
-    implementation("androidx.navigation:navigation-fragment:2.1.0")
-    implementation("androidx.navigation:navigation-ui:2.1.0")
     implementation("androidx.lifecycle:lifecycle-extensions:2.1.0")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.1.0")
-    implementation("androidx.navigation:navigation-ui-ktx:2.1.0")
 
     implementation("com.github.kittinunf.fuel:fuel:${appConfig.dependencyVersion.fuel}")
     implementation("com.github.kittinunf.fuel:fuel-kotlinx-serialization:${appConfig.dependencyVersion.fuel}")
