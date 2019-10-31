@@ -21,6 +21,8 @@ class IncrementalLoadingAdapter<T>(layout: IItemSelector<T>) : AutoAdapter<T>(la
         }
     }
 
+    var autoRefresh = true
+
     override var items = listOf<T>()
         set(value) {
             field = value
@@ -33,7 +35,7 @@ class IncrementalLoadingAdapter<T>(layout: IItemSelector<T>) : AutoAdapter<T>(la
             if (value is INotifyCollectionChanged) {
                 value.collectionChanged += onCollectionChanged
             }
-            if (value is ISupportIncrementalLoading && !value.any()) {
+            if (value is ISupportIncrementalLoading && !value.any() && autoRefresh) {
                 GlobalScope.launch {
                     value.loadMoreItemsAsync()
                 }

@@ -21,21 +21,21 @@ class NotificationItemDataSource<T>(
     override suspend fun getPagedItemAsync(page: Int, count: Int): List<T> {
         return func.invoke(page + 1)
     }
-
 }
 
-interface ITabItem {
+interface INotificationTabItem<T> {
     val title: Int
     val icon: Int
+    val adapter: IncrementalLoadingAdapter<T>
 }
 
 data class NotificationItemViewModel<T>(
     override val title: Int,
     @DrawableRes override val icon: Int,
-    val adapter: IncrementalLoadingAdapter<T>
-): ITabItem
+    override val adapter: IncrementalLoadingAdapter<T>
+): INotificationTabItem<T>
 
-class MentionViewModel: ITabItem {
+class MentionViewModel: INotificationTabItem<Any> {
     override val title: Int
         get() = R.string.mention
     override val icon: Int
@@ -43,16 +43,15 @@ class MentionViewModel: ITabItem {
 
     var isCmt = false
 
-    val source = IncrementalLoadingCollection(NotificationItemDataSource {
-        if (isCmt) {
-            Api.mentionsCmt(it)
-        } else {
-            Api.mentionsAt(it)
-        }
-    })
-
-    val adapter = IncrementalLoadingAdapter<Any>(ItemSelector(R.layout.item_status)).apply {
-        items = source
+    override val adapter = IncrementalLoadingAdapter<Any>(ItemSelector(R.layout.item_status)).apply {
+        autoRefresh = false
+        items = IncrementalLoadingCollection(NotificationItemDataSource {
+            if (isCmt) {
+                Api.mentionsCmt(it)
+            } else {
+                Api.mentionsAt(it)
+            }
+        })
         setView<StatusView>(R.id.item_status) { view, item, _, _ ->
             view.data = item
         }
@@ -66,6 +65,7 @@ class NotificationViewModel : ViewModel() {
             R.string.comment,
             R.drawable.ic_comment_black_24dp,
             IncrementalLoadingAdapter<Comment>(ItemSelector(R.layout.item_status)).apply {
+                autoRefresh = false
                 items = IncrementalLoadingCollection(NotificationItemDataSource {
                     Api.comment(it)
                 })
@@ -78,6 +78,7 @@ class NotificationViewModel : ViewModel() {
             R.string.attitude,
             R.drawable.ic_thumb_up_black_24dp,
             IncrementalLoadingAdapter<Attitude>(ItemSelector(R.layout.item_status)).apply {
+                autoRefresh = false
                 items = IncrementalLoadingCollection(NotificationItemDataSource {
                     Api.attitude(it)
                 })
@@ -90,6 +91,7 @@ class NotificationViewModel : ViewModel() {
             R.string.direct_message,
             R.drawable.ic_message_black_24dp,
             IncrementalLoadingAdapter<MessageList>(ItemSelector(R.layout.item_person)).apply {
+                autoRefresh = false
                 items = IncrementalLoadingCollection(NotificationItemDataSource {
                     Api.messageList(it)
                 })

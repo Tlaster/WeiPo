@@ -44,6 +44,9 @@ class TimelineActivity : BaseActivity() {
                 refresh_layout.isRefreshing = false
             }
         }
+        account_button.setOnClickListener {
+            openActivity<UserActivity>()
+        }
         notification_button.setOnClickListener {
             openActivity<NotificationActivity>()
         }

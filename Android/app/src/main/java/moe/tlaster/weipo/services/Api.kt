@@ -3,6 +3,7 @@ package moe.tlaster.weipo.services
 import com.github.kittinunf.fuel.core.Request
 import com.github.kittinunf.fuel.core.ResponseDeserializable
 import com.github.kittinunf.fuel.coroutines.awaitObject
+import com.github.kittinunf.fuel.coroutines.awaitStringResponse
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.fuel.serialization.kotlinxDeserializerOf
 import kotlinx.serialization.KSerializer
@@ -70,5 +71,31 @@ object Api {
             .httpGet(listOf("page" to page))
             .awaitWeiboResponse(MessageList.serializer().list)
             .getData()
+    }
+
+    suspend fun profile(uid: Long): ProfileData {
+        return "$HOST/api/container/getIndex"
+            .httpGet(
+                listOf(
+                    "type" to "uid",
+                    "value" to uid
+                )
+            )
+            .awaitWeiboResponse(ProfileData.serializer())
+            .getData()
+    }
+
+    suspend fun userId(name: String): Long {
+        val (_, response, _) = "$HOST/n/$name"
+            .httpGet()
+            .awaitStringResponse()
+        return "/u/(\\d+)"
+            .toRegex()
+            .find(response.url.toString())
+            ?.let {
+                it.groups[1]
+            }?.let {
+                it.value.toLongOrNull()
+            } ?: throw Error("user not found")
     }
 }

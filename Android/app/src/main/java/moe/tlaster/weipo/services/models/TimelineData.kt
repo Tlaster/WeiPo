@@ -1,9 +1,12 @@
 package moe.tlaster.weipo.services.models
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import kotlinx.serialization.*
 import kotlinx.serialization.internal.LongDescriptor
 
 @Serializable
+@Parcelize
 data class TimelineData(
     val statuses: List<Status>? = null,
 
@@ -43,9 +46,10 @@ data class TimelineData(
 
     @SerialName("has_unread")
     val hasUnread: Long? = null
-)
+): Parcelable
 
 @Serializable
+@Parcelize
 data class Status(
     val visible: StatusVisible? = null,
 
@@ -155,9 +159,10 @@ data class Status(
 
     @SerialName("safe_tags")
     val safeTags: Long? = null
-)
+): Parcelable
 
 @Serializable
+@Parcelize
 data class DarwinTag(
     @SerialName("object_type")
     val objectType: String? = null,
@@ -170,9 +175,10 @@ data class DarwinTag(
 
     @SerialName("bd_object_type")
     val bdObjectType: String? = null
-)
+): Parcelable
 
 @Serializable
+@Parcelize
 data class NumberDisplayStrategy(
     @SerialName("apply_scenario_flag")
     val applyScenarioFlag: Long? = null,
@@ -182,9 +188,10 @@ data class NumberDisplayStrategy(
 
     @SerialName("display_text")
     val displayText: String? = null
-)
+): Parcelable
 
 @Serializable
+@Parcelize
 data class PageInfo(
     @SerialName("object_type")
     val objectType: Long? = null,
@@ -221,43 +228,47 @@ data class PageInfo(
 
     @SerialName("video_details")
     val videoDetails: VideoDetails? = null
-)
+): Parcelable
 
 @Serializable
+@Parcelize
 data class PagePic(
     @Serializable(with = CustomLongSerializer::class)
     val width: Long? = null,
     val url: String? = null,
     @Serializable(with = CustomLongSerializer::class)
     val height: Long? = null
-)
+): Parcelable
 
 @Serializable
+@Parcelize
 data class PicFocusPoint(
     @SerialName("focus_point")
     val focusPoint: FocusPoint? = null,
 
     @SerialName("pic_id")
     val picID: String? = null
-)
+): Parcelable
 
 @Serializable
+@Parcelize
 data class FocusPoint(
     val left: Double? = null,
     val top: Double? = null,
     val width: Double? = null,
     val height: Double? = null,
     val type: Long? = null
-)
+): Parcelable
 
 @Serializable
+@Parcelize
 data class Pic(
     val pid: String? = null,
     val url: String? = null,
     val size: String? = null,
     val geo: PicGeo? = null,
     val large: PurpleLarge? = null
-)
+): Parcelable
 
 @Serializer(forClass = Long::class)
 object CustomLongSerializer : KSerializer<Long> {
@@ -274,32 +285,35 @@ object CustomLongSerializer : KSerializer<Long> {
 }
 
 @Serializable
+@Parcelize
 data class PicGeo(
     @Serializable(with = CustomLongSerializer::class)
     val width: Long? = null,
     @Serializable(with = CustomLongSerializer::class)
     val height: Long? = null,
     val croped: Boolean? = null
-)
-
+): Parcelable
 
 @Serializable
+@Parcelize
 data class PurpleLarge(
     val size: String? = null,
     val url: String? = null,
     val geo: PurpleGeo? = null
-)
+): Parcelable
 
 @Serializable
+@Parcelize
 data class PurpleGeo(
     @Serializable(with = CustomLongSerializer::class)
     val width: Long? = null,
     @Serializable(with = CustomLongSerializer::class)
     val height: Long? = null,
     val croped: Boolean? = null
-)
+): Parcelable
 
 @Serializable
+@Parcelize
 data class MediaInfo(
     @SerialName("stream_url")
     val streamURL: String? = null,
@@ -308,9 +322,10 @@ data class MediaInfo(
     val streamURLHD: String? = null,
 
     val duration: Double = 0.0
-)
+): Parcelable
 
 @Serializable
+@Parcelize
 data class VideoDetails(
     val size: Long? = null,
     val bitrate: Long? = null,
@@ -318,9 +333,10 @@ data class VideoDetails(
 
     @SerialName("prefetch_size")
     val prefetchSize: Long = 0
-)
+): Parcelable
 
 @Serializable
+@Parcelize
 data class User(
     @SerialName("avatar_large")
     val avatarLarge: String? = null,
@@ -380,14 +396,16 @@ data class User(
 
     @SerialName("like_me")
     val likeMe: Boolean? = null
-)
+): Parcelable
 
 @Serializable
+@Parcelize
 data class Title(
     val text: String? = null
-)
+): Parcelable
 
 @Serializable
+@Parcelize
 data class StatusVisible(
     val type: Long? = null,
 
@@ -396,16 +414,18 @@ data class StatusVisible(
 
     @SerialName("list_idstr")
     val listIdstr: String? = null
-)
+): Parcelable
 
 
 @Serializable
-sealed class Comments {
+@Parcelize
+open class Comments: Parcelable {
     class BoolValue(val value: Boolean) : Comments()
     class CommentArrayValue(val value: List<Comment>) : Comments()
 }
 
 @Serializable
+@Parcelize
 data class Comment(
 
     @SerialName("pic")
@@ -458,10 +478,10 @@ data class Comment(
     val user: User? = null,
     val status: Status? = null,
     val bid: String? = null
-)
-
+): Parcelable
 
 @Serializable
+@Parcelize
 data class CommentBadge(
     @SerialName("pic_url")
     val picURL: String? = null,
@@ -470,18 +490,19 @@ data class CommentBadge(
     val length: Double? = null,
     val actionlog: Actionlog? = null,
     val scheme: String? = null
-)
+): Parcelable
 
 @Serializable
+@Parcelize
 data class Actionlog(
     @SerialName("act_code")
     val actCode: String? = null,
 
     val ext: String? = null
-)
-
+): Parcelable
 
 @Serializable
+@Parcelize
 data class Attitude(
     val idStr: String? = null,
 
@@ -508,10 +529,10 @@ data class Attitude(
     val user: User? = null,
     val attitude: String? = null,
     val status: Status? = null
-)
-
+): Parcelable
 
 @Serializable
+@Parcelize
 data class MessageList(
     val user: User? = null,
 
@@ -521,4 +542,5 @@ data class MessageList(
     val scheme: String? = null,
     val unread: Long? = null,
     val text: String? = null
-)
+): Parcelable
+

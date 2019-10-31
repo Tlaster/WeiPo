@@ -5,6 +5,7 @@ import android.util.TypedValue
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.coroutines.*
 
@@ -46,12 +47,12 @@ fun CoroutineScope.runOnDefaultThread(action: () -> Unit) {
     }
 }
 
-inline fun <reified T: ViewModel> Fragment.viewModel(): T {
-    return this.activity?.let { ViewModelProviders.of(it) }?.get(T::class.java)!!
+inline fun <reified T: ViewModel> Fragment.viewModel(viewModelFactory: ViewModelProvider.Factory? = null): T {
+    return this.activity?.let { ViewModelProviders.of(it, viewModelFactory) }?.get(T::class.java)!!
 }
 
-inline fun <reified T: ViewModel> FragmentActivity.viewModel(): T {
-    return ViewModelProviders.of(this)[T::class.java]
+inline fun <reified T: ViewModel> FragmentActivity.viewModel(viewModelFactory: ViewModelProvider.Factory? = null): T {
+    return ViewModelProviders.of(this, viewModelFactory)[T::class.java]
 }
 
 inline fun async(noinline block: suspend () -> Unit): suspend () -> Unit = block
