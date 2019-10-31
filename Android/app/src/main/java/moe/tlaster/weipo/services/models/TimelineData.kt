@@ -420,7 +420,9 @@ data class StatusVisible(
 @Serializable
 @Parcelize
 open class Comments: Parcelable {
+    @Parcelize
     class BoolValue(val value: Boolean) : Comments()
+    @Parcelize
     class CommentArrayValue(val value: List<Comment>) : Comments()
 }
 

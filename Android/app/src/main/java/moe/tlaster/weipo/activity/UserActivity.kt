@@ -7,8 +7,7 @@ import androidx.lifecycle.Observer
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_user.*
 import moe.tlaster.weipo.R
-import moe.tlaster.weipo.common.adapter.AutoAdapter
-import moe.tlaster.weipo.common.adapter.ItemSelector
+import moe.tlaster.weipo.common.adapter.FragmentAdapter
 import moe.tlaster.weipo.common.extensions.load
 import moe.tlaster.weipo.common.extensions.viewModel
 import moe.tlaster.weipo.services.models.ProfileData
@@ -23,11 +22,22 @@ class UserActivity : BaseActivity() {
         ))
     }
 
+    private var tabItems = emptyList<Fragment>()
+        set(value) {
+            field = value
+            pagerAdapter.items = value
+        }
+
+    private val pagerAdapter by lazy {
+        FragmentAdapter(supportFragmentManager, lifecycle)
+    }
+
     override val layoutId: Int
         get() = R.layout.activity_user
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        view_pager.adapter = pagerAdapter
         viewModel.profile.observe(this, Observer<ProfileData> { profile ->
             profile.userInfo?.coverImagePhone?.let {
                 user_background.load(it)

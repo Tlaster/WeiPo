@@ -7,6 +7,6 @@ class WeiboTabFragment() : Fragment(R.layout.layout_list), ITabItem {
     override val title: Int
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
     override val icon: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        get() = -1
 
 }
