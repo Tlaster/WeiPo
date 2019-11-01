@@ -33,9 +33,11 @@
                           Title="{x:Bind Status.User.ScreenName, Mode=OneWay}"
                           SubTitle="{x:Bind local:StatusViewXamlHelper.TimeConverter(Status.CreatedAt), Mode=OneWay}" />
         <html:HtmlTextBlock LinkClicked="{x:Bind OnLinkClicked}"
+                            IsTextSelectionEnabled="{x:Bind IsTextSelectionEnabled, Mode=OneWay}"
                             Visibility="{x:Bind ShowLongText, Mode=OneWay}"
                             Text="{x:Bind Status.LongText, Mode=OneWay}" />
         <html:HtmlTextBlock LinkClicked="{x:Bind OnLinkClicked}"
+                            IsTextSelectionEnabled="{x:Bind IsTextSelectionEnabled, Mode=OneWay}"
                             Visibility="{x:Bind common:XamlHelper.InvertBoolToVisibility(ShowLongText), Mode=OneWay}"
                             Text="{x:Bind Status.Text, Mode=OneWay}" />
         <ItemsControl Tapped="{x:Bind ImageListOnTapped}" ItemsSource="{x:Bind Status.Pics, Mode=OneWay}">

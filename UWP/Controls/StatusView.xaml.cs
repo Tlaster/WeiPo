@@ -8,8 +8,6 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using Flurl.Http;
-using HtmlAgilityPack;
 using Humanizer;
 using Newtonsoft.Json;
 using WeiPo.Common;
@@ -48,7 +46,7 @@ namespace WeiPo.Controls
 
         public static Visibility PageInfoVisibleOn(StatusModel status, string type)
         {
-            return status?.PageInfo != null && (status.PageInfo.Type == type)
+            return status?.PageInfo != null && status.PageInfo.Type == type
                 ? Visibility.Visible
                 : Visibility.Collapsed;
         }
@@ -91,17 +89,28 @@ namespace WeiPo.Controls
             nameof(Status), typeof(StatusModel), typeof(StatusView), new PropertyMetadata(default));
 
         public static readonly DependencyProperty ShowLongTextProperty =
-            DependencyProperty.Register(nameof(ShowLongText), typeof(bool), typeof(StatusView), new PropertyMetadata(false));
+            DependencyProperty.Register(nameof(ShowLongText), typeof(bool), typeof(StatusView),
+                new PropertyMetadata(false));
+
+
+        public static readonly DependencyProperty IsTextSelectionEnabledProperty = DependencyProperty.Register(
+            nameof(IsTextSelectionEnabled), typeof(bool), typeof(StatusView), new PropertyMetadata(default(bool)));
 
         public StatusView()
         {
             InitializeComponent();
         }
 
+        public bool IsTextSelectionEnabled
+        {
+            get => (bool) GetValue(IsTextSelectionEnabledProperty);
+            set => SetValue(IsTextSelectionEnabledProperty, value);
+        }
+
         public bool ShowLongText
         {
-            get { return (bool)GetValue(ShowLongTextProperty); }
-            set { SetValue(ShowLongTextProperty, value); }
+            get => (bool) GetValue(ShowLongTextProperty);
+            set => SetValue(ShowLongTextProperty, value);
         }
 
         public bool ShowRetweet
@@ -165,7 +174,8 @@ namespace WeiPo.Controls
                                     url = info.MediaInfo.StreamUrl;
                                 }
 
-                                if (string.IsNullOrEmpty(url) || !url.StartsWith("http", StringComparison.InvariantCultureIgnoreCase))
+                                if (string.IsNullOrEmpty(url) ||
+                                    !url.StartsWith("http", StringComparison.InvariantCultureIgnoreCase))
                                 {
                                     if (info.PageUrl != null)
                                     {
@@ -199,7 +209,8 @@ namespace WeiPo.Controls
                                         {
                                             if (!string.IsNullOrEmpty(link?.StoryObject?.Stream?.Url))
                                             {
-                                                Singleton<BroadcastCenter>.Instance.Send(this, "video_clicked", link?.StoryObject?.Stream?.Url);
+                                                Singleton<BroadcastCenter>.Instance.Send(this, "video_clicked",
+                                                    link?.StoryObject?.Stream?.Url);
                                             }
                                             else
                                             {
@@ -256,7 +267,7 @@ namespace WeiPo.Controls
 
         private void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
-            var data =  new DataPackage();
+            var data = new DataPackage();
             data.SetText(JsonConvert.SerializeObject(Status));
             Clipboard.SetContent(data);
         }

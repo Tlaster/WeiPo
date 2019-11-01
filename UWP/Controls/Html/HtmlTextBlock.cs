@@ -45,6 +45,9 @@ namespace WeiPo.Controls.Html
         public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
             nameof(Text), typeof(string), typeof(HtmlTextBlock), new PropertyMetadata(default, OnPropertyChanged));
 
+        public static readonly DependencyProperty IsTextSelectionEnabledProperty = DependencyProperty.Register(
+            nameof(IsTextSelectionEnabled), typeof(bool), typeof(HtmlTextBlock), new PropertyMetadata(default));
+
         private readonly List<Hyperlink> _listeningHyperlinks = new List<Hyperlink>();
         private RichTextBlock _richTextContent;
         private Border _rootElement;
@@ -52,6 +55,12 @@ namespace WeiPo.Controls.Html
         public HtmlTextBlock()
         {
             DefaultStyleKey = typeof(HtmlTextBlock);
+        }
+
+        public bool IsTextSelectionEnabled
+        {
+            get => (bool) GetValue(IsTextSelectionEnabledProperty);
+            set => SetValue(IsTextSelectionEnabledProperty, value);
         }
 
         public string HyperlinkUrl
@@ -92,9 +101,8 @@ namespace WeiPo.Controls.Html
             if (e.Property == TextProperty)
             {
                 (d as HtmlTextBlock).RenderHtml();
-            }
+            } 
         }
-
 
         private void Render(HtmlNode node, IHtmlRenderContext context)
         {

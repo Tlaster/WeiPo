@@ -18,7 +18,7 @@
         <Pivot Grid.Column="1" Name="Pivot">
             <PivotItem Header="{common:i18n Key=Status}">
                 <ScrollViewer x:Name="StatusViewContainer" VerticalScrollBarVisibility="Auto" VerticalScrollMode="Auto">
-                    <controls:StatusView ShowLongText="True" Status="{x:Bind ViewModel.Status, Mode=OneWay}"/>
+                    <controls:StatusView ShowLongText="True" IsTextSelectionEnabled="True" Status="{x:Bind ViewModel.Status, Mode=OneWay}"/>
                 </ScrollViewer>
             </PivotItem>
             <PivotItem Header="{common:i18n Key=Reposts}">

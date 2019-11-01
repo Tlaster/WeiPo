@@ -17,7 +17,7 @@
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}">
-                        <RichTextBlock Name="RichTextContent" TextWrapping="Wrap" IsTextSelectionEnabled="False" />
+                        <RichTextBlock Name="RichTextContent" TextWrapping="Wrap" IsTextSelectionEnabled="{TemplateBinding IsTextSelectionEnabled}" />
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
