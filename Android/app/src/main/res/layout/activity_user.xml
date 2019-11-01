@@ -33,17 +33,23 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
+                <androidx.constraintlayout.widget.Guideline
+                    android:orientation="horizontal"
+                    android:id="@+id/avatar_guideline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintGuide_percent="0.25"/>
+
                 <ImageView
+                    app:layout_constraintTop_toBottomOf="@id/avatar_guideline"
                     android:id="@+id/user_avatar"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="75dp"
                     android:scaleType="centerCrop"
                     tools:src="@mipmap/ic_launcher"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"/>
 
                 <TextView
                     android:id="@+id/user_name"
@@ -159,10 +165,10 @@
                             tools:text="Following" />
                     </LinearLayout>
                     <Button
+                        android:textAllCaps="false"
                         android:id="@+id/follow_button"
-                        tools:textAllCaps="false"
-                        tools:text="Follow"
-                        style="@style/Widget.AppCompat.Button.Borderless"
+                        android:text="Follow"
+                        style="@style/Widget.MaterialComponents.Button"
                         android:minWidth="0dp"
                         android:minHeight="0dp"
                         android:layout_weight="1"
@@ -179,5 +185,6 @@
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

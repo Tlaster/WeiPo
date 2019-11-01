@@ -9,13 +9,12 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_notification.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import moe.tlaster.weipo.R
 import moe.tlaster.weipo.common.AutoStaggeredGridLayoutManager
 import moe.tlaster.weipo.common.adapter.AutoAdapter
 import moe.tlaster.weipo.common.adapter.IItemSelector
 import moe.tlaster.weipo.common.collection.IncrementalLoadingCollection
+import moe.tlaster.weipo.common.extensions.bindLoadingCollection
 import moe.tlaster.weipo.common.extensions.dp
 import moe.tlaster.weipo.common.extensions.viewModel
 import moe.tlaster.weipo.viewmodel.INotificationTabItem
@@ -47,13 +46,10 @@ class NotificationActivity : BaseActivity() {
             AutoAdapter(NotificationSelector()).apply {
                 items = viewModel.sources
                 setView<SwipeRefreshLayout>(R.id.refresh_layout) { view, item, _, _ ->
-                    view.setOnRefreshListener {
-                        GlobalScope.launch {
-                            item.adapter.items.let {
-                                it as? IncrementalLoadingCollection<*, *>
-                            }?.refreshAsync()
-                            view.isRefreshing = false
-                        }
+                    item.adapter.items.let {
+                        it as? IncrementalLoadingCollection<*, *>
+                    }?.let {
+                        view.bindLoadingCollection(it)
                     }
                 }
                 setView<RecyclerView>(R.id.recycler_view) { view, item, _, _ ->

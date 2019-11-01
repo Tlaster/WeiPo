@@ -5,4 +5,6 @@
     <string name="comment">Comment</string>
     <string name="attitude">Attitude</string>
     <string name="direct_message">Direct Message</string>
+    <string name="statuses">Statuses</string>
+
 </resources>

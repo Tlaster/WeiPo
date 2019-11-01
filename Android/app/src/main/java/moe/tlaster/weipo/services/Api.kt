@@ -8,6 +8,8 @@ import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.fuel.serialization.kotlinxDeserializerOf
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.list
 import moe.tlaster.weipo.services.models.*
 
@@ -98,4 +100,65 @@ object Api {
                 it.value.toLongOrNull()
             } ?: throw Error("user not found")
     }
+
+    suspend fun config(): Config {
+        return "$HOST/api/config"
+            .httpGet()
+            .awaitWeiboResponse(Config.serializer())
+            .getData()
+    }
+
+    suspend fun profileTab(uid: Long, containerId: String, since_id: Long = 0): JsonObject {
+        return "$HOST/api/container/getIndex"
+            .httpGet(listOf(
+                "type" to "uid",
+                "value" to uid,
+                "containerid" to containerId,
+                "since_id" to since_id
+            ))
+            .awaitWeiboResponse(JsonObject.serializer())
+            .getData()
+    }
+
+    suspend fun follow(uid: Long, page: Int = 1): JsonObject {
+        val param = getParamFromProfileInfo(uid, "follow")
+        return "$HOST/api/container/getSecond?$param"
+            .httpGet(listOf("page" to page))
+            .awaitWeiboResponse(JsonObject.serializer())
+            .getData()
+    }
+
+    private suspend fun getParamFromProfileInfo(uid: Long, key: String): String {
+        val info = "$HOST/profile/info"
+            .httpGet(
+                listOf(
+                    "uid" to uid
+                )
+            )
+            .awaitWeiboResponse(JsonObject.serializer())
+            .getData()
+        val container =
+            info[key]?.contentOrNull ?: throw Error("Can not find the user profile info")
+        return container.substring(container.indexOf('?') + 1)
+    }
+
+    suspend fun myFans(since_id: Long = 0): JsonObject {
+        return "$HOST/api/container/getIndex"
+            .httpGet(listOf(
+                "containerid" to "231016_-_selffans",
+                "since_id" to since_id
+            ))
+            .awaitWeiboResponse(JsonObject.serializer())
+            .getData()
+    }
+
+    suspend fun fans(uid: Long, page: Int = 1): JsonObject {
+        val param = getParamFromProfileInfo(uid, "fans")
+        return "$HOST/api/container/getSecond?$param"
+            .httpGet(listOf("page" to page))
+            .awaitWeiboResponse(JsonObject.serializer())
+            .getData()
+    }
+
+
 }

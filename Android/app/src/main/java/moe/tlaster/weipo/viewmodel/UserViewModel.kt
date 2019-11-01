@@ -5,23 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import moe.tlaster.weipo.common.extensions.runOnMainThread
 import moe.tlaster.weipo.services.Api
 import moe.tlaster.weipo.services.models.ProfileData
-
-class UserViewModelFactory(
-    val name: String? = null,
-    val id: Long? = null
-) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (name != null) {
-            return UserViewModel(name) as T
-        }
-        if (id != null && id != 0L) {
-            return UserViewModel(id) as T
-        }
-        throw Error("Name or Id should not be null")
-    }
-}
 
 class UserViewModel : ViewModel {
     val profile = MutableLiveData<ProfileData>()
@@ -42,7 +28,10 @@ class UserViewModel : ViewModel {
 
     private fun initProfile(id: Long) {
         GlobalScope.launch {
-            profile.value = Api.profile(id)
+            val value = Api.profile(id)
+            runOnMainThread {
+                profile.value = value
+            }
         }
     }
 }

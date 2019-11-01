@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import java.util.*
 import kotlin.math.abs
 
-class AutoStaggeredGridLayoutManager(columnSize: Int, orientation: Int) :
+class AutoStaggeredGridLayoutManager(columnSize: Int, orientation: Int = StaggeredGridLayoutManager.VERTICAL) :
     StaggeredGridLayoutManager(1, orientation) {
 
     enum class Strategy {

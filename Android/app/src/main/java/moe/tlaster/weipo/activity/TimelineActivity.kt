@@ -4,12 +4,11 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import kotlinx.android.synthetic.main.activity_timeline.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import moe.tlaster.weipo.R
 import moe.tlaster.weipo.common.AutoStaggeredGridLayoutManager
 import moe.tlaster.weipo.common.adapter.IncrementalLoadingAdapter
 import moe.tlaster.weipo.common.adapter.ItemSelector
+import moe.tlaster.weipo.common.extensions.bindLoadingCollection
 import moe.tlaster.weipo.common.extensions.dp
 import moe.tlaster.weipo.common.extensions.openActivity
 import moe.tlaster.weipo.common.extensions.viewModel
@@ -38,14 +37,13 @@ class TimelineActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         recycler_view.layoutManager = AutoStaggeredGridLayoutManager(360.dp.toInt(), StaggeredGridLayoutManager.VERTICAL)
         recycler_view.adapter = adapter
-        refresh_layout.setOnRefreshListener {
-            GlobalScope.launch {
-                viewModel.items.refreshAsync()
-                refresh_layout.isRefreshing = false
-            }
-        }
+        refresh_layout.bindLoadingCollection(viewModel.items)
         account_button.setOnClickListener {
-            openActivity<UserActivity>()
+            viewModel.config?.let {
+                openActivity<UserActivity>(
+                    "user_id" to it.uid?.toLongOrNull()
+                )
+            }
         }
         notification_button.setOnClickListener {
             openActivity<NotificationActivity>()

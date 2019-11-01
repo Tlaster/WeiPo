@@ -9,19 +9,11 @@ import moe.tlaster.weipo.common.collection.IIncrementalSource
 import moe.tlaster.weipo.common.collection.IncrementalLoadingCollection
 import moe.tlaster.weipo.controls.PersonCard
 import moe.tlaster.weipo.controls.StatusView
+import moe.tlaster.weipo.datasource.FuncDataSource
 import moe.tlaster.weipo.services.Api
 import moe.tlaster.weipo.services.models.Attitude
 import moe.tlaster.weipo.services.models.Comment
 import moe.tlaster.weipo.services.models.MessageList
-
-class NotificationItemDataSource<T>(
-    private val func: suspend (page: Int) -> List<T>
-) : IIncrementalSource<T> {
-
-    override suspend fun getPagedItemAsync(page: Int, count: Int): List<T> {
-        return func.invoke(page + 1)
-    }
-}
 
 interface INotificationTabItem<T> {
     val title: Int
@@ -45,11 +37,11 @@ class MentionViewModel: INotificationTabItem<Any> {
 
     override val adapter = IncrementalLoadingAdapter<Any>(ItemSelector(R.layout.item_status)).apply {
         autoRefresh = false
-        items = IncrementalLoadingCollection(NotificationItemDataSource {
+        items = IncrementalLoadingCollection(FuncDataSource {
             if (isCmt) {
-                Api.mentionsCmt(it)
+                Api.mentionsCmt(it + 1)
             } else {
-                Api.mentionsAt(it)
+                Api.mentionsAt(it + 1)
             }
         })
         setView<StatusView>(R.id.item_status) { view, item, _, _ ->
@@ -66,8 +58,8 @@ class NotificationViewModel : ViewModel() {
             R.drawable.ic_comment_black_24dp,
             IncrementalLoadingAdapter<Comment>(ItemSelector(R.layout.item_status)).apply {
                 autoRefresh = false
-                items = IncrementalLoadingCollection(NotificationItemDataSource {
-                    Api.comment(it)
+                items = IncrementalLoadingCollection(FuncDataSource {
+                    Api.comment(it + 1)
                 })
                 setView<StatusView>(R.id.item_status) { view, item, _, _ ->
                     view.data = item
@@ -79,8 +71,8 @@ class NotificationViewModel : ViewModel() {
             R.drawable.ic_thumb_up_black_24dp,
             IncrementalLoadingAdapter<Attitude>(ItemSelector(R.layout.item_status)).apply {
                 autoRefresh = false
-                items = IncrementalLoadingCollection(NotificationItemDataSource {
-                    Api.attitude(it)
+                items = IncrementalLoadingCollection(FuncDataSource {
+                    Api.attitude(it + 1)
                 })
                 setView<StatusView>(R.id.item_status) { view, item, _, _ ->
                     view.data = item
@@ -92,8 +84,8 @@ class NotificationViewModel : ViewModel() {
             R.drawable.ic_message_black_24dp,
             IncrementalLoadingAdapter<MessageList>(ItemSelector(R.layout.item_person)).apply {
                 autoRefresh = false
-                items = IncrementalLoadingCollection(NotificationItemDataSource {
-                    Api.messageList(it)
+                items = IncrementalLoadingCollection(FuncDataSource {
+                    Api.messageList(it + 1)
                 })
                 setView<PersonCard>(R.id.item_person) { view, item, _, _ ->
                     item.user?.avatarLarge?.let {

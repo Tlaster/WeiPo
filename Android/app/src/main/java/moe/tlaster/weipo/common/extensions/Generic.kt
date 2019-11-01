@@ -7,7 +7,9 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import kotlinx.coroutines.*
+import moe.tlaster.weipo.common.collection.IncrementalLoadingCollection
 
 
 fun runOnMainThread(action: () -> Unit) {
@@ -21,7 +23,6 @@ fun runOnIOThread(action: () -> Unit) {
 fun runOnDefaultThread(action: () -> Unit) {
     GlobalScope.runOnDefaultThread(action)
 }
-
 
 fun CoroutineScope.runOnMainThread(action: () -> Unit) {
     launch {
@@ -43,6 +44,14 @@ fun CoroutineScope.runOnDefaultThread(action: () -> Unit) {
     launch {
         withContext(Dispatchers.Default) {
             action.invoke()
+        }
+    }
+}
+
+inline fun <reified T: ViewModel> factory(crossinline creator: () -> T): ViewModelProvider.Factory {
+    return object : ViewModelProvider.Factory {
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            return creator.invoke() as T
         }
     }
 }
@@ -69,3 +78,18 @@ internal val Number.dp: Float
         this.toFloat(),
         Resources.getSystem().displayMetrics
     )
+
+fun SwipeRefreshLayout.bindLoadingCollection(incrementalLoadingCollection: IncrementalLoadingCollection<*, *>) {
+    incrementalLoadingCollection.stateChanged += { _, args ->
+        runOnMainThread {
+            isRefreshing = when {
+                args == IncrementalLoadingCollection.CollectionState.Loading && !incrementalLoadingCollection.any() -> true
+                args == IncrementalLoadingCollection.CollectionState.Completed -> false
+                else -> false
+            }
+        }
+    }
+    setOnRefreshListener {
+        incrementalLoadingCollection.refresh()
+    }
+}
