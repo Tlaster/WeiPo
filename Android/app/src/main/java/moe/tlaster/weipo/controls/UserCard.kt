@@ -2,9 +2,13 @@ package moe.tlaster.weipo.controls
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.bumptech.glide.request.RequestOptions
+import kotlinx.android.synthetic.main.control_user.view.*
 import moe.tlaster.weipo.R
 import moe.tlaster.weipo.common.extensions.inflate
+import moe.tlaster.weipo.common.extensions.load
 import moe.tlaster.weipo.services.models.User
 
 class UserCard : ConstraintLayout {
@@ -32,7 +36,25 @@ class UserCard : ConstraintLayout {
         if (value == null) {
             return
         }
-
+        value.profileImageURL?.let {
+            user_avatar.load(it) {
+                apply(RequestOptions.circleCropTransform())
+            }
+        }
+        value.screenName?.let {
+            user_name.text = it
+        }
+        value.verifiedReason?.let {
+            user_verify.text = it
+        }
+        user_verify.visibility = if (value.verified == true) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
+        value.description?.let {
+            user_desc.text = it
+        }
     }
 
     init {

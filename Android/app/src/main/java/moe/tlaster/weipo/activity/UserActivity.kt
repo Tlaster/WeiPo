@@ -2,6 +2,7 @@ package moe.tlaster.weipo.activity
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.tabs.TabLayoutMediator
@@ -33,7 +34,12 @@ class UserActivity : BaseActivity() {
     private val fragmentMapping by lazy {
         mapOf(
             "weibo" to { uid: Long, containerId: String ->
-                WeiboTabFragment(uid, containerId)
+                WeiboTabFragment().apply {
+                    arguments = bundleOf(
+                        "containerId" to containerId,
+                        "userId" to uid
+                    )
+                }
             }
         )
     }
@@ -94,10 +100,22 @@ class UserActivity : BaseActivity() {
                                 title = tab.title.toString()
                             }
                         }
-                        return@map EmptyTabFragment(0, "").apply {
+                        return@map EmptyTabFragment().apply {
                             title = tab.title.toString()
                         }
-                    } + FollowFragment(userId) + FansFragment(userId)
+                    } + FollowFragment().apply {
+                        arguments = bundleOf(
+                            "containerId" to containerId,
+                            "userId" to userId
+                        )
+                        title = "Follow"
+                    } + FansFragment().apply {
+                        arguments = bundleOf(
+                            "containerId" to containerId,
+                            "userId" to userId
+                        )
+                        title = "Fans"
+                    }
                 }
             }
             profile.tabsInfo?.selectedTab?.let {

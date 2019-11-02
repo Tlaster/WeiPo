@@ -12,9 +12,10 @@
         android:layout_height="25dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/user_avatar" />
 
     <androidx.cardview.widget.CardView
+        app:layout_goneMarginBottom="4dp"
         android:id="@+id/user_card"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -22,13 +23,14 @@
         android:layout_marginEnd="4dp"
         android:layout_marginBottom="4dp"
         app:cardCornerRadius="4dp"
-        app:cardElevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/user_avatar_anchor" />
 
     <ImageView
+        android:layout_marginTop="4dp"
+        android:elevation="2dp"
         android:id="@+id/user_avatar"
         android:layout_width="0dp"
         android:layout_height="50dp"
@@ -39,9 +41,13 @@
         tools:src="@mipmap/ic_launcher_round" />
 
     <TextView
+        android:elevation="2dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:gravity="center"
         android:id="@+id/user_name"
         style="@style/TextAppearance.AppCompat.Title"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="@id/user_card"
         app:layout_constraintStart_toStartOf="@id/user_card"
@@ -49,23 +55,30 @@
         tools:text="UserName" />
 
     <TextView
+        android:elevation="2dp"
+        android:paddingEnd="8dp"
+        android:paddingStart="8dp"
         android:id="@+id/user_verify"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:drawableStart="@drawable/ic_check_circle_black_24dp"
-        android:drawablePadding="4dp"
-        android:gravity="center_vertical"
+        android:gravity="center"
+        android:maxLines="1"
         app:layout_constraintEnd_toEndOf="@id/user_card"
         app:layout_constraintStart_toStartOf="@id/user_card"
         app:layout_constraintTop_toBottomOf="@id/user_avatar"
         tools:text="User verify" />
 
     <TextView
-        android:id="@+id/user_desc"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:elevation="2dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:gravity="center"
+        android:id="@+id/user_desc"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@id/user_card"
         app:layout_constraintEnd_toEndOf="@id/user_card"
         app:layout_constraintStart_toStartOf="@id/user_card"

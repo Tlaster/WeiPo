@@ -11,12 +11,13 @@ import moe.tlaster.weipo.common.extensions.bindLoadingCollection
 import moe.tlaster.weipo.common.extensions.dp
 import moe.tlaster.weipo.common.extensions.factory
 import moe.tlaster.weipo.common.extensions.viewModel
+import moe.tlaster.weipo.controls.UserCard
 import moe.tlaster.weipo.services.models.User
 import moe.tlaster.weipo.viewmodel.user.FansViewModel
 
-class FansFragment(
-    userId: Long
-) : UserTabFragment(R.layout.layout_list, userId, containerId = "") {
+class FansFragment : UserTabFragment() {
+    override val contentLayoutId: Int
+        get() = R.layout.layout_list
 
     val viewModel by lazy {
         viewModel<FansViewModel>(factory {
@@ -25,14 +26,17 @@ class FansFragment(
     }
 
     val adapter by lazy {
-        IncrementalLoadingAdapter<User>(ItemSelector(R.layout.control_user)).apply {
+        IncrementalLoadingAdapter<User>(ItemSelector(R.layout.item_user)).apply {
             items = viewModel.source
+            setView<UserCard>(R.id.user_card) { view, item, _, _ ->
+                view.user = item
+            }
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        recycler_view.layoutManager = AutoStaggeredGridLayoutManager(100.dp.toInt())
+        recycler_view.layoutManager = AutoStaggeredGridLayoutManager(200.dp.toInt())
         recycler_view.adapter = adapter
         refresh_layout.bindLoadingCollection(viewModel.source)
     }

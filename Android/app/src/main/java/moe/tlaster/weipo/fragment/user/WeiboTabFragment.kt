@@ -15,9 +15,9 @@ import moe.tlaster.weipo.common.extensions.viewModel
 import moe.tlaster.weipo.controls.StatusView
 import moe.tlaster.weipo.viewmodel.user.WeiboListViewModel
 
-class WeiboTabFragment(
-    userId: Long, containerId: String
-) : UserTabFragment(R.layout.layout_list, userId, containerId) {
+class WeiboTabFragment : UserTabFragment() {
+    override val contentLayoutId: Int
+        get() = R.layout.layout_list
 
     private val viewModel by lazy {
         viewModel<WeiboListViewModel>(factory {
