@@ -10,17 +10,22 @@ import androidx.core.view.updateMarginsRelative
 import androidx.core.view.updatePaddingRelative
 import kotlinx.android.synthetic.main.control_status.view.*
 import moe.tlaster.weipo.R
+import moe.tlaster.weipo.activity.UserActivity
 import moe.tlaster.weipo.common.adapter.AutoAdapter
 import moe.tlaster.weipo.common.adapter.ItemSelector
 import moe.tlaster.weipo.common.extensions.dp
 import moe.tlaster.weipo.common.extensions.inflate
+import moe.tlaster.weipo.common.extensions.openActivity
 import moe.tlaster.weipo.common.extensions.updateItemsSource
 import moe.tlaster.weipo.common.fromHtml
+import moe.tlaster.weipo.common.openWeiboLink
 import moe.tlaster.weipo.services.models.*
 
 class StatusView : LinearLayout {
 
-    private val linkClicked: ((url: String) -> Unit)? = null
+    private val linkClicked: ((url: String) -> Unit) = {
+        openWeiboLink(context, it)
+    }
     private lateinit var repostView: StatusView
     
     var data: Any? = null
@@ -199,7 +204,7 @@ class StatusView : LinearLayout {
         }
 
     constructor(context: Context) : super(context)
-    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
+    constructor(context: Context, attrs : AttributeSet?) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
         context,
         attrs,
@@ -216,5 +221,16 @@ class StatusView : LinearLayout {
         }
         status_content.movementMethod = LinkMovementMethod.getInstance()
         updatePaddingRelative(bottom = 8.dp.toInt())
+        status_person.setOnClickListener {
+            data?.let {
+                it as? IWithUser
+            }?.let {
+                it.user?.id
+            }?.let {
+                context.openActivity<UserActivity>(
+                    "user_id" to it
+                )
+            }
+        }
     }
 }

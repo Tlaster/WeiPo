@@ -5,6 +5,10 @@ import kotlinx.android.parcel.Parcelize
 import kotlinx.serialization.*
 import kotlinx.serialization.internal.LongDescriptor
 
+interface IWithUser {
+    val user: User?
+}
+
 @Serializable
 @Parcelize
 data class TimelineData(
@@ -97,7 +101,7 @@ data class Status(
     @SerialName("mblog_vip_type")
     val mblogVipType: Long? = null,
 
-    val user: User? = null,
+    override val user: User? = null,
 
     @SerialName("reposts_count")
     val repostsCount: Long? = null,
@@ -159,7 +163,7 @@ data class Status(
 
     @SerialName("safe_tags")
     val safeTags: Long? = null
-): Parcelable
+): Parcelable, IWithUser
 
 @Serializable
 @Parcelize
@@ -477,10 +481,10 @@ data class Comment(
     val liked: Boolean? = null,
     val id: String? = null,
     val text: String? = null,
-    val user: User? = null,
+    override val user: User? = null,
     val status: Status? = null,
     val bid: String? = null
-): Parcelable
+): Parcelable, IWithUser
 
 @Serializable
 @Parcelize
@@ -528,10 +532,10 @@ data class Attitude(
 
     val id: Long? = null,
     val source: String? = null,
-    val user: User? = null,
+    override val user: User? = null,
     val attitude: String? = null,
     val status: Status? = null
-): Parcelable
+): Parcelable, IWithUser
 
 @Serializable
 @Parcelize
