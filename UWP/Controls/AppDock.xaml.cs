@@ -13,6 +13,8 @@ using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
 using System.IO;
 using System.Linq;
+using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.DataTransfer;
 using WeiPo.Services.Models;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
@@ -60,6 +62,10 @@ namespace WeiPo.Controls
                     ToggleHeader();
                 }
             });
+            Singleton<BroadcastCenter>.Instance.Subscribe("share_add_image",
+                delegate { DockInput.Focus(FocusState.Programmatic); });
+            Singleton<BroadcastCenter>.Instance.Subscribe("share_add_text",
+                delegate { DockInput.Focus(FocusState.Programmatic); });
         }
         
         public bool IsComposing { get; private set; }
@@ -205,7 +211,7 @@ namespace WeiPo.Controls
             {
                 e.Handled = true;
                 var bitmap = await dataPackageView.GetBitmapAsync();
-                var file = await GetFileFromBitmap(bitmap);
+                var file = await bitmap.SaveCacheFile();
                 ViewModel.PostWeiboViewModel.AddImage(file);
             }
             else if (dataPackageView.Contains(Windows.ApplicationModel.DataTransfer.StandardDataFormats.StorageItems))
@@ -217,25 +223,6 @@ namespace WeiPo.Controls
                     .ToArray();
                 ViewModel.PostWeiboViewModel.AddImage(files);
             }
-        }
-
-        private static async Task<StorageFile> GetFileFromBitmap(RandomAccessStreamReference bitmap)
-        {
-            var file = await ApplicationData.Current.LocalCacheFolder.CreateFileAsync($"{new Random().Next()}.png", CreationCollisionOption.GenerateUniqueName);
-            using (var fstream = await file.OpenStreamForWriteAsync())
-            {
-                using var stream = await bitmap.OpenReadAsync();
-                var decoder = await BitmapDecoder.CreateAsync(stream);
-                var pixels = await decoder.GetPixelDataAsync();
-                var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, fstream.AsRandomAccessStream());
-                encoder.SetPixelData(decoder.BitmapPixelFormat, BitmapAlphaMode.Ignore,
-                    decoder.OrientedPixelWidth, decoder.OrientedPixelHeight,
-                    decoder.DpiX, decoder.DpiY,
-                    pixels.DetachPixelData());
-                await encoder.FlushAsync();
-            }
-
-            return file;
         }
 
         private bool _isCtrlDown;

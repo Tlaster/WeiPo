@@ -1,4 +1,7 @@
-﻿using Windows.ApplicationModel.Core;
+﻿using System;
+using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Core;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
@@ -26,6 +29,24 @@ namespace WeiPo.Activities
             CoreApplication.GetCurrentView().TitleBar.Also(it =>
             {
                 it.LayoutMetricsChanged += OnCoreTitleBarOnLayoutMetricsChanged;
+            });
+            Singleton<BroadcastCenter>.Instance.SubscribeWithPendingMessage("share_target_receive", async (sender, args) =>
+            {
+                if (args is ProtocolActivatedEventArgs protocolActivatedEventArgs)
+                {
+                    if (protocolActivatedEventArgs.Data.ContainsKey("image"))
+                    {
+                        var file = await SharedStorageAccessManager.RedeemTokenForFileAsync(
+                            protocolActivatedEventArgs.Data["image"].ToString());
+                        Singleton<BroadcastCenter>.Instance.Send(this, "share_add_image", file);
+                    }
+
+                    if (protocolActivatedEventArgs.Data.ContainsKey("text"))
+                    {
+                        var text = protocolActivatedEventArgs.Data["text"].ToString();
+                        Singleton<BroadcastCenter>.Instance.Send(this, "share_add_text", text);
+                    }
+                }
             });
         }
 

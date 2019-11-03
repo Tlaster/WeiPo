@@ -259,6 +259,9 @@
     <Compile Include="Services\Models\VideoDetails.cs" />
     <Compile Include="Services\Models\Visible.cs" />
     <Compile Include="Services\Models\WeiboResponse.cs" />
+    <Compile Include="ShareTargetView.xaml.cs">
+      <DependentUpon>ShareTargetView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\AccountMessagingCenterDockViewModel.cs" />
     <Compile Include="ViewModels\DockViewModel.cs" />
     <Compile Include="ViewModels\ImageViewModel.cs" />
@@ -431,6 +434,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\TimelineActivity.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ShareTargetView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

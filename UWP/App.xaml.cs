@@ -9,6 +9,7 @@ using Flurl.Http;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
+using Microsoft.Toolkit.Uwp.Helpers;
 using Newtonsoft.Json;
 using WeiPo.Common;
 using WeiPo.Services;
@@ -23,9 +24,10 @@ namespace WeiPo
         public App()
         {
             InitializeComponent();
+            Init();
         }
 
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        private void Init()
         {
             FlurlHttp.Configure(settings =>
             {
@@ -70,16 +72,42 @@ namespace WeiPo
             });
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             ImageCache.Instance.InitializeAsync(httpMessageHandler: new WeiboHttpClientHandler());
+        }
 
+        protected override void OnActivated(IActivatedEventArgs args)
+        {
+            if (args is ProtocolActivatedEventArgs protocolActivatedEventArgs)
+            {
+                EnsureWindow();
+                Singleton<BroadcastCenter>.Instance.SendWithPendingMessage(this, "share_target_receive", protocolActivatedEventArgs);
+            }
+        }
+
+        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        {
+            EnsureWindow(e.PrelaunchActivated);
+        }
+
+        private void EnsureWindow(bool preLaunch = false)
+        {
             if (!(Window.Current.Content is RootView))
             {
                 Window.Current.Content = new RootView();
             }
 
-            if (e.PrelaunchActivated == false)
+            if (preLaunch == false)
             {
                 Window.Current.Activate();
             }
+        }
+
+        protected override void OnShareTargetActivated(ShareTargetActivatedEventArgs args)
+        {
+            if (!(Window.Current.Content is ShareTargetView))
+            {
+                Window.Current.Content = new ShareTargetView(args);
+            }
+            Window.Current.Activate();
         }
     }
 }

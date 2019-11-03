@@ -42,6 +42,20 @@ namespace WeiPo.ViewModels
                     ToCommentState(reply);
                 }
             });
+            Singleton<BroadcastCenter>.Instance.Subscribe("share_add_image", (sender, args) =>
+            {
+                if (args is StorageFile file)
+                {
+                    Files.Add(file);
+                }
+            });
+            Singleton<BroadcastCenter>.Instance.Subscribe("share_add_text", (sender, args) =>
+            {
+                if (args is string text)
+                {
+                    Content = text;
+                }
+            });
         }
 
         public bool IsSending { get; private set; }
