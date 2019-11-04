@@ -48,5 +48,8 @@ class TimelineActivity : BaseActivity() {
         notification_button.setOnClickListener {
             openActivity<NotificationActivity>()
         }
+        compose_button.setOnClickListener {
+            openActivity<ComposeActivity>()
+        }
     }
 }
