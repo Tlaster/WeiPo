@@ -51,8 +51,7 @@
         android:id="@+id/image_picked_list"
         app:layout_constraintBottom_toTopOf="@id/action_container"
         android:layout_width="match_parent"
-        app:layout_constraintHeight_percent="0.1"
-        android:layout_height="0dp"/>
+        android:layout_height="wrap_content"/>
     <LinearLayout
         android:orientation="horizontal"
         android:id="@+id/action_container"
