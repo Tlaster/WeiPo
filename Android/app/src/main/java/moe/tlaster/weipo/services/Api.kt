@@ -1,10 +1,13 @@
 package moe.tlaster.weipo.services
 
+import com.github.kittinunf.fuel.core.FileDataPart
 import com.github.kittinunf.fuel.core.Request
 import com.github.kittinunf.fuel.core.ResponseDeserializable
 import com.github.kittinunf.fuel.coroutines.awaitObject
 import com.github.kittinunf.fuel.coroutines.awaitStringResponse
 import com.github.kittinunf.fuel.httpGet
+import com.github.kittinunf.fuel.httpPost
+import com.github.kittinunf.fuel.httpUpload
 import com.github.kittinunf.fuel.serialization.kotlinxDeserializerOf
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
@@ -12,6 +15,7 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.list
 import moe.tlaster.weipo.services.models.*
+import java.io.File
 
 inline fun <reified T : Any> defaultKotlinxDeserializerOf(loader: KSerializer<T>): ResponseDeserializable<T> {
     return kotlinxDeserializerOf(loader, json = Json.nonstrict)
@@ -160,5 +164,29 @@ object Api {
             .getData()
     }
 
+    suspend fun update(content: String, vararg pics: String): JsonObject {
+        val st = config().st
+        return "$HOST/api/statuses/update"
+            .httpPost(listOf(
+                "content" to content,
+                "st" to st,
+                "picId" to pics.joinToString(",")
+            ))
+            .header("Referer", "$HOST/compose/?${(if (pics.any()) "&pids=${pics.joinToString(",")}" else "")}")
+            .awaitWeiboResponse(JsonObject.serializer())
+            .getData()
+    }
 
+    suspend fun uploadPic(file: File): UploadPic {
+        val st = config().st
+        return "$HOST/api/statuses/uploadPic"
+            .httpUpload(listOf(
+                "type" to "json",
+                "st" to st
+            ))
+            .add(FileDataPart(file, name = "pic", filename = file.name, contentType = "image/*"))
+            .header("Referer", "$HOST/compose/")
+            .awaitWeiboResponse(UploadPic.serializer())
+            .getData()
+    }
 }

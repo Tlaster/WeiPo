@@ -1,6 +1,9 @@
 package moe.tlaster.weipo.common.extensions
 
+import android.content.Context
 import android.content.res.Resources
+import android.net.Uri
+import android.provider.OpenableColumns
 import android.util.TypedValue
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -10,6 +13,9 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import kotlinx.coroutines.*
 import moe.tlaster.weipo.common.collection.IncrementalLoadingCollection
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
 
 
 fun runOnMainThread(action: () -> Unit) {
@@ -92,4 +98,53 @@ fun SwipeRefreshLayout.bindLoadingCollection(incrementalLoadingCollection: Incre
     setOnRefreshListener {
         incrementalLoadingCollection.refresh()
     }
+}
+
+
+private fun getFileName(context: Context, uri: Uri): String {
+    var result: String? = null
+    if (uri.scheme == "content") {
+        val cursor = context.contentResolver.query(uri, null, null, null, null)
+        try {
+            if (cursor != null && cursor.moveToFirst()) {
+                result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+            }
+        } finally {
+            cursor!!.close()
+        }
+    }
+    if (result == null) {
+        result = uri.path
+        val cut = result!!.lastIndexOf('/')
+        if (cut != -1) {
+            result = result.substring(cut + 1)
+        }
+    }
+    return result
+}
+
+private fun getFile(context: Context, uri: Uri?): String? {
+    if (uri == null) {
+        return null
+    }
+    if ("file" == uri.scheme) {
+        return uri.path
+    }
+    // TODO: Different image file with the same name
+    val temp = File(context.cacheDir, getFileName(context, uri))
+    try {
+        val `in` = context.contentResolver.openInputStream(uri) as FileInputStream?
+        val out = FileOutputStream(temp)
+        val inChannel = `in`!!.channel
+        val outChannel = out.channel
+        inChannel.transferTo(0, inChannel.size(), outChannel)
+        `in`.close()
+        out.close()
+    } catch (e: Exception) {
+    }
+
+    return Uri.fromFile(temp).path
+}
+fun Uri.getFilePath(context: Context): String? {
+    return getFile(context, this)
 }
