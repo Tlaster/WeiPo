@@ -119,6 +119,14 @@ class ComposeActivity : BaseActivity() {
                     viewModel.images.clear()
                     viewModel.images.addAll(it)
                 }
+                data.data?.getFilePath(this)?.let {
+                    File(it)
+                }?.let {
+                    viewModel.images + it
+                }?.let {
+                    viewModel.images.clear()
+                    viewModel.images.addAll(it)
+                }
             }
         }
     }
