@@ -1,6 +1,7 @@
 package moe.tlaster.weipo.services
 
 import com.github.kittinunf.fuel.core.FileDataPart
+import com.github.kittinunf.fuel.core.InlineDataPart
 import com.github.kittinunf.fuel.core.Request
 import com.github.kittinunf.fuel.core.ResponseDeserializable
 import com.github.kittinunf.fuel.coroutines.awaitObject
@@ -30,7 +31,7 @@ suspend inline fun <reified T : Any> Request.awaitWeiboResponse(loader: KSeriali
 }
 
 suspend inline fun <reified T: Any> WeiboResponse<T>.getData(): T {
-    return this.data
+    return this.data ?: throw Error()
 }
 
 object Api {
@@ -178,15 +179,13 @@ object Api {
     }
 
     suspend fun uploadPic(file: File): UploadPic {
-        val st = config().st
+        val st = config().st ?: throw Error()
         return "$HOST/api/statuses/uploadPic"
-            .httpUpload(listOf(
-                "type" to "json",
-                "st" to st
-            ))
-            .add(FileDataPart(file, name = "pic", filename = file.name, contentType = "image/*"))
+            .httpUpload()
+            .add(InlineDataPart("json", "type"))
+            .add(InlineDataPart(st, "st"))
+            .add(FileDataPart(file, name = "pic", filename = file.name))
             .header("Referer", "$HOST/compose/")
-            .awaitWeiboResponse(UploadPic.serializer())
-            .getData()
+            .awaitObject(UploadPic.serializer())
     }
 }

@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class WeiboResponse<T>(
-    val data: T,
+    val data: T?,
     val ok: Long,
     @SerialName("http_code")
     val httpCode: Long? = null

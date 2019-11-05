@@ -6,16 +6,17 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
+import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.ItemTouchHelper
 import kotlinx.android.synthetic.main.activity_compose.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import moe.tlaster.weipo.R
 import moe.tlaster.weipo.common.SimpleItemTouchHelperCallback
 import moe.tlaster.weipo.common.adapter.IncrementalLoadingAdapter
 import moe.tlaster.weipo.common.adapter.ItemSelector
 import moe.tlaster.weipo.common.collection.CollectionChangedEventArg
-import moe.tlaster.weipo.common.extensions.getFilePath
-import moe.tlaster.weipo.common.extensions.load
-import moe.tlaster.weipo.common.extensions.viewModel
+import moe.tlaster.weipo.common.extensions.*
 import moe.tlaster.weipo.viewmodel.ComposeViewModel
 import java.io.File
 import java.util.*
@@ -59,7 +60,9 @@ class ComposeActivity : BaseActivity() {
         get() = R.layout.activity_compose
 
     private val viewModel by lazy {
-        viewModel<ComposeViewModel>()
+        viewModel<ComposeViewModel>(factory {
+            ComposeViewModel(ComposeViewModel.ComposeType.Create)
+        })
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,6 +79,17 @@ class ComposeActivity : BaseActivity() {
         image_picked_list.adapter = imageAdapter
         viewModel.images.collectionChanged += onImageCollectionChanged
         touchHelper.attachToRecyclerView(image_picked_list)
+        compose_input.doOnTextChanged { text, _, _, _ ->
+            viewModel.content = text.toString()
+        }
+        send_button.setOnClickListener {
+            GlobalScope.launch {
+                viewModel.commit()
+                runOnMainThread {
+                    finish()
+                }
+            }
+        }
     }
 
     private fun openImagePicker() {
