@@ -492,3 +492,5 @@ yarn-error.log*
 
 .antlr
 *.DotSettings
+
+UWP/Strings/AppCenter.resw

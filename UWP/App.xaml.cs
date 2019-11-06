@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml;
 using Flurl.Http;
 using Microsoft.AppCenter;
@@ -29,6 +30,12 @@ namespace WeiPo
 
         private void Init()
         {
+            var id = ResourceLoader.GetForViewIndependentUse("AppCenter")?.GetString("AppCenterId");
+            if (!string.IsNullOrEmpty(id))
+            {
+                AppCenter.Start(id,
+                    typeof(Analytics), typeof(Crashes));
+            }
             FlurlHttp.Configure(settings =>
             {
                 var jsonSettings = new JsonSerializerSettings
