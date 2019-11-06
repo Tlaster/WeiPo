@@ -26,39 +26,44 @@ namespace WeiPo.ViewModels.User.Tab
         public async Task<IEnumerable<UserModel>> GetPagedItemsAsync(int pageIndex, int pageSize,
             CancellationToken cancellationToken = new CancellationToken())
         {
-            switch (_type)
+            try
             {
-                case PeopleList.ListType.Follow:
+                switch (_type)
                 {
-                    var result = await Singleton<Api>.Instance.Follow(_uid, pageIndex + 1);
-                    var items = result["cards"].Select(it => it["user"].ToObject<UserModel>()).ToList();
-                    return items;
-                }
-                    break;
-                case PeopleList.ListType.Fans:
-                {
-                    if (pageIndex == 0)
+                    case PeopleList.ListType.Follow:
                     {
-                        ////Check if user is me
-                        //var uconfig = await Singleton<Api>.Instance.Config();
-                        //long.TryParse(uconfig.Data.Uid, out var ucid);
-                        //TODO:Not a good idea
-                        var ucid = DockViewModel.Instance.MyProfile.Result.UserInfo.Id;
-                        if (ucid == _uid)
-                        {
-                            //clear notification
-                            await Singleton<Api>.Instance.MyFans();
-                            Singleton<BroadcastCenter>.Instance.Send(this, "notification_clear_fans");
-                        }
+                        var result = await Singleton<Api>.Instance.Follow(_uid, pageIndex + 1);
+                        return result["cards"].Select(it => it["user"].ToObject<UserModel>()).ToList();
                     }
+                        break;
+                    case PeopleList.ListType.Fans:
+                    {
+                        if (pageIndex == 0)
+                        {
+                            ////Check if user is me
+                            //var uconfig = await Singleton<Api>.Instance.Config();
+                            //long.TryParse(uconfig.Data.Uid, out var ucid);
+                            //TODO:Not a good idea
+                            var ucid = DockViewModel.Instance.MyProfile.Result.UserInfo.Id;
+                            if (ucid == _uid)
+                            {
+                                //clear notification
+                                await Singleton<Api>.Instance.MyFans();
+                                Singleton<BroadcastCenter>.Instance.Send(this, "notification_clear_fans");
+                            }
+                        }
 
-                    var result = await Singleton<Api>.Instance.Fans(_uid, pageIndex + 1);
-                    var items = result["cards"].Select(it => it["user"].ToObject<UserModel>()).ToList();
-                    return items;
+                        var result = await Singleton<Api>.Instance.Fans(_uid, pageIndex + 1);
+                        return result["cards"].Select(it => it["user"].ToObject<UserModel>()).ToList();
+                    }
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+            }
+            catch (WeiboException e)
+            {
+                // there aren't any fans/follow for this user
             }
         }
     }
