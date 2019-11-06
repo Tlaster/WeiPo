@@ -64,6 +64,7 @@ namespace WeiPo.ViewModels.User.Tab
             catch (WeiboException e)
             {
                 // there aren't any fans/follow for this user
+                return new List<UserModel>();
             }
         }
     }
