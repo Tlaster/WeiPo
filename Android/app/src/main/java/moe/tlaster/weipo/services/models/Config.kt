@@ -1,5 +1,6 @@
 package moe.tlaster.weipo.services.models
 
+import android.os.Parcelable
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -15,3 +16,8 @@ data class UploadPic(
     @SerialName("pic_id")
     val picId: String? = null
 )
+
+interface ICanReply : Parcelable {
+    val id: String?
+    val mid: String?
+}

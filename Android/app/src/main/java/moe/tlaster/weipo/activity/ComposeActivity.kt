@@ -9,23 +9,44 @@ import android.widget.ImageView
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.ItemTouchHelper
 import kotlinx.android.synthetic.main.activity_compose.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import moe.tlaster.weipo.R
 import moe.tlaster.weipo.common.SimpleItemTouchHelperCallback
 import moe.tlaster.weipo.common.adapter.IncrementalLoadingAdapter
 import moe.tlaster.weipo.common.adapter.ItemSelector
 import moe.tlaster.weipo.common.collection.CollectionChangedEventArg
 import moe.tlaster.weipo.common.extensions.*
+import moe.tlaster.weipo.services.models.ICanReply
+import moe.tlaster.weipo.services.models.Status
 import moe.tlaster.weipo.viewmodel.ComposeViewModel
 import java.io.File
 import java.util.*
 
 
 class ComposeActivity : BaseActivity() {
+    companion object {
+        fun bundle(type: ComposeViewModel.ComposeType, reply: ICanReply? = null): Array<Pair<String, Any?>> {
+            return arrayOf(
+                "compose_type" to type.ordinal,
+                "reply_to" to reply
+            )
+        }
+    }
+
     private val IMAGE_PICKER_REQUEST_CODE: Int = 3247
     private val maxImageCount by lazy {
-        intent.getIntExtra("max_image_count", 9)
+        when (composeType) {
+            ComposeViewModel.ComposeType.Create -> 9
+            ComposeViewModel.ComposeType.Repost -> 1
+            ComposeViewModel.ComposeType.Comment -> 1
+        }
+    }
+    private val composeType by lazy {
+        ComposeViewModel.ComposeType.fromInt(
+            intent.getIntExtra(
+                "compose_type",
+                ComposeViewModel.ComposeType.Create.ordinal
+            )
+        ) ?: ComposeViewModel.ComposeType.Create
     }
     private val onImageCollectionChanged: (Any, CollectionChangedEventArg) -> Unit = { _, _ ->
         image_picked_list.visibility = if (viewModel.images.any()) {
@@ -61,7 +82,16 @@ class ComposeActivity : BaseActivity() {
 
     private val viewModel by lazy {
         viewModel<ComposeViewModel>(factory {
-            ComposeViewModel(ComposeViewModel.ComposeType.Create)
+            intent.getParcelableExtra<ICanReply>("reply_to").let { reply ->
+                ComposeViewModel(
+                    composeType,
+                    if (composeType == ComposeViewModel.ComposeType.Repost && reply is Status) {
+                        reply.retweetedStatus ?: reply
+                    } else {
+                        reply
+                    }
+                )
+            }
         })
     }
 
@@ -83,10 +113,23 @@ class ComposeActivity : BaseActivity() {
             viewModel.content = text.toString()
         }
         send_button.setOnClickListener {
-            GlobalScope.launch {
+            if (viewModel.content.length > viewModel.maxLength) {
+                toast("Text length out of range")
+            } else {
                 viewModel.commit()
-                runOnMainThread {
-                    finish()
+                finish()
+            }
+        }
+        compose_input.post {
+            if (composeType == ComposeViewModel.ComposeType.Repost) {
+                intent.getParcelableExtra<ICanReply>("reply_to")?.let {
+                    it as? Status
+                }?.let {
+                    compose_input.setText(if (it.retweetedStatus == null) {
+                        ""
+                    } else {
+                        "//@${it.user?.screenName}:${it.rawText}"
+                    })
                 }
             }
         }
@@ -114,7 +157,9 @@ class ComposeActivity : BaseActivity() {
                         clip.getItemAt(i)
                     }
                 }?.let {
-                    (viewModel.images + it.mapNotNull { it.uri.getFilePath(this) }.map { File(it) }).take(maxImageCount)
+                    (viewModel.images + it.mapNotNull { it.uri.getFilePath(this) }.map { File(it) }).takeLast(
+                        maxImageCount
+                    )
                 }?.let {
                     viewModel.images.clear()
                     viewModel.images.addAll(it)
@@ -122,7 +167,7 @@ class ComposeActivity : BaseActivity() {
                 data.data?.getFilePath(this)?.let {
                     File(it)
                 }?.let {
-                    viewModel.images + it
+                    (viewModel.images + it).takeLast(maxImageCount)
                 }?.let {
                     viewModel.images.clear()
                     viewModel.images.addAll(it)

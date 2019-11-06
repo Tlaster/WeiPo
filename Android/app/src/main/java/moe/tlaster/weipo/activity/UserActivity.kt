@@ -17,6 +17,16 @@ import moe.tlaster.weipo.services.models.ProfileData
 import moe.tlaster.weipo.viewmodel.UserViewModel
 
 class UserActivity : BaseActivity() {
+
+    companion object {
+        fun bundle(name: String? = null, id: Long? = null): Array<Pair<String, Any?>> {
+            return arrayOf(
+                "user_name" to name,
+                "user_id" to id
+            )
+        }
+    }
+
     private val viewModel by lazy {
         viewModel<UserViewModel>(factory {
             val name = intent.getStringExtra("user_name")

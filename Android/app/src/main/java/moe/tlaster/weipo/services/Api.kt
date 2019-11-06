@@ -188,4 +188,51 @@ object Api {
             .header("Referer", "$HOST/compose/")
             .awaitObject(UploadPic.serializer())
     }
+
+    suspend fun repost(content: String, reply: ICanReply, picId: String? = null): JsonObject {
+        val st = config().st
+        return "$HOST/api/statuses/repost"
+            .httpPost(listOf(
+                "id" to reply.id,
+                "mid" to reply.mid,
+                "content" to content,
+                "st" to st,
+                "picId" to picId
+            ))
+            .header("Referer", "$HOST/compose/repost?id=${reply.id}${(if (!picId.isNullOrEmpty()) "&pids=${picId}" else "")}")
+            .awaitWeiboResponse(JsonObject.serializer())
+            .getData()
+    }
+
+    suspend fun reply(content: String, comment: Comment, picId: String? = null): JsonObject {
+        val st = config().st
+        return "$HOST/api/comments/reply"
+            .httpPost(listOf(
+                "id" to comment.status?.id,
+                "mid" to comment.status?.id,
+                "content" to content,
+                "cid" to comment.id,
+                "reply" to comment.id,
+                "st" to st,
+                "picId" to picId
+            ))
+            .header("Referer", "$HOST/compose/reply?id=${comment.id}${(if (!picId.isNullOrEmpty()) "&pids=${picId}" else "")}")
+            .awaitWeiboResponse(JsonObject.serializer())
+            .getData()
+    }
+
+    suspend fun comment(content: String, reply: ICanReply, picId: String? = null): JsonObject {
+        val st = config().st
+        return "$HOST/api/comments/create"
+            .httpPost(listOf(
+                "id" to reply.id,
+                "mid" to reply.mid,
+                "content" to content,
+                "st" to st,
+                "picId" to picId
+            ))
+            .header("Referer", "$HOST/compose/comment?id=${reply.id}${(if (!picId.isNullOrEmpty()) "&pids=${picId}" else "")}")
+            .awaitWeiboResponse(JsonObject.serializer())
+            .getData()
+    }
 }

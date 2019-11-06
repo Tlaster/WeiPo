@@ -10,19 +10,17 @@ import androidx.core.view.updateMarginsRelative
 import androidx.core.view.updatePaddingRelative
 import kotlinx.android.synthetic.main.control_status.view.*
 import moe.tlaster.weipo.R
+import moe.tlaster.weipo.activity.ComposeActivity
 import moe.tlaster.weipo.activity.UserActivity
 import moe.tlaster.weipo.common.adapter.AutoAdapter
 import moe.tlaster.weipo.common.adapter.ItemSelector
-import moe.tlaster.weipo.common.extensions.dp
-import moe.tlaster.weipo.common.extensions.inflate
-import moe.tlaster.weipo.common.extensions.openActivity
-import moe.tlaster.weipo.common.extensions.updateItemsSource
+import moe.tlaster.weipo.common.extensions.*
 import moe.tlaster.weipo.common.fromHtml
 import moe.tlaster.weipo.common.openWeiboLink
 import moe.tlaster.weipo.services.models.*
+import moe.tlaster.weipo.viewmodel.ComposeViewModel
 
 class StatusView : LinearLayout {
-
     private val linkClicked: ((url: String) -> Unit) = {
         openWeiboLink(context, it)
     }
@@ -46,7 +44,7 @@ class StatusView : LinearLayout {
             setPersonCard(it)
         }
         value.createdAt?.also {
-            status_person.subTitle = it
+            status_person.subTitle = it.toHumanizedTime()
         }
         if (value.status != null && showRepost) {
             initRepostView()
@@ -82,7 +80,7 @@ class StatusView : LinearLayout {
             setPersonCard(it)
         }
         value.createdAt?.also {
-            status_person.subTitle = it
+            status_person.subTitle = it.toHumanizedTime()
         }
         value.text?.also { html ->
             status_content.text = fromHtml(html, status_content) { url ->
@@ -132,7 +130,7 @@ class StatusView : LinearLayout {
             setPersonCard(it)
         }
         value.createdAt?.also {
-            status_person.subTitle = it
+            status_person.subTitle = it.toHumanizedTime()
         }
         value.text?.also { html ->
             status_content.text = fromHtml(html, status_content) { url ->
@@ -231,6 +229,24 @@ class StatusView : LinearLayout {
                     "user_id" to it
                 )
             }
+        }
+        repost_button.setOnClickListener { _ ->
+            data?.let {
+                it as ICanReply
+            }?.let {
+                context.openActivity<ComposeActivity>(*ComposeActivity.bundle(ComposeViewModel.ComposeType.Repost, it))
+            }
+        }
+        comment_button.setOnClickListener { _ ->
+            data?.let {
+                it as ICanReply
+            }?.let {
+                context.openActivity<ComposeActivity>(*ComposeActivity.bundle(ComposeViewModel.ComposeType.Comment, it))
+            }
+
+        }
+        like_button.setOnClickListener {
+
         }
     }
 }

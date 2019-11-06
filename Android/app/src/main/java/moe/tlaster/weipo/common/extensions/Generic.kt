@@ -3,6 +3,7 @@ package moe.tlaster.weipo.common.extensions
 import android.content.Context
 import android.content.res.Resources
 import android.net.Uri
+import android.os.Build
 import android.provider.OpenableColumns
 import android.util.TypedValue
 import androidx.fragment.app.Fragment
@@ -13,9 +14,15 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import kotlinx.coroutines.*
 import moe.tlaster.weipo.common.collection.IncrementalLoadingCollection
+import org.ocpsoft.prettytime.PrettyTime
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
+
+
 
 
 fun runOnMainThread(action: () -> Unit) {
@@ -145,6 +152,32 @@ private fun getFile(context: Context, uri: Uri?): String? {
 
     return Uri.fromFile(temp).path
 }
+
 fun Uri.getFilePath(context: Context): String? {
     return getFile(context, this)
+}
+
+private val SECOND_MILLIS = 1000
+private val MINUTE_MILLIS = 60 * SECOND_MILLIS
+private val HOUR_MILLIS = 60 * MINUTE_MILLIS
+private val DAY_MILLIS = 24 * HOUR_MILLIS
+
+private val prettyTime = PrettyTime(if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
+    Resources.getSystem().configuration.locales[0]
+} else {
+    Resources.getSystem().configuration.locale
+})
+private val simpleDateFormat = SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", Locale.US)
+
+fun String.toHumanizedTime(): String {
+    kotlin.runCatching {
+        val date = simpleDateFormat.parse(this)
+        return if (System.currentTimeMillis() - date.time > 3 * HOUR_MILLIS) {
+            DateFormat.getDateTimeInstance().format(date)
+        } else {
+            prettyTime.format(date)
+        }
+    }.onFailure {
+    }
+    return this
 }

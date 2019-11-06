@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import java.io.Serializable
 
@@ -32,6 +33,10 @@ fun <T> createIntent(ctx: Context, clazz: Class<out T>, params: Array<out Pair<S
         fillIntentArguments(intent, params)
     }
     return intent
+}
+
+fun Context.toast(content: String) {
+    Toast.makeText(this, content, Toast.LENGTH_SHORT).show()
 }
 
 private fun fillIntentArguments(intent: Intent, params: Array<out Pair<String, Any?>>) {

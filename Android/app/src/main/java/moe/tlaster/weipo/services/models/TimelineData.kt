@@ -60,8 +60,8 @@ data class Status(
     @SerialName("created_at")
     val createdAt: String? = null,
 
-    val id: String? = null,
-    val mid: String? = null,
+    override val id: String? = null,
+    override val mid: String? = null,
 
     @SerialName("can_edit")
     val canEdit: Boolean? = null,
@@ -163,7 +163,7 @@ data class Status(
 
     @SerialName("safe_tags")
     val safeTags: Long? = null
-): Parcelable, IWithUser
+): Parcelable, IWithUser, ICanReply
 
 @Serializable
 @Parcelize
@@ -467,7 +467,7 @@ data class Comment(
     @SerialName("created_at")
     val createdAt: String? = null,
 
-    val mid: String? = null,
+    override val mid: String? = null,
 
     @SerialName("floor_number")
     val floorNumber: Long? = null,
@@ -479,12 +479,12 @@ data class Comment(
     val replyCount: Long? = null,
 
     val liked: Boolean? = null,
-    val id: String? = null,
+    override val id: String? = null,
     val text: String? = null,
     override val user: User? = null,
     val status: Status? = null,
     val bid: String? = null
-): Parcelable, IWithUser
+): Parcelable, IWithUser, ICanReply
 
 @Serializable
 @Parcelize

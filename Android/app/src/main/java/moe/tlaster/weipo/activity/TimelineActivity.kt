@@ -14,6 +14,7 @@ import moe.tlaster.weipo.common.extensions.openActivity
 import moe.tlaster.weipo.common.extensions.viewModel
 import moe.tlaster.weipo.controls.StatusView
 import moe.tlaster.weipo.services.models.Status
+import moe.tlaster.weipo.viewmodel.ComposeViewModel
 import moe.tlaster.weipo.viewmodel.TimelineViewModel
 
 class TimelineActivity : BaseActivity() {
@@ -49,7 +50,7 @@ class TimelineActivity : BaseActivity() {
             openActivity<NotificationActivity>()
         }
         compose_button.setOnClickListener {
-            openActivity<ComposeActivity>()
+            openActivity<ComposeActivity>(*ComposeActivity.bundle(ComposeViewModel.ComposeType.Create))
         }
     }
 }

@@ -59,6 +59,8 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:${appConfig.dependencyVersion.glide}")
     kapt("com.github.bumptech.glide:compiler:${appConfig.dependencyVersion.glide}")
 
+    implementation("org.ocpsoft.prettytime:prettytime:4.0.1.Final")
+
     testImplementation("junit:junit:4.12")
     androidTestImplementation("androidx.test:runner:1.2.0")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.2.0")

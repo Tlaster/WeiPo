@@ -1,35 +1,39 @@
 package moe.tlaster.weipo.viewmodel
 
 import androidx.lifecycle.ViewModel
+import moe.tlaster.weipo.common.ComposeQueue
 import moe.tlaster.weipo.common.collection.ObservableCollection
-import moe.tlaster.weipo.services.Api
+import moe.tlaster.weipo.services.models.ICanReply
 import java.io.File
 
 class ComposeViewModel(
-    private val composeType: ComposeType
+    val composeType: ComposeType,
+    val reply: ICanReply?
 ) : ViewModel() {
 
     enum class ComposeType {
         Create,
         Repost,
-        Comment
+        Comment;
+        companion object {
+            private val map = values().associateBy(ComposeType::ordinal)
+            fun fromInt(type: Int) = map[type]
+        }
+
     }
 
     val maxLength: Int
     get() {
-        return 1000
+        return when (composeType) {
+            ComposeType.Create -> 1000
+            ComposeType.Repost -> 140
+            ComposeType.Comment -> 140
+        }
     }
     val images = ObservableCollection<File>()
     var content: String = ""
 
-    suspend fun commit() {
-        val picIds = images.mapNotNull { Api.uploadPic(it).picId }
-        val result = when (composeType) {
-            ComposeType.Create -> {
-                Api.update(content, *picIds.toTypedArray())
-            }
-            ComposeType.Repost -> TODO()
-            ComposeType.Comment -> TODO()
-        }
+    fun commit() {
+        ComposeQueue.commit(content, composeType, reply, images.toTypedArray())
     }
 }
