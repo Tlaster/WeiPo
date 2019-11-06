@@ -21,3 +21,17 @@ interface ICanReply : Parcelable {
     val id: String?
     val mid: String?
 }
+
+
+@Serializable
+data class RepostTimeline (
+    val data: List<Status>? = null,
+
+    @SerialName("total_number")
+    val totalNumber: Long? = null,
+
+    @SerialName("hot_total_number")
+    val hotTotalNumber: Long? = null,
+
+    val max: Long? = null
+)

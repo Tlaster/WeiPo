@@ -81,7 +81,7 @@ data class Status(
     val picTypes: String? = null,
 
     @SerialName("pic_focus_point")
-    val picFocusPoint: List<PicFocusPoint> = listOf(),
+    val picFocusPoint: List<PicFocusPoint>? = null,
 
     @SerialName("pic_flag")
     val picFlag: Long? = null,

@@ -12,7 +12,11 @@ import moe.tlaster.weipo.common.adapter.FragmentAdapter
 import moe.tlaster.weipo.common.extensions.factory
 import moe.tlaster.weipo.common.extensions.load
 import moe.tlaster.weipo.common.extensions.viewModel
-import moe.tlaster.weipo.fragment.user.*
+import moe.tlaster.weipo.fragment.TabFragment
+import moe.tlaster.weipo.fragment.user.EmptyTabFragment
+import moe.tlaster.weipo.fragment.user.FansFragment
+import moe.tlaster.weipo.fragment.user.FollowFragment
+import moe.tlaster.weipo.fragment.user.WeiboTabFragment
 import moe.tlaster.weipo.services.models.ProfileData
 import moe.tlaster.weipo.viewmodel.UserViewModel
 

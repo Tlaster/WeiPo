@@ -17,6 +17,7 @@ import moe.tlaster.weipo.common.collection.IncrementalLoadingCollection
 import moe.tlaster.weipo.common.extensions.bindLoadingCollection
 import moe.tlaster.weipo.common.extensions.dp
 import moe.tlaster.weipo.common.extensions.viewModel
+import moe.tlaster.weipo.common.statusWidth
 import moe.tlaster.weipo.viewmodel.INotificationTabItem
 import moe.tlaster.weipo.viewmodel.MentionViewModel
 import moe.tlaster.weipo.viewmodel.NotificationViewModel
@@ -54,7 +55,7 @@ class NotificationActivity : BaseActivity() {
                 }
                 setView<RecyclerView>(R.id.recycler_view) { view, item, _, _ ->
                     view.layoutManager = AutoStaggeredGridLayoutManager(
-                        360.dp.toInt(),
+                        statusWidth,
                         StaggeredGridLayoutManager.VERTICAL
                     )
                     view.adapter = item.adapter

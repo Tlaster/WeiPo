@@ -4,13 +4,16 @@ import android.content.Context
 import android.graphics.Color
 import android.text.method.LinkMovementMethod
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
+import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.core.view.updateMarginsRelative
 import androidx.core.view.updatePaddingRelative
 import kotlinx.android.synthetic.main.control_status.view.*
 import moe.tlaster.weipo.R
 import moe.tlaster.weipo.activity.ComposeActivity
+import moe.tlaster.weipo.activity.StatusActivity
 import moe.tlaster.weipo.activity.UserActivity
 import moe.tlaster.weipo.common.adapter.AutoAdapter
 import moe.tlaster.weipo.common.adapter.ItemSelector
@@ -201,6 +204,10 @@ class StatusView : LinearLayout {
             }
         }
 
+    var isTextSelectionEnabled: Boolean
+        get() = status_content.isTextSelectable
+        set(value) = status_content.setTextIsSelectable(value)
+
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs : AttributeSet?) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
@@ -213,8 +220,11 @@ class StatusView : LinearLayout {
         orientation = VERTICAL
         inflate(R.layout.control_status)
         status_image.adapter = AutoAdapter<Pic>(ItemSelector(R.layout.item_image)).apply {
-            setImage(R.id.image) {
-                it.url ?: ""
+            setView<ImageView>(R.id.image) { view, item, _, _ ->
+                view.load(item.url ?: "")
+                view.setOnClickListener {
+                    onImageClicked(item)
+                }
             }
         }
         status_content.movementMethod = LinkMovementMethod.getInstance()
@@ -248,5 +258,16 @@ class StatusView : LinearLayout {
         like_button.setOnClickListener {
 
         }
+        status_content.setOnClickListener {
+            data?.let {
+                data as? Status
+            }?.let {
+                context.openActivity<StatusActivity>(*StatusActivity.bundle(it))
+            }
+        }
+    }
+
+    private fun onImageClicked(item: Pic) {
+        // TODO:
     }
 }

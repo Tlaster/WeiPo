@@ -11,6 +11,7 @@ import moe.tlaster.weipo.common.extensions.bindLoadingCollection
 import moe.tlaster.weipo.common.extensions.dp
 import moe.tlaster.weipo.common.extensions.factory
 import moe.tlaster.weipo.common.extensions.viewModel
+import moe.tlaster.weipo.common.userWidth
 import moe.tlaster.weipo.controls.UserCard
 import moe.tlaster.weipo.services.models.User
 import moe.tlaster.weipo.viewmodel.user.FollowViewModel
@@ -36,7 +37,7 @@ class FollowFragment : UserTabFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        recycler_view.layoutManager = AutoStaggeredGridLayoutManager(200.dp.toInt())
+        recycler_view.layoutManager = AutoStaggeredGridLayoutManager(userWidth)
         recycler_view.adapter = adapter
         refresh_layout.bindLoadingCollection(viewModel.source)
     }

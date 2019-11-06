@@ -9,9 +9,9 @@ import moe.tlaster.weipo.common.AutoStaggeredGridLayoutManager
 import moe.tlaster.weipo.common.adapter.IncrementalLoadingAdapter
 import moe.tlaster.weipo.common.adapter.ItemSelector
 import moe.tlaster.weipo.common.extensions.bindLoadingCollection
-import moe.tlaster.weipo.common.extensions.dp
 import moe.tlaster.weipo.common.extensions.factory
 import moe.tlaster.weipo.common.extensions.viewModel
+import moe.tlaster.weipo.common.statusWidth
 import moe.tlaster.weipo.controls.StatusView
 import moe.tlaster.weipo.viewmodel.user.WeiboListViewModel
 
@@ -36,7 +36,7 @@ class WeiboTabFragment : UserTabFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        recycler_view.layoutManager = AutoStaggeredGridLayoutManager(360.dp.toInt(), StaggeredGridLayoutManager.VERTICAL)
+        recycler_view.layoutManager = AutoStaggeredGridLayoutManager(statusWidth, StaggeredGridLayoutManager.VERTICAL)
         recycler_view.adapter = adapter
         refresh_layout.bindLoadingCollection(viewModel.source)
     }

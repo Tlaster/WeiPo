@@ -235,4 +235,14 @@ object Api {
             .awaitWeiboResponse(JsonObject.serializer())
             .getData()
     }
+
+    suspend fun repostTimeline(id: Long, page: Int = 1): RepostTimeline {
+        return "$HOST/api/statuses/repostTimeline"
+            .httpGet(listOf(
+                "id" to id,
+                "page" to page
+            ))
+            .awaitWeiboResponse(RepostTimeline.serializer())
+            .getData()
+    }
 }

@@ -4,19 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import moe.tlaster.weipo.R
+import moe.tlaster.weipo.fragment.TabFragment
 
-interface ITabItem {
-    val titleRes: Int
-    val title: String
-    val icon: Int
-}
-abstract class TabFragment : Fragment(), ITabItem
 
 abstract class UserTabFragment : TabFragment() {
-
-
     abstract val contentLayoutId: Int
     var userId: Long = 0
         private set
@@ -44,10 +36,6 @@ abstract class UserTabFragment : TabFragment() {
             }
         }
         return inflater.inflate(contentLayoutId, container)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

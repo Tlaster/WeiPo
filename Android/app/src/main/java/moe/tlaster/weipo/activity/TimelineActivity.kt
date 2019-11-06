@@ -9,9 +9,9 @@ import moe.tlaster.weipo.common.AutoStaggeredGridLayoutManager
 import moe.tlaster.weipo.common.adapter.IncrementalLoadingAdapter
 import moe.tlaster.weipo.common.adapter.ItemSelector
 import moe.tlaster.weipo.common.extensions.bindLoadingCollection
-import moe.tlaster.weipo.common.extensions.dp
 import moe.tlaster.weipo.common.extensions.openActivity
 import moe.tlaster.weipo.common.extensions.viewModel
+import moe.tlaster.weipo.common.statusWidth
 import moe.tlaster.weipo.controls.StatusView
 import moe.tlaster.weipo.services.models.Status
 import moe.tlaster.weipo.viewmodel.ComposeViewModel
@@ -36,7 +36,7 @@ class TimelineActivity : BaseActivity() {
     @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        recycler_view.layoutManager = AutoStaggeredGridLayoutManager(360.dp.toInt(), StaggeredGridLayoutManager.VERTICAL)
+        recycler_view.layoutManager = AutoStaggeredGridLayoutManager(statusWidth, StaggeredGridLayoutManager.VERTICAL)
         recycler_view.adapter = adapter
         refresh_layout.bindLoadingCollection(viewModel.items)
         account_button.setOnClickListener {

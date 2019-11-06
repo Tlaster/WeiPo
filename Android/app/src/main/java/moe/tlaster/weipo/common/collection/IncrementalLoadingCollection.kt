@@ -40,7 +40,7 @@ class IncrementalLoadingCollection<TSource: IIncrementalSource<T>, T>(
         try {
             result = source.getPagedItemAsync(currentPageIndex++, itemsPerPage)
         } catch (e: Throwable) {
-
+            e.printStackTrace()
         }
         if (result != null && result.any()) {
             addAll(result)

@@ -7,8 +7,8 @@ import moe.tlaster.weipo.services.models.ICanReply
 import java.io.File
 
 class ComposeViewModel(
-    val composeType: ComposeType,
-    val reply: ICanReply?
+    private val composeType: ComposeType,
+    private val reply: ICanReply?
 ) : ViewModel() {
 
     enum class ComposeType {
