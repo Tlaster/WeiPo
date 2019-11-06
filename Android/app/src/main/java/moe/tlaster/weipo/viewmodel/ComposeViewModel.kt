@@ -1,8 +1,6 @@
 package moe.tlaster.weipo.viewmodel
 
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import moe.tlaster.weipo.common.collection.ObservableCollection
 import moe.tlaster.weipo.services.Api
 import java.io.File
@@ -22,19 +20,16 @@ class ComposeViewModel(
         return 1000
     }
     val images = ObservableCollection<File>()
-    val content: String = ""
+    var content: String = ""
 
-    fun commit() {
-        GlobalScope.launch {
-            val picIds = images.mapNotNull { Api.uploadPic(it).picId }
-            val result = when (composeType) {
-                ComposeType.Create -> {
-                    Api.update(content, *picIds.toTypedArray())
-                }
-                ComposeType.Repost -> TODO()
-                ComposeType.Comment -> TODO()
+    suspend fun commit() {
+        val picIds = images.mapNotNull { Api.uploadPic(it).picId }
+        val result = when (composeType) {
+            ComposeType.Create -> {
+                Api.update(content, *picIds.toTypedArray())
             }
-
+            ComposeType.Repost -> TODO()
+            ComposeType.Comment -> TODO()
         }
     }
 }
