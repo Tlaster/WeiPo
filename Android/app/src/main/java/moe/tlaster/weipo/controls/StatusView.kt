@@ -13,6 +13,8 @@ import androidx.core.view.updateMarginsRelative
 import androidx.core.view.updatePaddingRelative
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.control_status.view.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import moe.tlaster.weipo.R
 import moe.tlaster.weipo.activity.*
 import moe.tlaster.weipo.common.adapter.AutoAdapter
@@ -20,19 +22,23 @@ import moe.tlaster.weipo.common.adapter.ItemSelector
 import moe.tlaster.weipo.common.extensions.*
 import moe.tlaster.weipo.common.fromHtml
 import moe.tlaster.weipo.common.openWeiboLink
+import moe.tlaster.weipo.services.Api
 import moe.tlaster.weipo.services.models.*
 import moe.tlaster.weipo.viewmodel.ComposeViewModel
+import java.text.SimpleDateFormat
+import java.util.*
+
 
 class StatusView : LinearLayout {
     private val linkClicked: ((url: String) -> Unit) = {
         openWeiboLink(context, it)
     }
     private lateinit var repostView: StatusView
-    
+
     var data: Any? = null
         set(value) {
             field = value
-            when(value) {
+            when (value) {
                 is Status -> onStatusChanged(value)
                 is Comment -> onCommentChanged(value)
                 is Attitude -> onAttitudeChanged(value)
@@ -41,6 +47,8 @@ class StatusView : LinearLayout {
 
     private fun onAttitudeChanged(value: Attitude) {
         updateHotFlowVisibility(false)
+        story_container.isVisible = false
+        video_container.isVisible = false
         action_container.visibility = View.GONE
         status_title.visibility = View.GONE
         status_title_divider.visibility = View.GONE
@@ -63,7 +71,7 @@ class StatusView : LinearLayout {
         status_content.text = "Likes your tweet"
     }
 
-    private fun setPersonCard(user: User)  {
+    private fun setPersonCard(user: User) {
         user.profileImageURL?.let {
             status_person.avatar = it
         }
@@ -74,6 +82,8 @@ class StatusView : LinearLayout {
 
     private fun onCommentChanged(value: Comment) {
         updateHotFlowVisibility(value.comments != null)
+        story_container.isVisible = false
+        video_container.isVisible = false
         hotflow_more_button.isVisible = value.totalNumber ?: 0L > 0L
         value.comments?.let {
             it as? Comments.ListValue
@@ -138,6 +148,11 @@ class StatusView : LinearLayout {
             status_title_divider.visibility = it
             status_title.text = value.title?.text ?: ""
         }
+
+        video_container.isVisible =
+            value.pageInfo != null && (value.pageInfo.type == "article" || value.pageInfo.type == "video")
+        story_container.isVisible =
+            value.pageInfo != null && value.pageInfo.type == "story"
         status_image.isVisible = value.pics != null
         value.user?.let {
             setPersonCard(it)
@@ -176,6 +191,20 @@ class StatusView : LinearLayout {
             value.attitudesCount.toString()
         } else {
             ""
+        }
+        value.pageInfo?.let { pageInfo ->
+            pageInfo.pagePic?.url?.let { video_image.load(it) }
+            pageInfo.pageTitle?.let { video_title.text = it }
+            pageInfo.content1?.let { video_content1.text = it }
+            pageInfo.content2?.let { video_content2.text = it }
+            video_time.text = kotlin.run {
+                pageInfo.mediaInfo?.duration?.let {
+                    val tz = TimeZone.getTimeZone("UTC")
+                    val df = SimpleDateFormat("HH:mm:ss", Locale.US)
+                    df.timeZone = tz
+                    df.format(Date((it * 1000).toLong()))
+                } ?: ""
+            }
         }
     }
 
@@ -216,7 +245,7 @@ class StatusView : LinearLayout {
         set(value) = status_content.setTextIsSelectable(value)
 
     constructor(context: Context) : super(context)
-    constructor(context: Context, attrs : AttributeSet?) : super(context, attrs)
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
         context,
         attrs,
@@ -251,14 +280,24 @@ class StatusView : LinearLayout {
             data?.let {
                 it as ICanReply
             }?.let {
-                context.openActivity<ComposeActivity>(*ComposeActivity.bundle(ComposeViewModel.ComposeType.Repost, it))
+                context.openActivity<ComposeActivity>(
+                    *ComposeActivity.bundle(
+                        ComposeViewModel.ComposeType.Repost,
+                        it
+                    )
+                )
             }
         }
         comment_button.setOnClickListener { _ ->
             data?.let {
                 it as ICanReply
             }?.let {
-                context.openActivity<ComposeActivity>(*ComposeActivity.bundle(ComposeViewModel.ComposeType.Comment, it))
+                context.openActivity<ComposeActivity>(
+                    *ComposeActivity.bundle(
+                        ComposeViewModel.ComposeType.Comment,
+                        it
+                    )
+                )
             }
 
         }
@@ -279,8 +318,59 @@ class StatusView : LinearLayout {
                 view.cardElevation = 0F
             }
         }
-        setOnClickListener {
-            showStatusDetail()
+//        setOnClickListener {
+//            showStatusDetail()
+//        }
+        video_container.setOnClickListener {
+            data?.let {
+                it as? Status
+            }?.pageInfo?.also { pageInfo ->
+                when (pageInfo.type) {
+                    "video" -> {
+                        val url = pageInfo.urls?.let {
+                            //trick: new [] { "mp4_720p_mp4", "mp4_hd_mp4", "mp4_ld_mp4", "mp4_1080p_mp4", "pre_ld_mp4"}.OrderBy(it => it) => OrderedEnumerable<string, string> { "mp4_1080p_mp4", "mp4_720p_mp4", "mp4_hd_mp4", "mp4_ld_mp4", "pre_ld_mp4" }
+                            it.toList().minBy { it.first }?.second
+                        } ?: pageInfo.mediaInfo?.mp4_720p_mp4 ?: pageInfo.mediaInfo?.streamURLHD
+                        ?: pageInfo.mediaInfo?.streamURL
+                        if (url != null) {
+                            if (url.isEmpty() || !url.startsWith("http")) {
+                                pageInfo.pageURL?.let {
+                                    context.openBrowser(it)
+                                }
+                            } else {
+                                context.openActivity<VideoActivity>(
+                                    // Fix Android P blocking http request
+                                    "url" to url.replace("http://", "https://")
+                                )
+                            }
+                        }
+                    }
+                    "article" -> {
+                        pageInfo.pageURL?.let {
+                            context.openBrowser(it)
+                        }
+                    }
+                }
+            }
+        }
+        story_container.setOnClickListener {
+            data?.let {
+                it as? Status
+            }?.let {
+                it.pageInfo?.pageURL
+            }?.let { link ->
+                GlobalScope.launch {
+                    kotlin.runCatching {
+                        val storyData = Api.storyVideoLink(link)
+                        context.openActivity<VideoActivity>(
+                            // Fix Android P blocking http request
+                            "url" to storyData.storyDataObject!!.stream!!.url!!.replace("http://", "https://")
+                        )
+                    }.onFailure {
+                        context.openBrowser(link)
+                    }
+                }
+            }
         }
     }
 

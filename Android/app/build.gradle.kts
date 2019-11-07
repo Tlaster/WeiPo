@@ -60,7 +60,13 @@ dependencies {
     kapt("com.github.bumptech.glide:compiler:${appConfig.dependencyVersion.glide}")
 
     implementation("org.ocpsoft.prettytime:prettytime:4.0.1.Final")
-    implementation("com.github.chrisbanes:PhotoView:2.3.0")
+
+    implementation("com.github.piasy:BigImageViewer:${appConfig.dependencyVersion.bigImageViewer}")
+    implementation("com.github.piasy:GlideImageLoader:${appConfig.dependencyVersion.bigImageViewer}")
+    implementation("com.github.piasy:ProgressPieIndicator:${appConfig.dependencyVersion.bigImageViewer}")
+    implementation("com.github.piasy:GlideImageViewFactory:${appConfig.dependencyVersion.bigImageViewer}")
+
+    implementation("com.google.android.exoplayer:exoplayer:2.10.7")
 
     testImplementation("junit:junit:4.12")
     androidTestImplementation("androidx.test:runner:1.2.0")

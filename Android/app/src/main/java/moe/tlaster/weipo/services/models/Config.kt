@@ -84,3 +84,40 @@ data class LongTextData (
     @SerialName("attitudes_count")
     val attitudesCount: Long? = null
 )
+
+
+@Serializable
+data class StoryData (
+    @SerialName("object_id")
+    val objectID: String? = null,
+
+    @SerialName("object_type")
+    val objectType: String? = null,
+
+    @SerialName("object")
+    val storyDataObject: Object? = null
+)
+
+@Serializable
+data class Object (
+    val summary: String? = null,
+    val author: User? = null,
+    val stream: Stream? = null,
+
+    @SerialName("created_at")
+    val createdAt: String? = null,
+
+    val image: Image? = null
+)
+
+@Serializable
+data class Image (
+    val width: Long? = null,
+    val url: String? = null,
+    val height: Long? = null
+)
+
+@Serializable
+data class Stream (
+    val url: String? = null
+)

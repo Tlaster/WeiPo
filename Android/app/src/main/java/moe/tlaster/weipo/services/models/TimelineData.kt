@@ -327,6 +327,9 @@ data class MediaInfo(
     @SerialName("stream_url")
     val streamURL: String? = null,
 
+    @SerialName("mp4_720p_mp4")
+    val mp4_720p_mp4: String? = null,
+
     @SerialName("stream_url_hd")
     val streamURLHD: String? = null,
 

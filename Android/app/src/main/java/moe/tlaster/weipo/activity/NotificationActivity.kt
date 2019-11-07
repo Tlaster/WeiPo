@@ -15,7 +15,6 @@ import moe.tlaster.weipo.common.adapter.AutoAdapter
 import moe.tlaster.weipo.common.adapter.IItemSelector
 import moe.tlaster.weipo.common.collection.IncrementalLoadingCollection
 import moe.tlaster.weipo.common.extensions.bindLoadingCollection
-import moe.tlaster.weipo.common.extensions.dp
 import moe.tlaster.weipo.common.extensions.viewModel
 import moe.tlaster.weipo.common.statusWidth
 import moe.tlaster.weipo.viewmodel.INotificationTabItem
@@ -88,7 +87,7 @@ class NotificationActivity : BaseActivity() {
             TabLayoutMediator.TabConfigurationStrategy { tab, position ->
                 viewModel.sources[position].let {
                     tab.text = getString(it.title)
-                    tab.setIcon(it.icon)
+//                    tab.setIcon(it.icon)
                 }
             }).attach()
         view_pager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {

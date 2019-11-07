@@ -1,9 +1,11 @@
 package moe.tlaster.weipo.activity
 
+import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
-import com.bumptech.glide.Glide
-import com.github.chrisbanes.photoview.PhotoView
+import com.github.piasy.biv.indicator.progresspie.ProgressPieIndicator
+import com.github.piasy.biv.view.BigImageView
+import com.github.piasy.biv.view.GlideImageViewFactory
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.activity_image.*
 import moe.tlaster.weipo.R
@@ -35,12 +37,10 @@ class ImageActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         view_pager.adapter = AutoAdapter<ImageData>(ItemSelector(R.layout.item_zoomable_image)).apply {
-            setView<PhotoView>(R.id.image_view) { view, item, _, _ ->
-                Glide.with(view).load(item.source).also {
-                    if (item.height > item.width * 3) {
-                        // TODO:
-                    }
-                }.into(view)
+            setView<BigImageView>(R.id.image_view) { view, item, _, _ ->
+                view.setImageViewFactory(GlideImageViewFactory())
+                view.setProgressIndicator(ProgressPieIndicator())
+                view.showImage(Uri.parse(item.placeHolder), Uri.parse(item.source))
             }
             intent.getParcelableArrayListExtra<ImageData>("image")?.let {
                 items = it

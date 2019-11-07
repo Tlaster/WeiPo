@@ -275,4 +275,11 @@ object Api {
             .awaitWeiboResponse(LongTextData.serializer())
             .getData()
     }
+
+    suspend fun storyVideoLink(pageInfoLink: String): StoryData {
+        return pageInfoLink.replace("/s/video/index", "/s/video/object")
+            .httpGet()
+            .awaitWeiboResponse(StoryData.serializer())
+            .getData()
+    }
 }

@@ -3,6 +3,8 @@ package moe.tlaster.weipo.common
 import android.content.Context
 import moe.tlaster.weipo.activity.UserActivity
 import moe.tlaster.weipo.common.extensions.openActivity
+import moe.tlaster.weipo.common.extensions.openBrowser
+
 
 fun openWeiboLink(context: Context, value: String) {
     when {
@@ -15,7 +17,7 @@ fun openWeiboLink(context: Context, value: String) {
 
         }
         value.startsWith("http") -> {
-
+            context.openBrowser(value)
         }
     }
 }

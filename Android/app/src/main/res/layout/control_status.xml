@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,6 +8,7 @@
     android:layout_height="wrap_content">
 
     <TextView
+        style="@style/TextAppearance.AppCompat.Caption"
         android:id="@+id/status_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -32,6 +33,7 @@
         tools:title="Title" />
 
     <TextView
+        style="@style/TextAppearance.AppCompat.Body1"
         android:id="@+id/status_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -52,6 +54,131 @@
         app:layoutManager=".common.NineGridLayoutManager"
         tools:itemCount="5"
         tools:listitem="@layout/item_image" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/story_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp">
+        <ImageView
+            android:id="@+id/story_image"
+            tools:scaleType="centerCrop"
+            tools:src="@mipmap/ic_launcher_round"
+            app:layout_constraintDimensionRatio="16:9"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"/>
+        <View
+            android:background="#aa000000"
+            app:layout_constraintTop_toTopOf="@id/story_image"
+            app:layout_constraintStart_toStartOf="@id/story_image"
+            app:layout_constraintEnd_toEndOf="@id/story_image"
+            app:layout_constraintBottom_toBottomOf="@id/story_image"
+            android:layout_width="0dp"
+            android:layout_height="0dp"/>
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/story_guideline"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/story_title"
+            app:layout_constraintTop_toBottomOf="@id/story_guideline"
+            android:textColor="@android:color/primary_text_dark"
+            android:gravity="center"
+            style="@style/TextAppearance.AppCompat.Title"
+            android:text="微博故事"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:layout_marginTop="8dp"
+            android:id="@+id/story_name"
+            app:layout_constraintTop_toBottomOf="@id/story_title"
+            android:textColor="@android:color/primary_text_dark"
+            android:gravity="center"
+            tools:text="Story Name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/video_container"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/video_image"
+            tools:scaleType="centerCrop"
+            tools:src="@mipmap/ic_launcher_round"
+            app:layout_constraintDimensionRatio="16:9"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"/>
+        <View
+            android:background="#aa000000"
+            app:layout_constraintTop_toTopOf="@id/video_image"
+            app:layout_constraintStart_toStartOf="@id/video_image"
+            app:layout_constraintEnd_toEndOf="@id/video_image"
+            app:layout_constraintBottom_toBottomOf="@id/video_image"
+            android:layout_width="0dp"
+            android:layout_height="0dp"/>
+        <TextView
+            android:textColor="@android:color/primary_text_dark"
+            android:layout_margin="8dp"
+            tools:text="Video Title"
+            android:id="@+id/video_title"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:gravity="bottom"
+            android:id="@+id/video_content1"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_margin="8dp"
+            android:textColor="@android:color/primary_text_dark"
+            app:layout_constraintBottom_toTopOf="@+id/video_content2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/video_title"
+            tools:text="Video Content1" />
+
+        <TextView
+            android:id="@+id/video_content2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:textColor="@android:color/primary_text_dark"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/video_time"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="Video Content2" />
+        <TextView
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textColor="@android:color/primary_text_dark"
+            tools:text="Video TimeSpan"
+            android:layout_margin="8dp"
+            android:id="@+id/video_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <FrameLayout
         android:id="@+id/repost_container"
@@ -103,6 +230,7 @@
                 android:tint="?attr/colorControlNormal" />
 
             <TextView
+                style="@style/TextAppearance.AppCompat.Body1"
                 android:id="@+id/repost_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -129,6 +257,7 @@
                 android:tint="?attr/colorControlNormal" />
 
             <TextView
+                style="@style/TextAppearance.AppCompat.Body1"
                 android:id="@+id/comment_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -155,6 +284,7 @@
                 android:tint="?attr/colorControlNormal" />
 
             <TextView
+                style="@style/TextAppearance.AppCompat.Body1"
                 android:id="@+id/like_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -181,4 +311,4 @@
                 android:tint="?attr/colorControlNormal" />
         </LinearLayout>
     </LinearLayout>
-</merge>
+</LinearLayout>

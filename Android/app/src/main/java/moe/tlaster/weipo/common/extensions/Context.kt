@@ -3,6 +3,7 @@ package moe.tlaster.weipo.common.extensions
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.widget.Toast
@@ -72,4 +73,8 @@ private fun fillIntentArguments(intent: Intent, params: Array<out Pair<String, A
         }
         return@forEach
     }
+}
+
+fun Context.openBrowser(value: String) {
+    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(value)))
 }
