@@ -15,18 +15,18 @@ import moe.tlaster.weipo.common.extensions.viewModel
 import moe.tlaster.weipo.common.statusWidth
 import moe.tlaster.weipo.controls.StatusView
 import moe.tlaster.weipo.fragment.TabFragment
-import moe.tlaster.weipo.services.models.Status
-import moe.tlaster.weipo.viewmodel.status.RepostTimelineViewModel
+import moe.tlaster.weipo.services.models.Comment
+import moe.tlaster.weipo.viewmodel.status.HotflowViewModel
 
-class RepostTimelineFragment : TabFragment() {
-    private var statusId: Long = 0
-
+class HotflowFratgment : TabFragment() {
     override val titleRes: Int
-        get() = R.string.repost
+        get() = R.string.comment
 
+    private var statusId = 0L
+    private var mid = 0L
     private val viewModel by lazy {
-        viewModel<RepostTimelineViewModel>(factory {
-            RepostTimelineViewModel(statusId)
+        viewModel<HotflowViewModel>(factory {
+            HotflowViewModel(statusId, mid)
         })
     }
 
@@ -41,14 +41,20 @@ class RepostTimelineFragment : TabFragment() {
             }?.let {
                 statusId = it
             }
+            bundle.getLong("mid").takeIf {
+                it != 0L
+            }?.let {
+                mid = it
+            }
         }
         return inflater.inflate(R.layout.layout_list, container)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         recycler_view.layoutManager = AutoStaggeredGridLayoutManager(statusWidth)
-        recycler_view.adapter = IncrementalLoadingAdapter<Status>(ItemSelector(R.layout.item_status)).apply {
+        recycler_view.adapter = IncrementalLoadingAdapter<Comment>(ItemSelector(R.layout.item_status)).apply {
             setView<StatusView>(R.id.item_status) { view, item, _, _ ->
                 view.isTextSelectionEnabled = false
                 view.showRepost = false
@@ -57,10 +63,12 @@ class RepostTimelineFragment : TabFragment() {
             items = viewModel.source
         }
         refresh_layout.bindLoadingCollection(viewModel.source)
+
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putLong("id", statusId)
+        outState.putLong("mid", mid)
     }
 }

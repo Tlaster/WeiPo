@@ -35,3 +35,40 @@ data class RepostTimeline (
 
     val max: Long? = null
 )
+
+
+@Serializable
+data class HotflowData (
+    val data: List<Comment>? = null,
+
+    @SerialName("total_number")
+    val totalNumber: Long? = null,
+
+    val status: Status? = null,
+
+    @SerialName("max_id")
+    val maxID: Long? = null,
+
+    val max: Long? = null,
+
+    @SerialName("max_id_type")
+    val maxIDType: Long? = null
+)
+
+@Serializable
+data class HotflowChildData (
+    val ok: Long? = null,
+    val data: List<Comment>? = null,
+
+    @SerialName("total_number")
+    val totalNumber: Long? = null,
+
+    @SerialName("max_id")
+    val maxID: Long? = null,
+
+    @SerialName("max_id_type")
+    val maxIDType: Long? = null,
+
+    val max: Long? = null,
+    val rootComment: List<Comment>? = null
+)

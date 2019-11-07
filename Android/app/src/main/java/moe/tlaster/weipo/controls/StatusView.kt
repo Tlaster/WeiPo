@@ -4,12 +4,14 @@ import android.content.Context
 import android.graphics.Color
 import android.text.method.LinkMovementMethod
 import android.util.AttributeSet
-import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.cardview.widget.CardView
+import androidx.core.view.isVisible
 import androidx.core.view.updateMarginsRelative
 import androidx.core.view.updatePaddingRelative
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.control_status.view.*
 import moe.tlaster.weipo.R
 import moe.tlaster.weipo.activity.ComposeActivity
@@ -40,9 +42,11 @@ class StatusView : LinearLayout {
         }
 
     private fun onAttitudeChanged(value: Attitude) {
+        updateHotFlowVisibility(false)
         action_container.visibility = View.GONE
         status_title.visibility = View.GONE
         status_title_divider.visibility = View.GONE
+        status_image.isVisible = false
         value.user?.let {
             setPersonCard(it)
         }
@@ -71,6 +75,14 @@ class StatusView : LinearLayout {
     }
 
     private fun onCommentChanged(value: Comment) {
+        updateHotFlowVisibility(value.comments != null)
+        hotflow_more_button.isVisible = value.totalNumber ?: 0L > 0L
+        value.comments?.let {
+            it as? Comments.ListValue
+        }?.let {
+            hotflow_list.updateItemsSource(it.value)
+            hotflow_list.isVisible = it.value.any()
+        }
         action_container.visibility = if (showActions) {
             View.VISIBLE
         } else {
@@ -79,6 +91,7 @@ class StatusView : LinearLayout {
         status_title.visibility = View.GONE
         status_title_divider.visibility = View.GONE
         repost_button.visibility = View.GONE
+        status_image.isVisible = value.pic != null
         value.user?.let {
             setPersonCard(it)
         }
@@ -112,14 +125,12 @@ class StatusView : LinearLayout {
         } else {
             ""
         }
+        hotflow_more_button.text = "${value.totalNumber ?: 0} More"
     }
 
     private fun onStatusChanged(value: Status) {
-        action_container.visibility = if (showActions) {
-            View.VISIBLE
-        } else {
-            View.GONE
-        }
+        updateHotFlowVisibility(false)
+        action_container.isVisible = showActions
         if (value.title == null) {
             View.GONE
         } else {
@@ -129,6 +140,7 @@ class StatusView : LinearLayout {
             status_title_divider.visibility = it
             status_title.text = value.title?.text ?: ""
         }
+        status_image.isVisible = value.pics != null
         value.user?.let {
             setPersonCard(it)
         }
@@ -140,7 +152,7 @@ class StatusView : LinearLayout {
                 linkClicked?.invoke(url)
             }
         }
-        value.pics.also {
+        value.pics?.also {
             status_image.updateItemsSource(it)
         }
         if (value.retweetedStatus != null && showRepost) {
@@ -169,6 +181,11 @@ class StatusView : LinearLayout {
         }
     }
 
+    private fun updateHotFlowVisibility(isVisible: Boolean) {
+        hotflow_list.isVisible = isVisible
+        hotflow_more_button.isVisible = isVisible
+    }
+
     private fun initRepostView() {
         if (!this::repostView.isInitialized) {
             repostView = StatusView(context)
@@ -187,21 +204,13 @@ class StatusView : LinearLayout {
     var showActions = true
         set(value) {
             field = value
-            action_container?.visibility = if (value) {
-                View.VISIBLE
-            } else {
-                View.GONE
-            }
+            action_container?.isVisible = value
         }
 
     var showRepost = true
         set(value) {
             field = value
-            repost_container?.visibility = if (value) {
-                View.VISIBLE
-            } else {
-                View.GONE
-            }
+            repost_container?.isVisible = value
         }
 
     var isTextSelectionEnabled: Boolean
@@ -259,11 +268,29 @@ class StatusView : LinearLayout {
 
         }
         status_content.setOnClickListener {
-            data?.let {
-                data as? Status
-            }?.let {
-                context.openActivity<StatusActivity>(*StatusActivity.bundle(it))
+            showStatusDetail()
+        }
+        hotflow_list.layoutManager = LinearLayoutManager(context)
+        hotflow_list.adapter = AutoAdapter<Comment>(ItemSelector(R.layout.item_status)).apply {
+            setView<StatusView>(R.id.item_status) { view, item, _, _ ->
+                view.showActions = false
+                view.showRepost = false
+                view.data = item
             }
+            setView<CardView>(R.id.item_status_card) { view, _, _, _ ->
+                view.cardElevation = 0F
+            }
+        }
+        setOnClickListener {
+            showStatusDetail()
+        }
+    }
+
+    private fun showStatusDetail() {
+        data?.let {
+            data as? Status
+        }?.let {
+            context.openActivity<StatusActivity>(*StatusActivity.bundle(it))
         }
     }
 

@@ -4,6 +4,11 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import kotlinx.serialization.*
 import kotlinx.serialization.internal.LongDescriptor
+import kotlinx.serialization.internal.StringDescriptor
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonInput
+import kotlinx.serialization.json.JsonLiteral
+import moe.tlaster.weipo.common.extensions.toObject
 
 interface IWithUser {
     val user: User?
@@ -142,7 +147,7 @@ data class Status(
     @SerialName("pic_num")
     val picNum: Long? = null,
 
-    val pics: List<Pic> = listOf(),
+    val pics: List<Pic>? = null,
     val bid: String? = null,
     val pid: Long? = null,
     val pidstr: String? = null,
@@ -422,12 +427,47 @@ data class StatusVisible(
 
 
 @Serializable
-@Parcelize
-open class Comments: Parcelable {
+sealed class Comments : Parcelable {
     @Parcelize
-    class BoolValue(val value: Boolean) : Comments()
+    @Serializable
+    data class BoolValue(val value: Boolean) : Comments()
+
     @Parcelize
-    class CommentArrayValue(val value: List<Comment>) : Comments()
+    @Serializable
+    data class ListValue(val value: List<Comment>) : Comments()
+
+    @Serializer(forClass = Comments::class)
+    companion object : KSerializer<Comments> {
+        override val descriptor: SerialDescriptor =
+            StringDescriptor.withName("Comments")
+
+        override fun serialize(encoder: Encoder, obj: Comments) {
+            when (obj) {
+                is BoolValue -> encoder.encode(BoolValue.serializer(), obj)
+                is ListValue -> encoder.encode(ListValue.serializer(), obj)
+            }
+        }
+
+        @UseExperimental(ImplicitReflectionSerializer::class)
+        override fun deserialize(decoder: Decoder): Comments {
+            return decoder.let {
+                it as? JsonInput
+            }?.decodeJson()?.let {
+
+                when (it) {
+                    is JsonArray -> {
+                        ListValue(it.map { it.jsonObject.toObject<Comment>() })
+                    }
+                    is JsonLiteral -> {
+                        BoolValue(it.booleanOrNull ?: false)
+                    }
+                    else -> {
+                        BoolValue(false)
+                    }
+                }
+            } ?: throw Error()
+        }
+    }
 }
 
 @Serializable

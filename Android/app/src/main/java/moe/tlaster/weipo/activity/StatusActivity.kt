@@ -6,6 +6,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_status.*
 import moe.tlaster.weipo.R
 import moe.tlaster.weipo.common.adapter.FragmentAdapter
+import moe.tlaster.weipo.fragment.status.HotflowFratgment
 import moe.tlaster.weipo.fragment.status.RepostTimelineFragment
 import moe.tlaster.weipo.services.models.Status
 
@@ -30,12 +31,19 @@ class StatusActivity : BaseActivity() {
                 arguments = bundleOf(
                     "id" to status?.id?.toLongOrNull()
                 )
+            },
+            HotflowFratgment().apply {
+                arguments = bundleOf(
+                    "id" to status?.id?.toLongOrNull(),
+                    "mid" to status?.mid?.toLongOrNull()
+                )
             }
         )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        item_status.isTextSelectionEnabled = true
         item_status.data = status
         view_pager.adapter = FragmentAdapter(supportFragmentManager, lifecycle).apply {
             items = tabItems

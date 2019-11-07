@@ -245,4 +245,25 @@ object Api {
             .awaitWeiboResponse(RepostTimeline.serializer())
             .getData()
     }
+
+    suspend fun hotflow(id: Long, mid: Long, maxid: Long = 0): HotflowData {
+        return "$HOST/comments/hotflow"
+            .httpGet(listOf(
+                "id" to id,
+                "mid" to mid,
+                "max_id" to maxid,
+                "max_id_type" to 0
+            ))
+            .awaitWeiboResponse(HotflowData.serializer())
+            .getData()
+    }
+
+    suspend fun hotflowChild(cid: Long, maxid: Long): HotflowChildData {
+        return "$HOST/comments/hotFlowChild"
+            .httpGet(listOf(
+                "cid" to cid,
+                "max_id" to maxid
+            ))
+            .awaitObject(HotflowChildData.serializer())
+    }
 }
