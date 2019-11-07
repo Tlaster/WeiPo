@@ -6,9 +6,12 @@ import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_status.*
 import moe.tlaster.weipo.R
 import moe.tlaster.weipo.common.adapter.FragmentAdapter
+import moe.tlaster.weipo.common.extensions.factory
+import moe.tlaster.weipo.common.extensions.viewModel
 import moe.tlaster.weipo.fragment.status.HotflowFratgment
 import moe.tlaster.weipo.fragment.status.RepostTimelineFragment
 import moe.tlaster.weipo.services.models.Status
+import moe.tlaster.weipo.viewmodel.status.StatusViewModel
 
 class StatusActivity : BaseActivity() {
     companion object {
@@ -18,6 +21,8 @@ class StatusActivity : BaseActivity() {
             )
         }
     }
+
+    private lateinit var viewModel: StatusViewModel
 
     private val status by lazy {
         intent.getParcelableExtra<Status>("status")
@@ -64,6 +69,11 @@ class StatusActivity : BaseActivity() {
                     }
                 }
             }).attach()
+        viewModel = viewModel(factory {
+            StatusViewModel(status) {
+                item_status.updateContent(it)
+            }
+        })
     }
 
 }

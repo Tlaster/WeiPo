@@ -23,8 +23,8 @@ android {
         getByName("release") {
             isMinifyEnabled = false
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                    getDefaultProguardFile("proguard-android-optimize.txt"),
+                    "proguard-rules.pro"
             )
         }
     }
@@ -35,7 +35,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-    tasks.withType<KotlinCompile> {
+    tasks.withType < KotlinCompile > {
         kotlinOptions.jvmTarget = "1.8"
     }
 }
@@ -60,6 +60,7 @@ dependencies {
     kapt("com.github.bumptech.glide:compiler:${appConfig.dependencyVersion.glide}")
 
     implementation("org.ocpsoft.prettytime:prettytime:4.0.1.Final")
+    implementation("com.github.chrisbanes:PhotoView:2.3.0")
 
     testImplementation("junit:junit:4.12")
     androidTestImplementation("androidx.test:runner:1.2.0")

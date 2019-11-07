@@ -266,4 +266,13 @@ object Api {
             ))
             .awaitObject(HotflowChildData.serializer())
     }
+
+    suspend fun extend(id: Long): LongTextData {
+        return "$HOST/statuses/extend"
+            .httpGet(listOf(
+                "id" to id
+            ))
+            .awaitWeiboResponse(LongTextData.serializer())
+            .getData()
+    }
 }

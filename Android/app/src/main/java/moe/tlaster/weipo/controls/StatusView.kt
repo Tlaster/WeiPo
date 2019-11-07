@@ -14,9 +14,7 @@ import androidx.core.view.updatePaddingRelative
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.control_status.view.*
 import moe.tlaster.weipo.R
-import moe.tlaster.weipo.activity.ComposeActivity
-import moe.tlaster.weipo.activity.StatusActivity
-import moe.tlaster.weipo.activity.UserActivity
+import moe.tlaster.weipo.activity.*
 import moe.tlaster.weipo.common.adapter.AutoAdapter
 import moe.tlaster.weipo.common.adapter.ItemSelector
 import moe.tlaster.weipo.common.extensions.*
@@ -100,7 +98,7 @@ class StatusView : LinearLayout {
         }
         value.text?.also { html ->
             status_content.text = fromHtml(html, status_content) { url ->
-                linkClicked?.invoke(url)
+                linkClicked.invoke(url)
             }
         }
         value.pic?.also {
@@ -232,7 +230,7 @@ class StatusView : LinearLayout {
             setView<ImageView>(R.id.image) { view, item, _, _ ->
                 view.load(item.url ?: "")
                 view.setOnClickListener {
-                    onImageClicked(item)
+                    onImageClicked(item, items)
                 }
             }
         }
@@ -286,7 +284,16 @@ class StatusView : LinearLayout {
         }
     }
 
+    fun updateContent(content: String) {
+        status_content.text = fromHtml(content, status_content) { url ->
+            linkClicked.invoke(url)
+        }
+    }
+
     private fun showStatusDetail() {
+        if (isTextSelectionEnabled) {
+            return
+        }
         data?.let {
             data as? Status
         }?.let {
@@ -294,7 +301,17 @@ class StatusView : LinearLayout {
         }
     }
 
-    private fun onImageClicked(item: Pic) {
-        // TODO:
+    private fun onImageClicked(
+        item: Pic,
+        items: List<Pic>
+    ) {
+        context.openActivity<ImageActivity>(*ImageActivity.bundle(items.map {
+            ImageData(
+                placeHolder = it.url ?: "",
+                source = it.large?.url ?: "",
+                width = it.large?.geo?.width ?: 0L,
+                height = it.large?.geo?.height ?: 0L
+            )
+        }, items.indexOf(item)))
     }
 }

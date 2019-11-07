@@ -72,3 +72,15 @@ data class HotflowChildData (
     val max: Long? = null,
     val rootComment: List<Comment>? = null
 )
+
+@Serializable
+data class LongTextData (
+    val ok: Long? = null,
+    val longTextContent: String? = null,
+    @SerialName("reposts_count")
+    val repostsCount: Long? = null,
+    @SerialName("comments_count")
+    val commentsCount: Long? = null,
+    @SerialName("attitudes_count")
+    val attitudesCount: Long? = null
+)
