@@ -327,22 +327,28 @@ class StatusView : LinearLayout {
             }?.pageInfo?.also { pageInfo ->
                 when (pageInfo.type) {
                     "video" -> {
-                        val url = pageInfo.urls?.let {
+                        var url = pageInfo.urls?.let {
                             //trick: new [] { "mp4_720p_mp4", "mp4_hd_mp4", "mp4_ld_mp4", "mp4_1080p_mp4", "pre_ld_mp4"}.OrderBy(it => it) => OrderedEnumerable<string, string> { "mp4_1080p_mp4", "mp4_720p_mp4", "mp4_hd_mp4", "mp4_ld_mp4", "pre_ld_mp4" }
                             it.toList().minBy { it.first }?.second
-                        } ?: pageInfo.mediaInfo?.mp4_720p_mp4 ?: pageInfo.mediaInfo?.streamURLHD
-                        ?: pageInfo.mediaInfo?.streamURL
-                        if (url != null) {
-                            if (url.isEmpty() || !url.startsWith("http")) {
-                                pageInfo.pageURL?.let {
-                                    context.openBrowser(it)
-                                }
-                            } else {
-                                context.openActivity<VideoActivity>(
-                                    // Fix Android P blocking http request
-                                    "url" to url.replace("http://", "https://")
-                                )
+                        }
+                        if (url.isNullOrEmpty()) {
+                            url = pageInfo.mediaInfo?.mp4_720p_mp4
+                        }
+                        if (url.isNullOrEmpty()) {
+                            url = pageInfo.mediaInfo?.streamURLHD
+                        }
+                        if (url.isNullOrEmpty()) {
+                            url = pageInfo.mediaInfo?.streamURL
+                        }
+                        if (url.isNullOrEmpty() || !url.startsWith("http")) {
+                            pageInfo.pageURL?.let {
+                                context.openBrowser(it)
                             }
+                        } else {
+                            context.openActivity<VideoActivity>(
+                                // Fix Android P blocking http request
+                                "url" to url.replace("http://", "https://")
+                            )
                         }
                     }
                     "article" -> {
