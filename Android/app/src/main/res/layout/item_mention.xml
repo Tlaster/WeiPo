@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Mention" />
+            android:text="@string/mention" />
 
         <com.google.android.material.radiobutton.MaterialRadioButton
             android:id="@+id/radio_mention_cmt"
@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="MentionComment" />
+            android:text="@string/mention_cmt" />
     </RadioGroup>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

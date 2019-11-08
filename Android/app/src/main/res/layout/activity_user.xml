@@ -112,7 +112,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:text="Status" />
+                            android:text="@string/statuses" />
 
                         <TextView
                             android:maxLines="1"
@@ -133,7 +133,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:text="Following" />
+                            android:text="@string/follow" />
 
                         <TextView
                             android:maxLines="1"
@@ -155,7 +155,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:text="Follower" />
+                            android:text="@string/fans" />
 
                         <TextView
                             android:maxLines="1"
@@ -165,9 +165,11 @@
                             tools:text="Following" />
                     </LinearLayout>
                     <Button
+                        tools:visibility="visible"
+                        android:visibility="gone"
                         android:textAllCaps="false"
                         android:id="@+id/follow_button"
-                        android:text="Follow"
+                        tools:text="@string/follow"
                         style="@style/Widget.MaterialComponents.Button"
                         android:minWidth="0dp"
                         android:minHeight="0dp"

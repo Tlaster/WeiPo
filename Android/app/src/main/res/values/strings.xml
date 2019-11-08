@@ -7,5 +7,11 @@
     <string name="direct_message">Direct Message</string>
     <string name="statuses">Statuses</string>
     <string name="repost">Repost</string>
+    <string name="follow">Follow</string>
+    <string name="fans">Fans</string>
+    <string name="attitude_action_text">Likes your tweet</string>
+    <string name="follow_state_twoway">FollowTwoway</string>
+    <string name="follow_state_fans_only">Your fans</string>
+    <string name="follow_state_follow_only">Following</string>
 
 </resources>

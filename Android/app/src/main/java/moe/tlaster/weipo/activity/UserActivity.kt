@@ -1,8 +1,8 @@
 package moe.tlaster.weipo.activity
 
 import android.os.Bundle
-import android.view.View
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.tabs.TabLayoutMediator
@@ -74,6 +74,9 @@ class UserActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         view_pager.adapter = pagerAdapter
+        follow_button.setOnClickListener {
+            viewModel.updateFollow()
+        }
         viewModel.profile.observe(this, Observer<ProfileData> { profile ->
             profile.userInfo?.coverImagePhone?.let {
                 user_background.load(it)
@@ -89,11 +92,7 @@ class UserActivity : BaseActivity() {
             profile.userInfo?.verifiedReason?.let {
                 user_verify.text = it
             }
-            user_verify.visibility = if (profile.userInfo?.verified == true) {
-                View.VISIBLE
-            } else {
-                View.GONE
-            }
+            user_verify.isVisible = profile.userInfo?.verified == true
             profile.userInfo?.description?.let {
                 user_desc.text = it
             }
@@ -106,35 +105,57 @@ class UserActivity : BaseActivity() {
             profile.userInfo?.followersCount?.let {
                 user_follower_count.text = it.toString()
             }
-            profile.userInfo?.id?.let { userId ->
-                profile.tabsInfo?.tabs?.let { tabs ->
-                    tabItems = tabs.map { tab ->
-                        if (fragmentMapping.containsKey(tab.tabType) && tab.containerid != null) {
-                            return@map fragmentMapping[tab.tabType]!!.invoke(userId, tab.containerid).apply {
+            if (tabItems.isEmpty()) {
+                profile.userInfo?.id?.let { userId ->
+                    profile.tabsInfo?.tabs?.let { tabs ->
+                        tabItems = tabs.map { tab ->
+                            if (fragmentMapping.containsKey(tab.tabType) && tab.containerid != null) {
+                                return@map fragmentMapping[tab.tabType]!!.invoke(
+                                    userId,
+                                    tab.containerid
+                                ).apply {
+                                    title = tab.title.toString()
+                                }
+                            }
+                            return@map EmptyTabFragment().apply {
                                 title = tab.title.toString()
                             }
+                        } + FollowFragment().apply {
+                            arguments = bundleOf(
+                                "containerId" to containerId,
+                                "userId" to userId
+                            )
+                        } + FansFragment().apply {
+                            arguments = bundleOf(
+                                "containerId" to containerId,
+                                "userId" to userId
+                            )
                         }
-                        return@map EmptyTabFragment().apply {
-                            title = tab.title.toString()
-                        }
-                    } + FollowFragment().apply {
-                        arguments = bundleOf(
-                            "containerId" to containerId,
-                            "userId" to userId
-                        )
-                        title = "Follow"
-                    } + FansFragment().apply {
-                        arguments = bundleOf(
-                            "containerId" to containerId,
-                            "userId" to userId
-                        )
-                        title = "Fans"
+                    }
+                }
+                profile.tabsInfo?.selectedTab?.let {
+                    view_pager.post {
+                        view_pager.setCurrentItem(it.toInt(), false)
                     }
                 }
             }
-            profile.tabsInfo?.selectedTab?.let {
-                view_pager.post {
-                    view_pager.setCurrentItem(it.toInt(), false)
+            if (profile?.userInfo?.id == viewModel.config.uid?.toLongOrNull()) {
+                follow_button.isVisible = false
+            } else {
+                follow_button.isVisible = true
+                follow_button.text = when {
+                    profile.userInfo?.followMe == true && profile.userInfo.following == true -> {
+                        getString(R.string.follow_state_twoway)
+                    }
+                    profile.userInfo?.followMe == true -> {
+                        getString(R.string.follow_state_fans_only)
+                    }
+                    profile.userInfo?.following == true -> {
+                        getString(R.string.follow_state_follow_only)
+                    }
+                    else -> {
+                        getString(R.string.follow)
+                    }
                 }
             }
         })

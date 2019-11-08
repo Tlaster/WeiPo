@@ -69,6 +69,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <ImageButton
+            android:id="@+id/emoji_button"
             android:src="@drawable/ic_insert_emoticon_black_24dp"
             android:minWidth="0dp"
             android:minHeight="0dp"

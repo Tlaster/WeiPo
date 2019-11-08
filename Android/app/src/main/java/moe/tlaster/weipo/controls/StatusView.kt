@@ -68,7 +68,7 @@ class StatusView : LinearLayout {
         } else {
             View.VISIBLE
         }
-        status_content.text = "Likes your tweet"
+        status_content.text = context.getString(R.string.attitude_action_text)
     }
 
     private fun setPersonCard(user: User) {
@@ -133,7 +133,7 @@ class StatusView : LinearLayout {
         } else {
             ""
         }
-        hotflow_more_button.text = "${value.totalNumber ?: 0} Emoji"
+        hotflow_more_button.text = "${value.totalNumber ?: 0} More"
     }
 
     private fun onStatusChanged(value: Status) {

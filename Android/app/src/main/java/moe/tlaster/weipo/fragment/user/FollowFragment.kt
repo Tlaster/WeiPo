@@ -8,7 +8,6 @@ import moe.tlaster.weipo.common.AutoStaggeredGridLayoutManager
 import moe.tlaster.weipo.common.adapter.IncrementalLoadingAdapter
 import moe.tlaster.weipo.common.adapter.ItemSelector
 import moe.tlaster.weipo.common.extensions.bindLoadingCollection
-import moe.tlaster.weipo.common.extensions.dp
 import moe.tlaster.weipo.common.extensions.factory
 import moe.tlaster.weipo.common.extensions.viewModel
 import moe.tlaster.weipo.common.userWidth
@@ -20,6 +19,8 @@ import moe.tlaster.weipo.viewmodel.user.FollowViewModel
 class FollowFragment : UserTabFragment() {
     override val contentLayoutId: Int
         get() = R.layout.layout_list
+    override val titleRes: Int
+        get() = R.string.follow
     val viewModel by lazy {
         viewModel<FollowViewModel>(factory {
             FollowViewModel(userId)

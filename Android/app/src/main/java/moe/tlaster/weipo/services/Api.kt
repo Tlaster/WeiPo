@@ -289,4 +289,26 @@ object Api {
             .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.16 Safari/537.36 Edg/79.0.309.15")
             .awaitObject(EmojiData.serializer())
     }
+
+    suspend fun follow(uid: Long): User {
+        val st = config().st
+        return "$HOST/api/friendships/create"
+            .httpPost(listOf(
+                "st" to st,
+                "uid" to uid
+            ))
+            .awaitWeiboResponse(User.serializer())
+            .getData()
+    }
+
+    suspend fun unfollow(uid: Long): User {
+        val st = config().st
+        return "$HOST/api/friendships/destory"
+            .httpPost(listOf(
+                "st" to st,
+                "uid" to uid
+            ))
+            .awaitWeiboResponse(User.serializer())
+            .getData()
+    }
 }

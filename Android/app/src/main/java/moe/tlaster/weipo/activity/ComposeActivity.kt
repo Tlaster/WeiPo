@@ -220,6 +220,9 @@ class ComposeActivity : BaseActivity() {
         } else {
             updateEmojiView()
         }
+        emoji_button.setOnClickListener {
+            toggleSoftInput()
+        }
     }
 
     @UseExperimental(ExperimentalCoroutinesApi::class)

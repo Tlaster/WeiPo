@@ -8,7 +8,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.inputmethod.InputMethodManager
-import android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import java.io.Serializable
@@ -94,9 +93,9 @@ fun Context.getNavigationBarHeight(): Int {
 }
 
 
-fun Context.showSoftInput() {
+fun Context.toggleSoftInput() {
     val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-    imm.toggleSoftInput(SHOW_IMPLICIT, 0)
+    imm.toggleSoftInput(0, 0)
 }
 
 @TargetApi(android.os.Build.VERSION_CODES.P)
