@@ -6,12 +6,13 @@ import com.github.kittinunf.fuel.core.FoldableResponseInterceptor
 import com.github.kittinunf.fuel.core.RequestTransformer
 import com.github.kittinunf.fuel.core.ResponseTransformer
 import kotlinx.serialization.ImplicitReflectionSerializer
+import kotlinx.serialization.UnstableDefault
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.parseMap
 
 
 object CookieRequestInterceptor : FoldableRequestInterceptor {
-    @ImplicitReflectionSerializer
+    @UseExperimental(ImplicitReflectionSerializer::class)
     override fun invoke(next: RequestTransformer): RequestTransformer {
         return { request ->
             Settings.get("user_cookie", "").takeIf {

@@ -1,11 +1,14 @@
 package moe.tlaster.weipo.common.extensions
 
+import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
+import android.view.inputmethod.InputMethodManager
+import android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import java.io.Serializable
@@ -77,4 +80,43 @@ private fun fillIntentArguments(intent: Intent, params: Array<out Pair<String, A
 
 fun Context.openBrowser(value: String) {
     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(value)))
+}
+
+
+fun Context.getStatusBarHeight(): Int {
+    val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
+    return resources.getDimensionPixelSize(resourceId)
+}
+
+fun Context.getNavigationBarHeight(): Int {
+    val resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
+    return resources.getDimensionPixelSize(resourceId)
+}
+
+
+fun Context.showSoftInput() {
+    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.toggleSoftInput(SHOW_IMPLICIT, 0)
+}
+
+@TargetApi(android.os.Build.VERSION_CODES.P)
+fun Activity.getTopCutoutHeight(): Int {
+    val decorView = window.decorView
+    var cutOffHeight = 0
+    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+        val windowInsets = decorView.rootWindowInsets
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+            val displayCutout = windowInsets.displayCutout
+            if (displayCutout != null) {
+                val list = displayCutout.boundingRects
+                for (rect in list) {
+                    if (rect.top == 0) {
+                        cutOffHeight += rect.bottom - rect.top
+                    }
+                }
+            }
+        }
+
+    }
+    return cutOffHeight
 }

@@ -151,6 +151,7 @@
 
         <TextView
             android:gravity="bottom"
+            android:maxLines="2"
             android:id="@+id/video_content1"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
@@ -163,6 +164,7 @@
 
         <TextView
             android:id="@+id/video_content2"
+            android:maxLines="2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"

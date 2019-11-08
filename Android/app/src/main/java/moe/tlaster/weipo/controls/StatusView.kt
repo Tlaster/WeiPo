@@ -133,7 +133,7 @@ class StatusView : LinearLayout {
         } else {
             ""
         }
-        hotflow_more_button.text = "${value.totalNumber ?: 0} More"
+        hotflow_more_button.text = "${value.totalNumber ?: 0} Emoji"
     }
 
     private fun onStatusChanged(value: Status) {

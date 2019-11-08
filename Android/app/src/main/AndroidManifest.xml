@@ -19,7 +19,7 @@
         <activity android:name=".activity.StatusActivity" />
         <activity
             android:name=".activity.ComposeActivity"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".activity.UserActivity" />
         <activity android:name=".activity.NotificationActivity" />
         <activity android:name=".activity.TimelineActivity" />

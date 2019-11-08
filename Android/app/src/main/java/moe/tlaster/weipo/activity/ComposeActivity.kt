@@ -2,25 +2,54 @@ package moe.tlaster.weipo.activity
 
 import android.app.Activity
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
+import androidx.core.view.updateLayoutParams
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.tabs.TabLayoutMediator
+import com.hold1.keyboardheightprovider.KeyboardHeightProvider
 import kotlinx.android.synthetic.main.activity_compose.*
+import kotlinx.coroutines.*
 import moe.tlaster.weipo.R
+import moe.tlaster.weipo.common.AutoStaggeredGridLayoutManager
 import moe.tlaster.weipo.common.SimpleItemTouchHelperCallback
+import moe.tlaster.weipo.common.adapter.AutoAdapter
 import moe.tlaster.weipo.common.adapter.IncrementalLoadingAdapter
 import moe.tlaster.weipo.common.adapter.ItemSelector
 import moe.tlaster.weipo.common.collection.CollectionChangedEventArg
 import moe.tlaster.weipo.common.extensions.*
+import moe.tlaster.weipo.common.isMiUi
+import moe.tlaster.weipo.services.Api
+import moe.tlaster.weipo.services.models.Emoji
 import moe.tlaster.weipo.services.models.ICanReply
 import moe.tlaster.weipo.services.models.Status
 import moe.tlaster.weipo.viewmodel.ComposeViewModel
 import java.io.File
 import java.util.*
 
+
+val emojis = GlobalScope.async(Dispatchers.IO, start = CoroutineStart.LAZY) {
+    val result = Api.emoji()
+    val list = arrayListOf<Emoji>()
+    result.data?.usual?.let {
+        list.addAll(it.values.flatten())
+    }
+    result.data?.more?.let {
+        list.addAll(it.values.flatten())
+    }
+    result.data?.brand?.norm?.let {
+        list.addAll(it.values.flatten())
+    }
+    return@async list.groupBy {
+        it.category ?: ""
+    }
+}
 
 class ComposeActivity : BaseActivity() {
     companion object {
@@ -95,6 +124,45 @@ class ComposeActivity : BaseActivity() {
         })
     }
 
+    private val emojiAdapter by lazy {
+        AutoAdapter<Pair<String, List<Emoji>>>(ItemSelector(R.layout.layout_pure_list)).apply {
+            setView<RecyclerView>(R.id.recycler_view) { view, item ->
+                view.layoutManager = AutoStaggeredGridLayoutManager(40.dp.toInt())
+                view.adapter = AutoAdapter<Emoji>(ItemSelector(R.layout.item_emoji)).apply {
+                    setView<ImageView>(R.id.image) { view: ImageView, item: Emoji ->
+                        item.url?.let { view.load("https:$it") }
+                        view.setOnClickListener {
+                            item.value?.let { emojiValue ->
+                                compose_input.text.insert(compose_input.selectionStart, emojiValue)
+                            }
+                        }
+                    }
+                    items = item.second
+                }
+            }
+        }
+    }
+
+    private var keyboardHeight = 0
+        set(value) {
+            field = value
+            if (value > 0) {
+                emoji_container.updateLayoutParams {
+                    height = value.let {
+                        var result = it
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+//                            result += getTopCutoutHeight()
+                        }
+                        if (isMiUi() && Settings.Global.getInt(contentResolver, "force_fsg_nav_bar", 0) != 0) {
+                            result += getNavigationBarHeight()
+                        }
+                        result
+                    }
+                }
+            }
+        }
+    private lateinit var keyboardHeightProvider: KeyboardHeightProvider
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         compose_input.post {
@@ -133,6 +201,43 @@ class ComposeActivity : BaseActivity() {
                 }
             }
         }
+        view_pager.adapter = emojiAdapter
+        keyboardHeightProvider = KeyboardHeightProvider(this).apply {
+            addKeyboardListener(object : KeyboardHeightProvider.KeyboardListener {
+                override fun onHeightChanged(height: Int) {
+                    keyboardHeight = height
+                }
+            })
+        }
+        if (emojis.start()) {
+            emojis.invokeOnCompletion {
+                if (!isFinishing) {
+                    runOnMainThread {
+                        updateEmojiView()
+                    }
+                }
+            }
+        } else {
+            updateEmojiView()
+        }
+    }
+
+    @UseExperimental(ExperimentalCoroutinesApi::class)
+    private fun updateEmojiView() {
+        val result = emojis.getCompleted()
+        emojiAdapter.items = result.toList()
+        TabLayoutMediator(
+            tab_layout,
+            view_pager,
+            TabLayoutMediator.TabConfigurationStrategy { tab, position ->
+                result.keys.toList()[position].let {
+                    if (it.isNotEmpty()) {
+                        tab.setText(it)
+                    } else {
+
+                    }
+                }
+            }).attach()
     }
 
     private fun openImagePicker() {
@@ -175,5 +280,16 @@ class ComposeActivity : BaseActivity() {
             }
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        keyboardHeightProvider.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        keyboardHeightProvider.onPause()
+    }
+
 }
 

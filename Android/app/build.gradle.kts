@@ -68,6 +68,8 @@ dependencies {
 
     implementation("com.google.android.exoplayer:exoplayer:2.10.7")
 
+    implementation("com.hold1:keyboardheightprovider:0.0.9")
+
     testImplementation("junit:junit:4.12")
     androidTestImplementation("androidx.test:runner:1.2.0")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.2.0")

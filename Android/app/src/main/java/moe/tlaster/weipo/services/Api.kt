@@ -282,4 +282,11 @@ object Api {
             .awaitWeiboResponse(StoryData.serializer())
             .getData()
     }
+
+    suspend fun emoji(): EmojiData {
+        return "https://weibo.com/aj/mblog/face?type=face"
+            .httpGet()
+            .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.16 Safari/537.36 Edg/79.0.309.15")
+            .awaitObject(EmojiData.serializer())
+    }
 }

@@ -121,3 +121,35 @@ data class Image (
 data class Stream (
     val url: String? = null
 )
+
+@Serializable
+data class EmojiData (
+    val code: String? = null,
+    val msg: String? = null,
+    val data: Data? = null
+)
+
+@Serializable
+data class Data (
+    val usual: Map<String, List<Emoji>>? = null,
+    val more: Map<String, List<Emoji>>? = null,
+    val brand: Brand? = null
+)
+
+@Serializable
+data class Brand (
+    val norm: Map<String, List<Emoji>>? = null
+)
+
+@Serializable
+data class Emoji (
+    val phrase: String? = null,
+    val type: String? = null,
+    val url: String? = null,
+    val hot: Boolean? = null,
+    val common: Boolean? = null,
+    val category: String? = null,
+    val icon: String? = null,
+    val value: String? = null,
+    val picid: String? = null
+)

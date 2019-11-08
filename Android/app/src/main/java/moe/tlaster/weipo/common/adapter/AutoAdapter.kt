@@ -100,4 +100,13 @@ open class AutoAdapter<T>(
             }
         }
     }
+    fun <K : View> setView(@IdRes id: Int, action: (view: K, item: T) -> Unit) {
+        customActions[id] = { view, item, _, _ ->
+            view.let {
+                it as? K
+            }?.let {
+                action.invoke(it, item)
+            }
+        }
+    }
 }
