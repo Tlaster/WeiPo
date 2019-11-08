@@ -19,6 +19,7 @@ class DependencyVersion {
     val glide = "4.10.0"
     val bigImageViewer = "1.6.1"
     val compose = "0.1.0-dev01"
+    val appCenter = "2.5.0"
 }
 
 val Project.appConfig

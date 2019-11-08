@@ -66,6 +66,9 @@ dependencies {
     implementation("com.github.piasy:ProgressPieIndicator:${appConfig.dependencyVersion.bigImageViewer}")
     implementation("com.github.piasy:GlideImageViewFactory:${appConfig.dependencyVersion.bigImageViewer}")
 
+    implementation("com.microsoft.appcenter:appcenter-analytics:${appConfig.dependencyVersion.appCenter}")
+    implementation("com.microsoft.appcenter:appcenter-crashes:${appConfig.dependencyVersion.appCenter}")
+
     implementation("com.google.android.exoplayer:exoplayer:2.10.7")
 
     implementation("com.hold1:keyboardheightprovider:0.0.9")
