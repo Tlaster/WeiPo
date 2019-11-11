@@ -1,14 +1,16 @@
-package moe.tlaster.weipo.activity
+package moe.tlaster.weipo.fragment
 
 import android.os.Bundle
+import android.view.View
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
-import kotlinx.android.synthetic.main.activity_notification.*
+import kotlinx.android.synthetic.main.fragment_notification.*
 import moe.tlaster.weipo.R
 import moe.tlaster.weipo.common.AutoStaggeredGridLayoutManager
 import moe.tlaster.weipo.common.adapter.AutoAdapter
@@ -31,17 +33,15 @@ class NotificationSelector: IItemSelector<INotificationTabItem<out Any>> {
     }
 }
 
-class NotificationActivity : BaseActivity() {
+class NotificationFragment : Fragment(R.layout.fragment_notification) {
 
     private val viewModel by lazy {
         viewModel<NotificationViewModel>()
     }
 
-    override val layoutId: Int
-        get() = R.layout.activity_notification
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         view_pager.adapter =
             AutoAdapter(NotificationSelector()).apply {
                 items = viewModel.sources
@@ -104,5 +104,4 @@ class NotificationActivity : BaseActivity() {
             }
         })
     }
-
 }

@@ -9,16 +9,9 @@ import moe.tlaster.weipo.services.Api
 import moe.tlaster.weipo.services.models.Config
 import moe.tlaster.weipo.services.models.ProfileData
 
-class UserViewModel : ViewModel {
+open class UserViewModel : ViewModel() {
     lateinit var config: Config
     val profile = MutableLiveData<ProfileData>()
-
-    constructor(id: Long) {
-        initProfile(id)
-    }
-    constructor(name: String) {
-        init(name)
-    }
 
     fun updateFollow() {
         profile.value?.userInfo?.following?.let { state ->
@@ -38,19 +31,34 @@ class UserViewModel : ViewModel {
         }
     }
 
-    private fun init(name: String) {
+    fun initProfile(name: String) {
         GlobalScope.launch {
             val id = Api.userId(name)
             initProfile(id)
         }
     }
 
-    private fun initProfile(id: Long) {
+    fun initProfile(id: Long) {
         GlobalScope.launch {
             config = Api.config()
             val value = Api.profile(id)
             runOnMainThread {
                 profile.value = value
+            }
+        }
+    }
+
+    fun initMe() {
+        GlobalScope.launch {
+            config = Api.config()
+            config.uid?.toLongOrNull().takeIf {
+                it != null && it != 0L
+            }?.let {
+                Api.profile(it)
+            }?.let {
+                runOnMainThread {
+                    profile.value = it
+                }
             }
         }
     }

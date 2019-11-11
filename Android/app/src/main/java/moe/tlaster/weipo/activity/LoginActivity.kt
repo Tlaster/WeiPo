@@ -9,8 +9,8 @@ import kotlinx.serialization.stringify
 import moe.tlaster.weipo.R
 import moe.tlaster.weipo.common.Settings
 import moe.tlaster.weipo.common.extensions.onPageStarted
-import moe.tlaster.weipo.common.extensions.source
 import moe.tlaster.weipo.common.extensions.openActivity
+import moe.tlaster.weipo.common.extensions.source
 
 class LoginActivity : BaseActivity() {
     override val layoutId: Int
@@ -28,7 +28,7 @@ class LoginActivity : BaseActivity() {
                 }.toMap()
                 if (cookies.containsKey("MLOGIN") && cookies["MLOGIN"] == "1") {
                     Settings.set("user_cookie", Json.nonstrict.stringify(cookies))
-                    openActivity<TimelineActivity>()
+                    openActivity<HomeActivity>()
                     finish()
                 }
             }

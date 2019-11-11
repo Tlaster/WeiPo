@@ -7,7 +7,7 @@ import moe.tlaster.weipo.common.extensions.dp
 
 class NineGridLayoutManager : RecyclerView.LayoutManager() {
     private var itemSize: Double = 0.0
-    private val gridSpacing = 8.dp
+    private val gridSpacing = 4.dp
 
     override fun generateDefaultLayoutParams(): RecyclerView.LayoutParams {
         return RecyclerView.LayoutParams(

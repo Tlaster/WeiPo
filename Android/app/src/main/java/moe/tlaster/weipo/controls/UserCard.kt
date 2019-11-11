@@ -7,8 +7,10 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.control_user.view.*
 import moe.tlaster.weipo.R
+import moe.tlaster.weipo.activity.UserActivity
 import moe.tlaster.weipo.common.extensions.inflate
 import moe.tlaster.weipo.common.extensions.load
+import moe.tlaster.weipo.common.extensions.openActivity
 import moe.tlaster.weipo.services.models.User
 
 class UserCard : ConstraintLayout {
@@ -59,5 +61,8 @@ class UserCard : ConstraintLayout {
 
     init {
         inflate(R.layout.control_user)
+        setOnClickListener {
+            context.openActivity<UserActivity>(*UserActivity.bundle(id = user?.id, name = user?.screenName))
+        }
     }
 }

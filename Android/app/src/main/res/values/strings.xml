@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">WeiPo</string>
+    <string name="app_name" translatable="false">WeiPo</string>
     <string name="mention">Mention</string>
     <string name="mention_cmt">Mention Comment</string>
     <string name="comment">Comment</string>
