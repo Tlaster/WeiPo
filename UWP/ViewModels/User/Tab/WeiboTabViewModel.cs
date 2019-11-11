@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -59,32 +60,39 @@ namespace WeiPo.ViewModels.User.Tab
                 _sinceId = 0;
             }
 
-            var result = await Singleton<Api>.Instance.ProfileTab(_userId, _containerId, _sinceId);
-            _sinceId = result["cardlistInfo"].Value<long>("since_id");
-            //_sinceId = result.Data.SelectToken("cardlistInfo.since_id").Value<long>();
-            return result["cards"]
-                .Select(it =>
-                {
-                    if (!(it is JObject obj))
+            try
+            {
+                var result = await Singleton<Api>.Instance.ProfileTab(_userId, _containerId, _sinceId);
+                _sinceId = result["cardlistInfo"].Value<long>("since_id");
+                //_sinceId = result.Data.SelectToken("cardlistInfo.since_id").Value<long>();
+                return result["cards"]
+                    .Select(it =>
                     {
+                        if (!(it is JObject obj))
+                        {
+                            return null;
+                        }
+
+                        if (obj.ContainsKey("mblog"))
+                        {
+                            return obj["mblog"].ToObject<StatusModel>() as object;
+                        }
+
+                        if (obj.ContainsKey("itemid") && obj.Value<string>("itemid") == "INTEREST_PEOPLE")
+                        {
+                            return new InterestPeopleViewModel(obj["card_group"].Skip(1)
+                                    .Select(card => card.ToObject<InterestPeopleModel>()).ToList(),
+                                obj["card_group"].FirstOrDefault()?.ToObject<InterestPropleDescModel>()) as object;
+                        }
+
                         return null;
-                    }
-
-                    if (obj.ContainsKey("mblog"))
-                    {
-                        return obj["mblog"].ToObject<StatusModel>() as object;
-                    }
-
-                    if (obj.ContainsKey("itemid") && obj.Value<string>("itemid") == "INTEREST_PEOPLE")
-                    {
-                        return new InterestPeopleViewModel(obj["card_group"].Skip(1)
-                                .Select(card => card.ToObject<InterestPeopleModel>()).ToList(),
-                            obj["card_group"].FirstOrDefault()?.ToObject<InterestPropleDescModel>()) as object;
-                    }
-
-                    return null;
-                })
-                .Where(it => it != null);
+                    })
+                    .Where(it => it != null);
+            }
+            catch (WeiboException e)// Empty here
+            {
+                return new List<object>();
+            }
         }
     }
 
