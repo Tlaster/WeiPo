@@ -59,7 +59,7 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:${appConfig.dependencyVersion.glide}")
     kapt("com.github.bumptech.glide:compiler:${appConfig.dependencyVersion.glide}")
 
-    implementation("org.ocpsoft.prettytime:prettytime:4.0.1.Final")
+    implementation("org.ocpsoft.prettytime:prettytime:4.0.2.Final")
 
     implementation("com.github.piasy:BigImageViewer:${appConfig.dependencyVersion.bigImageViewer}")
     implementation("com.github.piasy:GlideImageLoader:${appConfig.dependencyVersion.bigImageViewer}")
