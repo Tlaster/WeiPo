@@ -14,6 +14,7 @@ namespace WeiPo.Services.Models
         public string Size { get; set; }
 
         [JsonProperty("geo", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonConverter(typeof(PicGeoConverter))]
         public PicGeo Geo { get; set; }
 
         [JsonProperty("large", NullValueHandling = NullValueHandling.Ignore)]

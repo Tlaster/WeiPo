@@ -235,6 +235,7 @@
     <Compile Include="Services\Models\Pic.cs" />
     <Compile Include="Services\Models\PicFocusPoint.cs" />
     <Compile Include="Services\Models\PicGeo.cs" />
+    <Compile Include="Services\Models\PicGeoConverter.cs" />
     <Compile Include="Services\Models\PicRectangleObject.cs" />
     <Compile Include="Services\Models\PicWall.cs" />
     <Compile Include="Services\Models\ProfileData.cs" />
