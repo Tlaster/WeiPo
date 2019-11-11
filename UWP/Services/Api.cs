@@ -24,7 +24,7 @@ namespace WeiPo.Services
             try
             {
                 var result = await task;
-                return result.Data;
+                return result?.Data;
             }
             catch (FlurlParsingException e) when (e.InnerException is WeiboException)
             {

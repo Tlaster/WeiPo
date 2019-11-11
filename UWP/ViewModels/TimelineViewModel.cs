@@ -22,6 +22,10 @@ namespace WeiPo.ViewModels
             }
 
             var result = await Singleton<Api>.Instance.Timeline(_maxId, cancellationToken);
+            if (result == null)
+            {
+                return new List<StatusModel>();
+            }
             var list = result.Statuses;
             _maxId = result.NextCursor;
             return list;
