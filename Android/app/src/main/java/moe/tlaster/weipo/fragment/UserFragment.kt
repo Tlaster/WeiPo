@@ -58,7 +58,7 @@ class UserFragment : Fragment(R.layout.fragment_user) {
         }
 
     private val pagerAdapter by lazy {
-        FragmentAdapter(fragmentManager!!, lifecycle)
+        FragmentAdapter(childFragmentManager, lifecycle)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
