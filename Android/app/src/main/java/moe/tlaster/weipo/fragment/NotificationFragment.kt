@@ -13,12 +13,14 @@ import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.fragment_notification.*
 import moe.tlaster.weipo.R
 import moe.tlaster.weipo.common.AutoStaggeredGridLayoutManager
+import moe.tlaster.weipo.common.Event
 import moe.tlaster.weipo.common.adapter.AutoAdapter
 import moe.tlaster.weipo.common.adapter.IItemSelector
 import moe.tlaster.weipo.common.collection.IncrementalLoadingCollection
 import moe.tlaster.weipo.common.extensions.bindLoadingCollection
 import moe.tlaster.weipo.common.extensions.viewModel
 import moe.tlaster.weipo.common.statusWidth
+import moe.tlaster.weipo.services.models.UnreadData
 import moe.tlaster.weipo.viewmodel.INotificationTabItem
 import moe.tlaster.weipo.viewmodel.MentionViewModel
 import moe.tlaster.weipo.viewmodel.NotificationViewModel
@@ -34,6 +36,30 @@ class NotificationSelector: IItemSelector<INotificationTabItem<out Any>> {
 }
 
 class NotificationFragment : Fragment(R.layout.fragment_notification) {
+    private var totalNotificationCount = 0
+    private val onUnreadChanged: (Any, UnreadData) -> Unit = { _, args ->
+        totalNotificationCount = 0
+        if (args.mentionCmt != 0L || args.mentionStatus != 0L) {
+            totalNotificationCount += ((args.mentionCmt ?: 0) + (args.mentionStatus ?: 0)).toInt()
+            tab_layout.getTabAt(0)?.orCreateBadge?.number =
+                ((args.mentionCmt ?: 0) + (args.mentionStatus ?: 0)).toInt()
+        }
+        if (args.cmt != 0L) {
+            totalNotificationCount += args.cmt?.toInt() ?: 0
+            tab_layout.getTabAt(1)?.orCreateBadge?.number = args.cmt?.toInt() ?: 0
+        }
+        if (args.attitude != 0L) {
+            totalNotificationCount += args.attitude?.toInt() ?: 0
+            tab_layout.getTabAt(2)?.orCreateBadge?.number = args.attitude?.toInt() ?: 0
+        }
+        if (args.dm != 0L) {
+            totalNotificationCount += args.dm?.toInt() ?: 0
+            tab_layout.getTabAt(3)?.orCreateBadge?.number = args.dm?.toInt() ?: 0
+        }
+        badgeUpdated.invoke(this, totalNotificationCount)
+    }
+
+    val badgeUpdated = Event<Int>()
 
     private val viewModel by lazy {
         viewModel<NotificationViewModel>()
@@ -41,7 +67,7 @@ class NotificationFragment : Fragment(R.layout.fragment_notification) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        viewModel.unreadChanged += onUnreadChanged
         view_pager.adapter =
             AutoAdapter(NotificationSelector()).apply {
                 items = viewModel.sources
@@ -93,15 +119,27 @@ class NotificationFragment : Fragment(R.layout.fragment_notification) {
         view_pager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                //TODO:Badge
-                viewModel.sources[position].let {
-                    if (!it.adapter.items.any()) {
-                        it.adapter.items.let {
-                            it as? IncrementalLoadingCollection<*, *>
-                        }?.refresh()
-                    }
+                tab_layout.getTabAt(position)?.badge?.takeIf {
+                    it.hasNumber() && it.number > 0
+                }?.let {
+                    viewModel.sources[position]
+                }?.let {
+                    it.adapter.items as? IncrementalLoadingCollection<*, *>
+                }?.let {
+                    it.refresh()
+                    tab_layout.getTabAt(position)
+                }?.let {
+                    totalNotificationCount -= it.badge?.number ?: 0
+                    it.removeBadge()
+                    badgeUpdated.invoke(this, totalNotificationCount)
                 }
             }
         })
+    }
+
+    fun requestRefresh() {
+        viewModel.sources[view_pager.currentItem].adapter.items.let {
+            it as? IncrementalLoadingCollection<*, *>
+        }?.refresh()
     }
 }

@@ -57,6 +57,66 @@ data class TimelineData(
     val hasUnread: Long? = null
 ): Parcelable
 
+
+@Serializable
+sealed class Count : Parcelable {
+    operator fun compareTo(i: Int): Int {
+        return when (this) {
+            is LongValue -> {
+                value.compareTo(i)
+            }
+            is StringValue -> {
+                Long.MAX_VALUE.compareTo(i)
+            }
+        }
+    }
+
+    override fun toString(): String {
+        return when (this) {
+            is LongValue -> value.toString()
+            is StringValue -> value
+        }
+    }
+
+    @Parcelize
+    @Serializable
+    class StringValue(val value: String) : Count()
+
+    @Parcelize
+    @Serializable
+    class LongValue(val value: Long) : Count()
+
+    @Serializer(forClass = Count::class)
+    companion object : KSerializer<Count> {
+        override val descriptor: SerialDescriptor =
+            StringDescriptor.withName("Count")
+
+        override fun serialize(encoder: Encoder, obj: Count) {
+            when (obj) {
+                is StringValue -> encoder.encode(StringValue.serializer(), obj)
+                is LongValue -> encoder.encode(LongValue.serializer(), obj)
+            }
+        }
+
+        override fun deserialize(decoder: Decoder): Count {
+            return decoder.let {
+                it as? JsonInput
+            }?.decodeJson()?.let {
+                when (it) {
+                    is JsonLiteral -> {
+                        if (it.isString) {
+                            StringValue(it.toString())
+                        } else {
+                            LongValue(it.longOrNull ?: 0L)
+                        }
+                    }
+                    else -> LongValue(0)
+                }
+            } ?: throw Error()
+        }
+    }
+}
+
 @Serializable
 @Parcelize
 data class Status(
@@ -109,13 +169,13 @@ data class Status(
     override val user: User? = null,
 
     @SerialName("reposts_count")
-    val repostsCount: Long? = null,
+    val repostsCount: Count? = null,
 
     @SerialName("comments_count")
-    val commentsCount: Long? = null,
+    val commentsCount: Count? = null,
 
     @SerialName("attitudes_count")
-    val attitudesCount: Long? = null,
+    val attitudesCount: Count? = null,
 
     @SerialName("pending_approval_count")
     val pendingApprovalCount: Long? = null,

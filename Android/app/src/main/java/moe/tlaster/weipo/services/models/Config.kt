@@ -78,11 +78,11 @@ data class LongTextData (
     val ok: Long? = null,
     val longTextContent: String? = null,
     @SerialName("reposts_count")
-    val repostsCount: Long? = null,
+    val repostsCount: Count? = null,
     @SerialName("comments_count")
-    val commentsCount: Long? = null,
+    val commentsCount: Count? = null,
     @SerialName("attitudes_count")
-    val attitudesCount: Long? = null
+    val attitudesCount: Count? = null
 )
 
 
@@ -152,4 +152,29 @@ data class Emoji (
     val icon: String? = null,
     val value: String? = null,
     val picid: String? = null
+)
+
+@Serializable
+data class UnreadData (
+    val cmt: Long? = null,
+    val status: Long? = null,
+    val follower: Long? = null,
+    val dm: Long? = null,
+
+    @SerialName("mention_cmt")
+    val mentionCmt: Long? = null,
+
+    @SerialName("mention_status")
+    val mentionStatus: Long? = null,
+
+    val attitude: Long? = null,
+    val unreadmblog: Long? = null,
+    val uid: String? = null,
+    val bi: Long? = null,
+    val newfans: Long? = null,
+    val unreadmsg: Map<String, Long>? = null,
+//    val group: Any? = null,
+    val notice: Long? = null,
+    val photo: Long? = null,
+    val msgbox: Long? = null
 )

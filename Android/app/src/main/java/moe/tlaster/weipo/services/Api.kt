@@ -311,4 +311,13 @@ object Api {
             .awaitWeiboResponse(User.serializer())
             .getData()
     }
+
+    suspend fun unread(): UnreadData {
+        return "$HOST/api/remind/unread"
+            .httpGet(listOf(
+                "t" to System.currentTimeMillis() / 1000
+            ))
+            .awaitWeiboResponse(UnreadData.serializer())
+            .getData()
+    }
 }

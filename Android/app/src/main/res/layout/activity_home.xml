@@ -20,36 +20,11 @@
         app:fabCradleMargin="8dp"
         app:fabCradleRoundedCornerRadius="8dp"
         app:hideOnScroll="true">
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content">
-            <ImageButton
-                android:id="@+id/home_button"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="?attr/actionBarSize"
-                android:layout_height="?attr/actionBarSize"
-                android:minWidth="0dp"
-                android:src="@drawable/ic_home_black_24dp" />
-
-            <ImageButton
-                android:id="@+id/notification_button"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="?attr/actionBarSize"
-                android:layout_height="?attr/actionBarSize"
-                android:minWidth="0dp"
-                android:src="@drawable/ic_notifications_black_24dp" />
-
-            <ImageButton
-                android:id="@+id/account_button"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="?attr/actionBarSize"
-                android:layout_height="?attr/actionBarSize"
-                android:minWidth="0dp"
-                android:src="@drawable/ic_person_black_24dp" />
-
-        </LinearLayout>
+        </com.google.android.material.tabs.TabLayout>
     </com.google.android.material.bottomappbar.BottomAppBar>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

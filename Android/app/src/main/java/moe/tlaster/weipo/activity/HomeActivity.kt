@@ -1,7 +1,8 @@
 package moe.tlaster.weipo.activity
 
-import android.annotation.SuppressLint
 import android.os.Bundle
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_home.*
 import moe.tlaster.weipo.R
 import moe.tlaster.weipo.common.adapter.FragmentAdapter
@@ -16,7 +17,9 @@ class HomeActivity : BaseActivity() {
         TimelineFragment()
     }
     private val notificationFragment by lazy {
-        NotificationFragment()
+        NotificationFragment().apply {
+            badgeUpdated += onNotificationBadgeUpdated
+        }
     }
     private val userFragment by lazy {
         UserFragment()
@@ -24,7 +27,26 @@ class HomeActivity : BaseActivity() {
 
     override val layoutId: Int
         get() = R.layout.activity_home
-    @SuppressLint("RestrictedApi")
+
+
+    private val onNotificationBadgeUpdated: (Any, Int) -> Unit = { sender, args ->
+        tab_layout.getTabAt(1)?.let {
+            if (args == 0) {
+                it.removeBadge()
+            } else {
+                it.orCreateBadge.number = args
+            }
+        }
+    }
+
+    private val tabIcon by lazy {
+        listOf(
+            R.drawable.ic_home_black_24dp,
+            R.drawable.ic_notifications_black_24dp,
+            R.drawable.ic_person_black_24dp
+        )
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -37,27 +59,33 @@ class HomeActivity : BaseActivity() {
 
         view_pager.isUserInputEnabled = false
 
-        home_button.setOnClickListener {
-            if (view_pager.currentItem == 0) {
-                timelineFragment.requestRefresh()
-            } else {
-                view_pager.setCurrentItem(0, false)
-            }
-        }
-        account_button.setOnClickListener {
-//            viewModel.config?.let {
-//                openActivity<UserActivity>(
-//                    "user_id" to it.uid?.toLongOrNull()
-//                )
-//            }
-            view_pager.setCurrentItem(2, false)
-        }
-        notification_button.setOnClickListener {
-//            openActivity<NotificationActivity>()
-            view_pager.setCurrentItem(1, false)
-        }
         compose_button.setOnClickListener {
             openActivity<ComposeActivity>(*ComposeActivity.bundle(ComposeViewModel.ComposeType.Create))
         }
+
+        TabLayoutMediator(
+            tab_layout,
+            view_pager,
+            TabLayoutMediator.TabConfigurationStrategy { tab, position ->
+                tab.setIcon(tabIcon[position])
+            }).attach()
+
+        tab_layout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+                if (tab != null) {
+                    when (tab.position) {
+                        0 -> timelineFragment.requestRefresh()
+                        1 -> notificationFragment.requestRefresh()
+                    }
+                }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+            }
+
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+            }
+
+        })
     }
 }
