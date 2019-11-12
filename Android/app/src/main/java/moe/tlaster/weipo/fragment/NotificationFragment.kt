@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -19,7 +20,6 @@ import moe.tlaster.weipo.common.adapter.AutoAdapter
 import moe.tlaster.weipo.common.adapter.IItemSelector
 import moe.tlaster.weipo.common.collection.IncrementalLoadingCollection
 import moe.tlaster.weipo.common.extensions.bindLoadingCollection
-import moe.tlaster.weipo.common.extensions.viewModel
 import moe.tlaster.weipo.common.statusWidth
 import moe.tlaster.weipo.viewmodel.INotificationTabItem
 import moe.tlaster.weipo.viewmodel.MentionViewModel
@@ -40,13 +40,11 @@ class NotificationFragment : Fragment(R.layout.fragment_notification) {
 
     val badgeUpdated = Event<Int>()
 
-    private val viewModel by lazy {
-        viewModel<NotificationViewModel>()
-    }
+    private val viewModel by viewModels<NotificationViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.unread.observe(this, Observer { args ->
+        viewModel.unread.observe(this.viewLifecycleOwner, Observer { args ->
             totalNotificationCount = 0
             if (args.mentionCmt != 0L || args.mentionStatus != 0L) {
                 totalNotificationCount += ((args.mentionCmt ?: 0) + (args.mentionStatus ?: 0)).toInt()

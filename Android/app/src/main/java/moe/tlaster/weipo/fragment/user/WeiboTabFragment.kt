@@ -2,6 +2,7 @@ package moe.tlaster.weipo.fragment.user
 
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import kotlinx.android.synthetic.main.layout_list.*
 import moe.tlaster.weipo.R
@@ -10,7 +11,6 @@ import moe.tlaster.weipo.common.adapter.IncrementalLoadingAdapter
 import moe.tlaster.weipo.common.adapter.ItemSelector
 import moe.tlaster.weipo.common.extensions.bindLoadingCollection
 import moe.tlaster.weipo.common.extensions.factory
-import moe.tlaster.weipo.common.extensions.viewModel
 import moe.tlaster.weipo.common.statusWidth
 import moe.tlaster.weipo.controls.StatusView
 import moe.tlaster.weipo.viewmodel.user.WeiboListViewModel
@@ -19,10 +19,10 @@ class WeiboTabFragment : UserTabFragment() {
     override val contentLayoutId: Int
         get() = R.layout.layout_list
 
-    private val viewModel by lazy {
-        viewModel<WeiboListViewModel>(factory {
+    private val viewModel by viewModels<WeiboListViewModel> {
+        factory {
             WeiboListViewModel(userId, containerId)
-        })
+        }
     }
 
     val adapter by lazy {

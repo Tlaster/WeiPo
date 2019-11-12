@@ -11,7 +11,7 @@ class StatusViewModel(
     private val item: Status,
     private val updateTextCallback: (String) -> Unit
 ) : ViewModel() {
-    init {
+    fun init() {
         if (item.isLongText == true) {
             loadLongText()
         }

@@ -1,13 +1,13 @@
 package moe.tlaster.weipo.activity
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.core.os.bundleOf
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_status.*
 import moe.tlaster.weipo.R
 import moe.tlaster.weipo.common.adapter.FragmentAdapter
 import moe.tlaster.weipo.common.extensions.factory
-import moe.tlaster.weipo.common.extensions.viewModel
 import moe.tlaster.weipo.fragment.status.HotflowFratgment
 import moe.tlaster.weipo.fragment.status.RepostTimelineFragment
 import moe.tlaster.weipo.services.models.Status
@@ -22,7 +22,13 @@ class StatusActivity : BaseActivity() {
         }
     }
 
-    private lateinit var viewModel: StatusViewModel
+    private val viewModel: StatusViewModel by viewModels {
+        factory {
+            StatusViewModel(status) {
+                item_status.updateContent(it)
+            }
+        }
+    }
 
     private val status by lazy {
         intent.getParcelableExtra<Status>("status")
@@ -69,11 +75,6 @@ class StatusActivity : BaseActivity() {
                     }
                 }
             }).attach()
-        viewModel = viewModel(factory {
-            StatusViewModel(status) {
-                item_status.updateContent(it)
-            }
-        })
+        viewModel.init()
     }
-
 }

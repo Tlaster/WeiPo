@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import kotlinx.android.synthetic.main.layout_list.*
 import moe.tlaster.weipo.R
 import moe.tlaster.weipo.common.AutoStaggeredGridLayoutManager
@@ -11,7 +12,6 @@ import moe.tlaster.weipo.common.adapter.IncrementalLoadingAdapter
 import moe.tlaster.weipo.common.adapter.ItemSelector
 import moe.tlaster.weipo.common.extensions.bindLoadingCollection
 import moe.tlaster.weipo.common.extensions.factory
-import moe.tlaster.weipo.common.extensions.viewModel
 import moe.tlaster.weipo.common.statusWidth
 import moe.tlaster.weipo.controls.StatusView
 import moe.tlaster.weipo.fragment.TabFragment
@@ -24,10 +24,10 @@ class HotflowFratgment : TabFragment() {
 
     private var statusId = 0L
     private var mid = 0L
-    private val viewModel by lazy {
-        viewModel<HotflowViewModel>(factory {
+    private val viewModel by viewModels<HotflowViewModel> {
+        factory {
             HotflowViewModel(statusId, mid)
-        })
+        }
     }
 
     override fun onCreateView(

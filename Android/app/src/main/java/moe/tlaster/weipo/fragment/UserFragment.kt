@@ -5,6 +5,7 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.tabs.TabLayoutMediator
@@ -13,7 +14,6 @@ import moe.tlaster.weipo.R
 import moe.tlaster.weipo.common.adapter.FragmentAdapter
 import moe.tlaster.weipo.common.extensions.factory
 import moe.tlaster.weipo.common.extensions.load
-import moe.tlaster.weipo.common.extensions.viewModel
 import moe.tlaster.weipo.fragment.user.EmptyTabFragment
 import moe.tlaster.weipo.fragment.user.FansFragment
 import moe.tlaster.weipo.fragment.user.FollowFragment
@@ -26,8 +26,8 @@ class UserFragment : Fragment(R.layout.fragment_user) {
     private var userId: Long = 0
     private var userName: String = ""
 
-    private val viewModel by lazy {
-        viewModel<UserViewModel>(factory {
+    private val viewModel by viewModels<UserViewModel> {
+        factory {
             val result = UserViewModel()
             when {
                 userId != 0L -> result.initProfile(userId)
@@ -35,9 +35,8 @@ class UserFragment : Fragment(R.layout.fragment_user) {
                 else -> result.initMe()
             }
             result
-        })
+        }
     }
-
 
     private val fragmentMapping by lazy {
         mapOf(

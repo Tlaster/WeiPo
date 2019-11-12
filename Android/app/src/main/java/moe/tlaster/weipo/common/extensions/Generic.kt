@@ -69,14 +69,6 @@ inline fun <reified T: ViewModel> factory(crossinline creator: () -> T): ViewMod
     }
 }
 
-inline fun <reified T: ViewModel> Fragment.viewModel(viewModelFactory: ViewModelProvider.Factory? = null): T {
-    return ViewModelProviders.of(this, viewModelFactory).get(T::class.java)
-}
-
-inline fun <reified T: ViewModel> FragmentActivity.viewModel(viewModelFactory: ViewModelProvider.Factory? = null): T {
-    return ViewModelProviders.of(this, viewModelFactory)[T::class.java]
-}
-
 inline fun async(noinline block: suspend () -> Unit): suspend () -> Unit = block
 
 fun <T> (suspend () -> T).fireAndForgot() {

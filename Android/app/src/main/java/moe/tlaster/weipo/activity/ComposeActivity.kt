@@ -8,6 +8,7 @@ import android.provider.Settings
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
+import androidx.activity.viewModels
 import androidx.core.view.updateLayoutParams
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -109,8 +110,8 @@ class ComposeActivity : BaseActivity() {
     override val layoutId: Int
         get() = R.layout.activity_compose
 
-    private val viewModel by lazy {
-        viewModel<ComposeViewModel>(factory {
+    private val viewModel by viewModels<ComposeViewModel> {
+        factory {
             intent.getParcelableExtra<ICanReply>("reply_to").let { reply ->
                 ComposeViewModel(
                     composeType,
@@ -121,7 +122,7 @@ class ComposeActivity : BaseActivity() {
                     }
                 )
             }
-        })
+        }
     }
 
     private val emojiAdapter by lazy {
