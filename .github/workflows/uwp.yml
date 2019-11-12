@@ -20,4 +20,4 @@ jobs:
         run: nuget restore ./WeiPo.sln
       - name: Build with msbuild
         working-directory: ./UWP
-        run: msbuild ./WeiPo.sln /m /verbosity:minimal /p:Configuration=Release
+        run: msbuild ./WeiPo.sln /m /verbosity:detailed /p:Configuration=Release /p:AppxBundle=Always /p:AppxBundlePlatforms="ARM|x86|x64" /p:UapAppxPackageBuildMode=StoreUpload
