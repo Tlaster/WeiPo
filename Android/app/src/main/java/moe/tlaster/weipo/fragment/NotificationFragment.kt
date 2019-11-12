@@ -71,11 +71,25 @@ class NotificationFragment : Fragment(R.layout.fragment_notification) {
         view_pager.adapter =
             AutoAdapter(NotificationSelector()).apply {
                 items = viewModel.sources
-                setView<SwipeRefreshLayout>(R.id.refresh_layout) { view, item, _, _ ->
+                setView<SwipeRefreshLayout>(R.id.refresh_layout) { view, item, position, _ ->
                     item.adapter.items.let {
                         it as? IncrementalLoadingCollection<*, *>
                     }?.let {
                         view.bindLoadingCollection(it)
+                        it.stateChanged += { _, args ->
+                            when (args) {
+                                IncrementalLoadingCollection.CollectionState.Loading -> {
+                                    tab_layout.getTabAt(position)?.let { tab ->
+                                        totalNotificationCount -= tab.badge?.number ?: 0
+                                        tab.removeBadge()
+                                        badgeUpdated.invoke(this, totalNotificationCount)
+                                    }
+                                }
+                                IncrementalLoadingCollection.CollectionState.Completed -> {
+
+                                }
+                            }
+                        }
                     }
                 }
                 setView<RecyclerView>(R.id.recycler_view) { view, item, _, _ ->
@@ -125,14 +139,7 @@ class NotificationFragment : Fragment(R.layout.fragment_notification) {
                     viewModel.sources[position]
                 }?.let {
                     it.adapter.items as? IncrementalLoadingCollection<*, *>
-                }?.let {
-                    it.refresh()
-                    tab_layout.getTabAt(position)
-                }?.let {
-                    totalNotificationCount -= it.badge?.number ?: 0
-                    it.removeBadge()
-                    badgeUpdated.invoke(this, totalNotificationCount)
-                }
+                }?.refresh()
             }
         })
     }
