@@ -1,16 +1,17 @@
 package moe.tlaster.weipo.viewmodel
 
 import androidx.annotation.DrawableRes
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import moe.tlaster.weipo.R
-import moe.tlaster.weipo.common.Event
 import moe.tlaster.weipo.common.adapter.IncrementalLoadingAdapter
 import moe.tlaster.weipo.common.adapter.ItemSelector
 import moe.tlaster.weipo.common.collection.IncrementalLoadingCollection
+import moe.tlaster.weipo.common.extensions.runOnMainThread
 import moe.tlaster.weipo.controls.PersonCard
 import moe.tlaster.weipo.controls.StatusView
 import moe.tlaster.weipo.datasource.FuncDataSource
@@ -107,9 +108,7 @@ class NotificationViewModel : ViewModel() {
         )
     )
 
-    val unreadChanged = Event<UnreadData>()
-
-    private var unread: UnreadData? = null
+    val unread = MutableLiveData<UnreadData>()
 
     private val task = GlobalScope.launch(start = CoroutineStart.LAZY) {
         while (true) {
@@ -124,32 +123,10 @@ class NotificationViewModel : ViewModel() {
         }.onFailure {
 
         }.onSuccess { newValue ->
-            if (notificationCheck(newValue.follower, unread?.follower)) {
-                // TODO: send notification
+            runOnMainThread {
+                unread.value = newValue
             }
-
-            if (notificationCheck(newValue.mentionStatus, unread?.mentionStatus)) {
-                // TODO: send notification
-            }
-
-            if (notificationCheck(newValue.mentionCmt, unread?.mentionCmt)) {
-                // TODO: send notification
-            }
-
-            if (notificationCheck(newValue.cmt, unread?.cmt)) {
-                // TODO: send notification
-            }
-
-            if (notificationCheck(newValue.dm, unread?.dm)) {
-                // TODO: send notification
-            }
-            unread = newValue
-            unreadChanged.invoke(this, newValue)
         }
-    }
-
-    private fun notificationCheck(newValue: Long?, oldValue: Long?): Boolean {
-        return newValue != null && newValue != 0L && newValue != oldValue
     }
 
     init {
