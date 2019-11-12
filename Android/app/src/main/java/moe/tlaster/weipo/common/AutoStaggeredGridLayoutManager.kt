@@ -93,4 +93,11 @@ class AutoStaggeredGridLayoutManager(columnSize: Int, orientation: Int = Stagger
     private fun getSpanCountForMinSize(total: Int, single: Int): Int {
         return 1.coerceAtLeast(total / single)
     }
+
+    override fun onLayoutChildren(recycler: RecyclerView.Recycler?, state: RecyclerView.State) {
+        try {
+            super.onLayoutChildren(recycler, state)
+        } catch (e: IndexOutOfBoundsException) {
+        }
+    }
 }
