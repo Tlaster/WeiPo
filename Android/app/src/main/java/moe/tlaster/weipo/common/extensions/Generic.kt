@@ -70,7 +70,7 @@ inline fun <reified T: ViewModel> factory(crossinline creator: () -> T): ViewMod
 }
 
 inline fun <reified T: ViewModel> Fragment.viewModel(viewModelFactory: ViewModelProvider.Factory? = null): T {
-    return this.activity?.let { ViewModelProviders.of(it, viewModelFactory) }?.get(T::class.java)!!
+    return ViewModelProviders.of(this, viewModelFactory).get(T::class.java)
 }
 
 inline fun <reified T: ViewModel> FragmentActivity.viewModel(viewModelFactory: ViewModelProvider.Factory? = null): T {
