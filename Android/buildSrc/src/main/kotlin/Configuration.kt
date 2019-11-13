@@ -5,8 +5,8 @@ class Configuration(project: Project) {
     val minSdkVersion = 21
     val targetSdkVersion = 29
     val compileSdkVersion = 29
-    val versionCode = project.getConfiguration("versionCode", 3)
-    val versionName = project.getConfiguration("versionName", "1.0.2")
+    val versionCode = project.getConfiguration("versionCode", 4)
+    val versionName = project.getConfiguration("versionName", "1.0.3")
     
     val signKeyStore = project.getConfiguration("signKeyStore", "./key.jks")
     val signKeyStorePassword = project.getConfiguration("signKeyStorePassword", "password")
