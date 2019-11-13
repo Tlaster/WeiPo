@@ -5,18 +5,15 @@ import moe.tlaster.weipo.common.collection.CollectionChangedEventArg
 import moe.tlaster.weipo.common.collection.CollectionChangedType
 import moe.tlaster.weipo.common.collection.INotifyCollectionChanged
 import moe.tlaster.weipo.common.collection.ISupportIncrementalLoading
-import moe.tlaster.weipo.common.extensions.runOnMainThread
 
 class IncrementalLoadingAdapter<T>(layout: IItemSelector<T>) : AutoAdapter<T>(layout) {
 
     private val onCollectionChanged: (Any, CollectionChangedEventArg) -> Unit = { _, args ->
-        runOnMainThread {
-            when (args.type) {
-                CollectionChangedType.Add -> notifyItemRangeInserted(args.index, args.count)
-                CollectionChangedType.Remove -> notifyItemRangeRemoved(args.index, args.count)
-                CollectionChangedType.Update -> notifyItemRangeChanged(args.index, args.count)
-                CollectionChangedType.Reset -> notifyDataSetChanged()
-            }
+        when (args.type) {
+            CollectionChangedType.Add -> notifyItemRangeInserted(args.index, args.count)
+            CollectionChangedType.Remove -> notifyItemRangeRemoved(args.index, args.count)
+            CollectionChangedType.Update -> notifyItemRangeChanged(args.index, args.count)
+            CollectionChangedType.Reset -> notifyDataSetChanged()
         }
     }
 
