@@ -29,7 +29,7 @@
 ## 为什么有UWP版？微软一点也不cool/微软不是倒闭了吗？
 因为我能
 ## 有没有iOS版的计划？
-由于缺少一台顶配15寸mACbOoK pRo 2019来编程和一台IpHonE 11 prO MAx来测试，目前不会有IoS版本的计划，除非有人白给
+由于缺少一台顶配16寸mACbOoK pRo 2019来编程和一台IpHonE 11 prO MAx来测试，目前不会有IoS版本的计划，除非有人白给
 ## 如何白给？
 网页右上角有个Sponsor按钮，点进去即可，或者点击[这里](https://afdian.net/@Tlaster)  
 # LICENSE
