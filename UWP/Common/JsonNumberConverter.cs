@@ -37,7 +37,14 @@ namespace WeiPo.Common
                         return Convert.ChangeType(0, objectType);
                     }
 
-                    return Convert.ChangeType(reader.Value, objectType);
+                    try
+                    {
+                        return Convert.ChangeType(reader.Value, objectType);
+                    }
+                    catch (FormatException e)
+                    {
+                        return Convert.ChangeType(0, objectType);
+                    } 
                 default:
                     throw new JsonSerializationException(
                         $"Token \"{reader.Value}\" of type {reader.TokenType} was not a JSON integer");

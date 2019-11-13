@@ -28,7 +28,7 @@ namespace WeiPo.ViewModels.User.Tab
             try
             {
                 var result = await Singleton<Api>.Instance.PhotoAll(_uid, _containerId, pageIndex + 1);
-                return result["cards"].SelectMany(it => it["pics"]).Select(it => it.ToObject<PicWall>());
+                return result["cards"].SelectMany(it => it["pics"]).Select(it => it.ToObject<PicWall>(WeiboJsonSerializerSetting.Serializer));
             }
             catch (WeiboException e)
             {

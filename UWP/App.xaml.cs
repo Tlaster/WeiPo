@@ -38,21 +38,7 @@ namespace WeiPo
             }
             FlurlHttp.Configure(settings =>
             {
-                var jsonSettings = new JsonSerializerSettings
-                {
-                    Converters =
-                    {
-                        new JsonNumberConverter()
-                    },
-                    Error = (sender, args) =>
-                    {
-                        var currentError = args.ErrorContext.Error.Message;
-                        Debug.WriteLine(currentError);
-                        args.ErrorContext.Handled = true;
-                    },
-                    NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore
-                };
-                settings.JsonSerializer = new WeiboJsonSerializer(jsonSettings);
+                settings.JsonSerializer = new WeiboJsonSerializer(WeiboJsonSerializerSetting.Settings);
                 //settings.UrlEncodedSerializer = new WeiboUrlEncodedSerializer();
                 settings.BeforeCall = call =>
                 {

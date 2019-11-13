@@ -33,7 +33,7 @@ namespace WeiPo.ViewModels.User.Tab
                     case PeopleList.ListType.Follow:
                     {
                         var result = await Singleton<Api>.Instance.Follow(_uid, pageIndex + 1);
-                        return result["cards"].Select(it => it["user"].ToObject<UserModel>()).ToList();
+                        return result["cards"].Select(it => it["user"].ToObject<UserModel>(WeiboJsonSerializerSetting.Serializer)).ToList();
                     }
                         break;
                     case PeopleList.ListType.Fans:
@@ -54,7 +54,7 @@ namespace WeiPo.ViewModels.User.Tab
                         }
 
                         var result = await Singleton<Api>.Instance.Fans(_uid, pageIndex + 1);
-                        return result["cards"].Select(it => it["user"].ToObject<UserModel>()).ToList();
+                        return result["cards"].Select(it => it["user"].ToObject<UserModel>(WeiboJsonSerializerSetting.Serializer)).ToList();
                     }
                         break;
                     default:

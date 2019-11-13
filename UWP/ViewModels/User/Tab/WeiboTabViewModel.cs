@@ -5,7 +5,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
+using Flurl.Http;
 using Microsoft.Toolkit.Collections;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using WeiPo.Common;
 using WeiPo.Common.Collection;
@@ -75,14 +77,14 @@ namespace WeiPo.ViewModels.User.Tab
 
                         if (obj.ContainsKey("mblog"))
                         {
-                            return obj["mblog"].ToObject<StatusModel>() as object;
+                            return obj["mblog"].ToObject<StatusModel>(WeiboJsonSerializerSetting.Serializer) as object;
                         }
 
                         if (obj.ContainsKey("itemid") && obj.Value<string>("itemid") == "INTEREST_PEOPLE")
                         {
                             return new InterestPeopleViewModel(obj["card_group"].Skip(1)
-                                    .Select(card => card.ToObject<InterestPeopleModel>()).ToList(),
-                                obj["card_group"].FirstOrDefault()?.ToObject<InterestPropleDescModel>()) as object;
+                                    .Select(card => card.ToObject<InterestPeopleModel>(WeiboJsonSerializerSetting.Serializer)).ToList(),
+                                obj["card_group"].FirstOrDefault()?.ToObject<InterestPropleDescModel>(WeiboJsonSerializerSetting.Serializer)) as object;
                         }
 
                         return null;
