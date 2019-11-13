@@ -33,6 +33,7 @@ class TimelineFragment : Fragment(R.layout.layout_list) {
         recycler_view.layoutManager = AutoStaggeredGridLayoutManager(statusWidth)
         recycler_view.adapter = adapter
         refresh_layout.bindLoadingCollection(viewModel.items)
+
     }
 
     fun requestRefresh() {

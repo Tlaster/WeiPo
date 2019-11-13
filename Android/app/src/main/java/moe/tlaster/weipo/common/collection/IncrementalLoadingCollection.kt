@@ -1,13 +1,18 @@
 package moe.tlaster.weipo.common.collection
 
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import moe.tlaster.weipo.common.Event
 
 class IncrementalLoadingCollection<TSource: IIncrementalSource<T>, T>(
     private val source: TSource,
-    private val itemsPerPage: Int = 20
+    private val itemsPerPage: Int = 20,
+    override val scope: CoroutineScope = GlobalScope
 ): ObservableCollection<T>(), ISupportIncrementalLoading {
+
+    val onError = Event<Throwable>()
+
     enum class CollectionState {
         Loading,
         Completed
@@ -18,7 +23,7 @@ class IncrementalLoadingCollection<TSource: IIncrementalSource<T>, T>(
     var isLoading = false
 
     fun refresh() {
-        GlobalScope.launch {
+        scope.launch {
             refreshAsync()
         }
     }
@@ -40,6 +45,7 @@ class IncrementalLoadingCollection<TSource: IIncrementalSource<T>, T>(
         try {
             result = source.getPagedItemAsync(currentPageIndex++, itemsPerPage)
         } catch (e: Throwable) {
+            onError.invoke(this, e)
             e.printStackTrace()
         }
         if (result != null && result.any()) {

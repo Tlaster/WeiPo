@@ -1,6 +1,7 @@
 package moe.tlaster.weipo.viewmodel.user
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.serialization.ImplicitReflectionSerializer
 import moe.tlaster.weipo.common.collection.IncrementalLoadingCollection
 import moe.tlaster.weipo.common.extensions.toObject
@@ -17,5 +18,5 @@ class FollowViewModel(
             .getArrayOrNull("cards")?.mapNotNull {
                 it.jsonObject["user"]?.jsonObject?.toObject<User>()
             } ?: emptyList()
-    })
+    }, scope = viewModelScope)
 }

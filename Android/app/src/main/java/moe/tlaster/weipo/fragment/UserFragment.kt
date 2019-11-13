@@ -85,7 +85,7 @@ class UserFragment : Fragment(R.layout.fragment_user) {
         follow_button.setOnClickListener {
             viewModel.updateFollow()
         }
-        viewModel.profile.observe(this, Observer<ProfileData> { profile ->
+        viewModel.profile.observe(viewLifecycleOwner, Observer<ProfileData> { profile ->
             profile.userInfo?.coverImagePhone?.let {
                 user_background.load(it)
             }

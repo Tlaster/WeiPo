@@ -51,7 +51,7 @@ class HomeActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         view_pager.offscreenPageLimit = 3
-        view_pager.adapter = FragmentAdapter(supportFragmentManager, lifecycle, listOf(
+        view_pager.adapter = FragmentAdapter(this, listOf(
             timelineFragment,
             notificationFragment,
             userFragment

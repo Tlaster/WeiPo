@@ -3,8 +3,9 @@ package moe.tlaster.weipo.viewmodel
 import androidx.annotation.DrawableRes
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import moe.tlaster.weipo.R
@@ -33,7 +34,9 @@ data class NotificationItemViewModel<T>(
     override val adapter: IncrementalLoadingAdapter<T>
 ): INotificationTabItem<T>
 
-class MentionViewModel: INotificationTabItem<Any> {
+class MentionViewModel(
+    private val scope: CoroutineScope
+): INotificationTabItem<Any> {
     override val title: Int
         get() = R.string.mention
     override val icon: Int
@@ -49,7 +52,7 @@ class MentionViewModel: INotificationTabItem<Any> {
             } else {
                 Api.mentionsAt(it + 1)
             }
-        })
+        }, scope = scope)
         setView<StatusView>(R.id.item_status) { view, item, _, _ ->
             view.data = item
         }
@@ -58,7 +61,7 @@ class MentionViewModel: INotificationTabItem<Any> {
 
 class NotificationViewModel : ViewModel() {
     val sources = listOf(
-        MentionViewModel(),
+        MentionViewModel(viewModelScope),
         NotificationItemViewModel(
             R.string.comment,
             R.drawable.ic_comment_black_24dp,
@@ -66,7 +69,7 @@ class NotificationViewModel : ViewModel() {
                 autoRefresh = false
                 items = IncrementalLoadingCollection(FuncDataSource {
                     Api.comment(it + 1)
-                })
+                }, scope = viewModelScope)
                 setView<StatusView>(R.id.item_status) { view, item, _, _ ->
                     view.data = item
                 }
@@ -79,7 +82,7 @@ class NotificationViewModel : ViewModel() {
                 autoRefresh = false
                 items = IncrementalLoadingCollection(FuncDataSource {
                     Api.attitude(it + 1)
-                })
+                }, scope = viewModelScope)
                 setView<StatusView>(R.id.item_status) { view, item, _, _ ->
                     view.data = item
                 }
@@ -92,7 +95,7 @@ class NotificationViewModel : ViewModel() {
                 autoRefresh = false
                 items = IncrementalLoadingCollection(FuncDataSource {
                     Api.messageList(it + 1)
-                })
+                }, scope = viewModelScope)
                 setView<PersonCard>(R.id.item_person) { view, item, _, _ ->
                     item.user?.avatarLarge?.let {
                         view.avatar = it
@@ -110,7 +113,7 @@ class NotificationViewModel : ViewModel() {
 
     val unread = MutableLiveData<UnreadData>()
 
-    private val task = GlobalScope.launch(start = CoroutineStart.LAZY) {
+    private val task = viewModelScope.launch(start = CoroutineStart.LAZY) {
         while (true) {
             fetchUnread()
             delay(60 * 1000)

@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.text.method.LinkMovementMethod
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -11,7 +12,10 @@ import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import androidx.core.view.updateMarginsRelative
 import androidx.core.view.updatePaddingRelative
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.coroutineScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.control_status.view.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -27,7 +31,6 @@ import moe.tlaster.weipo.services.models.*
 import moe.tlaster.weipo.viewmodel.ComposeViewModel
 import java.text.SimpleDateFormat
 import java.util.*
-
 
 class StatusView : LinearLayout {
     private val linkClicked: ((url: String) -> Unit) = {
@@ -263,6 +266,25 @@ class StatusView : LinearLayout {
                 }
             }
         }
+        status_image.addOnItemTouchListener(object : RecyclerView.SimpleOnItemTouchListener() {
+            override fun onInterceptTouchEvent(
+                recyclerView: RecyclerView,
+                motionEvent: MotionEvent
+            ): Boolean {
+                if (motionEvent.action != MotionEvent.ACTION_UP) {
+                    return false
+                }
+                val child = recyclerView.findChildViewUnder(motionEvent.x, motionEvent.y)
+                return if (child != null) {
+                    // tapped on child
+                    false
+                } else {
+                    showStatusDetail()
+                    true
+                }
+            }
+        })
+
         status_content.movementMethod = LinkMovementMethod.getInstance()
         updatePaddingRelative(bottom = 8.dp.toInt())
         status_person.setOnClickListener {
@@ -299,7 +321,6 @@ class StatusView : LinearLayout {
                     )
                 )
             }
-
         }
         like_button.setOnClickListener {
 
@@ -318,9 +339,6 @@ class StatusView : LinearLayout {
                 view.cardElevation = 0F
             }
         }
-//        setOnClickListener {
-//            showStatusDetail()
-//        }
         video_container.setOnClickListener {
             data?.let {
                 it as? Status
@@ -365,18 +383,24 @@ class StatusView : LinearLayout {
             }?.let {
                 it.pageInfo?.pageURL
             }?.let { link ->
-                GlobalScope.launch {
+                (context?.let {
+                    it as? LifecycleOwner
+                }?.lifecycle?.coroutineScope ?: GlobalScope).launch {
                     kotlin.runCatching {
-                        val storyData = Api.storyVideoLink(link)
-                        context.openActivity<VideoActivity>(
-                            // Fix Android P blocking http request
-                            "url" to storyData.storyDataObject!!.stream!!.url!!.replace("http://", "https://")
-                        )
+                        Api.storyVideoLink(link).storyDataObject?.stream?.url?.let {
+                            context.openActivity<VideoActivity>(
+                                // Fix Android P blocking http request
+                                "url" to it.replace("http://", "https://")
+                            )
+                        }
                     }.onFailure {
                         context.openBrowser(link)
                     }
                 }
             }
+        }
+        setOnClickListener {
+            showStatusDetail()
         }
     }
 

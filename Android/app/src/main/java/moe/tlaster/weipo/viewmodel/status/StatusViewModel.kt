@@ -1,8 +1,7 @@
 package moe.tlaster.weipo.viewmodel.status
 
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import moe.tlaster.weipo.common.extensions.async
 import moe.tlaster.weipo.common.extensions.runOnMainThread
 import moe.tlaster.weipo.services.Api
 import moe.tlaster.weipo.services.models.Status
@@ -18,7 +17,7 @@ class StatusViewModel(
     }
 
     private fun loadLongText() {
-        GlobalScope.launch {
+        async {
             item.id?.toLongOrNull()?.let {
                 Api.extend(it)
             }?.let {

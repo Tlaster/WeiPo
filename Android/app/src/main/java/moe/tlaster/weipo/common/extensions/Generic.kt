@@ -6,11 +6,8 @@ import android.net.Uri
 import android.os.Build
 import android.provider.OpenableColumns
 import android.util.TypedValue
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
+import android.view.View
+import androidx.lifecycle.*
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import kotlinx.coroutines.*
 import moe.tlaster.weipo.common.collection.IncrementalLoadingCollection
@@ -23,7 +20,19 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
+fun ViewModel.runOnMainThread(action: () -> Unit) {
+    viewModelScope.runOnMainThread(action)
+}
 
+fun LifecycleOwner.runOnMainThread(action: () -> Unit) {
+    lifecycleScope.runOnMainThread(action)
+}
+
+fun View.runOnMainThread(action: () -> Unit) {
+    (context?.let {
+        it as? LifecycleOwner
+    }?.lifecycleScope ?: GlobalScope).runOnMainThread(action)
+}
 
 fun runOnMainThread(action: () -> Unit) {
     GlobalScope.runOnMainThread(action)
@@ -69,7 +78,13 @@ inline fun <reified T: ViewModel> factory(crossinline creator: () -> T): ViewMod
     }
 }
 
-inline fun async(noinline block: suspend () -> Unit): suspend () -> Unit = block
+//inline fun async(noinline block: suspend () -> Unit): suspend () -> Unit = block
+
+inline fun ViewModel.async(noinline block: suspend () -> Unit) {
+    viewModelScope.launch {
+        block.invoke()
+    }
+}
 
 fun <T> (suspend () -> T).fireAndForgot() {
     GlobalScope.launch {

@@ -2,8 +2,7 @@ package moe.tlaster.weipo.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import moe.tlaster.weipo.common.extensions.async
 import moe.tlaster.weipo.common.extensions.runOnMainThread
 import moe.tlaster.weipo.services.Api
 import moe.tlaster.weipo.services.models.Config
@@ -16,7 +15,7 @@ open class UserViewModel : ViewModel() {
     fun updateFollow() {
         profile.value?.userInfo?.following?.let { state ->
             profile.value?.userInfo?.id?.let { id ->
-                GlobalScope.launch {
+                async {
                     val result = if (state) {
                         Api.unfollow(id)
                     } else {
@@ -32,14 +31,14 @@ open class UserViewModel : ViewModel() {
     }
 
     fun initProfile(name: String) {
-        GlobalScope.launch {
+        async {
             val id = Api.userId(name)
             initProfile(id)
         }
     }
 
     fun initProfile(id: Long) {
-        GlobalScope.launch {
+        async {
             config = Api.config()
             val value = Api.profile(id)
             runOnMainThread {
@@ -49,7 +48,7 @@ open class UserViewModel : ViewModel() {
     }
 
     fun initMe() {
-        GlobalScope.launch {
+        async {
             config = Api.config()
             config.uid?.toLongOrNull().takeIf {
                 it != null && it != 0L

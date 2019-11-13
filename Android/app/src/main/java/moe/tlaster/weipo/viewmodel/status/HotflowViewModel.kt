@@ -1,6 +1,7 @@
 package moe.tlaster.weipo.viewmodel.status
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import moe.tlaster.weipo.common.collection.IncrementalLoadingCollection
 import moe.tlaster.weipo.datasource.FuncDataSource
 import moe.tlaster.weipo.services.Api
@@ -18,5 +19,5 @@ class HotflowViewModel(
         val result = Api.hotflow(id, mid, maxId)
         maxId = result.maxID ?: 0L
         return@FuncDataSource result.data ?: emptyList()
-    })
+    }, scope = viewModelScope)
 }

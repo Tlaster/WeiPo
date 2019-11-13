@@ -1,6 +1,5 @@
 package moe.tlaster.weipo.common.adapter
 
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import moe.tlaster.weipo.common.collection.CollectionChangedEventArg
 import moe.tlaster.weipo.common.collection.CollectionChangedType
@@ -36,7 +35,7 @@ class IncrementalLoadingAdapter<T>(layout: IItemSelector<T>) : AutoAdapter<T>(la
                 value.collectionChanged += onCollectionChanged
             }
             if (value is ISupportIncrementalLoading && !value.any() && autoRefresh) {
-                GlobalScope.launch {
+                value.scope.launch {
                     value.loadMoreItemsAsync()
                 }
             }
@@ -51,7 +50,7 @@ class IncrementalLoadingAdapter<T>(layout: IItemSelector<T>) : AutoAdapter<T>(la
             currentItems.hasMoreItems &&
             !isLoading
         ) {
-            GlobalScope.launch {
+            currentItems.scope.launch {
                 isLoading = true
                 currentItems.loadMoreItemsAsync()
                 isLoading = false
