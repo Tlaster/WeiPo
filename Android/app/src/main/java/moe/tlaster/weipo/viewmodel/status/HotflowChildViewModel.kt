@@ -13,6 +13,9 @@ class HotflowChildViewModel(item: Comment?) : ViewModel() {
         if (page == 0) {
             maxId = 0L
         }
+        if (page != 0 && maxId == 0L) {
+            return@FuncDataSource emptyList<Comment>()
+        }
         return@FuncDataSource item?.mid?.let { id ->
             val result = Api.hotflowChild(id.toLong(), maxId)
             maxId = result.maxID ?: 0
