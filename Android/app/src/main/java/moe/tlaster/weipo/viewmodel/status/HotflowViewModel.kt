@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import moe.tlaster.weipo.common.collection.IncrementalLoadingCollection
 import moe.tlaster.weipo.datasource.FuncDataSource
 import moe.tlaster.weipo.services.Api
+import moe.tlaster.weipo.services.models.Comment
 
 class HotflowViewModel(
     private val id: Long,
@@ -15,6 +16,9 @@ class HotflowViewModel(
     val source = IncrementalLoadingCollection(FuncDataSource {
         if (it == 0) {
             maxId = 0L
+        }
+        if (it != 0 && maxId == 0L) {
+            return@FuncDataSource emptyList<Comment>()
         }
         val result = Api.hotflow(id, mid, maxId)
         maxId = result.maxID ?: 0L
