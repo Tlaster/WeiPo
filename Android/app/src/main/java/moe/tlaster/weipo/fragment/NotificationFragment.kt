@@ -45,21 +45,40 @@ class NotificationFragment : Fragment(R.layout.fragment_notification) {
         viewModel.unread.observe(this.viewLifecycleOwner, Observer { args ->
             var result = 0
             if (args.mentionCmt != 0L || args.mentionStatus != 0L) {
-                result += ((args.mentionCmt ?: 0) + (args.mentionStatus ?: 0)).toInt()
-                tab_layout.getTabAt(0)?.orCreateBadge?.number =
-                    ((args.mentionCmt ?: 0) + (args.mentionStatus ?: 0)).toInt()
+                val mention = ((args.mentionCmt ?: 0) + (args.mentionStatus ?: 0)).toInt()
+                result += mention
+                if (mention > 0) {
+                    tab_layout.getTabAt(0)?.orCreateBadge?.number = mention
+                } else {
+                    tab_layout.getTabAt(0)?.removeBadge()
+                }
             }
             if (args.cmt != 0L) {
-                result += args.cmt?.toInt() ?: 0
-                tab_layout.getTabAt(1)?.orCreateBadge?.number = args.cmt?.toInt() ?: 0
+                val cmt = args.cmt?.toInt() ?: 0
+                result += cmt
+                if (cmt > 0) {
+                    tab_layout.getTabAt(1)?.orCreateBadge?.number = cmt
+                } else {
+                    tab_layout.getTabAt(1)?.removeBadge()
+                }
             }
             if (args.attitude != 0L) {
-                result += args.attitude?.toInt() ?: 0
-                tab_layout.getTabAt(2)?.orCreateBadge?.number = args.attitude?.toInt() ?: 0
+                val attitude = args.attitude?.toInt() ?: 0
+                result += attitude
+                if (attitude > 0) {
+                    tab_layout.getTabAt(2)?.orCreateBadge?.number = attitude
+                } else {
+                    tab_layout.getTabAt(2)?.removeBadge()
+                }
             }
             if (args.dm != 0L) {
-                result += args.dm?.toInt() ?: 0
-                tab_layout.getTabAt(3)?.orCreateBadge?.number = args.dm?.toInt() ?: 0
+                val dm = args.dm?.toInt() ?: 0
+                result += dm
+                if (dm > 0) {
+                    tab_layout.getTabAt(3)?.orCreateBadge?.number = dm
+                } else {
+                    tab_layout.getTabAt(3)?.removeBadge()
+                }
             }
             totalNotificationCount.value = result.toLong()
         })
