@@ -243,6 +243,13 @@ class StatusView : LinearLayout {
             repost_container?.isVisible = value
         }
 
+    var showHotflow
+        get() = hotflow_list.isVisible
+        set(value) {
+            hotflow_list.isVisible = value
+            hotflow_more_button.isVisible = value
+        }
+
     var isTextSelectionEnabled: Boolean
         get() = status_content.isTextSelectable
         set(value) = status_content.setTextIsSelectable(value)
@@ -402,6 +409,15 @@ class StatusView : LinearLayout {
         setOnClickListener {
             showStatusDetail()
         }
+        hotflow_more_button.setOnClickListener {
+            data?.let {
+                it as? Comment
+            }?.let {
+                context.openActivity<HotflowChildActivity>(
+                    "item" to it
+                )
+            }
+        }
     }
 
     fun updateContent(content: String) {
@@ -415,7 +431,7 @@ class StatusView : LinearLayout {
             return
         }
         data?.let {
-            data as? Status
+            it as? Status
         }?.let {
             context.openActivity<StatusActivity>(*StatusActivity.bundle(it))
         }

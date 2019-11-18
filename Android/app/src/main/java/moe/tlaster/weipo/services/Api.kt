@@ -262,7 +262,8 @@ object Api {
         return "$HOST/comments/hotFlowChild"
             .httpGet(listOf(
                 "cid" to cid,
-                "max_id" to maxid
+                "max_id" to maxid,
+                "max_id_type" to 0
             ))
             .awaitObject(HotflowChildData.serializer())
     }
