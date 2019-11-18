@@ -1,6 +1,7 @@
 package moe.tlaster.weipo.activity
 
 import android.os.Bundle
+import androidx.lifecycle.Observer
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_home.*
@@ -18,7 +19,15 @@ class HomeActivity : BaseActivity() {
     }
     private val notificationFragment by lazy {
         NotificationFragment().apply {
-            badgeUpdated += onNotificationBadgeUpdated
+            totalNotificationCount.observe(this@HomeActivity, Observer { args ->
+                tab_layout.getTabAt(1)?.let {
+                    if (args == 0L) {
+                        it.removeBadge()
+                    } else {
+                        it.orCreateBadge.number = args.toInt()
+                    }
+                }
+            })
         }
     }
     private val userFragment by lazy {
@@ -27,17 +36,6 @@ class HomeActivity : BaseActivity() {
 
     override val layoutId: Int
         get() = R.layout.activity_home
-
-
-    private val onNotificationBadgeUpdated: (Any, Int) -> Unit = { sender, args ->
-        tab_layout.getTabAt(1)?.let {
-            if (args == 0) {
-                it.removeBadge()
-            } else {
-                it.orCreateBadge.number = args
-            }
-        }
-    }
 
     private val tabIcon by lazy {
         listOf(

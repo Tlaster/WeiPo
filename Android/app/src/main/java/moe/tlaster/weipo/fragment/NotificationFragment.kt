@@ -6,6 +6,7 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -15,7 +16,6 @@ import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.fragment_notification.*
 import moe.tlaster.weipo.R
 import moe.tlaster.weipo.common.AutoStaggeredGridLayoutManager
-import moe.tlaster.weipo.common.Event
 import moe.tlaster.weipo.common.adapter.AutoAdapter
 import moe.tlaster.weipo.common.adapter.IItemSelector
 import moe.tlaster.weipo.common.collection.IncrementalLoadingCollection
@@ -36,34 +36,32 @@ class NotificationSelector: IItemSelector<INotificationTabItem<out Any>> {
 }
 
 class NotificationFragment : Fragment(R.layout.fragment_notification) {
-    private var totalNotificationCount = 0
-
-    val badgeUpdated = Event<Int>()
+    val totalNotificationCount = MutableLiveData<Long>()
 
     private val viewModel by viewModels<NotificationViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.unread.observe(this.viewLifecycleOwner, Observer { args ->
-            totalNotificationCount = 0
+            var result = 0
             if (args.mentionCmt != 0L || args.mentionStatus != 0L) {
-                totalNotificationCount += ((args.mentionCmt ?: 0) + (args.mentionStatus ?: 0)).toInt()
+                result += ((args.mentionCmt ?: 0) + (args.mentionStatus ?: 0)).toInt()
                 tab_layout.getTabAt(0)?.orCreateBadge?.number =
                     ((args.mentionCmt ?: 0) + (args.mentionStatus ?: 0)).toInt()
             }
             if (args.cmt != 0L) {
-                totalNotificationCount += args.cmt?.toInt() ?: 0
+                result += args.cmt?.toInt() ?: 0
                 tab_layout.getTabAt(1)?.orCreateBadge?.number = args.cmt?.toInt() ?: 0
             }
             if (args.attitude != 0L) {
-                totalNotificationCount += args.attitude?.toInt() ?: 0
+                result += args.attitude?.toInt() ?: 0
                 tab_layout.getTabAt(2)?.orCreateBadge?.number = args.attitude?.toInt() ?: 0
             }
             if (args.dm != 0L) {
-                totalNotificationCount += args.dm?.toInt() ?: 0
+                result += args.dm?.toInt() ?: 0
                 tab_layout.getTabAt(3)?.orCreateBadge?.number = args.dm?.toInt() ?: 0
             }
-            badgeUpdated.invoke(this, totalNotificationCount)
+            totalNotificationCount.value = result.toLong()
         })
         view_pager.adapter =
             AutoAdapter(NotificationSelector()).apply {
@@ -77,9 +75,10 @@ class NotificationFragment : Fragment(R.layout.fragment_notification) {
                             when (args) {
                                 IncrementalLoadingCollection.CollectionState.Loading -> {
                                     tab_layout.getTabAt(position)?.let { tab ->
-                                        totalNotificationCount -= tab.badge?.number ?: 0
+                                        totalNotificationCount.value = totalNotificationCount.value?.minus(
+                                            (tab.badge?.number ?: 0)
+                                        ) ?: 0
                                         tab.removeBadge()
-                                        badgeUpdated.invoke(this, totalNotificationCount)
                                     }
                                 }
                                 IncrementalLoadingCollection.CollectionState.Completed -> {
