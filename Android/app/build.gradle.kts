@@ -47,7 +47,7 @@ dependencies {
 
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha03")
     implementation("androidx.appcompat:appcompat:1.1.0")
-    implementation("com.google.android.material:material:1.2.0-alpha01")
+    implementation("com.google.android.material:material:1.2.0-alpha02")
     implementation("androidx.core:core-ktx:1.1.0")
     implementation("androidx.constraintlayout:constraintlayout:2.0.0-beta3")
     implementation("androidx.lifecycle:lifecycle-extensions:2.1.0")
