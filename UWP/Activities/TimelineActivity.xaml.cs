@@ -4,6 +4,7 @@ using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using WeiPo.Common;
 
@@ -16,7 +17,6 @@ namespace WeiPo.Activities
     /// </summary>
     public sealed partial class TimelineActivity
     {
-        private ScrollViewer _scrollViewer;
 
         public TimelineActivity()
         {
@@ -26,10 +26,6 @@ namespace WeiPo.Activities
         protected override void OnCreate(object parameter)
         {
             base.OnCreate(parameter);
-            CoreApplication.GetCurrentView().TitleBar.Also(it =>
-            {
-                it.LayoutMetricsChanged += OnCoreTitleBarOnLayoutMetricsChanged;
-            });
             Singleton<BroadcastCenter>.Instance.SubscribeWithPendingMessage("share_target_receive", async (sender, args) =>
             {
                 if (args is ProtocolActivatedEventArgs protocolActivatedEventArgs)
@@ -50,27 +46,18 @@ namespace WeiPo.Activities
             });
         }
 
-        protected override void OnLoaded(object sender, RoutedEventArgs routedEventArgs)
+        private void TimelinePivot_Loaded(object sender, RoutedEventArgs e)
         {
-            base.OnLoaded(sender, routedEventArgs);
-            if (_scrollViewer == null)
-            {
-                _scrollViewer = TimelineListView.FindDescendant<ScrollViewer>();
-                _scrollViewer.ViewChanged += ScrollViewerOnViewChanged;
-            }
+            TimelinePivot.FindDescendantByName("HeaderClipper").Visibility = Visibility.Collapsed;
+            TimelinePivot.FindDescendantByName("LeftHeaderPresenter").Visibility = Visibility.Collapsed;
+            TimelinePivot.FindDescendantByName("PreviousButton").Visibility = Visibility.Collapsed;
+            TimelinePivot.FindDescendantByName("NextButton").Visibility = Visibility.Collapsed;
+            TimelinePivot.FindDescendantByName("RightHeaderPresenter").Visibility = Visibility.Collapsed;
         }
 
-        private void OnCoreTitleBarOnLayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
+        private void ShareNavigationViewItemTapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
-            //Header.Margin = new Thickness(0, sender.Height, 0, 0);
-        }
-
-        private void ScrollViewerOnViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
-        {
-            if (!e.IsIntermediate)
-            {
-                Singleton<BroadcastCenter>.Instance.Send(this, "dock_expand", _scrollViewer.VerticalOffset < 5d);
-            }
+            Singleton<BroadcastCenter>.Instance.Send(this, "status_create");
         }
     }
 }

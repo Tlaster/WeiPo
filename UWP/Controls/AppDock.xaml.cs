@@ -32,25 +32,26 @@ namespace WeiPo.Controls
         {
             InitializeComponent();
             DataContext = DockViewModel.Instance;
-            Singleton<BroadcastCenter>.Instance.Subscribe("dock_expand", (sender, args) =>
-            {
-                if (args is bool boolArgs)
-                {
-                    _keepDockExpanded = boolArgs;
-                    ToggleHeader();
-                }
-            });
+            //Singleton<BroadcastCenter>.Instance.Subscribe("dock_expand", (sender, args) =>
+            //{
+            //    if (args is bool boolArgs)
+            //    {
+            //        _keepDockExpanded = boolArgs;
+            //        ToggleHeader();
+            //    }
+            //});
+            Singleton<BroadcastCenter>.Instance.Subscribe("status_create", delegate { StartComposing(); });
             Singleton<BroadcastCenter>.Instance.Subscribe("status_share", (sender, args) => StartComposing());
             Singleton<BroadcastCenter>.Instance.Subscribe("status_comment", (sender, args) => StartComposing());
-            Singleton<BroadcastCenter>.Instance.Subscribe("dock_visible", (sender, args) =>
-            {
-                if (args is bool booArgs)
-                {
-                    ClearComposing();
-                    Visibility = booArgs ? Visibility.Visible : Visibility.Collapsed;
-                    ToggleImageTeachingTip();
-                }
-            });
+            //Singleton<BroadcastCenter>.Instance.Subscribe("dock_visible", (sender, args) =>
+            //{
+            //    if (args is bool booArgs)
+            //    {
+            //        ClearComposing();
+            //        Visibility = booArgs ? Visibility.Visible : Visibility.Collapsed;
+            //        ToggleImageTeachingTip();
+            //    }
+            //});
             Singleton<BroadcastCenter>.Instance.Subscribe("post_weibo_complete",
                 (sender, args) => StopComposing());
             Singleton<BroadcastCenter>.Instance.Subscribe("dock_image_count_changed", (sender, args) =>
@@ -59,7 +60,7 @@ namespace WeiPo.Controls
                 {
                     _imageCount = intArgs;
                     ToggleImageTeachingTip();
-                    ToggleHeader();
+                    //ToggleHeader();
                 }
             });
             Singleton<BroadcastCenter>.Instance.Subscribe("share_add_image",
@@ -70,7 +71,7 @@ namespace WeiPo.Controls
         
         public bool IsComposing { get; private set; }
 
-        public bool IsHeaderOpened { get; private set; } = true;
+        //public bool IsHeaderOpened { get; private set; } = true;
 
         public DockViewModel ViewModel => DockViewModel.Instance;
 
@@ -92,33 +93,29 @@ namespace WeiPo.Controls
             IsComposing = true;
             Visibility = Visibility.Visible;
             FullBackground.Visibility = Visibility.Visible;
-            ToggleHeader();
+            //ToggleHeader();
             DockInput.Focus(FocusState.Programmatic);
-        }
-
-        private void ClearComposing()
-        {
-            IsComposing = false;
-            ToggleHeader();
-            FullBackground.Visibility = Visibility.Collapsed;
-            ViewModel.PostWeiboViewModel.ToCreateState();
         }
 
         public void StopComposing()
         {
-            ClearComposing();
-            Singleton<BroadcastCenter>.Instance.Send(this, "request_dock_visible", true);
+            IsComposing = false;
+            //ToggleHeader();
+            FullBackground.Visibility = Visibility.Collapsed;
+            Visibility = Visibility.Collapsed;
+            ViewModel.PostWeiboViewModel.ToCreateState();
+            ToggleImageTeachingTip();
         }
 
-        private void CloseHeader()
-        {
-            IsHeaderOpened = false;
-        }
+        //private void CloseHeader()
+        //{
+        //    IsHeaderOpened = false;
+        //}
 
-        private void ExpandHeader()
-        {
-            IsHeaderOpened = true;
-        }
+        //private void ExpandHeader()
+        //{
+        //    IsHeaderOpened = true;
+        //}
 
         private void FullBackground_Tapped(object sender, TappedRoutedEventArgs e)
         {
@@ -163,46 +160,46 @@ namespace WeiPo.Controls
             }
         }
 
-        private void ToggleHeader()
-        {
-            if (_keepDockExpanded || _isPointerOverHeader || _isTextBoxFocused || IsComposing || _imageCount > 0)
-            {
-                ExpandHeader();
-            }
-            else
-            {
-                CloseHeader();
-            }
-        }
+        //private void ToggleHeader()
+        //{
+        //    if (_keepDockExpanded || _isPointerOverHeader || _isTextBoxFocused || IsComposing || _imageCount > 0)
+        //    {
+        //        ExpandHeader();
+        //    }
+        //    else
+        //    {
+        //        CloseHeader();
+        //    }
+        //}
 
         private void ToggleImageTeachingTip()
         {
             ImageTeachTip.IsOpen = _imageCount > 0 && Visibility == Visibility.Visible;
         }
 
-        private void UIElement_OnGotFocus(object sender, RoutedEventArgs e)
-        {
-            _isTextBoxFocused = true;
-            ToggleHeader();
-        }
+        //private void UIElement_OnGotFocus(object sender, RoutedEventArgs e)
+        //{
+        //    _isTextBoxFocused = true;
+        //    ToggleHeader();
+        //}
 
-        private void UIElement_OnLostFocus(object sender, RoutedEventArgs e)
-        {
-            _isTextBoxFocused = false;
-            ToggleHeader();
-        }
+        //private void UIElement_OnLostFocus(object sender, RoutedEventArgs e)
+        //{
+        //    _isTextBoxFocused = false;
+        //    ToggleHeader();
+        //}
 
-        private void UIElement_OnPointerEntered(object sender, PointerRoutedEventArgs e)
-        {
-            _isPointerOverHeader = true;
-            ToggleHeader();
-        }
+        //private void UIElement_OnPointerEntered(object sender, PointerRoutedEventArgs e)
+        //{
+        //    _isPointerOverHeader = true;
+        //    ToggleHeader();
+        //}
 
-        private void UIElement_OnPointerExited(object sender, PointerRoutedEventArgs e)
-        {
-            _isPointerOverHeader = false;
-            ToggleHeader();
-        }
+        //private void UIElement_OnPointerExited(object sender, PointerRoutedEventArgs e)
+        //{
+        //    _isPointerOverHeader = false;
+        //    ToggleHeader();
+        //}
 
         private async void TextBox_Paste(object sender, TextControlPasteEventArgs e)
         {

@@ -33,6 +33,8 @@ namespace WeiPo.ViewModels.User
 
         public ProfileData Profile { get; private set; }
 
+        public ProfileData Me { get; private set; }
+
         [DependsOn(nameof(Profile))]
         public Services.Models.Tab[] Tabs
         {
@@ -57,14 +59,7 @@ namespace WeiPo.ViewModels.User
         }
 
         [DependsOn(nameof(Profile))]
-        public bool IsNotMe
-        {
-            get
-            {
-                //TODO:Not a good idea
-                return Profile?.UserInfo?.Id != DockViewModel.Instance.MyProfile.Result.UserInfo.Id;
-            }
-        }
+        public bool IsNotMe => Profile?.UserInfo?.Id != Me?.UserInfo?.Id;
 
         public Action UpdatePivot { get; }
 
@@ -116,8 +111,10 @@ namespace WeiPo.ViewModels.User
 
         private async Task InitProfile(long id)
         {
+            Me = await Singleton<Api>.Instance.Me();
             Profile = await Singleton<Api>.Instance.Profile(id);
             UpdatePivot.Invoke();
         }
+
     }
 }

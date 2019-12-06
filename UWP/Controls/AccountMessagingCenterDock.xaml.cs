@@ -21,7 +21,7 @@ namespace WeiPo.Controls
                 if (args is bool boolArgs)
                 {
                     Visibility = boolArgs ? Visibility.Visible : Visibility.Collapsed;
-                    Singleton<BroadcastCenter>.Instance.Send(this, "request_dock_visible", !boolArgs);
+                    //Singleton<BroadcastCenter>.Instance.Send(this, "request_dock_visible", !boolArgs);
                 }
             });
             Singleton<BroadcastCenter>.Instance.Subscribe("message_center_to", (sender, args) =>

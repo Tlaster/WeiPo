@@ -11,13 +11,13 @@ namespace WeiPo.Controls
         public NotificationDockView()
         {
             InitializeComponent();
-            Singleton<BroadcastCenter>.Instance.Subscribe("dock_visible", (sender, args) =>
-            {
-                if (args is bool booArgs)
-                {
-                    Visibility = booArgs ? Visibility.Visible : Visibility.Collapsed;
-                }
-            });
+            //Singleton<BroadcastCenter>.Instance.Subscribe("dock_visible", (sender, args) =>
+            //{
+            //    if (args is bool booArgs)
+            //    {
+            //        Visibility = booArgs ? Visibility.Visible : Visibility.Collapsed;
+            //    }
+            //});
             DataContext = NotificationViewModel.Instance;
         }
 

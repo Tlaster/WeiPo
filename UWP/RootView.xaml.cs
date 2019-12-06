@@ -36,8 +36,8 @@ namespace WeiPo
 
         private void Init()
         {
-            MessageCenterDock.RegisterPropertyChangedCallback(VisibilityProperty,
-                (sender, e) => { UpdateNavigationBackButton(); });
+            //MessageCenterDock.RegisterPropertyChangedCallback(VisibilityProperty,
+            //    (sender, e) => { UpdateNavigationBackButton(); });
             Singleton<BroadcastCenter>.Instance.Subscribe("login_completed",
                 (sender, args) => RootContainer.Navigate<TimelineActivity>());
             Singleton<BroadcastCenter>.Instance.Subscribe("status_clicked", 
@@ -49,20 +49,20 @@ namespace WeiPo
                 (sender, args) => RootContainer.Navigate<ImageActivity>(args));
             Singleton<BroadcastCenter>.Instance.Subscribe("video_clicked",
                 (sender, args) => RootContainer.Navigate<VideoActivity>(args));
-            Singleton<BroadcastCenter>.Instance.Subscribe("request_dock_visible", (sender, args) =>
-            {
-                if (args is bool boolArgs)
-                {
-                    Singleton<BroadcastCenter>.Instance.Send(this, "dock_visible", boolArgs && MessageCenterDock.Visibility == Visibility.Collapsed && RootContainer.CurrentActivity is TimelineActivity);
-                }
-            });
+            //Singleton<BroadcastCenter>.Instance.Subscribe("request_dock_visible", (sender, args) =>
+            //{
+            //    if (args is bool boolArgs)
+            //    {
+            //        Singleton<BroadcastCenter>.Instance.Send(this, "dock_visible", boolArgs && MessageCenterDock.Visibility == Visibility.Collapsed && RootContainer.CurrentActivity is TimelineActivity);
+            //    }
+            //});
             RootContainer.BackStackChanged += RootContainerOnBackStackChanged;
             RootContainer.Navigate(typeof(LoginActivity));
         }
 
         private void OnBackRequested(object sender, BackRequestedEventArgs e)
         {
-            if (!Dock.OnBackPress() && !MessageCenterDock.OnBackPress() && RootContainer.CanGoBack)
+            if (!Dock.OnBackPress() && /*!MessageCenterDock.OnBackPress() &&*/ RootContainer.CanGoBack)
             {
                 RootContainer.GoBack();
             }
@@ -81,15 +81,15 @@ namespace WeiPo
 
         private void RootContainerOnNavigated(object sender, EventArgs e)
         {
-            Singleton<BroadcastCenter>.Instance.Send(this, "message_center_visible", false);
-            Singleton<BroadcastCenter>.Instance.Send(this, "dock_visible",
-                RootContainer.CurrentActivity is TimelineActivity);
+            //Singleton<BroadcastCenter>.Instance.Send(this, "message_center_visible", false);
+            //Singleton<BroadcastCenter>.Instance.Send(this, "dock_visible",
+            //    RootContainer.CurrentActivity is TimelineActivity);
         }
 
         private void UpdateNavigationBackButton()
         {
             SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
-                RootContainer.CanGoBack || MessageCenterDock.Visibility == Visibility.Visible
+                RootContainer.CanGoBack /*|| MessageCenterDock.Visibility == Visibility.Visible*/
                     ? AppViewBackButtonVisibility.Visible
                     : AppViewBackButtonVisibility.Collapsed;
         }

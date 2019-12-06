@@ -98,7 +98,6 @@
                       VerticalAlignment="Top"
                       Margin="16"
                       MaxWidth="600"
-                      PointerEntered="UIElement_OnPointerEntered" PointerExited="UIElement_OnPointerExited"
                       Background="{ThemeResource SystemControlAcrylicElementBrush}"
                       CornerRadius="{StaticResource CardCorner}">
             <Grid>
@@ -112,9 +111,9 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <Button HorizontalAlignment="Stretch" Margin="8,0,0,8" VerticalAlignment="Stretch"
+                <Button Visibility="Collapsed" HorizontalAlignment="Stretch" Margin="8,0,0,8" VerticalAlignment="Stretch"
                         Click="NotificationClick"
-                        Visibility="{x:Bind IsHeaderOpened, Mode=OneWay}" Grid.Column="0" Grid.Row="2"
+                        Grid.Column="0" Grid.Row="2"
                         Style="{ThemeResource DateTimePickerFlyoutButtonStyle}">
                     <SymbolIcon Symbol="Mail" />
                 </Button>
@@ -139,20 +138,18 @@
                         </common:StatusTypeDataTemplateSelector>
                     </ContentControl.ContentTemplateSelector>
                 </ContentControl>
-                <controls:ImageEx Grid.Row="1" Grid.Column="0" VerticalAlignment="Top"
+                <controls:ImageEx Visibility="Collapsed" Grid.Row="1" Grid.Column="0" VerticalAlignment="Top"
                                   Width="{StaticResource AvatarNormalSize}"
                                   Margin="8,8,0,8"
-                                  Source="{x:Bind ViewModel.MyProfile.Result.UserInfo.ProfileImageUrl, Mode=OneWay}"
-                                  Tapped="{x:Bind ViewModel.ToMyProfile}"
                                   Height="{StaticResource AvatarNormalSize}" CornerRadius="999" />
-                <TextBox GotFocus="UIElement_OnGotFocus" LostFocus="UIElement_OnLostFocus" Margin="8" Grid.Row="1"
+                <TextBox Margin="8" Grid.Row="1"
                          Paste="TextBox_Paste" KeyDown="TextBox_KeyDown" KeyUp="TextBox_KeyUp"
                          x:Name="DockInput"
                          AcceptsReturn="True" VerticalContentAlignment="Center" Grid.Column="1" TextWrapping="Wrap"
                          Text="{x:Bind ViewModel.PostWeiboViewModel.Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          IsEnabled="{x:Bind ViewModel.PostWeiboViewModel.IsNotSending, Mode=OneWay}"
                          HorizontalAlignment="Stretch" PlaceholderText="Say sth..." />
-                <Grid Visibility="{x:Bind IsHeaderOpened, Mode=OneWay}" Name="HeaderMoreContent" Grid.Row="2"
+                <Grid Name="HeaderMoreContent" Grid.Row="2"
                       Grid.Column="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />

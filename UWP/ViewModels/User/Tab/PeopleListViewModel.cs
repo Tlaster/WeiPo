@@ -43,8 +43,8 @@ namespace WeiPo.ViewModels.User.Tab
                             ////Check if user is me
                             //var uconfig = await Singleton<Api>.Instance.Config();
                             //long.TryParse(uconfig.Data.Uid, out var ucid);
-                            //TODO:Not a good idea
-                            var ucid = DockViewModel.Instance.MyProfile.Result.UserInfo.Id;
+                            var me = await Singleton<Api>.Instance.Me();
+                            var ucid = me?.UserInfo?.Id;
                             if (ucid == _uid)
                             {
                                 //clear notification

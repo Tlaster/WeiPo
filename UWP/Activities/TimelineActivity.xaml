@@ -12,42 +12,190 @@
     xmlns:controls2="using:WeiPo.Controls"
     xmlns:models="using:WeiPo.Services.Models"
     xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
+    xmlns:controls="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d">
     <paging:Activity.DataContext>
         <viewModels:TimelineViewModel />
     </paging:Activity.DataContext>
     <Grid>
-        <controls2:ListViewEx x:Name="TimelineListView"
+        <controls:NavigationView Name="TimelineNavigationView" IsSettingsVisible="False" IsBackButtonVisible="Collapsed">
+            <controls:NavigationView.PaneFooter>
+                <StackPanel Orientation="Vertical">
+                    <controls:NavigationViewItem Content="Share" Tapped="ShareNavigationViewItemTapped">
+                        <controls:NavigationViewItem.Icon>
+                            <SymbolIcon Symbol="Edit"/>
+                        </controls:NavigationViewItem.Icon>
+                    </controls:NavigationViewItem>
+                </StackPanel>
+            </controls:NavigationView.PaneFooter>
+            <controls:NavigationView.PaneHeader>
+                <Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" CornerRadius="0"
+                        BorderThickness="0" Padding="0" Margin="0" Background="Transparent"
+                        Click="{x:Bind ((viewModels:TimelineViewModel)DataContext).ToMyProfile}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <controls1:ImageEx Margin="8" Source="{x:Bind DataContext.(viewModels:TimelineViewModel.MyProfile).Result.UserInfo.ProfileImageUrl, Mode=OneWay}"
+                                           Width="{StaticResource AvatarNormalSize}" Height="{StaticResource AvatarNormalSize}" CornerRadius="999"/>
+                        <TextBlock VerticalAlignment="Center" Grid.Column="1" 
+                                   Text="{x:Bind DataContext.(viewModels:TimelineViewModel.MyProfile).Result.UserInfo.ScreenName, Mode=OneWay}"/>
+                    </Grid>
+                </Button>
+            </controls:NavigationView.PaneHeader>
+            <controls:NavigationView.PaneCustomContent>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Button Click="{x:Bind ((viewModels:TimelineViewModel)DataContext).ToMyProfile}" CornerRadius="0" 
+                            Height="{ThemeResource NavigationViewItemOnLeftMinHeight}" Width="{ThemeResource NavigationViewItemOnLeftMinHeight}"
+                            Visibility="{x:Bind common:XamlHelper.InvertBoolToVisibility(TimelineNavigationView.IsPaneOpen), Mode=OneWay}" 
+                            BorderThickness="0" Padding="0" Margin="0" Background="Transparent">
+                        <controls1:ImageEx Source="{x:Bind DataContext.(viewModels:TimelineViewModel.MyProfile).Result.UserInfo.ProfileImageUrl, Mode=OneWay}"
+                                           Margin="8" CornerRadius="999"/>
+                    </Button>
+                    <ListView Grid.Row="1" SelectionMode="Single" SelectedIndex="0" Name="NavigationMenuList" 
+                              ItemsSource="{x:Bind DataContext.(viewModels:TimelineViewModel.Sources), Mode=OneWay}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="viewModels:TimelineNavigationSubViewModel">
+                                <Grid>                                    
+                                    <controls:NavigationViewItem Content="{x:Bind Title}">
+                                        <controls:NavigationViewItem.Icon>
+                                            <SymbolIcon Symbol="{x:Bind Symbol}"/>
+                                        </controls:NavigationViewItem.Icon>
+                                    </controls:NavigationViewItem>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+            </controls:NavigationView.PaneCustomContent>
+            <Pivot x:Name="TimelinePivot" Loaded="TimelinePivot_Loaded" 
+                   SelectedIndex="{x:Bind NavigationMenuList.SelectedIndex,Mode=OneWay}" 
+                   ItemsSource="{x:Bind DataContext.(viewModels:TimelineViewModel.Sources), Mode=OneWay}">
+                <Pivot.ItemContainerStyle>
+                    <Style TargetType="PivotItem">
+                        <Setter Property="Margin" Value="0" />
+                    </Style>
+                </Pivot.ItemContainerStyle>
+                <Pivot.ItemTemplate>
+                    <DataTemplate x:DataType="viewModels:TimelineNavigationSubViewModel">
+                        <controls2:ListViewEx ItemsSource="{x:Bind Source}">
+                            <controls2:ListViewEx.Layout>
+                                <common:StaggeredLayout DesiredColumnWidth="300" />
+                            </controls2:ListViewEx.Layout>
+                            <controls2:ListViewEx.ItemTemplate>
+                                <common:StatusTypeDataTemplateSelector>
+                                    <common:StatusTypeDataTemplateSelector.CommentTemplate>
+                                        <DataTemplate x:DataType="models:CommentModel">
+                                            <controls2:CommentView ShowActions="True" Comment="{x:Bind}" />
+                                        </DataTemplate>
+                                    </common:StatusTypeDataTemplateSelector.CommentTemplate>
+                                    <common:StatusTypeDataTemplateSelector.StatusTemplate>
+                                        <DataTemplate x:DataType="models:StatusModel">
+                                            <controls2:StatusView ShowActions="True" Status="{x:Bind}" />
+                                        </DataTemplate>
+                                    </common:StatusTypeDataTemplateSelector.StatusTemplate>
+                                    <common:StatusTypeDataTemplateSelector.AttitudeTemplate>
+                                        <DataTemplate x:DataType="models:AttitudeModel">
+                                            <StackPanel
+                                                Background="{ThemeResource SystemControlAcrylicElementBrush}"
+                                                CornerRadius="{StaticResource CardCorner}"
+                                                Padding="8"
+                                                Margin="8"
+                                                DataContext="{x:Bind}" Orientation="Vertical">
+                                                <controls2:PersonCard
+                                                    Avatar="{x:Bind User.ProfileImageUrl, Mode=OneWay}"
+                                                    common:XamlExtensions.TappedMessage="user_clicked"
+                                                    common:XamlExtensions.TappedMessageParameter="{x:Bind User, Mode=OneWay}"
+                                                    DataContext="{x:Bind User, Mode=OneWay}"
+                                                    Title="{x:Bind User.ScreenName, Mode=OneWay}"
+                                                    SubTitle="{x:Bind controls2:StatusViewXamlHelper.TimeConverter(CreatedAt), Mode=OneWay}" />
+                                                <TextBlock Text="赞了你的微博" />
+                                                <controls2:StatusView Margin="-4, 4, -4, 0" ShowActions="False"
+                                                                      CornerRadius="0"
+                                                                      Status="{x:Bind Status, Mode=OneWay}"
+                                                                      ShowRetweet="False"
+                                                                      Background="{ThemeResource RetweetBackground}" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </common:StatusTypeDataTemplateSelector.AttitudeTemplate>
+                                    <common:StatusTypeDataTemplateSelector.MessageListTemplate>
+                                        <DataTemplate x:DataType="models:MessageListModel">
+                                            <Grid
+                                                Padding="8"
+                                                common:XamlExtensions.TappedMessage="dm_clicked"
+                                                common:XamlExtensions.TappedMessageParameter="{x:Bind}">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition />
+                                                </Grid.RowDefinitions>
+                                                <controls1:ImageEx Grid.RowSpan="2" Margin="0,0,4,4"
+                                                                   Width="{StaticResource AvatarNormalSize}"
+                                                                   Height="{StaticResource AvatarNormalSize}"
+                                                                   CornerRadius="999"
+                                                                   Source="{x:Bind User.AvatarLarge}" />
+                                                <TextBlock Grid.Row="0" Grid.Column="1" Text="{x:Bind User.ScreenName}" />
+                                                <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind Text}"
+                                                           Foreground="Gray" />
+                                                <TextBlock Grid.Row="0" Grid.Column="2"
+                                                           Text="{x:Bind controls2:StatusViewXamlHelper.TimeConverter(CreatedAt)}" />
+                                                <Grid Grid.Row="1" HorizontalAlignment="Right" Grid.Column="2"
+                                                      RequestedTheme="Dark"
+                                                      Visibility="{x:Bind common:XamlHelper.IsLongNonZeroToVisibility(Unread)}">
+                                                    <Ellipse Fill="Red" Width="14" Height="14" />
+                                                    <TextBlock Text="{x:Bind Unread}" HorizontalAlignment="Center" />
+                                                </Grid>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </common:StatusTypeDataTemplateSelector.MessageListTemplate>
+                                </common:StatusTypeDataTemplateSelector>
+                            </controls2:ListViewEx.ItemTemplate>
+                        </controls2:ListViewEx>
+                    </DataTemplate>
+                </Pivot.ItemTemplate>
+            </Pivot>
+        </controls:NavigationView>
+        <!--<controls2:ListViewEx x:Name="TimelineListView"
                               ItemsSource="{x:Bind DataContext.(viewModels:TimelineViewModel.Timeline), Mode=OneWay}">
             <controls2:ListViewEx.Layout>
-                <common:StaggeredLayout VerticalOffset="120" DesiredColumnWidth="400" />
+                <common:StaggeredLayout DesiredColumnWidth="400" />
             </controls2:ListViewEx.Layout>
             <controls2:ListViewEx.ItemTemplate>
                 <DataTemplate x:DataType="models:StatusModel">
                     <controls2:StatusView Status="{x:Bind}" />
                 </DataTemplate>
             </controls2:ListViewEx.ItemTemplate>
-        </controls2:ListViewEx>
-        <controls1:DropShadowPanel
+        </controls2:ListViewEx>-->
+        <!--<controls1:DropShadowPanel
             VerticalAlignment="{Binding ElementName=RefreshButton, Path=VerticalAlignment}"
             HorizontalAlignment="{Binding ElementName=RefreshButton, Path=HorizontalAlignment}"
             BlurRadius="20"
             Margin="{Binding ElementName=RefreshButton, Path=Margin}"
             ShadowOpacity="0.6"
             Color="Black">
-            <Ellipse Fill="{ThemeResource SystemAccentColor}" 
-                Width="{Binding ElementName=RefreshButton, Path=(extensions:FrameworkElementExtensions.ActualWidth), Mode=OneWay}"
-                Height="{Binding ElementName=RefreshButton, Path=(extensions:FrameworkElementExtensions.ActualHeight), Mode=OneWay}" />
+            <Ellipse Fill="{ThemeResource SystemAccentColor}"
+                     Width="{Binding ElementName=RefreshButton, Path=(extensions:FrameworkElementExtensions.ActualWidth), Mode=OneWay}"
+                     Height="{Binding ElementName=RefreshButton, Path=(extensions:FrameworkElementExtensions.ActualHeight), Mode=OneWay}" />
         </controls1:DropShadowPanel>
-        <Button 
+        <Button
             extensions:FrameworkElementExtensions.EnableActualSizeBinding="True"
             Name="RefreshButton"
             Margin="16"
             VerticalAlignment="Bottom"
             HorizontalAlignment="Right"
             CornerRadius="40" Padding="8" RequestedTheme="Dark" Style="{ThemeResource AccentButtonStyle}"
-                    Click="{x:Bind DataContext.(viewModels:TimelineViewModel.Timeline).Refresh}">
-            <SymbolIcon Width="{StaticResource AvatarNormalSize}" Height="{StaticResource AvatarNormalSize}" Symbol="Refresh"/>
-        </Button>
+            Click="{x:Bind DataContext.(viewModels:TimelineViewModel.Timeline).Refresh}">
+            <SymbolIcon Width="{StaticResource AvatarNormalSize}" Height="{StaticResource AvatarNormalSize}"
+                        Symbol="Refresh" />
+        </Button>-->
     </Grid>
 </paging:Activity>
