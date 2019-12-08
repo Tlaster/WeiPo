@@ -19,16 +19,10 @@ namespace WeiPo.ViewModels
         public async Task<IEnumerable<StatusModel>> GetPagedItemsAsync(int pageIndex, int pageSize,
             CancellationToken cancellationToken = new CancellationToken())
         {
-            if (pageIndex == 0)
-            {
-                _maxId = 0;
-            }
+            if (pageIndex == 0) _maxId = 0;
 
             var result = await Singleton<Api>.Instance.Timeline(_maxId, cancellationToken);
-            if (result == null)
-            {
-                return new List<StatusModel>();
-            }
+            if (result == null) return new List<StatusModel>();
 
             var list = result.Statuses;
             _maxId = result.NextCursor;
@@ -36,19 +30,97 @@ namespace WeiPo.ViewModels
         }
     }
 
-    public class TimelineNavigationSubViewModel : ViewModelBase
+    public abstract class NavigationViewModelWithNotification : ViewModelBase
     {
-        public TimelineNavigationSubViewModel(string id, Symbol symbol, object source)
+        protected NavigationViewModelWithNotification()
         {
-            Id = id;
-            Symbol = symbol;
-            Source = source;
+            if (!string.IsNullOrEmpty(NotificationName))
+            {
+                Singleton<BroadcastCenter>.Instance.Subscribe(NotificationName, (sender, args) =>
+                {
+                    if (args is long longArgs) NotificationCount = longArgs;
+                });
+            }
+
+            if (Source is IWithStatus withStatus)
+            {
+                withStatus.OnStartLoading += () => NotificationCount = 0;
+            }
         }
 
-        public string Id { get; }
-        public string Title => Id.GetLocalized();
-        public Symbol Symbol { get; }
-        public object Source { get; }
+        public long NotificationCount { get; set; }
+        public abstract string Name { get; set; }
+        public string Title => Name.GetLocalized();
+        public abstract Symbol Icon { get; set; }
+        public abstract string NotificationName { get; }
+        public abstract object Source { get; }
+    }
+    
+    public class TimelineNavigationViewModel : NavigationViewModelWithNotification
+    {
+        public override string Name { get; set; } = "Timeline";
+        public override Symbol Icon { get; set; } = Symbol.Home;
+        public override string NotificationName { get; } = "";
+
+        public override object Source { get; } =
+            new LoadingCollection<IIncrementalSource<StatusModel>, StatusModel>(new TimelineDataSource());
+    }
+
+    public class MentionNavigationViewModel : NavigationViewModelWithNotification
+    {
+        public override string Name { get; set; } = "Mention";
+        public override Symbol Icon { get; set; } = Symbol.Account;
+        public override string NotificationName { get; } = "notification_new_mention_at";
+
+        public override object Source { get; } =
+            new LoadingCollection<IIncrementalSource<StatusModel>, StatusModel>(
+                new MessagingCenterDockItemDataSource<StatusModel>("notification_clear_mention_at",
+                    async page => await Singleton<Api>.Instance.GetMentionsAt(page)));
+    }
+
+    public class MentionCommentNavigationViewModel : NavigationViewModelWithNotification
+    {
+        public override string Name { get; set; } = "MentionComment";
+        public override Symbol Icon { get; set; } = Symbol.Account;
+        public override string NotificationName { get; } = "notification_new_mention_comment";
+        public override object Source { get; } = 
+            new LoadingCollection<IIncrementalSource<CommentModel>, CommentModel>(
+                    new MessagingCenterDockItemDataSource<CommentModel>("notification_clear_mention_comment",
+                        async page => await Singleton<Api>.Instance.GetMentionsCmt(page)));
+    }
+
+    public class CommentNavigationViewModel : NavigationViewModelWithNotification
+    {
+        public override string Name { get; set; } = "Comment";
+        public override Symbol Icon { get; set; } = Symbol.Comment;
+        public override string NotificationName { get; } = "notification_new_comment";
+
+        public override object Source { get; } =
+            new LoadingCollection<IIncrementalSource<CommentModel>, CommentModel>(
+                new MessagingCenterDockItemDataSource<CommentModel>("notification_clear_comment",
+                    async page => await Singleton<Api>.Instance.GetComment(page)));
+    }
+
+    public class LikeNavigationViewModel : NavigationViewModelWithNotification
+    {
+        public override string Name { get; set; } = "Like";
+        public override Symbol Icon { get; set; } = Symbol.Like;
+        public override string NotificationName { get; } = string.Empty;
+        public override object Source { get; } =
+            new LoadingCollection<IIncrementalSource<AttitudeModel>, AttitudeModel>(
+                    new MessagingCenterDockItemDataSource<AttitudeModel>("",
+                        async page => await Singleton<Api>.Instance.GetAttitude(page)));
+    }
+
+    public class DirectMessageNavigationViewModel : NavigationViewModelWithNotification
+    {
+        public override string Name { get; set; } = "DirectMessage";
+        public override Symbol Icon { get; set; } = Symbol.Message;
+        public override string NotificationName { get; } = "notification_new_dm";
+        public override object Source { get; } = 
+            new LoadingCollection<IIncrementalSource<MessageListModel>, MessageListModel>(
+                    new MessagingCenterDockItemDataSource<MessageListModel>("notification_clear_dm",
+                        async page => await Singleton<Api>.Instance.GetMessageList(page)));
     }
 
     public class TimelineViewModel : ViewModelBase
@@ -58,35 +130,14 @@ namespace WeiPo.ViewModels
             MyProfile = NotifyTask.Create(LoadMe);
         }
 
-        public List<TimelineNavigationSubViewModel> Sources { get; } = new List<TimelineNavigationSubViewModel>
+        public List<NavigationViewModelWithNotification> Source { get; } = new List<NavigationViewModelWithNotification>
         {
-            new TimelineNavigationSubViewModel("Timeline", Symbol.Home,
-                new LoadingCollection<TimelineDataSource, StatusModel>()),
-
-            new TimelineNavigationSubViewModel("Mention", Symbol.Account,
-                new LoadingCollection<MessagingCenterDockItemDataSource<StatusModel>, StatusModel>(
-                    new MessagingCenterDockItemDataSource<StatusModel>("notification_clear_mention_at",
-                        async page => await Singleton<Api>.Instance.GetMentionsAt(page)))),
-
-            new TimelineNavigationSubViewModel("MentionComment", Symbol.Account,
-                new LoadingCollection<MessagingCenterDockItemDataSource<CommentModel>, CommentModel>(
-                    new MessagingCenterDockItemDataSource<CommentModel>("notification_clear_mention_comment",
-                        async page => await Singleton<Api>.Instance.GetMentionsCmt(page)))),
-
-            new TimelineNavigationSubViewModel("Comment", Symbol.Comment,
-                new LoadingCollection<MessagingCenterDockItemDataSource<CommentModel>, CommentModel>(
-                    new MessagingCenterDockItemDataSource<CommentModel>("notification_clear_comment",
-                        async page => await Singleton<Api>.Instance.GetComment(page)))),
-
-            new TimelineNavigationSubViewModel("Like", Symbol.Like,
-                new LoadingCollection<MessagingCenterDockItemDataSource<AttitudeModel>, AttitudeModel>(
-                    new MessagingCenterDockItemDataSource<AttitudeModel>("",
-                        async page => await Singleton<Api>.Instance.GetAttitude(page)))),
-
-            new TimelineNavigationSubViewModel("DirectMessage", Symbol.Message,
-                new LoadingCollection<MessagingCenterDockItemDataSource<MessageListModel>, MessageListModel>(
-                    new MessagingCenterDockItemDataSource<MessageListModel>("notification_clear_dm",
-                        async page => await Singleton<Api>.Instance.GetMessageList(page))))
+            new TimelineNavigationViewModel(),
+            new MentionNavigationViewModel(),
+            new MentionCommentNavigationViewModel(),
+            new CommentNavigationViewModel(),
+            new LikeNavigationViewModel(),
+            new DirectMessageNavigationViewModel(),
         };
 
         public NotifyTask<ProfileData> MyProfile { get; }
@@ -99,9 +150,7 @@ namespace WeiPo.ViewModels
         public void ToMyProfile()
         {
             if (MyProfile.IsCompleted && MyProfile.Result != null)
-            {
                 Singleton<BroadcastCenter>.Instance.Send(this, "user_clicked", MyProfile.Result.UserInfo.Id);
-            }
         }
     }
 }

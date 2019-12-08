@@ -23,7 +23,8 @@ namespace WeiPo.Common
     {
         public static string GetString(string key)
         {
-            return key.GetViewLocalized();
+            var result = key.GetViewLocalized();
+            return result.IsNullOrEmpty() ? key : result;
         }
         
         public static string Format(string key, object arg)

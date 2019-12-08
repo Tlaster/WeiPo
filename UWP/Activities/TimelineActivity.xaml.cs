@@ -4,9 +4,12 @@ using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using WeiPo.Common;
+using WeiPo.Common.Collection;
+using WeiPo.ViewModels;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -58,6 +61,25 @@ namespace WeiPo.Activities
         private void ShareNavigationViewItemTapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
             Singleton<BroadcastCenter>.Instance.Send(this, "status_create");
+        }
+
+        private void RefreshNavigationViewItemTapped(object sender, TappedRoutedEventArgs e)
+        {
+            RefreshCurrentItem();
+        }
+
+        private void RefreshCurrentItem()
+        {
+            if (NavigationMenuList.SelectedItem is NavigationViewModelWithNotification viewModel &&
+                viewModel.Source is ISupportRefresh refresh)
+            {
+                refresh.Refresh();
+            }
+        }
+
+        private void MenuItemDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            RefreshCurrentItem();
         }
     }
 }

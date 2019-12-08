@@ -8,6 +8,7 @@ using Windows.UI.Xaml.Controls;
 using WeiPo.Activities;
 using WeiPo.Activities.User;
 using WeiPo.Common;
+using WeiPo.ViewModels;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -36,8 +37,6 @@ namespace WeiPo
 
         private void Init()
         {
-            //MessageCenterDock.RegisterPropertyChangedCallback(VisibilityProperty,
-            //    (sender, e) => { UpdateNavigationBackButton(); });
             Singleton<BroadcastCenter>.Instance.Subscribe("login_completed",
                 (sender, args) => RootContainer.Navigate<TimelineActivity>());
             Singleton<BroadcastCenter>.Instance.Subscribe("status_clicked", 
@@ -49,15 +48,28 @@ namespace WeiPo
                 (sender, args) => RootContainer.Navigate<ImageActivity>(args));
             Singleton<BroadcastCenter>.Instance.Subscribe("video_clicked",
                 (sender, args) => RootContainer.Navigate<VideoActivity>(args));
-            //Singleton<BroadcastCenter>.Instance.Subscribe("request_dock_visible", (sender, args) =>
-            //{
-            //    if (args is bool boolArgs)
-            //    {
-            //        Singleton<BroadcastCenter>.Instance.Send(this, "dock_visible", boolArgs && MessageCenterDock.Visibility == Visibility.Collapsed && RootContainer.CurrentActivity is TimelineActivity);
-            //    }
-            //});
+
+            RegisterNotification("notification_new_fans", "FollowerCount");
+            RegisterNotification("notification_new_mention_at", "MentionStatusCount");
+            RegisterNotification("notification_new_mention_comment", "MentionCmtCount");
+            RegisterNotification("notification_new_comment", "CmtCount");
+            RegisterNotification("notification_new_dm", "DmCount");
+
+            NotificationViewModel.Instance.Init();
+
             RootContainer.BackStackChanged += RootContainerOnBackStackChanged;
             RootContainer.Navigate(typeof(LoginActivity));
+        }
+
+        private void RegisterNotification(string name, string localizationName)
+        {
+            Singleton<BroadcastCenter>.Instance.Subscribe(name, (sender, args) =>
+            {
+                if (args is long longArgs)
+                {
+                    ToastNotificationSender.SendText(Localization.Format(localizationName, longArgs));
+                }
+            });
         }
 
         private void OnBackRequested(object sender, BackRequestedEventArgs e)

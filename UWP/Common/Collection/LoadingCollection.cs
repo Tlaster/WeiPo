@@ -10,7 +10,14 @@ namespace WeiPo.Common.Collection
         Task Refresh();
     }
 
-    public class LoadingCollection<TSource, IType> : IncrementalLoadingCollection<TSource, IType>, ISupportRefresh
+    public interface IWithStatus
+    {
+        Action OnStartLoading { get; set; }
+        Action OnEndLoading { get; set; }
+        Action<Exception> OnError { get; set; }
+    }
+
+    public class LoadingCollection<TSource, IType> : IncrementalLoadingCollection<TSource, IType>, ISupportRefresh, IWithStatus
         where TSource : IIncrementalSource<IType>
     {
         public LoadingCollection(int itemsPerPage = 20, Action onStartLoading = null, Action onEndLoading = null,

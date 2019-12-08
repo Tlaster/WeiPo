@@ -18,10 +18,15 @@
         <viewModels:TimelineViewModel />
     </paging:Activity.DataContext>
     <Grid>
-        <controls:NavigationView Name="TimelineNavigationView" IsSettingsVisible="False" IsBackButtonVisible="Collapsed">
+        <controls:NavigationView PaneDisplayMode="LeftCompact" x:Name="TimelineNavigationView" IsSettingsVisible="False" IsBackButtonVisible="Collapsed">
             <controls:NavigationView.PaneFooter>
                 <StackPanel Orientation="Vertical">
-                    <controls:NavigationViewItem Content="Share" Tapped="ShareNavigationViewItemTapped">
+                    <controls:NavigationViewItem Content="{common:i18n Key=Refresh}" Tapped="RefreshNavigationViewItemTapped">
+                        <controls:NavigationViewItem.Icon>
+                            <SymbolIcon Symbol="Refresh"/>
+                        </controls:NavigationViewItem.Icon>
+                    </controls:NavigationViewItem>
+                    <controls:NavigationViewItem Content="{common:i18n Key=Share}" Tapped="ShareNavigationViewItemTapped">
                         <controls:NavigationViewItem.Icon>
                             <SymbolIcon Symbol="Edit"/>
                         </controls:NavigationViewItem.Icon>
@@ -58,15 +63,31 @@
                                            Margin="8" CornerRadius="999"/>
                     </Button>
                     <ListView Grid.Row="1" SelectionMode="Single" SelectedIndex="0" Name="NavigationMenuList" 
-                              ItemsSource="{x:Bind DataContext.(viewModels:TimelineViewModel.Sources), Mode=OneWay}">
+                                ItemsSource="{x:Bind DataContext.(viewModels:TimelineViewModel.Source)}">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="Margin" Value="0"/>
+                                <Setter Property="Padding" Value="0"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
                         <ListView.ItemTemplate>
-                            <DataTemplate x:DataType="viewModels:TimelineNavigationSubViewModel">
-                                <Grid>                                    
-                                    <controls:NavigationViewItem Content="{x:Bind Title}">
-                                        <controls:NavigationViewItem.Icon>
-                                            <SymbolIcon Symbol="{x:Bind Symbol}"/>
-                                        </controls:NavigationViewItem.Icon>
-                                    </controls:NavigationViewItem>
+                            <DataTemplate x:DataType="viewModels:NavigationViewModelWithNotification">
+                                <Grid DoubleTapped="MenuItemDoubleTapped">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="{ThemeResource NavigationViewCompactPaneLength}" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Viewbox
+                                        Height="16"
+                                        Margin="{ThemeResource NavigationViewItemOnLeftIconBoxMargin}">    
+                                        <SymbolIcon Symbol="{x:Bind Icon}" />
+                                    </Viewbox>
+                                    <Grid Margin="0,0,8,0" Width="10" Visibility="{x:Bind common:XamlHelper.IsLongNonZeroToVisibility(NotificationCount), Mode=OneWay}" Height="10" HorizontalAlignment="Right" VerticalAlignment="Top">
+                                        <Ellipse Fill="Red" />
+                                        <TextBlock FontSize="8" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" 
+                                                   Text="{x:Bind NotificationCount, Mode=OneWay}" />
+                                    </Grid>
+                                    <TextBlock VerticalAlignment="Center" Grid.Column="1" Text="{x:Bind Title}" />
                                 </Grid>
                             </DataTemplate>
                         </ListView.ItemTemplate>
@@ -74,15 +95,15 @@
                 </Grid>
             </controls:NavigationView.PaneCustomContent>
             <Pivot x:Name="TimelinePivot" Loaded="TimelinePivot_Loaded" 
-                   SelectedIndex="{x:Bind NavigationMenuList.SelectedIndex,Mode=OneWay}" 
-                   ItemsSource="{x:Bind DataContext.(viewModels:TimelineViewModel.Sources), Mode=OneWay}">
+                   ItemsSource="{x:Bind DataContext.(viewModels:TimelineViewModel.Source)}"
+                   SelectedIndex="{x:Bind NavigationMenuList.SelectedIndex,Mode=OneWay}">
                 <Pivot.ItemContainerStyle>
                     <Style TargetType="PivotItem">
                         <Setter Property="Margin" Value="0" />
                     </Style>
                 </Pivot.ItemContainerStyle>
                 <Pivot.ItemTemplate>
-                    <DataTemplate x:DataType="viewModels:TimelineNavigationSubViewModel">
+                    <DataTemplate x:DataType="viewModels:NavigationViewModelWithNotification">
                         <controls2:ListViewEx ItemsSource="{x:Bind Source}">
                             <controls2:ListViewEx.Layout>
                                 <common:StaggeredLayout DesiredColumnWidth="300" />
@@ -164,38 +185,5 @@
                 </Pivot.ItemTemplate>
             </Pivot>
         </controls:NavigationView>
-        <!--<controls2:ListViewEx x:Name="TimelineListView"
-                              ItemsSource="{x:Bind DataContext.(viewModels:TimelineViewModel.Timeline), Mode=OneWay}">
-            <controls2:ListViewEx.Layout>
-                <common:StaggeredLayout DesiredColumnWidth="400" />
-            </controls2:ListViewEx.Layout>
-            <controls2:ListViewEx.ItemTemplate>
-                <DataTemplate x:DataType="models:StatusModel">
-                    <controls2:StatusView Status="{x:Bind}" />
-                </DataTemplate>
-            </controls2:ListViewEx.ItemTemplate>
-        </controls2:ListViewEx>-->
-        <!--<controls1:DropShadowPanel
-            VerticalAlignment="{Binding ElementName=RefreshButton, Path=VerticalAlignment}"
-            HorizontalAlignment="{Binding ElementName=RefreshButton, Path=HorizontalAlignment}"
-            BlurRadius="20"
-            Margin="{Binding ElementName=RefreshButton, Path=Margin}"
-            ShadowOpacity="0.6"
-            Color="Black">
-            <Ellipse Fill="{ThemeResource SystemAccentColor}"
-                     Width="{Binding ElementName=RefreshButton, Path=(extensions:FrameworkElementExtensions.ActualWidth), Mode=OneWay}"
-                     Height="{Binding ElementName=RefreshButton, Path=(extensions:FrameworkElementExtensions.ActualHeight), Mode=OneWay}" />
-        </controls1:DropShadowPanel>
-        <Button
-            extensions:FrameworkElementExtensions.EnableActualSizeBinding="True"
-            Name="RefreshButton"
-            Margin="16"
-            VerticalAlignment="Bottom"
-            HorizontalAlignment="Right"
-            CornerRadius="40" Padding="8" RequestedTheme="Dark" Style="{ThemeResource AccentButtonStyle}"
-            Click="{x:Bind DataContext.(viewModels:TimelineViewModel.Timeline).Refresh}">
-            <SymbolIcon Width="{StaticResource AvatarNormalSize}" Height="{StaticResource AvatarNormalSize}"
-                        Symbol="Refresh" />
-        </Button>-->
     </Grid>
 </paging:Activity>
