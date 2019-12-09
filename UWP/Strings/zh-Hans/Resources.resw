@@ -180,16 +180,25 @@
   <data name="MentionStatusCount" xml:space="preserve">
     <value>{0} 条@你的微博</value>
   </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>刷新</value>
+  </data>
   <data name="Reposts" xml:space="preserve">
     <value>转发</value>
   </data>
   <data name="Send" xml:space="preserve">
     <value>发送</value>
   </data>
+  <data name="SendWeibo" xml:space="preserve">
+    <value>发微博</value>
+  </data>
   <data name="Status" xml:space="preserve">
     <value>微博</value>
   </data>
   <data name="Statuses" xml:space="preserve">
     <value>微博</value>
+  </data>
+  <data name="Timeline" xml:space="preserve">
+    <value>主页</value>
   </data>
 </root>

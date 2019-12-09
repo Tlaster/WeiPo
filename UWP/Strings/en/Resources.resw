@@ -180,16 +180,25 @@
   <data name="MentionStatusCount" xml:space="preserve">
     <value>{0} @</value>
   </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
   <data name="Reposts" xml:space="preserve">
     <value>Reposts</value>
   </data>
   <data name="Send" xml:space="preserve">
     <value>Send</value>
   </data>
+  <data name="SendWeibo" xml:space="preserve">
+    <value>Send Post</value>
+  </data>
   <data name="Status" xml:space="preserve">
     <value>Status</value>
   </data>
   <data name="Statuses" xml:space="preserve">
     <value>Statuses</value>
+  </data>
+  <data name="Timeline" xml:space="preserve">
+    <value>Timeline</value>
   </data>
 </root>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -171,9 +171,6 @@
     <Compile Include="Common\WeiboLinkHelper.cs" />
     <Compile Include="Common\XamlExtensions.cs" />
     <Compile Include="Common\XamlHelper.cs" />
-    <Compile Include="Controls\AccountMessagingCenterDock.xaml.cs">
-      <DependentUpon>AccountMessagingCenterDock.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\AppDock.xaml.cs">
       <DependentUpon>AppDock.xaml</DependentUpon>
     </Compile>
@@ -185,9 +182,6 @@
     <Compile Include="Controls\FollowStateButton.cs" />
     <Compile Include="Controls\Html\HtmlTextBlock.cs" />
     <Compile Include="Controls\ListViewEx.cs" />
-    <Compile Include="Controls\NotificationDockView.xaml.cs">
-      <DependentUpon>NotificationDockView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\PersonCard.xaml.cs">
       <DependentUpon>PersonCard.xaml</DependentUpon>
     </Compile>
@@ -263,10 +257,8 @@
     <Compile Include="ShareTargetView.xaml.cs">
       <DependentUpon>ShareTargetView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModels\AccountMessagingCenterDockViewModel.cs" />
     <Compile Include="ViewModels\DockViewModel.cs" />
     <Compile Include="ViewModels\ImageViewModel.cs" />
-    <Compile Include="ViewModels\NavigationDockViewModel.cs" />
     <Compile Include="ViewModels\NotificationViewModel.cs" />
     <Compile Include="ViewModels\PostWeiboViewModel.cs" />
     <Compile Include="ViewModels\StatusViewModel.cs" />
@@ -402,19 +394,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\AccountMessagingCenterDock.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\AppDock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\CommentView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\NotificationDockView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

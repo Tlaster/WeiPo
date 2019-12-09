@@ -26,7 +26,7 @@
                             <SymbolIcon Symbol="Refresh"/>
                         </controls:NavigationViewItem.Icon>
                     </controls:NavigationViewItem>
-                    <controls:NavigationViewItem Content="{common:i18n Key=Share}" Tapped="ShareNavigationViewItemTapped">
+                    <controls:NavigationViewItem Content="{common:i18n Key=SendWeibo}" Tapped="ShareNavigationViewItemTapped">
                         <controls:NavigationViewItem.Icon>
                             <SymbolIcon Symbol="Edit"/>
                         </controls:NavigationViewItem.Icon>

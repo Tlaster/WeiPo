@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
@@ -27,6 +28,31 @@ namespace WeiPo.ViewModels
             var list = result.Statuses;
             _maxId = result.NextCursor;
             return list;
+        }
+    }
+
+    public class FuncDataSource<T> : IIncrementalSource<T>
+    {
+        private readonly Func<int, Task<IEnumerable<T>>> _func;
+        private readonly string _postMessageId;
+
+        public FuncDataSource(string postMessageId, Func<int, Task<IEnumerable<T>>> func)
+        {
+            _postMessageId = postMessageId;
+            _func = func;
+        }
+
+        public async Task<IEnumerable<T>> GetPagedItemsAsync(int pageIndex, int pageSize,
+            CancellationToken cancellationToken = new CancellationToken())
+        {
+            if (pageIndex == 0 && !string.IsNullOrEmpty(_postMessageId))
+                //clear notification
+            {
+                Singleton<BroadcastCenter>.Instance.Send(this, _postMessageId);
+            }
+
+            var result = await _func.Invoke(pageIndex + 1);
+            return result;
         }
     }
 
@@ -74,7 +100,7 @@ namespace WeiPo.ViewModels
 
         public override object Source { get; } =
             new LoadingCollection<IIncrementalSource<StatusModel>, StatusModel>(
-                new MessagingCenterDockItemDataSource<StatusModel>("notification_clear_mention_at",
+                new FuncDataSource<StatusModel>("notification_clear_mention_at",
                     async page => await Singleton<Api>.Instance.GetMentionsAt(page)));
     }
 
@@ -85,7 +111,7 @@ namespace WeiPo.ViewModels
         public override string NotificationName { get; } = "notification_new_mention_comment";
         public override object Source { get; } = 
             new LoadingCollection<IIncrementalSource<CommentModel>, CommentModel>(
-                    new MessagingCenterDockItemDataSource<CommentModel>("notification_clear_mention_comment",
+                    new FuncDataSource<CommentModel>("notification_clear_mention_comment",
                         async page => await Singleton<Api>.Instance.GetMentionsCmt(page)));
     }
 
@@ -97,7 +123,7 @@ namespace WeiPo.ViewModels
 
         public override object Source { get; } =
             new LoadingCollection<IIncrementalSource<CommentModel>, CommentModel>(
-                new MessagingCenterDockItemDataSource<CommentModel>("notification_clear_comment",
+                new FuncDataSource<CommentModel>("notification_clear_comment",
                     async page => await Singleton<Api>.Instance.GetComment(page)));
     }
 
@@ -108,7 +134,7 @@ namespace WeiPo.ViewModels
         public override string NotificationName { get; } = string.Empty;
         public override object Source { get; } =
             new LoadingCollection<IIncrementalSource<AttitudeModel>, AttitudeModel>(
-                    new MessagingCenterDockItemDataSource<AttitudeModel>("",
+                    new FuncDataSource<AttitudeModel>("",
                         async page => await Singleton<Api>.Instance.GetAttitude(page)));
     }
 
@@ -119,7 +145,7 @@ namespace WeiPo.ViewModels
         public override string NotificationName { get; } = "notification_new_dm";
         public override object Source { get; } = 
             new LoadingCollection<IIncrementalSource<MessageListModel>, MessageListModel>(
-                    new MessagingCenterDockItemDataSource<MessageListModel>("notification_clear_dm",
+                    new FuncDataSource<MessageListModel>("notification_clear_dm",
                         async page => await Singleton<Api>.Instance.GetMessageList(page)));
     }
 
