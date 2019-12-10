@@ -62,7 +62,7 @@
                         <controls1:ImageEx Source="{x:Bind DataContext.(viewModels:TimelineViewModel.MyProfile).Result.UserInfo.ProfileImageUrl, Mode=OneWay}"
                                            Margin="8" CornerRadius="999"/>
                     </Button>
-                    <ListView Grid.Row="1" SelectionMode="Single" SelectedIndex="0" Name="NavigationMenuList" 
+                    <ListView Grid.Row="1" SelectionMode="Single" SelectedIndex="0" x:Name="NavigationMenuList" 
                                 ItemsSource="{x:Bind DataContext.(viewModels:TimelineViewModel.Source)}">
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">

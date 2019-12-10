@@ -31,14 +31,17 @@ namespace WeiPo
                 it.ButtonInactiveBackgroundColor = Colors.Transparent;
             });
             SystemNavigationManager.GetForCurrentView().BackRequested += OnBackRequested;
-            RootContainer.Navigated += RootContainerOnNavigated;
             Init();
         }
 
         private void Init()
         {
             Singleton<BroadcastCenter>.Instance.Subscribe("login_completed",
-                (sender, args) => RootContainer.Navigate<TimelineActivity>());
+                (sender, args) =>
+                {
+                    RootContainer.Navigate<TimelineActivity>();
+                    NotificationViewModel.Instance.Init();
+                });
             Singleton<BroadcastCenter>.Instance.Subscribe("status_clicked", 
                 (sender, args) => RootContainer.Navigate<StatusActivity>(args));
             Singleton<BroadcastCenter>.Instance.Subscribe("user_clicked",
@@ -54,8 +57,6 @@ namespace WeiPo
             RegisterNotification("notification_new_mention_comment", "MentionCmtCount");
             RegisterNotification("notification_new_comment", "CmtCount");
             RegisterNotification("notification_new_dm", "DmCount");
-
-            NotificationViewModel.Instance.Init();
 
             RootContainer.BackStackChanged += RootContainerOnBackStackChanged;
             RootContainer.Navigate(typeof(LoginActivity));
@@ -74,7 +75,7 @@ namespace WeiPo
 
         private void OnBackRequested(object sender, BackRequestedEventArgs e)
         {
-            if (!Dock.OnBackPress() && /*!MessageCenterDock.OnBackPress() &&*/ RootContainer.CanGoBack)
+            if (!Dock.OnBackPress() && RootContainer.CanGoBack)
             {
                 RootContainer.GoBack();
             }
@@ -91,17 +92,10 @@ namespace WeiPo
             UpdateNavigationBackButton();
         }
 
-        private void RootContainerOnNavigated(object sender, EventArgs e)
-        {
-            //Singleton<BroadcastCenter>.Instance.Send(this, "message_center_visible", false);
-            //Singleton<BroadcastCenter>.Instance.Send(this, "dock_visible",
-            //    RootContainer.CurrentActivity is TimelineActivity);
-        }
-
         private void UpdateNavigationBackButton()
         {
             SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
-                RootContainer.CanGoBack /*|| MessageCenterDock.Visibility == Visibility.Visible*/
+                RootContainer.CanGoBack 
                     ? AppViewBackButtonVisibility.Visible
                     : AppViewBackButtonVisibility.Collapsed;
         }

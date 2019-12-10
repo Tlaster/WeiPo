@@ -34,23 +34,15 @@ namespace WeiPo.ViewModels
     public class FuncDataSource<T> : IIncrementalSource<T>
     {
         private readonly Func<int, Task<IEnumerable<T>>> _func;
-        private readonly string _postMessageId;
 
-        public FuncDataSource(string postMessageId, Func<int, Task<IEnumerable<T>>> func)
+        public FuncDataSource(Func<int, Task<IEnumerable<T>>> func)
         {
-            _postMessageId = postMessageId;
             _func = func;
         }
 
         public async Task<IEnumerable<T>> GetPagedItemsAsync(int pageIndex, int pageSize,
             CancellationToken cancellationToken = new CancellationToken())
         {
-            if (pageIndex == 0 && !string.IsNullOrEmpty(_postMessageId))
-                //clear notification
-            {
-                Singleton<BroadcastCenter>.Instance.Send(this, _postMessageId);
-            }
-
             var result = await _func.Invoke(pageIndex + 1);
             return result;
         }
@@ -75,17 +67,17 @@ namespace WeiPo.ViewModels
         }
 
         public long NotificationCount { get; set; }
-        public abstract string Name { get; set; }
+        public abstract string Name { get;  }
         public string Title => Name.GetLocalized();
-        public abstract Symbol Icon { get; set; }
+        public abstract Symbol Icon { get; }
         public abstract string NotificationName { get; }
         public abstract object Source { get; }
     }
     
     public class TimelineNavigationViewModel : NavigationViewModelWithNotification
     {
-        public override string Name { get; set; } = "Timeline";
-        public override Symbol Icon { get; set; } = Symbol.Home;
+        public override string Name { get; } = "Timeline";
+        public override Symbol Icon { get; } = Symbol.Home;
         public override string NotificationName { get; } = "";
 
         public override object Source { get; } =
@@ -94,59 +86,54 @@ namespace WeiPo.ViewModels
 
     public class MentionNavigationViewModel : NavigationViewModelWithNotification
     {
-        public override string Name { get; set; } = "Mention";
-        public override Symbol Icon { get; set; } = Symbol.Account;
-        public override string NotificationName { get; } = "notification_new_mention_at";
+        public override string Name { get; } = "Mention";
+        public override Symbol Icon { get; } = Symbol.Account;
+        public override string NotificationName { get; } = "notification_changed_mention_at";
 
         public override object Source { get; } =
             new LoadingCollection<IIncrementalSource<StatusModel>, StatusModel>(
-                new FuncDataSource<StatusModel>("notification_clear_mention_at",
-                    async page => await Singleton<Api>.Instance.GetMentionsAt(page)));
+                new FuncDataSource<StatusModel>(async page => await Singleton<Api>.Instance.GetMentionsAt(page)));
     }
 
     public class MentionCommentNavigationViewModel : NavigationViewModelWithNotification
     {
-        public override string Name { get; set; } = "MentionComment";
-        public override Symbol Icon { get; set; } = Symbol.Account;
-        public override string NotificationName { get; } = "notification_new_mention_comment";
+        public override string Name { get; } = "MentionComment";
+        public override Symbol Icon { get; } = Symbol.Account;
+        public override string NotificationName { get; } = "notification_changed_mention_comment";
         public override object Source { get; } = 
             new LoadingCollection<IIncrementalSource<CommentModel>, CommentModel>(
-                    new FuncDataSource<CommentModel>("notification_clear_mention_comment",
-                        async page => await Singleton<Api>.Instance.GetMentionsCmt(page)));
+                    new FuncDataSource<CommentModel>(async page => await Singleton<Api>.Instance.GetMentionsCmt(page)));
     }
 
     public class CommentNavigationViewModel : NavigationViewModelWithNotification
     {
-        public override string Name { get; set; } = "Comment";
-        public override Symbol Icon { get; set; } = Symbol.Comment;
-        public override string NotificationName { get; } = "notification_new_comment";
+        public override string Name { get; } = "Comment";
+        public override Symbol Icon { get; } = Symbol.Comment;
+        public override string NotificationName { get; } = "notification_changed_comment";
 
         public override object Source { get; } =
             new LoadingCollection<IIncrementalSource<CommentModel>, CommentModel>(
-                new FuncDataSource<CommentModel>("notification_clear_comment",
-                    async page => await Singleton<Api>.Instance.GetComment(page)));
+                new FuncDataSource<CommentModel>(async page => await Singleton<Api>.Instance.GetComment(page)));
     }
 
     public class LikeNavigationViewModel : NavigationViewModelWithNotification
     {
-        public override string Name { get; set; } = "Like";
-        public override Symbol Icon { get; set; } = Symbol.Like;
+        public override string Name { get; } = "Like";
+        public override Symbol Icon { get; } = Symbol.Like;
         public override string NotificationName { get; } = string.Empty;
         public override object Source { get; } =
             new LoadingCollection<IIncrementalSource<AttitudeModel>, AttitudeModel>(
-                    new FuncDataSource<AttitudeModel>("",
-                        async page => await Singleton<Api>.Instance.GetAttitude(page)));
+                    new FuncDataSource<AttitudeModel>(async page => await Singleton<Api>.Instance.GetAttitude(page)));
     }
 
     public class DirectMessageNavigationViewModel : NavigationViewModelWithNotification
     {
-        public override string Name { get; set; } = "DirectMessage";
-        public override Symbol Icon { get; set; } = Symbol.Message;
-        public override string NotificationName { get; } = "notification_new_dm";
+        public override string Name { get; } = "DirectMessage";
+        public override Symbol Icon { get; } = Symbol.Message;
+        public override string NotificationName { get; } = "notification_changed_dm";
         public override object Source { get; } = 
             new LoadingCollection<IIncrementalSource<MessageListModel>, MessageListModel>(
-                    new FuncDataSource<MessageListModel>("notification_clear_dm",
-                        async page => await Singleton<Api>.Instance.GetMessageList(page)));
+                    new FuncDataSource<MessageListModel>(async page => await Singleton<Api>.Instance.GetMessageList(page)));
     }
 
     public class TimelineViewModel : ViewModelBase
