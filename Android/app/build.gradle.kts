@@ -51,8 +51,14 @@ dependencies {
     implementation("androidx.core:core-ktx:1.1.0")
     implementation("androidx.constraintlayout:constraintlayout:2.0.0-beta3")
     implementation("androidx.lifecycle:lifecycle-extensions:2.1.0")
-    implementation("androidx.fragment:fragment-ktx:1.2.0-rc02")
-    implementation("androidx.activity:activity-ktx:1.1.0-rc02")
+    implementation("androidx.fragment:fragment-ktx:1.2.0-rc03")
+    implementation("androidx.activity:activity-ktx:1.1.0-rc03")
+    implementation("androidx.viewpager2:viewpager2:1.0.0")
+
+    implementation("androidx.navigation:navigation-fragment:2.1.0")
+    implementation("androidx.navigation:navigation-ui:2.1.0")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.1.0")
+    implementation("androidx.navigation:navigation-ui-ktx:2.1.0")
 
     implementation("com.github.kittinunf.fuel:fuel:${appConfig.dependencyVersion.fuel}")
     implementation("com.github.kittinunf.fuel:fuel-kotlinx-serialization:${appConfig.dependencyVersion.fuel}")
@@ -75,7 +81,7 @@ dependencies {
 
     implementation("com.hold1:keyboardheightprovider:0.0.9")
 
-    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.0-beta-3")
+    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.0")
 
     testImplementation("junit:junit:4.12")
     androidTestImplementation("androidx.test:runner:1.2.0")
