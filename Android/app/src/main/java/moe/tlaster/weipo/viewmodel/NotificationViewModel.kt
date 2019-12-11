@@ -15,6 +15,7 @@ import moe.tlaster.weipo.common.collection.IncrementalLoadingCollection
 import moe.tlaster.weipo.common.extensions.runOnMainThread
 import moe.tlaster.weipo.controls.PersonCard
 import moe.tlaster.weipo.controls.StatusView
+import moe.tlaster.weipo.datasource.CachedFuncDataSource
 import moe.tlaster.weipo.datasource.FuncDataSource
 import moe.tlaster.weipo.services.Api
 import moe.tlaster.weipo.services.models.Attitude
@@ -67,7 +68,7 @@ class NotificationViewModel : ViewModel() {
             R.drawable.ic_comment_black_24dp,
             IncrementalLoadingAdapter<Comment>(ItemSelector(R.layout.item_status)).apply {
                 autoRefresh = false
-                items = IncrementalLoadingCollection(FuncDataSource {
+                items = IncrementalLoadingCollection(CachedFuncDataSource("comment_list", Comment.serializer()) {
                     Api.comment(it + 1)
                 }, scope = viewModelScope)
                 setView<StatusView>(R.id.item_status) { view, item, _, _ ->
@@ -80,7 +81,7 @@ class NotificationViewModel : ViewModel() {
             R.drawable.ic_thumb_up_black_24dp,
             IncrementalLoadingAdapter<Attitude>(ItemSelector(R.layout.item_status)).apply {
                 autoRefresh = false
-                items = IncrementalLoadingCollection(FuncDataSource {
+                items = IncrementalLoadingCollection(CachedFuncDataSource("attitude_list", Attitude.serializer()) {
                     Api.attitude(it + 1)
                 }, scope = viewModelScope)
                 setView<StatusView>(R.id.item_status) { view, item, _, _ ->
@@ -93,7 +94,7 @@ class NotificationViewModel : ViewModel() {
             R.drawable.ic_message_black_24dp,
             IncrementalLoadingAdapter<MessageList>(ItemSelector(R.layout.item_person)).apply {
                 autoRefresh = false
-                items = IncrementalLoadingCollection(FuncDataSource {
+                items = IncrementalLoadingCollection(CachedFuncDataSource("direct_message_list", MessageList.serializer()) {
                     Api.messageList(it + 1)
                 }, scope = viewModelScope)
                 setView<PersonCard>(R.id.item_person) { view, item, _, _ ->

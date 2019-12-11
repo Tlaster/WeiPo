@@ -8,4 +8,8 @@ interface ISupportIncrementalLoading {
     val scope: CoroutineScope
 }
 
+interface ISupportCacheLoading {
+    suspend fun loadCachedAsync()
+    val scope: CoroutineScope
+}
 

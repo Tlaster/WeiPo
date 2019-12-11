@@ -5,11 +5,11 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import moe.tlaster.weipo.common.Event
 
-class IncrementalLoadingCollection<TSource: IIncrementalSource<T>, T>(
+open class IncrementalLoadingCollection<TSource: IIncrementalSource<T>, T>(
     private val source: TSource,
     private val itemsPerPage: Int = 20,
     override val scope: CoroutineScope = GlobalScope
-): ObservableCollection<T>(), ISupportIncrementalLoading {
+): ObservableCollection<T>(), ISupportIncrementalLoading, ISupportCacheLoading {
 
     val onError = Event<Throwable>()
 
@@ -52,6 +52,27 @@ class IncrementalLoadingCollection<TSource: IIncrementalSource<T>, T>(
             addAll(result)
         } else {
             hasMoreItems = false
+        }
+        stateChanged.invoke(this, CollectionState.Completed)
+        isLoading = false
+    }
+
+    override suspend fun loadCachedAsync() {
+        if (source !is ICachedIncrementalSource<*>) {
+            return
+        }
+        if (isLoading) {
+            return
+        }
+        isLoading = true
+        stateChanged.invoke(this, CollectionState.Loading)
+        kotlin.runCatching {
+            source.getCachedItemsAsync()
+        }.onFailure {
+            onError.invoke(this, it)
+            it.printStackTrace()
+        }.onSuccess {
+            addAll(it.map { it as T })
         }
         stateChanged.invoke(this, CollectionState.Completed)
         isLoading = false
