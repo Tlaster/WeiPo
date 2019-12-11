@@ -226,7 +226,7 @@ class StatusView : LinearLayout {
             }?.also {
                 it.updateMarginsRelative(start = 8.dp.toInt(), end = 8.dp.toInt())
             }
-            repostView.setBackgroundColor(Color.argb(32, 0, 0, 0))
+            repostView.setBackgroundColor(Color.argb(16, 0, 0, 0))
             repost_container.addView(repostView)
         }
     }

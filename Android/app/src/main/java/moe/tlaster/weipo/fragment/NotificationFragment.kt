@@ -5,7 +5,7 @@ import android.view.View
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
@@ -35,52 +35,45 @@ class NotificationSelector: IItemSelector<INotificationTabItem<out Any>> {
     }
 }
 
-class NotificationFragment : Fragment(R.layout.fragment_notification) {
-    val totalNotificationCount = MutableLiveData<Long>()
+class NotificationFragment : Fragment(R.layout.fragment_notification), ITabFragment {
+    private lateinit var requestRefresh: () -> Unit
+    val totalNotificationCount = MutableLiveData<Int>()
 
-    private val viewModel by viewModels<NotificationViewModel>()
+    private val viewModel by activityViewModels<NotificationViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.unread.observe(this.viewLifecycleOwner, Observer { args ->
             var result = 0
-            if (args.mentionCmt != 0L || args.mentionStatus != 0L) {
-                val mention = ((args.mentionCmt ?: 0) + (args.mentionStatus ?: 0)).toInt()
-                result += mention
-                if (mention > 0) {
-                    tab_layout.getTabAt(0)?.orCreateBadge?.number = mention
-                } else {
-                    tab_layout.getTabAt(0)?.removeBadge()
-                }
+            val mention = ((args.mentionCmt ?: 0) + (args.mentionStatus ?: 0)).toInt()
+            result += mention
+            if (mention > 0) {
+                tab_layout.getTabAt(0)?.orCreateBadge?.number = mention
+            } else {
+                tab_layout.getTabAt(0)?.removeBadge()
             }
-            if (args.cmt != 0L) {
-                val cmt = args.cmt?.toInt() ?: 0
-                result += cmt
-                if (cmt > 0) {
-                    tab_layout.getTabAt(1)?.orCreateBadge?.number = cmt
-                } else {
-                    tab_layout.getTabAt(1)?.removeBadge()
-                }
+            val cmt = args.cmt?.toInt() ?: 0
+            result += cmt
+            if (cmt > 0) {
+                tab_layout.getTabAt(1)?.orCreateBadge?.number = cmt
+            } else {
+                tab_layout.getTabAt(1)?.removeBadge()
             }
-            if (args.attitude != 0L) {
-                val attitude = args.attitude?.toInt() ?: 0
-                result += attitude
-                if (attitude > 0) {
-                    tab_layout.getTabAt(2)?.orCreateBadge?.number = attitude
-                } else {
-                    tab_layout.getTabAt(2)?.removeBadge()
-                }
+            val attitude = args.attitude?.toInt() ?: 0
+            result += attitude
+            if (attitude > 0) {
+                tab_layout.getTabAt(2)?.orCreateBadge?.number = attitude
+            } else {
+                tab_layout.getTabAt(2)?.removeBadge()
             }
-            if (args.dm != 0L) {
-                val dm = args.dm?.toInt() ?: 0
-                result += dm
-                if (dm > 0) {
-                    tab_layout.getTabAt(3)?.orCreateBadge?.number = dm
-                } else {
-                    tab_layout.getTabAt(3)?.removeBadge()
-                }
+            val dm = args.dm?.toInt() ?: 0
+            result += dm
+            if (dm > 0) {
+                tab_layout.getTabAt(3)?.orCreateBadge?.number = dm
+            } else {
+                tab_layout.getTabAt(3)?.removeBadge()
             }
-            totalNotificationCount.value = result.toLong()
+            totalNotificationCount.value = result
         })
         view_pager.adapter =
             AutoAdapter(NotificationSelector()).apply {
@@ -157,11 +150,15 @@ class NotificationFragment : Fragment(R.layout.fragment_notification) {
                 }?.refresh()
             }
         })
+
+        requestRefresh = {
+            viewModel.sources[view_pager.currentItem].adapter.items.let {
+                it as? IncrementalLoadingCollection<*, *>
+            }?.refresh()
+        }
     }
 
-    fun requestRefresh() {
-        viewModel.sources[view_pager.currentItem].adapter.items.let {
-            it as? IncrementalLoadingCollection<*, *>
-        }?.refresh()
+    override fun onTabReselected() {
+        requestRefresh.invoke()
     }
 }

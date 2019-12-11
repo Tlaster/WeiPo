@@ -3,7 +3,7 @@ package moe.tlaster.weipo.fragment
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import kotlinx.android.synthetic.main.layout_list.*
 import moe.tlaster.weipo.R
 import moe.tlaster.weipo.common.AutoStaggeredGridLayoutManager
@@ -15,9 +15,14 @@ import moe.tlaster.weipo.controls.StatusView
 import moe.tlaster.weipo.services.models.Status
 import moe.tlaster.weipo.viewmodel.TimelineViewModel
 
-class TimelineFragment : Fragment(R.layout.layout_list) {
+interface ITabFragment {
+    fun onTabReselected()
+}
 
-    private val viewModel by viewModels<TimelineViewModel>()
+class TimelineFragment : Fragment(R.layout.layout_list), ITabFragment {
+
+    private lateinit var requestRefresh: () -> Unit
+    private val viewModel by activityViewModels<TimelineViewModel>()
 
     private val adapter by lazy {
         IncrementalLoadingAdapter<Status>(ItemSelector(R.layout.item_status)).apply {
@@ -33,10 +38,12 @@ class TimelineFragment : Fragment(R.layout.layout_list) {
         recycler_view.layoutManager = AutoStaggeredGridLayoutManager(statusWidth)
         recycler_view.adapter = adapter
         refresh_layout.bindLoadingCollection(viewModel.items)
-
+        requestRefresh = {
+            viewModel.items.refresh()
+        }
     }
 
-    fun requestRefresh() {
-        viewModel.items.refresh()
+    override fun onTabReselected() {
+        requestRefresh.invoke()
     }
 }

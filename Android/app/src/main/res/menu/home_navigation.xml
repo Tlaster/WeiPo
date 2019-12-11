@@ -7,6 +7,11 @@
         android:title="Me"
         app:showAsAction="always" />
     <item
+        android:id="@+id/navigation_timeline"
+        android:icon="@drawable/ic_home_black_24dp"
+        android:title="Timeline"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/navigation_notification"
         android:icon="@drawable/ic_notifications_black_24dp"
         android:title="Notification"
