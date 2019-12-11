@@ -1,7 +1,6 @@
 package moe.tlaster.weipo.activity
 
 import android.os.Bundle
-import androidx.core.view.isVisible
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import kotlinx.android.synthetic.main.activity_home.*
@@ -20,9 +19,12 @@ class HomeActivity : BaseActivity() {
         floating_button.setOnClickListener {
             it?.context?.openActivity<ComposeActivity>("compose_type" to ComposeViewModel.ComposeType.Create)
         }
-        bottom_navigation_view.setOnNavigationItemSelectedListener {
-            floating_button.isVisible = it.itemId == R.id.navigation_timeline
-            false
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.id == R.id.navigation_timeline) {
+                floating_button.show()
+            } else {
+                floating_button.hide()
+            }
         }
     }
 }
