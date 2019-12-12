@@ -3,6 +3,7 @@ package moe.tlaster.weipo.activity
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
+import androidx.core.view.children
 import com.github.piasy.biv.indicator.progresspie.ProgressPieIndicator
 import com.github.piasy.biv.view.BigImageView
 import com.github.piasy.biv.view.GlideImageViewFactory
@@ -49,6 +50,15 @@ class ImageActivity : BaseActivity() {
 
         view_pager.post {
             view_pager.setCurrentItem(intent.getIntExtra("selected_index", 0), false)
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        view_pager.children.forEach {
+            if (it is BigImageView) {
+                it.cancel()
+            }
         }
     }
 }
