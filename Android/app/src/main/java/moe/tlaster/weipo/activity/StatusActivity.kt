@@ -56,7 +56,7 @@ class StatusActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         item_status.isTextSelectionEnabled = true
         item_status.data = status
-        view_pager.adapter = FragmentAdapter(supportFragmentManager, lifecycle).apply {
+        view_pager.adapter = FragmentAdapter(this).apply {
             items = tabItems
         }
         TabLayoutMediator(
