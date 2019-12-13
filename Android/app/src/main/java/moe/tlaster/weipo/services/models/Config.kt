@@ -156,18 +156,18 @@ data class Emoji (
 
 @Serializable
 data class UnreadData (
-    val cmt: Long? = null,
+    var cmt: Long? = null,
     val status: Long? = null,
-    val follower: Long? = null,
-    val dm: Long? = null,
+    var follower: Long? = null,
+    var dm: Long? = null,
 
     @SerialName("mention_cmt")
-    val mentionCmt: Long? = null,
+    var mentionCmt: Long? = null,
 
     @SerialName("mention_status")
-    val mentionStatus: Long? = null,
+    var mentionStatus: Long? = null,
 
-    val attitude: Long? = null,
+    var attitude: Long? = null,
     val unreadmblog: Long? = null,
     val uid: String? = null,
     val bi: Long? = null,

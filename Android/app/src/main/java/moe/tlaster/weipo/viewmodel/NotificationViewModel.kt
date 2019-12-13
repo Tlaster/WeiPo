@@ -21,6 +21,14 @@ class NotificationViewModel : ViewModel() {
             delay(60 * 1000)
         }
     }
+
+    fun update(action: (UnreadData) -> Unit) {
+        unread.value = unread.value?.let {
+            action.invoke(it)
+            it
+        }
+    }
+
     private suspend fun fetchUnread() {
         kotlin.runCatching {
             Api.unread()
