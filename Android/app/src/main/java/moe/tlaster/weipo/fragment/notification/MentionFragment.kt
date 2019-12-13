@@ -46,6 +46,7 @@ class MentionFragment : BaseFragment(R.layout.fragment_mention) {
                 }
             }
         })
+        refresh_layout.bindLoadingCollection(viewModel.source, viewLifecycleOwner)
         recycler_view.adapter = IncrementalLoadingAdapter(
             ItemSelector<Any>(R.layout.item_status)
         ).apply {

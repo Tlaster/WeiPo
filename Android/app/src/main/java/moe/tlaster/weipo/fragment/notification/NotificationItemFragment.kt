@@ -31,7 +31,6 @@ abstract class NotificationItemFragment<T> : BaseFragment(R.layout.layout_list) 
     private val notificationViewModel by activityViewModels<NotificationViewModel>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        refresh_layout.bindLoadingCollection(viewModel.source, this)
         recycler_view.adapter = createAdapter()
         viewModel.source.stateChanged.observe(viewLifecycleOwner, Observer {
             if (it == IncrementalLoadingCollection.CollectionState.Loading) {
@@ -39,6 +38,7 @@ abstract class NotificationItemFragment<T> : BaseFragment(R.layout.layout_list) 
             }
         })
         recycler_view.layoutManager = AutoStaggeredGridLayoutManager(statusWidth)
+        refresh_layout.bindLoadingCollection(viewModel.source, viewLifecycleOwner)
     }
 
     protected open fun createAdapter(): IncrementalLoadingAdapter<T> {

@@ -2,7 +2,6 @@ package moe.tlaster.weipo.fragment
 
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import kotlinx.android.synthetic.main.layout_list.*
 import moe.tlaster.weipo.R
@@ -37,7 +36,7 @@ class TimelineFragment : BaseFragment(R.layout.layout_list), ITabFragment {
         super.onViewCreated(view, savedInstanceState)
         recycler_view.layoutManager = AutoStaggeredGridLayoutManager(statusWidth)
         recycler_view.adapter = adapter
-        refresh_layout.bindLoadingCollection(viewModel.items, this)
+        refresh_layout.bindLoadingCollection(viewModel.items, viewLifecycleOwner)
         requestRefresh = {
             viewModel.items.refresh()
         }

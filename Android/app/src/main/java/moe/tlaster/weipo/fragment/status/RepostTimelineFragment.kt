@@ -56,7 +56,7 @@ class RepostTimelineFragment : TabFragment() {
             }
             items = viewModel.source
         }
-        refresh_layout.bindLoadingCollection(viewModel.source, this)
+        refresh_layout.bindLoadingCollection(viewModel.source, viewLifecycleOwner)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
