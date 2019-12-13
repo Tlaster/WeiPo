@@ -1,9 +1,9 @@
 package moe.tlaster.weipo.common.collection
 
+import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import moe.tlaster.weipo.common.Event
 
 open class IncrementalLoadingCollection<TSource: IIncrementalSource<T>, T>(
     private val source: TSource,
@@ -11,7 +11,7 @@ open class IncrementalLoadingCollection<TSource: IIncrementalSource<T>, T>(
     override val scope: CoroutineScope = GlobalScope
 ): ObservableCollection<T>(), ISupportIncrementalLoading, ISupportCacheLoading {
 
-    val onError = Event<Throwable>()
+    val onError = MutableLiveData<Throwable>()
 
     enum class CollectionState {
         Loading,
@@ -19,7 +19,7 @@ open class IncrementalLoadingCollection<TSource: IIncrementalSource<T>, T>(
     }
 
     protected var currentPageIndex = 0
-    val stateChanged = Event<CollectionState>()
+    val stateChanged = MutableLiveData<CollectionState>()
     var isLoading = false
 
     fun refresh() {
@@ -40,12 +40,12 @@ open class IncrementalLoadingCollection<TSource: IIncrementalSource<T>, T>(
             return
         }
         isLoading = true
-        stateChanged.invoke(this, CollectionState.Loading)
+        stateChanged.value = CollectionState.Loading
         var result: List<T>? = null
         try {
             result = source.getPagedItemAsync(currentPageIndex++, itemsPerPage)
         } catch (e: Throwable) {
-            onError.invoke(this, e)
+            onError. value = e
             e.printStackTrace()
         }
         if (result != null && result.any()) {
@@ -53,7 +53,7 @@ open class IncrementalLoadingCollection<TSource: IIncrementalSource<T>, T>(
         } else {
             hasMoreItems = false
         }
-        stateChanged.invoke(this, CollectionState.Completed)
+        stateChanged.value = CollectionState.Completed
         isLoading = false
     }
 
@@ -65,16 +65,16 @@ open class IncrementalLoadingCollection<TSource: IIncrementalSource<T>, T>(
             return
         }
         isLoading = true
-        stateChanged.invoke(this, CollectionState.Loading)
+        stateChanged.value = CollectionState.Loading
         kotlin.runCatching {
             source.getCachedItemsAsync()
         }.onFailure {
-            onError.invoke(this, it)
+            onError.value = it
             it.printStackTrace()
         }.onSuccess {
             addAll(it.map { it as T })
         }
-        stateChanged.invoke(this, CollectionState.Completed)
+        stateChanged.value = CollectionState.Completed
         isLoading = false
     }
 

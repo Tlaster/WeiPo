@@ -2,7 +2,6 @@ package moe.tlaster.weipo.fragment
 
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import com.google.android.material.tabs.TabLayoutMediator
@@ -16,7 +15,7 @@ import moe.tlaster.weipo.fragment.notification.MentionFragment
 import moe.tlaster.weipo.viewmodel.NotificationViewModel
 
 
-class NotificationFragment : Fragment(R.layout.fragment_notification), ITabFragment {
+class NotificationFragment : BaseFragment(R.layout.fragment_notification), ITabFragment {
     private lateinit var requestRefresh: () -> Unit
 
     private val viewModel by activityViewModels<NotificationViewModel>()

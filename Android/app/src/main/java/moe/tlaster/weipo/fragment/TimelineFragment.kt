@@ -19,7 +19,7 @@ interface ITabFragment {
     fun onTabReselected()
 }
 
-class TimelineFragment : Fragment(R.layout.layout_list), ITabFragment {
+class TimelineFragment : BaseFragment(R.layout.layout_list), ITabFragment {
 
     private lateinit var requestRefresh: () -> Unit
     private val viewModel by activityViewModels<TimelineViewModel>()
@@ -37,7 +37,7 @@ class TimelineFragment : Fragment(R.layout.layout_list), ITabFragment {
         super.onViewCreated(view, savedInstanceState)
         recycler_view.layoutManager = AutoStaggeredGridLayoutManager(statusWidth)
         recycler_view.adapter = adapter
-        refresh_layout.bindLoadingCollection(viewModel.items)
+        refresh_layout.bindLoadingCollection(viewModel.items, this)
         requestRefresh = {
             viewModel.items.refresh()
         }

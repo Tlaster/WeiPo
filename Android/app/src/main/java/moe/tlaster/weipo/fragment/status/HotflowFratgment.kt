@@ -62,7 +62,7 @@ class HotflowFratgment : TabFragment() {
             }
             items = viewModel.source
         }
-        refresh_layout.bindLoadingCollection(viewModel.source)
+        refresh_layout.bindLoadingCollection(viewModel.source, this)
 
     }
 

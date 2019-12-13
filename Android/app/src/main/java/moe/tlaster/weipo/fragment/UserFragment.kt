@@ -4,9 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.tabs.TabLayoutMediator
@@ -22,7 +20,7 @@ import moe.tlaster.weipo.fragment.user.WeiboTabFragment
 import moe.tlaster.weipo.services.models.ProfileData
 import moe.tlaster.weipo.viewmodel.UserViewModel
 
-class UserFragment : Fragment(R.layout.fragment_user) {
+class UserFragment : BaseFragment(R.layout.fragment_user) {
 
     private var userId: Long = 0
     private var userName: String = ""

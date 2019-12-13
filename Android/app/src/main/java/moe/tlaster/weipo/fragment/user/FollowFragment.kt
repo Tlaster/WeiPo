@@ -40,6 +40,6 @@ class FollowFragment : UserTabFragment() {
         super.onViewCreated(view, savedInstanceState)
         recycler_view.layoutManager = AutoStaggeredGridLayoutManager(userWidth)
         recycler_view.adapter = adapter
-        refresh_layout.bindLoadingCollection(viewModel.source)
+        refresh_layout.bindLoadingCollection(viewModel.source, this)
     }
 }

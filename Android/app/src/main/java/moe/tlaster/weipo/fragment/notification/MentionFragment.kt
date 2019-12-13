@@ -2,7 +2,6 @@ package moe.tlaster.weipo.fragment.notification
 
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import kotlinx.android.synthetic.main.fragment_mention.*
 import moe.tlaster.weipo.R
@@ -12,9 +11,10 @@ import moe.tlaster.weipo.common.adapter.ItemSelector
 import moe.tlaster.weipo.common.extensions.bindLoadingCollection
 import moe.tlaster.weipo.common.statusWidth
 import moe.tlaster.weipo.controls.StatusView
+import moe.tlaster.weipo.fragment.BaseFragment
 import moe.tlaster.weipo.viewmodel.notification.MentionViewModel
 
-class MentionFragment : Fragment(R.layout.fragment_mention) {
+class MentionFragment : BaseFragment(R.layout.fragment_mention) {
     private val viewModel by activityViewModels<MentionViewModel>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -29,7 +29,7 @@ class MentionFragment : Fragment(R.layout.fragment_mention) {
             }
             viewModel.source.refresh()
         }
-        refresh_layout.bindLoadingCollection(viewModel.source)
+        refresh_layout.bindLoadingCollection(viewModel.source, this)
         recycler_view.adapter = IncrementalLoadingAdapter(
             ItemSelector<Any>(R.layout.item_status)
         ).apply {

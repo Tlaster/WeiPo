@@ -1,19 +1,13 @@
 package moe.tlaster.weipo.common.adapter
 
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.launch
 import moe.tlaster.weipo.common.collection.*
 
-class IncrementalLoadingAdapter<T>(layout: IItemSelector<T>) : AutoAdapter<T>(layout) {
-
-    private val onCollectionChanged: (Any, CollectionChangedEventArg) -> Unit = { _, args ->
-        when (args.type) {
-            CollectionChangedType.Add -> notifyItemRangeInserted(args.index, args.count)
-            CollectionChangedType.Remove -> notifyItemRangeRemoved(args.index, args.count)
-            CollectionChangedType.Update -> notifyItemRangeChanged(args.index, args.count)
-            CollectionChangedType.Reset -> notifyDataSetChanged()
-        }
-    }
-
+class IncrementalLoadingAdapter<T>(
+    layout: IItemSelector<T>
+) : AutoAdapter<T>(layout), Observer<CollectionChangedEventArg> {
     var autoRefresh = true
 
     override var items = listOf<T>()
@@ -22,11 +16,11 @@ class IncrementalLoadingAdapter<T>(layout: IItemSelector<T>) : AutoAdapter<T>(la
 
             val current = field
             if (current is INotifyCollectionChanged) {
-                current.collectionChanged -= onCollectionChanged
+                current.collectionChanged.removeObserver(this)
             }
             field = value
             if (value is INotifyCollectionChanged) {
-                value.collectionChanged += onCollectionChanged
+                value.collectionChanged.observeForever(this)
             }
             if (!value.any()) {
                 if (value is ISupportIncrementalLoading && autoRefresh) {
@@ -41,6 +35,15 @@ class IncrementalLoadingAdapter<T>(layout: IItemSelector<T>) : AutoAdapter<T>(la
             }
             notifyDataSetChanged()
         }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView)
+        items.let {
+            it as? INotifyCollectionChanged
+        }?.let {
+            it.collectionChanged.removeObserver(this)
+        }
+    }
 
     private var isLoading = false
     override fun getItem(position: Int): T {
@@ -61,5 +64,14 @@ class IncrementalLoadingAdapter<T>(layout: IItemSelector<T>) : AutoAdapter<T>(la
 
     private fun isNearEnd(index: Int, count: Int): Boolean {
         return index == count - 1
+    }
+
+    override fun onChanged(args: CollectionChangedEventArg) {
+        when (args.type) {
+            CollectionChangedType.Add -> notifyItemRangeInserted(args.index, args.count)
+            CollectionChangedType.Remove -> notifyItemRangeRemoved(args.index, args.count)
+            CollectionChangedType.Update -> notifyItemRangeChanged(args.index, args.count)
+            CollectionChangedType.Reset -> notifyDataSetChanged()
+        }
     }
 }

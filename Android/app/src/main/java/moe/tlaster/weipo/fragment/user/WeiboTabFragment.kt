@@ -38,6 +38,6 @@ class WeiboTabFragment : UserTabFragment() {
         super.onViewCreated(view, savedInstanceState)
         recycler_view.layoutManager = AutoStaggeredGridLayoutManager(statusWidth, StaggeredGridLayoutManager.VERTICAL)
         recycler_view.adapter = adapter
-        refresh_layout.bindLoadingCollection(viewModel.source)
+        refresh_layout.bindLoadingCollection(viewModel.source, this)
     }
 }

@@ -2,7 +2,6 @@ package moe.tlaster.weipo.fragment.notification
 
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import kotlinx.android.synthetic.main.layout_list.*
 import moe.tlaster.weipo.R
@@ -13,6 +12,7 @@ import moe.tlaster.weipo.common.extensions.bindLoadingCollection
 import moe.tlaster.weipo.common.statusWidth
 import moe.tlaster.weipo.controls.PersonCard
 import moe.tlaster.weipo.controls.StatusView
+import moe.tlaster.weipo.fragment.BaseFragment
 import moe.tlaster.weipo.services.models.Attitude
 import moe.tlaster.weipo.services.models.Comment
 import moe.tlaster.weipo.services.models.MessageList
@@ -21,16 +21,16 @@ import moe.tlaster.weipo.viewmodel.notification.CommentViewModel
 import moe.tlaster.weipo.viewmodel.notification.DirectMessageViewModel
 import moe.tlaster.weipo.viewmodel.notification.NotificationItemViewModel
 
-abstract class NotificationItemFragment<T> : Fragment(R.layout.layout_list) {
+abstract class NotificationItemFragment<T> : BaseFragment(R.layout.layout_list) {
     protected abstract val viewModel: NotificationItemViewModel<T>
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        refresh_layout.bindLoadingCollection(viewModel.source)
-        recycler_view.adapter = ceateAdapter()
+        refresh_layout.bindLoadingCollection(viewModel.source, this)
+        recycler_view.adapter = createAdapter()
         recycler_view.layoutManager = AutoStaggeredGridLayoutManager(statusWidth)
     }
 
-    protected open fun ceateAdapter(): IncrementalLoadingAdapter<T> {
+    protected open fun createAdapter(): IncrementalLoadingAdapter<T> {
         return IncrementalLoadingAdapter(
             ItemSelector<T>(R.layout.item_status)
         ).apply {
@@ -50,7 +50,7 @@ class AttitudeFragment : NotificationItemFragment<Attitude>() {
 }
 class DirectMessageFragment : NotificationItemFragment<MessageList>() {
     override val viewModel by activityViewModels<DirectMessageViewModel>()
-    override fun ceateAdapter(): IncrementalLoadingAdapter<MessageList> {
+    override fun createAdapter(): IncrementalLoadingAdapter<MessageList> {
         return IncrementalLoadingAdapter<MessageList>(ItemSelector(R.layout.item_person)).apply {
             autoRefresh = false
             items = viewModel.source

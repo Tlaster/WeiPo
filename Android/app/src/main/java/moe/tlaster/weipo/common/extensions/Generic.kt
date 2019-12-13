@@ -8,6 +8,7 @@ import android.provider.OpenableColumns
 import android.util.TypedValue
 import android.view.View
 import androidx.lifecycle.*
+import androidx.lifecycle.Observer
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import kotlinx.coroutines.*
 import moe.tlaster.weipo.common.collection.IncrementalLoadingCollection
@@ -78,8 +79,6 @@ inline fun <reified T: ViewModel> factory(crossinline creator: () -> T): ViewMod
     }
 }
 
-//inline fun async(noinline block: suspend () -> Unit): suspend () -> Unit = block
-
 inline fun ViewModel.async(noinline block: suspend () -> Unit) {
     viewModelScope.launch {
         block.invoke()
@@ -99,21 +98,21 @@ internal val Number.dp: Float
         Resources.getSystem().displayMetrics
     )
 
-fun SwipeRefreshLayout.bindLoadingCollection(incrementalLoadingCollection: IncrementalLoadingCollection<*, *>) {
-    incrementalLoadingCollection.stateChanged += { _, args ->
-        runOnMainThread {
-            isRefreshing = when {
-                args == IncrementalLoadingCollection.CollectionState.Loading && !incrementalLoadingCollection.any() -> true
-                args == IncrementalLoadingCollection.CollectionState.Completed -> false
-                else -> false
-            }
+fun SwipeRefreshLayout.bindLoadingCollection(
+    incrementalLoadingCollection: IncrementalLoadingCollection<*, *>,
+    lifecycleOwner: LifecycleOwner
+) {
+    incrementalLoadingCollection.stateChanged.observe(lifecycleOwner, Observer { args ->
+        isRefreshing = when {
+            args == IncrementalLoadingCollection.CollectionState.Loading && !incrementalLoadingCollection.any() -> true
+            args == IncrementalLoadingCollection.CollectionState.Completed -> false
+            else -> false
         }
-    }
+    })
     setOnRefreshListener {
         incrementalLoadingCollection.refresh()
     }
 }
-
 
 private fun getFileName(context: Context, uri: Uri): String {
     var result: String? = null
@@ -174,6 +173,7 @@ private val prettyTime = PrettyTime(if (Build.VERSION.SDK_INT > Build.VERSION_CO
 } else {
     Resources.getSystem().configuration.locale
 })
+
 private val simpleDateFormat = SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", Locale.US)
 
 fun String.toHumanizedTime(): String {

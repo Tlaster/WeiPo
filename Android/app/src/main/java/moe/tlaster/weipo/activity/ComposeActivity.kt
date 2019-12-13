@@ -23,7 +23,6 @@ import moe.tlaster.weipo.common.SimpleItemTouchHelperCallback
 import moe.tlaster.weipo.common.adapter.AutoAdapter
 import moe.tlaster.weipo.common.adapter.IncrementalLoadingAdapter
 import moe.tlaster.weipo.common.adapter.ItemSelector
-import moe.tlaster.weipo.common.collection.CollectionChangedEventArg
 import moe.tlaster.weipo.common.extensions.*
 import moe.tlaster.weipo.common.isMiUi
 import moe.tlaster.weipo.services.Api
@@ -77,13 +76,6 @@ class ComposeActivity : BaseActivity() {
                 ComposeViewModel.ComposeType.Create.ordinal
             )
         ) ?: ComposeViewModel.ComposeType.Create
-    }
-    private val onImageCollectionChanged: (Any, CollectionChangedEventArg) -> Unit = { _, _ ->
-        image_picked_list.visibility = if (viewModel.images.any()) {
-            View.VISIBLE
-        } else {
-            View.GONE
-        }
     }
 
     private val imageAdapter by lazy {
@@ -176,7 +168,13 @@ class ComposeActivity : BaseActivity() {
             openImagePicker()
         }
         image_picked_list.adapter = imageAdapter
-        viewModel.images.collectionChanged += onImageCollectionChanged
+        viewModel.images.collectionChanged.observe(this, androidx.lifecycle.Observer {
+            image_picked_list.visibility = if (viewModel.images.any()) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
+        })
         touchHelper.attachToRecyclerView(image_picked_list)
         compose_input.doOnTextChanged { text, _, _, _ ->
             viewModel.content = text.toString()

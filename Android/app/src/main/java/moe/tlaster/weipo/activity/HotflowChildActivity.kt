@@ -45,6 +45,6 @@ class HotflowChildActivity : AppCompatActivity() {
                 view.data = item
             }
         }
-        refresh_layout.bindLoadingCollection(viewModel.source)
+        refresh_layout.bindLoadingCollection(viewModel.source, this)
     }
 }
