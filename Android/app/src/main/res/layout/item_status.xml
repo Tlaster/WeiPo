@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:id="@+id/item_status_card"
     android:layout_margin="4dp"
-    app:cardCornerRadius="4dp">
+    app:cardCornerRadius="8dp">
 
     <moe.tlaster.weipo.controls.StatusView
         android:id="@+id/item_status"
