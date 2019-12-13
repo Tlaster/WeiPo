@@ -1,12 +1,12 @@
 import org.gradle.api.Project
 class Configuration(project: Project) {
     val appId = "moe.tlaster.weipo"
-    val kotlinVersion = "1.3.60"
+    val kotlinVersion = "1.3.61"
     val minSdkVersion = 21
     val targetSdkVersion = 29
     val compileSdkVersion = 29
-    val versionCode = project.getConfiguration("versionCode", 5)
-    val versionName = project.getConfiguration("versionName", "1.0.4")
+    val versionCode = project.getConfiguration("versionCode", 6)
+    val versionName = project.getConfiguration("versionName", "1.1.0")
     
     val signKeyStore = project.getConfiguration("signKeyStore", "./key.jks")
     val signKeyStorePassword = project.getConfiguration("signKeyStorePassword", "password")
