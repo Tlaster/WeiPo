@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="notification_mention_status">100</integer>
+    <integer name="notification_mention_cmt">101</integer>
+    <integer name="notification_cmt">102</integer>
+    <integer name="notification_dm">103</integer>
+    <integer name="notification_follower">104</integer>
+</resources>

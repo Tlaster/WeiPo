@@ -16,4 +16,10 @@
     <string name="me">我</string>
     <string name="timeline">首页</string>
     <string name="notification">消息</string>
+    <string name="channel_description">WeiPo 消息通知</string>
+    <string name="notification_mention_status">%1$d 个新提及</string>
+    <string name="notification_mention_cmt">%1$d 个新提及的评论</string>
+    <string name="notification_cmt">%1$d 个新评论</string>
+    <string name="notification_dm">%1$d 个新私信</string>
+    <string name="notification_follower">%1$d 位新粉丝</string>
 </resources>
