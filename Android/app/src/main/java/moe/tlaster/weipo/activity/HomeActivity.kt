@@ -21,7 +21,8 @@ class HomeActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val navController = findNavController(R.id.nav_host_fragment)
-        bottom_navigation_view.setupWithNavController(navController)
+        bottom_navigation_view?.setupWithNavController(navController)
+        navigation_view?.setupWithNavController(navController)
         floating_button.setOnClickListener {
             it?.context?.openActivity<ComposeActivity>("compose_type" to ComposeViewModel.ComposeType.Create)
         }
@@ -33,11 +34,16 @@ class HomeActivity : BaseActivity() {
             }
         }
         notificationViewModel.unread.observe(this, Observer {
-            val total = (it.mentionStatus ?: 0) + (it.mentionCmt ?: 0) + (it.cmt ?: 0) + (it.attitude ?: 0) + (it.dm ?: 0)
-            if (total > 0) {
-                bottom_navigation_view.getOrCreateBadge(R.id.navigation_notification).number = total.toInt()
-            } else {
-                bottom_navigation_view.removeBadge(R.id.navigation_notification)
+            bottom_navigation_view?.let { bottomNavigationView ->
+                val total = (it.mentionStatus ?: 0) + (it.mentionCmt ?: 0) + (it.cmt ?: 0) + (it.attitude ?: 0) + (it.dm ?: 0)
+                if (total > 0) {
+                    bottomNavigationView.getOrCreateBadge(R.id.navigation_notification).number = total.toInt()
+                } else {
+                    bottomNavigationView.removeBadge(R.id.navigation_notification)
+                }
+            }
+            navigation_view?.let { navigationView ->
+                //TODO: badge
             }
         })
     }

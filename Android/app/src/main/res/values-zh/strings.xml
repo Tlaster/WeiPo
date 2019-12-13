@@ -13,4 +13,7 @@
     <string name="follow_state_fans_only">被关注</string>
     <string name="follow_state_follow_only">关注中</string>
     <string name="follow_state_twoway">互相关注</string>
+    <string name="me">我</string>
+    <string name="timeline">首页</string>
+    <string name="notification">消息</string>
 </resources>

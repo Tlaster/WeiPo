@@ -23,6 +23,7 @@
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
+        app:labelVisibilityMode="selected"
         android:id="@+id/bottom_navigation_view"
         app:menu="@menu/home_navigation"
         android:layout_gravity="bottom"
