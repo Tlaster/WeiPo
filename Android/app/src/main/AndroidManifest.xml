@@ -22,7 +22,7 @@
             android:name=".activity.ComposeActivity"
             android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".activity.UserActivity" />
-        <activity android:name=".activity.HomeActivity" />
+        <activity android:name=".activity.HomeActivity" android:launchMode="singleTop" />
         <activity android:name=".activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

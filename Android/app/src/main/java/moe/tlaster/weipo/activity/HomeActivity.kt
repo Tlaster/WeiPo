@@ -1,11 +1,14 @@
 package moe.tlaster.weipo.activity
 
+import android.app.PendingIntent
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
+import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import kotlinx.android.synthetic.main.activity_home.*
 import moe.tlaster.weipo.R
@@ -108,6 +111,14 @@ class HomeActivity : BaseActivity() {
         val builder = NotificationCompat.Builder(this, getString(R.string.channel_id))
             .setAutoCancel(true)
             .setSmallIcon(R.drawable.ic_notification_icon)
+            .setContentIntent(
+                PendingIntent.getActivity(
+                    this,
+                    0,
+                    Intent(this, HomeActivity::class.java),
+                    0
+                )
+            )
             .setContentTitle(title)
         with(NotificationManagerCompat.from(this)) {
             notify(notificationId, builder.build())
