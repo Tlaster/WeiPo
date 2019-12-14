@@ -31,7 +31,6 @@ open class IncrementalLoadingCollection<TSource: IIncrementalSource<T>, T>(
     suspend fun refreshAsync() {
         currentPageIndex = 0
         hasMoreItems = true
-        clear()
         loadMoreItemsAsync()
     }
 
@@ -42,11 +41,15 @@ open class IncrementalLoadingCollection<TSource: IIncrementalSource<T>, T>(
         isLoading = true
         stateChanged.value = CollectionState.Loading
         var result: List<T>? = null
+        val lazyClear = currentPageIndex == 0
         try {
             result = source.getPagedItemAsync(currentPageIndex++, itemsPerPage)
         } catch (e: Throwable) {
             onError. value = e
             e.printStackTrace()
+        }
+        if (lazyClear) {
+            clear()
         }
         if (result != null && result.any()) {
             addAll(result)
