@@ -158,9 +158,6 @@ class ComposeActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        compose_input.post {
-            compose_input.requestFocus()
-        }
         close_button.setOnClickListener {
             onBackPressed()
         }

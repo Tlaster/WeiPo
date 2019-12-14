@@ -44,7 +44,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/image_picked_list"
         android:layout_width="0dp"
-        android:layout_height="0dp"/>
+        android:layout_height="0dp">
+        <requestFocus />
+    </EditText>
     <androidx.recyclerview.widget.RecyclerView
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:orientation="horizontal"
