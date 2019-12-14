@@ -16,8 +16,8 @@
     <string name="me">Me</string>
     <string name="timeline">Timeline</string>
     <string name="notification">Notification</string>
-    <string name="channel_name" translatable="false">weipo</string>
-    <string name="channel_description">WeiPo Notification</string>
+    <string name="channel_name">Weibo Notification</string>
+    <string name="channel_description">Weibo Notification</string>
     <string name="channel_id" translatable="false">weipo_notification</string>
     <string name="notification_mention_status">%1$d New Mentions</string>
     <string name="notification_mention_cmt">%1$d New Mention Comment </string>

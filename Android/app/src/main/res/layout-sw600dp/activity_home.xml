@@ -14,7 +14,7 @@
         app:defaultNavHost="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/navigation_view"
-        app:navGraph="@navigation/home_navigation_tablet" />
+        app:navGraph="@navigation/home_navigation" />
 
     <com.google.android.material.navigation.NavigationView
         app:itemHorizontalPadding="16dp"
@@ -22,7 +22,7 @@
         app:itemIconSize="24dp"
         app:itemIconPadding="8dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/home_navigation_tablet"
+        app:menu="@menu/home_navigation"
         android:id="@+id/navigation_view"
         android:layout_width="56dp"
         android:layout_height="match_parent"
