@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization;
 using Flurl.Http.Configuration;
+using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -48,10 +51,18 @@ namespace WeiPo.Common
             },
             Error = (sender, args) =>
             {
-                var currentError = args.ErrorContext.Error.Message;
-                Debug.WriteLine(currentError);
+                Analytics.TrackEvent("JsonError", new Dictionary<string, string>
+                {
+                    {
+                        "currentErrorMessage", args.ErrorContext.Error.Message ?? ""
+                    },
+                    {
+                        "path", args.ErrorContext?.Path ?? ""
+                    }
+                });
                 args.ErrorContext.Handled = true;
             },
+            MissingMemberHandling = MissingMemberHandling.Ignore,
             NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore
         };
 
@@ -72,6 +83,10 @@ namespace WeiPo.Common
         public T Deserialize<T>(string s)
         {
             var obj = JsonConvert.DeserializeObject<JToken>(s, WeiboJsonSerializerSetting.Settings);
+            if (obj == null)
+            {
+                return default;
+            }
             CheckIfError(obj);
             return obj.ToObject<T>(WeiboJsonSerializerSetting.Serializer);
         }
