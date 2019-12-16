@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using WeiPo.Common;
 
 namespace WeiPo.Services.Models
 {
@@ -10,10 +11,10 @@ namespace WeiPo.Services.Models
 
         public override bool CanConvert(Type t)
         {
-            return t == typeof(List<>);
+            return ReflectionHelper.GetCollectionItemType(t) == typeof(CommentModel);
         }
 
-        public override object ReadJson(JsonReader reader, Type t, object existingValue, JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type t, object? existingValue, JsonSerializer serializer)
         {
             return reader.TokenType switch
             {
@@ -23,7 +24,7 @@ namespace WeiPo.Services.Models
             };
         }
 
-        public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, object? untypedValue, JsonSerializer serializer)
         {
             if (untypedValue == null)
             {

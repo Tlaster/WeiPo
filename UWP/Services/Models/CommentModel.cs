@@ -22,7 +22,6 @@ namespace WeiPo.Services.Models
         public long TotalNumber { get; set; }
 
         [JsonProperty("comments", NullValueHandling = NullValueHandling.Ignore)]
-        [JsonConverter(typeof(CommentsConverter))]
         public List<CommentModel> Comments { get; set; }
 
         [JsonProperty("like_count", NullValueHandling = NullValueHandling.Ignore)]

@@ -8,6 +8,8 @@ using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using WeiPo.Services.Models;
+using Stream = System.IO.Stream;
 
 namespace WeiPo.Common
 {
@@ -47,17 +49,15 @@ namespace WeiPo.Common
         {
             Converters =
             {
-                new JsonNumberConverter()
+                new JsonNumberConverter(),
+                new CommentsConverter()
             },
             Error = (sender, args) =>
             {
                 Analytics.TrackEvent("JsonError", new Dictionary<string, string>
                 {
                     {
-                        "currentErrorMessage", args.ErrorContext.Error.Message ?? ""
-                    },
-                    {
-                        "path", args.ErrorContext?.Path ?? ""
+                        "data", JsonConvert.SerializeObject(args)
                     }
                 });
                 args.ErrorContext.Handled = true;
