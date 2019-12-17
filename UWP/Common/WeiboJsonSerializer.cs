@@ -49,8 +49,8 @@ namespace WeiPo.Common
         {
             Converters =
             {
-                new JsonNumberConverter(),
-                new CommentsConverter()
+                new JsonNumberConverter()
+                //new CommentsConverter()
             },
             Error = (sender, args) =>
             {
