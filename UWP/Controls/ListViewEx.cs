@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -14,6 +17,11 @@ using ScrollViewer = Windows.UI.Xaml.Controls.ScrollViewer;
 
 namespace WeiPo.Controls
 {
+    
+    [TemplateVisualState(Name = "Normal", GroupName = "CommonStateGroup")]
+    [TemplateVisualState(Name = "Loading", GroupName = "CommonStateGroup")]
+    [TemplateVisualState(Name = "Error", GroupName = "CommonStateGroup")]
+    [TemplateVisualState(Name = "Empty", GroupName = "CommonStateGroup")]
     public sealed class ListViewEx : Control
     {
         public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register(
@@ -73,22 +81,69 @@ namespace WeiPo.Controls
                 _refresher.RequestRefresh());
         }
 
-        private void OnItemsSourceChanged()
-        {
-            if (ItemsSource is ISupportRefresh refresh)
-            {
-                _refresher?.RequestRefresh();
-            }
-
-            //refresh.Refresh();
-        }
-
         private static void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (e.Property == ItemsSourceProperty)
             {
-                (d as ListViewEx).OnItemsSourceChanged();
+                (d as ListViewEx).OnItemsSourceChanged(e.OldValue, e.NewValue);
             }
+        }
+
+        private void OnItemsSourceChanged(object oldValue, object newValue)
+        {
+            if (oldValue is IWithStatus oldWithStatus)
+            {
+                oldWithStatus.OnStartLoading -= OnStartLoading;
+                oldWithStatus.OnEndLoading -= OnEndLoading;
+                oldWithStatus.OnError -= OnError;
+            }
+
+            if (newValue is IWithStatus newWithStatus)
+            {
+                newWithStatus.OnStartLoading += OnStartLoading;
+                newWithStatus.OnEndLoading += OnEndLoading;
+                newWithStatus.OnError += OnError;
+            }
+
+            if (newValue is ISupportRefresh refresh)
+            {
+                _refresher?.RequestRefresh();
+            }
+        }
+
+        private void OnError(Exception obj)
+        {
+            if (!IsItemsSourceEmpty())
+            {
+                VisualStateManager.GoToState(this, "Error", true);
+            }
+        }
+
+        private void OnEndLoading()
+        {
+            _isLoading = false;
+            if (IsItemsSourceEmpty())
+            {
+                VisualStateManager.GoToState(this, "Empty", true);
+            }
+            else
+            {
+                VisualStateManager.GoToState(this, "Normal", true);
+            }
+        }
+
+        private void OnStartLoading()
+        {
+            _isLoading = true;
+            if (IsItemsSourceEmpty())
+            {
+                VisualStateManager.GoToState(this, "Loading", true);
+            }
+        }
+
+        private bool IsItemsSourceEmpty()
+        {
+            return ItemsSource is IEnumerable enumerable && !enumerable.Cast<object>().Any();
         }
 
         private async void RefresherOnRefreshRequested(RefreshContainer sender, RefreshRequestedEventArgs args)
@@ -100,11 +155,9 @@ namespace WeiPo.Controls
 
             if (ItemsSource is ISupportRefresh refresh)
             {
-                _isLoading = true;
                 var def = args.GetDeferral();
                 await refresh.Refresh();
                 def.Complete();
-                _isLoading = false;
                 Task.Delay(100).ContinueWith(it => Dispatcher.RunAsync(CoreDispatcherPriority.Low, TryLoadIfNotFill));
             }
         }
@@ -119,9 +172,7 @@ namespace WeiPo.Controls
                 if (distanceToEnd <= 2.0 * scroller.ViewportHeight
                     && ItemsSource is ISupportIncrementalLoading loading && loading.HasMoreItems)
                 {
-                    _isLoading = true;
                     await loading.LoadMoreItemsAsync(20);
-                    _isLoading = false;
                 }
             }
         }
@@ -143,9 +194,7 @@ namespace WeiPo.Controls
                 return;
             }
 
-            _isLoading = true;
             await loading.LoadMoreItemsAsync(20);
-            _isLoading = false;
             Task.Delay(100).ContinueWith(it => Dispatcher.RunAsync(CoreDispatcherPriority.Low, TryLoadIfNotFill));
         }
     }

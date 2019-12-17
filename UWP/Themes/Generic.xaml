@@ -32,15 +32,67 @@
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}">
-                        <RefreshContainer Name="RefreshContainer">
-                            <ScrollViewer x:Name="ScrollViewer">
-                                <controls1:ItemsRepeater x:Name="ItemsRepeater"
-                                                         ItemsSource="{TemplateBinding ItemsSource}"
-                                                         ItemTemplate="{TemplateBinding ItemTemplate}"
-                                                         Layout="{TemplateBinding Layout}"
-                                                         TabFocusNavigation="{TemplateBinding TabFocusNavigation}" />
-                            </ScrollViewer>
-                        </RefreshContainer>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStateGroup">
+                                <VisualState x:Name="Normal">
+                                    <VisualState.Setters>
+                                        <Setter Target="RefreshContainer.Visibility" Value="Visible"/>
+                                        <Setter Target="LoadingProgressRing.Visibility" Value="Collapsed"/>
+                                        <Setter Target="EmptyContainer.Visibility" Value="Collapsed"/>
+                                        <Setter Target="ErrorContainer.Visibility" Value="Collapsed"/>
+                                        <Setter Target="LoadingProgressRing.IsActive" Value="False"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Loading">
+                                    <VisualState.Setters>
+                                        <Setter Target="RefreshContainer.Visibility" Value="Collapsed"/>
+                                        <Setter Target="LoadingProgressRing.Visibility" Value="Visible"/>
+                                        <Setter Target="EmptyContainer.Visibility" Value="Collapsed"/>
+                                        <Setter Target="ErrorContainer.Visibility" Value="Collapsed"/>
+                                        <Setter Target="LoadingProgressRing.IsActive" Value="True"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Error">
+                                    <VisualState.Setters>
+                                        <Setter Target="RefreshContainer.Visibility" Value="Collapsed"/>
+                                        <Setter Target="LoadingProgressRing.Visibility" Value="Collapsed"/>
+                                        <Setter Target="EmptyContainer.Visibility" Value="Collapsed"/>
+                                        <Setter Target="ErrorContainer.Visibility" Value="Visible"/>
+                                        <Setter Target="LoadingProgressRing.IsActive" Value="False"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Empty">
+                                    <VisualState.Setters>
+                                        <Setter Target="EmptyContainer.Visibility" Value="Collapsed"/>
+                                        <Setter Target="ErrorContainer.Visibility" Value="Visible"/>
+                                        <Setter Target="RefreshContainer.Visibility" Value="Collapsed"/>
+                                        <Setter Target="LoadingProgressRing.Visibility" Value="Collapsed"/>
+                                        <Setter Target="LoadingProgressRing.IsActive" Value="False"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Grid Name="RootGridContainer">
+                            <RefreshContainer Name="RefreshContainer">
+                                <ScrollViewer x:Name="ScrollViewer">
+                                    <controls1:ItemsRepeater x:Name="ItemsRepeater"
+                                                             ItemsSource="{TemplateBinding ItemsSource}"
+                                                             ItemTemplate="{TemplateBinding ItemTemplate}"
+                                                             Layout="{TemplateBinding Layout}"
+                                                             TabFocusNavigation="{TemplateBinding TabFocusNavigation}" />
+                                </ScrollViewer>
+                            </RefreshContainer>
+                            <ProgressRing Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" Height="50"
+                                          Name="LoadingProgressRing" IsActive="False"/>
+                            <StackPanel Visibility="Collapsed" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Name="EmptyContainer">
+                                <SymbolIcon Symbol="Page2" Width="50" Height="50" HorizontalAlignment="Center"/>
+                                <TextBlock Text="Noting here" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" Name="ErrorContainer">
+                                <SymbolIcon Symbol="ReportHacked" Width="50" Height="50" HorizontalAlignment="Center"/>
+                                <TextBlock Text="Error!" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>

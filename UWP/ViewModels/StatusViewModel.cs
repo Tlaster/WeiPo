@@ -40,6 +40,10 @@ namespace WeiPo.ViewModels
             try
             {
                 var result = await Singleton<Api>.Instance.Hotflow(_id, _mid, _max_id);
+                if (result == null)
+                {
+                    return Array.Empty<CommentModel>();
+                }
                 _max_id = result.MaxId;
                 result.Data.ForEach(it => it.Status = _status);
                 return result.Data;

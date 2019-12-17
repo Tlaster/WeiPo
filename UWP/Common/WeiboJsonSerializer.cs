@@ -50,10 +50,10 @@ namespace WeiPo.Common
             Converters =
             {
                 new JsonNumberConverter()
-                //new CommentsConverter()
             },
             Error = (sender, args) =>
             {
+
                 Analytics.TrackEvent("JsonError", new Dictionary<string, string>
                 {
                     {

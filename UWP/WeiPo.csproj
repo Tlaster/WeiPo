@@ -202,7 +202,6 @@
     <Compile Include="Services\Models\CommentBadge.cs" />
     <Compile Include="Services\Models\CommentManageInfo.cs" />
     <Compile Include="Services\Models\CommentModel.cs" />
-    <Compile Include="Services\Models\CommentsConverter.cs" />
     <Compile Include="Services\Models\ConfigModel.cs" />
     <Compile Include="Services\Models\DarwinTag.cs" />
     <Compile Include="Services\Models\FilterGroup.cs" />
