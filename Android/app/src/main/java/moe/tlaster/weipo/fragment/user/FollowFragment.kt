@@ -16,7 +16,7 @@ import moe.tlaster.weipo.services.models.User
 import moe.tlaster.weipo.viewmodel.user.FollowViewModel
 
 
-class FollowFragment : UserTabFragment() {
+class FollowFragment : UserTabFragment(R.layout.layout_list) {
     override val contentLayoutId: Int
         get() = R.layout.layout_list
     override val titleRes: Int

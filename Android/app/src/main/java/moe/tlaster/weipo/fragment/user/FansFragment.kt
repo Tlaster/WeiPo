@@ -15,7 +15,7 @@ import moe.tlaster.weipo.controls.UserCard
 import moe.tlaster.weipo.services.models.User
 import moe.tlaster.weipo.viewmodel.user.FansViewModel
 
-class FansFragment : UserTabFragment() {
+class FansFragment : UserTabFragment(R.layout.layout_list) {
     override val contentLayoutId: Int
         get() = R.layout.layout_list
 

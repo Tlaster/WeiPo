@@ -8,7 +8,7 @@ plugins {
     kotlin("kapt")
 }
 android {
-
+    buildToolsVersion = "29.0.2"
     compileSdkVersion(appConfig.compileSdkVersion)
     defaultConfig {
         applicationId = appConfig.appId
@@ -43,15 +43,15 @@ android {
 dependencies {
     implementation(kotlin("stdlib-jdk8", appConfig.kotlinVersion))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.13.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.14.0")
 
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha03")
     implementation("androidx.appcompat:appcompat:1.1.0")
-    implementation("com.google.android.material:material:1.2.0-alpha02")
+    implementation("com.google.android.material:material:1.2.0-alpha03")
     implementation("androidx.core:core-ktx:1.1.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.0.0-beta3")
+    implementation("androidx.constraintlayout:constraintlayout:2.0.0-beta4")
     implementation("androidx.lifecycle:lifecycle-extensions:2.1.0")
-    implementation("androidx.fragment:fragment-ktx:1.2.0-rc03")
+    implementation("androidx.fragment:fragment-ktx:1.2.0-rc04")
     implementation("androidx.activity:activity-ktx:1.1.0-rc03")
     implementation("androidx.viewpager2:viewpager2:1.0.0")
 

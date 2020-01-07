@@ -103,11 +103,7 @@ fun SwipeRefreshLayout.bindLoadingCollection(
     lifecycleOwner: LifecycleOwner
 ) {
     incrementalLoadingCollection.stateChanged.observe(lifecycleOwner, Observer { args ->
-        isRefreshing = when {
-            args == IncrementalLoadingCollection.CollectionState.Loading && !incrementalLoadingCollection.any() -> true
-            args == IncrementalLoadingCollection.CollectionState.Completed -> false
-            else -> false
-        }
+        isRefreshing = args == IncrementalLoadingCollection.CollectionState.Refreshing
     })
     setOnRefreshListener {
         incrementalLoadingCollection.refresh()

@@ -14,6 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".activity.FragmentActivity" />
         <activity android:name=".activity.HotflowChildActivity" />
         <activity android:name=".activity.VideoActivity" />
         <activity android:name=".activity.ImageActivity" />
@@ -21,8 +22,9 @@
         <activity
             android:name=".activity.ComposeActivity"
             android:windowSoftInputMode="adjustNothing" />
-        <activity android:name=".activity.UserActivity" />
-        <activity android:name=".activity.HomeActivity" android:launchMode="singleTop" />
+        <activity
+            android:name=".activity.HomeActivity"
+            android:launchMode="singleTop" />
         <activity android:name=".activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

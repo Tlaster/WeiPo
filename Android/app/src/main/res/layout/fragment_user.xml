@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".activity.UserActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -22,7 +21,7 @@
 
                 <ImageView
                     app:layout_constraintWidth_max="600dp"
-                    app:layout_constraintHeight_percent="0.3"
+                    app:layout_constraintHeight_percent="0.4"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     android:id="@+id/user_background"
@@ -134,6 +133,10 @@
                             tools:text="Status" />
                     </LinearLayout>
                     <LinearLayout
+                        android:id="@+id/follow_container"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:focusable="true"
+                        android:clickable="true"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -158,6 +161,10 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/fans_container"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:focusable="true"
+                        android:clickable="true"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -193,6 +200,20 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"/>
                 </LinearLayout>
+
+                <ImageButton
+                    android:visibility="gone"
+                    android:id="@+id/back_button"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:tint="@android:color/background_light"
+                    android:padding="16dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:src="?attr/homeAsUpIndicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
         <com.google.android.material.tabs.TabLayout

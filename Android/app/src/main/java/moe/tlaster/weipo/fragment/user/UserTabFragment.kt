@@ -8,7 +8,10 @@ import moe.tlaster.weipo.R
 import moe.tlaster.weipo.fragment.TabFragment
 
 
-abstract class UserTabFragment : TabFragment() {
+abstract class UserTabFragment : TabFragment {
+    constructor() : super()
+    constructor(contentLayoutId: Int) : super(contentLayoutId)
+
     abstract val contentLayoutId: Int
     var userId: Long = 0
         private set
@@ -22,20 +25,21 @@ abstract class UserTabFragment : TabFragment() {
     override val icon: Int
         get() = -1
 
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        (savedInstanceState ?: arguments)?.let {
-            it.getString("containerId")?.let {
+        (savedInstanceState ?: arguments)?.let { bundle ->
+            bundle.getString("containerId")?.let {
                 containerId = it
             }
-            if (it.getLong("userId") != 0L) {
-                userId = it.getLong("userId")
+            if (bundle.getLong("userId") != 0L) {
+                userId = bundle.getLong("userId")
             }
         }
-        return inflater.inflate(contentLayoutId, container)
+        return super.onCreateView(inflater, container, savedInstanceState) ?: inflater.inflate(contentLayoutId, container, false)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

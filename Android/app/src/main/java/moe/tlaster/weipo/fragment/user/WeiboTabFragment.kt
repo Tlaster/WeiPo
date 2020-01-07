@@ -2,7 +2,7 @@ package moe.tlaster.weipo.fragment.user
 
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import kotlinx.android.synthetic.main.layout_list.*
 import moe.tlaster.weipo.R
@@ -19,7 +19,7 @@ class WeiboTabFragment : UserTabFragment() {
     override val contentLayoutId: Int
         get() = R.layout.layout_list
 
-    private val viewModel by viewModels<WeiboListViewModel> {
+    private val viewModel by activityViewModels<WeiboListViewModel> {
         factory {
             WeiboListViewModel(userId, containerId)
         }

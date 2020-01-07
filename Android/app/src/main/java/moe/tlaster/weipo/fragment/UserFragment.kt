@@ -10,9 +10,11 @@ import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.fragment_user.*
 import moe.tlaster.weipo.R
+import moe.tlaster.weipo.activity.FragmentActivity
 import moe.tlaster.weipo.common.adapter.FragmentAdapter
 import moe.tlaster.weipo.common.extensions.factory
 import moe.tlaster.weipo.common.extensions.load
+import moe.tlaster.weipo.common.extensions.openActivity
 import moe.tlaster.weipo.fragment.user.EmptyTabFragment
 import moe.tlaster.weipo.fragment.user.FansFragment
 import moe.tlaster.weipo.fragment.user.FollowFragment
@@ -68,18 +70,24 @@ class UserFragment : BaseFragment(R.layout.fragment_user) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (savedInstanceState ?: arguments)?.let {
-            it.getString("user_name").takeIf {
+        (savedInstanceState ?: arguments)?.let { bundle ->
+            bundle.getString("user_name").takeIf {
                 !it.isNullOrEmpty()
             }?.let {
                 userName = it
             }
-            it.getLong("user_id").takeIf {
+            bundle.getLong("user_id").takeIf {
                 it != 0L
             }?.let {
                 userId = it
             }
+            back_button.isVisible = userId != 0L || userName.isNotEmpty()
         }
+
+        back_button.setOnClickListener {
+            activity?.onBackPressed()
+        }
+
         view_pager.adapter = pagerAdapter
         follow_button.setOnClickListener {
             viewModel.updateFollow()
@@ -114,6 +122,22 @@ class UserFragment : BaseFragment(R.layout.fragment_user) {
             }
             if (tabItems.isEmpty()) {
                 profile.userInfo?.id?.let { userId ->
+                    follow_container.setOnClickListener {
+                        context?.openActivity<FragmentActivity>(
+                            "className" to FollowFragment::class.java.name,
+                            "data" to bundleOf(
+                                "userId" to userId
+                            )
+                        )
+                    }
+                    fans_container.setOnClickListener {
+                        context?.openActivity<FragmentActivity>(
+                            "className" to FansFragment::class.java.name,
+                            "data" to bundleOf(
+                                "userId" to userId
+                            )
+                        )
+                    }
                     profile.tabsInfo?.tabs?.let { tabs ->
                         tabItems = tabs.map { tab ->
                             if (fragmentMapping.containsKey(tab.tabType) && tab.containerid != null) {
@@ -127,16 +151,6 @@ class UserFragment : BaseFragment(R.layout.fragment_user) {
                             return@map EmptyTabFragment().apply {
                                 title = tab.title.toString()
                             }
-                        } + FollowFragment().apply {
-                            arguments = bundleOf(
-                                "containerId" to containerId,
-                                "userId" to userId
-                            )
-                        } + FansFragment().apply {
-                            arguments = bundleOf(
-                                "containerId" to containerId,
-                                "userId" to userId
-                            )
                         }
                     }
                 }

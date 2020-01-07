@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.cardview.widget.CardView
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.core.view.updateMarginsRelative
 import androidx.core.view.updatePaddingRelative
@@ -26,6 +27,7 @@ import moe.tlaster.weipo.common.adapter.ItemSelector
 import moe.tlaster.weipo.common.extensions.*
 import moe.tlaster.weipo.common.fromHtml
 import moe.tlaster.weipo.common.openWeiboLink
+import moe.tlaster.weipo.fragment.UserFragment
 import moe.tlaster.weipo.services.Api
 import moe.tlaster.weipo.services.models.*
 import moe.tlaster.weipo.viewmodel.ComposeViewModel
@@ -300,8 +302,11 @@ class StatusView : LinearLayout {
             }?.let {
                 it.user?.id
             }?.let {
-                context.openActivity<UserActivity>(
-                    "user_id" to it
+                context.openActivity<FragmentActivity>(
+                    "className" to UserFragment::class.java.name,
+                    "data" to bundleOf(
+                        "user_id" to it
+                    )
                 )
             }
         }

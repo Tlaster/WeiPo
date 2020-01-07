@@ -14,6 +14,7 @@ open class IncrementalLoadingCollection<TSource: IIncrementalSource<T>, T>(
     val onError = MutableLiveData<Throwable>()
 
     enum class CollectionState {
+        Refreshing,
         Loading,
         Completed
     }
@@ -39,7 +40,11 @@ open class IncrementalLoadingCollection<TSource: IIncrementalSource<T>, T>(
             return
         }
         isLoading = true
-        stateChanged.value = CollectionState.Loading
+        stateChanged.value = if (currentPageIndex == 0) {
+            CollectionState.Refreshing
+        } else {
+            CollectionState.Loading
+        }
         var result: List<T>? = null
         val lazyClear = currentPageIndex == 0
         try {

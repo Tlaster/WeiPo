@@ -4,13 +4,15 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.os.bundleOf
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.control_user.view.*
 import moe.tlaster.weipo.R
-import moe.tlaster.weipo.activity.UserActivity
+import moe.tlaster.weipo.activity.FragmentActivity
 import moe.tlaster.weipo.common.extensions.inflate
 import moe.tlaster.weipo.common.extensions.load
 import moe.tlaster.weipo.common.extensions.openActivity
+import moe.tlaster.weipo.fragment.UserFragment
 import moe.tlaster.weipo.services.models.User
 
 class UserCard : ConstraintLayout {
@@ -62,7 +64,13 @@ class UserCard : ConstraintLayout {
     init {
         inflate(R.layout.control_user)
         setOnClickListener {
-            context.openActivity<UserActivity>(*UserActivity.bundle(id = user?.id, name = user?.screenName))
+            context.openActivity<FragmentActivity>(
+                "className" to UserFragment::class.java.name,
+                "data" to bundleOf(
+                    "user_id" to it,
+                    "user_name" to user?.screenName
+                )
+            )
         }
     }
 }

@@ -7,8 +7,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 
 class FragmentAdapter : FragmentStateAdapter {
-
-
     var items: List<Fragment>
         set(value) {
             field = value
