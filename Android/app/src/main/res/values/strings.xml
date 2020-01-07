@@ -24,5 +24,6 @@
     <string name="notification_cmt">%1$d New Comments</string>
     <string name="notification_dm">%1$d New DirectMessage</string>
     <string name="notification_follower">%1$d New Follower</string>
+    <string name="status_detail">Status Detail</string>
 
 </resources>

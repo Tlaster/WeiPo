@@ -125,6 +125,8 @@ class UserFragment : BaseFragment(R.layout.fragment_user) {
                     follow_container.setOnClickListener {
                         context?.openActivity<FragmentActivity>(
                             "className" to FollowFragment::class.java.name,
+                            "show_toolbar" to true,
+                            "title_res" to R.string.follow,
                             "data" to bundleOf(
                                 "userId" to userId
                             )
@@ -133,6 +135,8 @@ class UserFragment : BaseFragment(R.layout.fragment_user) {
                     fans_container.setOnClickListener {
                         context?.openActivity<FragmentActivity>(
                             "className" to FansFragment::class.java.name,
+                            "show_toolbar" to true,
+                            "title_res" to R.string.fans,
                             "data" to bundleOf(
                                 "userId" to userId
                             )

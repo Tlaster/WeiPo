@@ -11,11 +11,19 @@
         android:layout_height="wrap_content"
         style="@style/Widget.MaterialComponents.AppBarLayout.Surface"
         android:theme="@style/ThemeOverlay.MaterialComponents.ActionBar">
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            app:navigationIcon="?attr/homeAsUpIndicator"
+            app:title="@string/status_detail"
+            app:layout_scrollFlags="scroll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll">
             <moe.tlaster.weipo.controls.StatusView
+                app:layout_collapseMode="parallax"
                 android:id="@+id/item_status"
                 android:layout_margin="4dp"
                 android:layout_width="match_parent"

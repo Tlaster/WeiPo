@@ -95,6 +95,7 @@ class StatusView : LinearLayout {
         }?.let {
             hotflow_list.updateItemsSource(it.value)
             hotflow_list.isVisible = it.value.any()
+            hotflow_more_button.isVisible = (value.totalNumber ?: 0) > it.value.count()
         }
         action_container.visibility = if (showActions) {
             View.VISIBLE

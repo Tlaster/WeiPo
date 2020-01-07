@@ -54,6 +54,7 @@ class StatusActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setSupportActionBar(toolbar)
         item_status.isTextSelectionEnabled = true
         item_status.data = status
         view_pager.adapter = FragmentAdapter(this).apply {

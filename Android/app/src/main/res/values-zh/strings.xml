@@ -23,4 +23,5 @@
     <string name="notification_cmt">%1$d 个新评论</string>
     <string name="notification_dm">%1$d 个新私信</string>
     <string name="notification_follower">%1$d 位新粉丝</string>
+    <string name="status_detail">微博详情</string>
 </resources>

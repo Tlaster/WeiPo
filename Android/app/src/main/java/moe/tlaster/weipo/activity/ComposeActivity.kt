@@ -139,7 +139,7 @@ class ComposeActivity : BaseActivity() {
     private var keyboardHeight = 0
         set(value) {
             field = value
-            if (value > 0) {
+            if (value > 100.dp) {
                 emoji_container.updateLayoutParams {
                     height = value.let {
                         var result = it
