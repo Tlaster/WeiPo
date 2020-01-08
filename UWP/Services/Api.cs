@@ -448,5 +448,29 @@ namespace WeiPo.Services
                 .ReceiveJson<WeiboResponse<JObject>>()
                 .GetData();
         }
+
+        public async Task<DirectMessageData> DirectMessage(long uid, int count = 10, int unfollowing = 0,
+            long since_id = 0, int is_continuous = 0)
+        {
+            return await $"{HOST}/api/chat/list"
+                .SetQueryParams(new Dictionary<string, object>().Also(it =>
+                {
+                    it.Add(nameof(uid), uid);
+                    it.Add(nameof(count), count);
+                    it.Add(nameof(unfollowing), unfollowing);
+                    if (since_id > 0)
+                    {
+                        it.Add(nameof(since_id), since_id);
+                    }
+
+                    if (is_continuous > 0)
+                    {
+                        it.Add(nameof(is_continuous), is_continuous);
+                    }
+                }))
+                .GetAsync()
+                .ReceiveJson<WeiboResponse<DirectMessageData>>()
+                .GetData();
+        }
     }
 }

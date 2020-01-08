@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -197,6 +197,7 @@
     </Compile>
     <Compile Include="Services\Api.cs" />
     <Compile Include="Services\Models\Actionlog.cs" />
+    <Compile Include="Services\Models\Attachment.cs" />
     <Compile Include="Services\Models\AttitudeModel.cs" />
     <Compile Include="Services\Models\ButtonModel.cs" />
     <Compile Include="Services\Models\CommentBadge.cs" />
@@ -204,6 +205,7 @@
     <Compile Include="Services\Models\CommentModel.cs" />
     <Compile Include="Services\Models\ConfigModel.cs" />
     <Compile Include="Services\Models\DarwinTag.cs" />
+    <Compile Include="Services\Models\DirectMessageData.cs" />
     <Compile Include="Services\Models\FilterGroup.cs" />
     <Compile Include="Services\Models\FilterGroupInfo.cs" />
     <Compile Include="Services\Models\FocusPoint.cs" />
@@ -221,7 +223,9 @@
     <Compile Include="Services\Models\MenuList.cs" />
     <Compile Include="Services\Models\MenuListParams.cs" />
     <Compile Include="Services\Models\MessageListModel.cs" />
+    <Compile Include="Services\Models\Msg.cs" />
     <Compile Include="Services\Models\NumberDisplayStrategy.cs" />
+    <Compile Include="Services\Models\OriginalImage.cs" />
     <Compile Include="Services\Models\PageInfo.cs" />
     <Compile Include="Services\Models\PagePic.cs" />
     <Compile Include="Services\Models\Params.cs" />
