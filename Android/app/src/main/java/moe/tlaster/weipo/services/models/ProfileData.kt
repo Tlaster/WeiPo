@@ -119,3 +119,72 @@ data class Params (
     val uid: Long? = null,
     val scheme: String? = null
 )
+
+@Serializable
+data class DirectMessageData (
+    val msgs: List<Msg>,
+    val users: Map<String, User>,
+
+    @SerialName("total_number")
+    val totalNumber: Long,
+
+    val following: Boolean,
+
+    @SerialName("last_read_mid")
+    val lastReadMid: Long,
+
+    val title: String
+)
+
+@Serializable
+data class Msg (
+    @SerialName("created_at")
+    val createdAt: String,
+
+    @SerialName("dm_type")
+    val dmType: Long,
+
+    val id: String,
+    val text: String,
+
+    @SerialName("msg_status")
+    val msgStatus: Long,
+
+    @SerialName("media_type")
+    val mediaType: Long,
+
+    @SerialName("recipient_id")
+    val recipientID: Long,
+
+    @SerialName("recipient_screen_name")
+    val recipientScreenName: String,
+
+    @SerialName("sender_id")
+    val senderID: Long,
+
+    @SerialName("sender_screen_name")
+    val senderScreenName: String,
+
+    val attachment: Attachment? = null
+)
+
+@Serializable
+data class Attachment (
+    val fid: Long,
+    val vfid: Long,
+    val filename: String,
+    val extension: String,
+    val filesize: String,
+
+    @SerialName("original_image")
+    val originalImage: OriginalImage,
+
+    val thumbnail: OriginalImage
+)
+
+@Serializable
+data class OriginalImage (
+    val url: String,
+    val width: Long,
+    val height: Long
+)

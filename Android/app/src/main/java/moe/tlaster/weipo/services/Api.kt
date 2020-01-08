@@ -321,4 +321,22 @@ object Api {
             .awaitWeiboResponse(UnreadData.serializer())
             .getData()
     }
+
+    suspend fun directMessage(uid: Long, count: Int = 10, unfollowing: Int = 0, since_id: Long = 0, is_continuous: Int = 0): DirectMessageData {
+        return "$HOST/api/chat/list"
+            .httpPost(arrayListOf(
+                "uid" to uid,
+                "count" to count,
+                "unfollowing" to unfollowing
+            ).also {
+                if (since_id > 0) {
+                    it.add("since_id" to since_id)
+                }
+                if (is_continuous > 0) {
+                    it.add("is_continuous" to is_continuous)
+                }
+            })
+            .awaitWeiboResponse(DirectMessageData.serializer())
+            .getData()
+    }
 }
