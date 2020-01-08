@@ -322,7 +322,7 @@ object Api {
             .getData()
     }
 
-    suspend fun directMessage(uid: Long, count: Int = 10, unfollowing: Int = 0, since_id: Long = 0, is_continuous: Int = 0): DirectMessageData {
+    suspend fun chatList(uid: Long, count: Int = 10, unfollowing: Int = 0, since_id: Long = 0, is_continuous: Int = 0): DirectMessageData {
         return "$HOST/api/chat/list"
             .httpPost(arrayListOf(
                 "uid" to uid,
@@ -336,6 +336,44 @@ object Api {
                     it.add("is_continuous" to is_continuous)
                 }
             })
+            .awaitWeiboResponse(DirectMessageData.serializer())
+            .getData()
+    }
+
+    suspend fun chatSend(content: String, uid: Long) : DirectMessageData {
+        val st = config().st
+        return "$HOST/api/chat/send"
+            .httpPost(listOf(
+                "st" to st,
+                "uid" to uid,
+                "content" to content
+            ))
+            .awaitWeiboResponse(DirectMessageData.serializer())
+            .getData()
+    }
+
+    suspend fun chatUpload(file: File, tuid: Long): ChatUploadData {
+        val st = config().st ?: throw Error()
+        return "$HOST/api/chat/send"
+            .httpUpload()
+            .add(InlineDataPart("tuid", tuid.toString()))
+            .add(InlineDataPart(st, "st"))
+            .add(FileDataPart(file, name = "file", filename = file.name))
+            .header("Referer", "$HOST/message/chat?uid=$tuid&name=msgbox")
+            .awaitWeiboResponse(ChatUploadData.serializer())
+            .getData()
+    }
+
+    suspend fun chatSend(content: String, uid: Long, fids: Long, media_type: Int = 1) : DirectMessageData {
+        val st = config().st
+        return "$HOST/api/chat/send"
+            .httpPost(listOf(
+                "st" to st,
+                "uid" to uid,
+                "content" to content,
+                "fids" to fids,
+                "media_type" to media_type
+            ))
             .awaitWeiboResponse(DirectMessageData.serializer())
             .getData()
     }

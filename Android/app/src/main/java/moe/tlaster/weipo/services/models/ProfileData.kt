@@ -188,3 +188,16 @@ data class OriginalImage (
     val width: Long,
     val height: Long
 )
+
+@Serializable
+data class ChatUploadData (
+    val fids: Long,
+    val vfid: Long,
+    val filename: String,
+    val filesize: String,
+
+    @SerialName("original_image")
+    val originalImage: OriginalImage,
+
+    val thumbnail: OriginalImage
+)
