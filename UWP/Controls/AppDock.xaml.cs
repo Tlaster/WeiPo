@@ -43,9 +43,9 @@ namespace WeiPo.Controls
                 }
             });
             Singleton<BroadcastCenter>.Instance.Subscribe("share_add_image",
-                delegate { DockInput.Focus(FocusState.Programmatic); });
+                delegate { StartComposing(); });
             Singleton<BroadcastCenter>.Instance.Subscribe("share_add_text",
-                delegate { DockInput.Focus(FocusState.Programmatic); });
+                delegate { StartComposing(); });
         }
         
         public bool IsComposing { get; private set; }
