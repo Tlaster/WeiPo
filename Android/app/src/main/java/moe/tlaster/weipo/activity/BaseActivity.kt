@@ -6,13 +6,11 @@ import androidx.appcompat.app.AppCompatActivity
 
 
 abstract class BaseActivity : AppCompatActivity() {
-    protected open var layoutId: Int? = null
+    protected abstract val layoutId: Int
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        layoutId?.let {
-            setContentView(it)
-        }
+        setContentView(layoutId)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -19,10 +19,6 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    buildFeatures {
-        compose = true
-    }
-
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
@@ -55,17 +51,9 @@ dependencies {
     implementation("androidx.core:core-ktx:1.1.0")
     implementation("androidx.constraintlayout:constraintlayout:2.0.0-beta4")
     implementation("androidx.lifecycle:lifecycle-extensions:2.1.0")
-    implementation("androidx.fragment:fragment-ktx:1.2.0-rc05")
+    implementation("androidx.fragment:fragment-ktx:1.2.0-rc04")
     implementation("androidx.activity:activity-ktx:1.1.0-rc03")
     implementation("androidx.viewpager2:viewpager2:1.0.0")
-
-    implementation ("androidx.compose:compose-runtime:${appConfig.dependencyVersion.compose}")
-    implementation ("androidx.ui:ui-framework:${appConfig.dependencyVersion.compose}")
-    implementation ("androidx.ui:ui-layout:${appConfig.dependencyVersion.compose}")
-    implementation ("androidx.ui:ui-material:${appConfig.dependencyVersion.compose}")
-    implementation ("androidx.ui:ui-foundation:${appConfig.dependencyVersion.compose}")
-    implementation ("androidx.ui:ui-animation:${appConfig.dependencyVersion.compose}")
-    implementation ("androidx.ui:ui-tooling:${appConfig.dependencyVersion.compose}")
 
     implementation("androidx.navigation:navigation-fragment:2.1.0")
     implementation("androidx.navigation:navigation-ui:2.1.0")

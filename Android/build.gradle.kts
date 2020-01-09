@@ -5,7 +5,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:4.0.0-alpha08")
+        classpath("com.android.tools.build:gradle:3.5.2")
         classpath(kotlin("gradle-plugin", appConfig.kotlinVersion))
         classpath(kotlin("serialization", appConfig.kotlinVersion))
     }
