@@ -34,7 +34,7 @@ class MentionFragment : BaseFragment(R.layout.fragment_mention) {
             viewModel.source.refresh()
         }
         viewModel.source.stateChanged.observe(viewLifecycleOwner, Observer {
-            if (it == IncrementalLoadingCollection.CollectionState.Loading) {
+            if (it == IncrementalLoadingCollection.CollectionState.Refreshing) {
                 if (viewModel.isCmt) {
                     notificationViewModel.update {
                         it.mentionCmt = 0L
@@ -51,6 +51,7 @@ class MentionFragment : BaseFragment(R.layout.fragment_mention) {
             ItemSelector<Any>(R.layout.item_status)
         ).apply {
             items = viewModel.source
+            autoRefresh = false
             setView<StatusView>(R.id.item_status) { view, item, _, _ ->
                 view.data = item
             }

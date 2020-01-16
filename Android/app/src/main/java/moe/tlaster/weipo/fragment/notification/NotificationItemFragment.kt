@@ -33,7 +33,7 @@ abstract class NotificationItemFragment<T> : BaseFragment(R.layout.layout_list) 
         super.onViewCreated(view, savedInstanceState)
         recycler_view.adapter = createAdapter()
         viewModel.source.stateChanged.observe(viewLifecycleOwner, Observer {
-            if (it == IncrementalLoadingCollection.CollectionState.Loading) {
+            if (it == IncrementalLoadingCollection.CollectionState.Refreshing) {
                 notificationViewModel.update(badgeAction)
             }
         })
@@ -45,6 +45,7 @@ abstract class NotificationItemFragment<T> : BaseFragment(R.layout.layout_list) 
         return IncrementalLoadingAdapter(
             ItemSelector<T>(R.layout.item_status)
         ).apply {
+            autoRefresh = false
             items = viewModel.source
             setView<StatusView>(R.id.item_status) { view, item, _, _ ->
                 view.data = item
