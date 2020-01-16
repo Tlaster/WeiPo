@@ -67,7 +67,7 @@ class UserCard : ConstraintLayout {
             context.openActivity<FragmentActivity>(
                 "className" to UserFragment::class.java.name,
                 "data" to bundleOf(
-                    "user_id" to it,
+                    "user_id" to user?.id,
                     "user_name" to user?.screenName
                 )
             )
