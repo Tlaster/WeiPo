@@ -4,13 +4,16 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.observe
 import kotlinx.android.synthetic.main.layout_list.*
 import moe.tlaster.weipo.R
+import moe.tlaster.weipo.activity.ChatActivity
 import moe.tlaster.weipo.common.AutoStaggeredGridLayoutManager
 import moe.tlaster.weipo.common.adapter.IncrementalLoadingAdapter
 import moe.tlaster.weipo.common.adapter.ItemSelector
 import moe.tlaster.weipo.common.collection.IncrementalLoadingCollection
 import moe.tlaster.weipo.common.extensions.bindLoadingCollection
+import moe.tlaster.weipo.common.extensions.openActivity
 import moe.tlaster.weipo.common.statusWidth
 import moe.tlaster.weipo.controls.PersonCard
 import moe.tlaster.weipo.controls.StatusView
@@ -88,6 +91,12 @@ class DirectMessageFragment : NotificationItemFragment<MessageList>() {
                 item.text?.let {
                     view.subTitle = it
                 }
+            }
+            itemClick.observe(viewLifecycleOwner) {
+                context?.openActivity<ChatActivity>(
+                    "data" to it.item.user,
+                    "config" to viewModel.config
+                )
             }
         }
     }

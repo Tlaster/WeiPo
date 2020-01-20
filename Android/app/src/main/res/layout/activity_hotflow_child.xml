@@ -12,6 +12,13 @@
         android:layout_height="wrap_content"
         style="@style/Widget.MaterialComponents.AppBarLayout.Surface"
         android:theme="@style/ThemeOverlay.MaterialComponents.ActionBar">
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            app:navigationIcon="?attr/homeAsUpIndicator"
+            app:title="@string/hotflow_child"
+            app:layout_scrollFlags="scroll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

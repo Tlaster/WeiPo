@@ -131,7 +131,7 @@ data class DirectMessageData (
     val following: Boolean,
 
     @SerialName("last_read_mid")
-    val lastReadMid: Long,
+    val lastReadMid: Long? = null,
 
     val title: String
 )
@@ -165,7 +165,9 @@ data class Msg (
     @SerialName("sender_screen_name")
     val senderScreenName: String,
 
-    val attachment: Attachment? = null
+    val attachment: Attachment? = null,
+
+    var user: User? = null
 )
 
 @Serializable

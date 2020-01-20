@@ -24,4 +24,5 @@
     <string name="notification_dm">%1$d 个新私信</string>
     <string name="notification_follower">%1$d 位新粉丝</string>
     <string name="status_detail">微博详情</string>
+    <string name="hotflow_child">热评</string>
 </resources>

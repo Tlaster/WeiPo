@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.IdRes
 import androidx.collection.ArrayMap
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import moe.tlaster.weipo.common.extensions.load
 
@@ -22,11 +23,17 @@ open class ItemSelector<T>(private val layoutId: Int) : IItemSelector<T> {
     }
 }
 
+data class ItemClickedEventArg<T>(
+    val view: View,
+    val item: T
+)
+
 open class AutoAdapter<T>(
     private val itemSelector: IItemSelector<T>
 ) : RecyclerView.Adapter<ViewHolder>() {
 
-    var itemClick: ((view: View, item: T, position: Int, adapter: AutoAdapter<T>) -> Unit)? = null
+    val itemClick = MutableLiveData<ItemClickedEventArg<T>>()
+
     private val customActions: ArrayMap<Int, ((view: View, item: T, position: Int, adapter: AutoAdapter<T>) -> Unit)> =
         ArrayMap()
 
@@ -57,11 +64,11 @@ open class AutoAdapter<T>(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        itemClick?.let { clickListener ->
-            holder.itemView.setOnClickListener {
-                clickListener.invoke(it, item, position, this)
-            }
+
+        holder.itemView.setOnClickListener {
+            itemClick.value = ItemClickedEventArg(it, item)
         }
+
         customActions.forEach { action ->
             holder.itemView.findViewById<View>(action.key)?.let {
                 action.value.invoke(it, item, position, this)

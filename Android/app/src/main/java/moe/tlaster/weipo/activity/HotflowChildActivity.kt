@@ -2,7 +2,6 @@ package moe.tlaster.weipo.activity
 
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_hotflow_child.*
 import moe.tlaster.weipo.R
 import moe.tlaster.weipo.common.AutoStaggeredGridLayoutManager
@@ -15,7 +14,7 @@ import moe.tlaster.weipo.controls.StatusView
 import moe.tlaster.weipo.services.models.Comment
 import moe.tlaster.weipo.viewmodel.status.HotflowChildViewModel
 
-class HotflowChildActivity : AppCompatActivity() {
+class HotflowChildActivity : BaseActivity() {
 
     private val comment by lazy {
         intent.getParcelableExtra<Comment>("item")
@@ -26,10 +25,12 @@ class HotflowChildActivity : AppCompatActivity() {
             HotflowChildViewModel(comment)
         }
     }
+    override val layoutId: Int
+        get() = R.layout.activity_hotflow_child
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_hotflow_child)
+        setSupportActionBar(toolbar)
         item_status.apply {
             data = comment
             showRepost = false

@@ -81,7 +81,7 @@ dependencies {
 
     implementation("com.hold1:keyboardheightprovider:0.0.9")
 
-    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.0")
+    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.1")
 
     testImplementation("junit:junit:4.12")
     androidTestImplementation("androidx.test:runner:1.2.0")

@@ -25,5 +25,6 @@
     <string name="notification_dm">%1$d New DirectMessage</string>
     <string name="notification_follower">%1$d New Follower</string>
     <string name="status_detail">Status Detail</string>
+    <string name="hotflow_child">Hotflow Child</string>
 
 </resources>
