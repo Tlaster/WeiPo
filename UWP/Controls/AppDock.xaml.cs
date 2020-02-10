@@ -15,6 +15,8 @@ using System.IO;
 using System.Linq;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.System;
+using Windows.UI.Core;
 using WeiPo.Services.Models;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
@@ -151,27 +153,12 @@ namespace WeiPo.Controls
             }
         }
 
-        private bool _isCtrlDown;
         private void TextBox_KeyDown(object sender, KeyRoutedEventArgs e)
         {
-            if (e.Key == Windows.System.VirtualKey.Control)
+            if (Window.Current.CoreWindow.GetKeyState(VirtualKey.Control).HasFlag(CoreVirtualKeyStates.Down)&& e.Key == VirtualKey.Enter)
             {
-                _isCtrlDown = true;
-            }
-            if (_isCtrlDown && e.Key == Windows.System.VirtualKey.Enter)
-            {
+                e.Handled = true;
                 ViewModel.PostWeiboViewModel.Commit();
-            }
-            (sender as TextBox).AcceptsReturn = !_isCtrlDown;
-        }
-
-        private void TextBox_KeyUp(object sender, KeyRoutedEventArgs e)
-        {
-
-            if (e.Key == Windows.System.VirtualKey.Control)
-            {
-                _isCtrlDown = false;
-                (sender as TextBox).AcceptsReturn = !_isCtrlDown;
             }
         }
 

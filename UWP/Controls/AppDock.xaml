@@ -143,7 +143,7 @@
                                   Margin="8,8,0,8"
                                   Height="{StaticResource AvatarNormalSize}" CornerRadius="999" />
                 <TextBox Margin="8" Grid.Row="1"
-                         Paste="TextBox_Paste" KeyDown="TextBox_KeyDown" KeyUp="TextBox_KeyUp"
+                         Paste="TextBox_Paste" PreviewKeyDown="TextBox_KeyDown"
                          x:Name="DockInput"
                          AcceptsReturn="True" VerticalContentAlignment="Center" Grid.Column="1" TextWrapping="Wrap"
                          Text="{x:Bind ViewModel.PostWeiboViewModel.Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
