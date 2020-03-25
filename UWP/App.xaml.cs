@@ -48,13 +48,13 @@ namespace WeiPo
                 };
                 settings.OnErrorAsync = async call =>
                 {
-                    if (call.HttpStatus == HttpStatusCode.Forbidden)
+                    if (call.Response.StatusCode == 403)
                     {
                         //maybe errno:100005
-                        var json = await call.Response.Content.ReadAsStringAsync();
+                        var json = await call.Response.GetStringAsync();
                         try
                         {
-                            call.FlurlRequest.Client.Settings.JsonSerializer.Deserialize<JObject>(json);
+                            call.Request.Client.Settings.JsonSerializer.Deserialize<JObject>(json);
                         }
                         catch (FlurlParsingException e) when (e.InnerException is WeiboException)
                         {

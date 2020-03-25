@@ -22,6 +22,7 @@ namespace WeiPo
             CoreApplication.GetCurrentView().TitleBar.Also(it =>
             {
                 it.LayoutMetricsChanged += OnCoreTitleBarOnLayoutMetricsChanged;
+                it.IsVisibleChanged += OnTitleBarIsVisibleChanged;
                 it.ExtendViewIntoTitleBar = true;
             });
             Window.Current.SetTitleBar(TitleBar);
@@ -61,6 +62,18 @@ namespace WeiPo
             RootContainer.BackStackChanged += RootContainerOnBackStackChanged;
             RootContainer.Navigate(typeof(LoginActivity));
         }
+        
+        private void OnTitleBarIsVisibleChanged(CoreApplicationViewTitleBar sender, object args)
+        {
+            if (sender.IsVisible)
+            {
+                TitleBar.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                TitleBar.Visibility = Visibility.Collapsed;
+            }
+        }
 
         private void RegisterNotification(string name, string localizationName)
         {
@@ -78,6 +91,7 @@ namespace WeiPo
             if (!Dock.OnBackPress() && RootContainer.CanGoBack)
             {
                 RootContainer.GoBack();
+                e.Handled = true;
             }
         }
 
