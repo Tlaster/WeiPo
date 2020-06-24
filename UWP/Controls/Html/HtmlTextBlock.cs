@@ -188,7 +188,7 @@ namespace WeiPo.Controls.Html
                 var link = node.GetAttributeValue("src", "");
                 var img = new ImageEx
                 {
-                    Source = $"https:{link}",
+                    Source = $"{link}",
                     Width = _richTextContent.FontSize,
                     Height = _richTextContent.FontSize,
                     HorizontalAlignment = HorizontalAlignment.Center,

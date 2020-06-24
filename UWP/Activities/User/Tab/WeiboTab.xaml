@@ -18,7 +18,7 @@
 
     <controls:ListViewEx ItemsSource="{x:Bind ViewModel.(tab:WeiboTabViewModel.DataSource), Mode=OneWay}">
         <controls:ListViewEx.Layout>
-            <common:StaggeredLayout DesiredColumnWidth="300" />
+            <controls2:StaggeredLayout DesiredColumnWidth="300" />
         </controls:ListViewEx.Layout>
         <controls:ListViewEx.ItemTemplate>
             <local:WeiboTabDataTemplateSelector>

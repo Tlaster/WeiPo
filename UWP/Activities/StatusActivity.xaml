@@ -9,6 +9,7 @@
     xmlns:controls="using:WeiPo.Controls"
     xmlns:common="using:WeiPo.Common"
     xmlns:models="using:WeiPo.Services.Models"
+    xmlns:controls1="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d">
     <Grid >
         <Grid.ColumnDefinitions>
@@ -24,7 +25,7 @@
             <PivotItem Header="{common:i18n Key=Reposts}">
                 <controls:ListViewEx ItemsSource="{x:Bind ViewModel.RepostSource, Mode=OneWay}">
                     <controls:ListViewEx.Layout>
-                        <common:StaggeredLayout DesiredColumnWidth="300" />
+                        <controls1:StaggeredLayout DesiredColumnWidth="300" />
                     </controls:ListViewEx.Layout>
                     <controls:ListViewEx.ItemTemplate>
                         <DataTemplate x:DataType="models:StatusModel">
@@ -36,7 +37,7 @@
             <PivotItem Header="{common:i18n Key=Comments}">
                 <controls:ListViewEx ItemsSource="{x:Bind ViewModel.HotflowSource, Mode=OneWay}">
                     <controls:ListViewEx.Layout>
-                        <common:StaggeredLayout DesiredColumnWidth="300" />
+                        <controls1:StaggeredLayout DesiredColumnWidth="300" />
                     </controls:ListViewEx.Layout>
                     <controls:ListViewEx.ItemTemplate>
                         <DataTemplate x:DataType="models:CommentModel">

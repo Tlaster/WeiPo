@@ -15,7 +15,7 @@
 
     <controls:ListViewEx ItemsSource="{x:Bind ViewModel.Source, Mode=OneWay}">
         <controls:ListViewEx.Layout>
-            <common:StaggeredLayout DesiredColumnWidth="150" />
+            <controls1:StaggeredLayout DesiredColumnWidth="150" />
         </controls:ListViewEx.Layout>
         <controls:ListViewEx.ItemTemplate>
             <DataTemplate x:DataType="models:UserModel">

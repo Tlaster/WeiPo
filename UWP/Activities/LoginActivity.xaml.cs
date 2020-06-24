@@ -2,6 +2,8 @@
 
 using System;
 using System.Linq;
+using System.Threading.Tasks;
+using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 using Windows.Web.Http.Filters;
 using WeiPo.Common;
@@ -28,7 +30,7 @@ namespace WeiPo.Activities
 
         private void LoginWebViewOnNavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
         {
-            var httpBaseProtocolFilter = new HttpBaseProtocolFilter();
+            using var httpBaseProtocolFilter = new HttpBaseProtocolFilter();
             var cookieManager = httpBaseProtocolFilter.CookieManager;
             var cookieCollection = cookieManager.GetCookies(new Uri("https://m.weibo.cn/"));
             if (cookieCollection != null && cookieCollection.Any(it => it.Name == "MLOGIN" && it.Value == "1"))

@@ -156,6 +156,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common\Collection\LoadingCollection.cs" />
+    <Compile Include="Common\FadeActivityTransition.cs" />
     <Compile Include="Common\Localization.cs" />
     <Compile Include="Common\BroadcastCenter.cs" />
     <Compile Include="Common\ReflectionHelper.cs" />
@@ -164,7 +165,6 @@
     <Compile Include="Common\ToastNotificationSender.cs" />
     <Compile Include="Common\WeiboJsonSerializer.cs" />
     <Compile Include="Common\Singleton.cs" />
-    <Compile Include="Common\StaggeredLayout.cs" />
     <Compile Include="Common\Extensions.cs" />
     <Compile Include="Common\Storage.cs" />
     <Compile Include="Common\StringExtensions.cs" />
@@ -186,6 +186,10 @@
     <Compile Include="Controls\PersonCard.xaml.cs">
       <DependentUpon>PersonCard.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\StaggeredLayout\StaggeredColumnLayout.cs" />
+    <Compile Include="Controls\StaggeredLayout\StaggeredItem.cs" />
+    <Compile Include="Controls\StaggeredLayout\StaggeredLayout.cs" />
+    <Compile Include="Controls\StaggeredLayout\StaggeredLayoutState.cs" />
     <Compile Include="Controls\StatusView.xaml.cs">
       <DependentUpon>StatusView.xaml</DependentUpon>
     </Compile>
@@ -443,24 +447,24 @@
       <Version>3.0.0-pre3</Version>
     </PackageReference>
     <PackageReference Include="Fody">
-      <Version>6.1.1</Version>
+      <Version>6.2.0</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="HtmlAgilityPack">
-      <Version>1.11.23</Version>
+      <Version>1.11.24</Version>
     </PackageReference>
     <PackageReference Include="Humanizer">
-      <Version>2.7.9</Version>
+      <Version>2.8.25</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Analytics">
-      <Version>3.1.0</Version>
+      <Version>3.2.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Crashes">
-      <Version>3.1.0</Version>
+      <Version>3.2.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers">
-      <Version>3.0.0-beta3.final</Version>
+      <Version>3.0.0</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
@@ -468,16 +472,16 @@
       <Version>6.2.10</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp">
-      <Version>6.0.0</Version>
+      <Version>7.0.0-preview1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications">
-      <Version>6.0.0</Version>
+      <Version>7.0.0-preview1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
-      <Version>6.0.0</Version>
+      <Version>7.0.0-preview1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
-      <Version>2.4.0-prerelease.200322001</Version>
+      <Version>2.5.0-prerelease.200609001</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>12.0.3</Version>
@@ -486,7 +490,7 @@
       <Version>1.0.0-pre-03</Version>
     </PackageReference>
     <PackageReference Include="PropertyChanged.Fody">
-      <Version>3.2.7</Version>
+      <Version>3.2.8</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

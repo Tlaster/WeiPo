@@ -95,6 +95,7 @@
                 </Grid>
             </controls:NavigationView.PaneCustomContent>
             <Pivot x:Name="TimelinePivot" Loaded="TimelinePivot_Loaded" 
+                   IsLocked="True"
                    ItemsSource="{x:Bind DataContext.(viewModels:TimelineViewModel.Source)}"
                    SelectedIndex="{x:Bind NavigationMenuList.SelectedIndex,Mode=OneWay}">
                 <Pivot.ItemContainerStyle>
@@ -106,7 +107,7 @@
                     <DataTemplate x:DataType="viewModels:NavigationViewModelWithNotification">
                         <controls2:ListViewEx ItemsSource="{x:Bind Source}">
                             <controls2:ListViewEx.Layout>
-                                <common:StaggeredLayout DesiredColumnWidth="300" />
+                                <controls1:StaggeredLayout DesiredColumnWidth="300" />
                             </controls2:ListViewEx.Layout>
                             <controls2:ListViewEx.ItemTemplate>
                                 <common:StatusTypeDataTemplateSelector>

@@ -227,6 +227,7 @@
                                            PreferredPlacement="Bottom">
                         <controls1:TeachingTip.Content>
                             <GridView SelectionMode="None"
+                                      MaxHeight="400"
                                       IsItemClickEnabled="True"
                                       ItemClick="EmojiGridView_ItemClick"
                                       ItemsSource="{Binding Source={StaticResource EmojiGroupSource}}">

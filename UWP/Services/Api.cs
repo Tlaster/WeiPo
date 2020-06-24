@@ -63,7 +63,7 @@ namespace WeiPo.Services
 
         public async Task<EmojiResponse> Emoji()
         {
-            return await "https://weibo.com/aj/mblog/face?type=face"
+            return await "https://gist.githubusercontent.com/Tlaster/cb3273227dca6264ed5440594c474f54/raw/11539c09b27de45915f01864e6aedffe4dd1a857/weibo_emoji.json"
                 .GetAsync()
                 .ReceiveJson<EmojiResponse>();
         }
