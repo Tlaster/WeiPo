@@ -484,7 +484,7 @@
       <Version>2.5.0-prerelease.200609001</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
-      <Version>12.0.3</Version>
+      <Version>13.0.1</Version>
     </PackageReference>
     <PackageReference Include="Nito.Mvvm.Async">
       <Version>1.0.0-pre-03</Version>
