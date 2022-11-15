@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "WeiPoX (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "WeiPoX (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
