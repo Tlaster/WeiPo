@@ -35,7 +35,6 @@ namespace WeiPoX
         private void myButton_Click(object sender, RoutedEventArgs e)
         {
             myButton.Content = "Clicked";
-            CacheBase<>
         }
     }
 }
