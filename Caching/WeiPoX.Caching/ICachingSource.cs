@@ -2,5 +2,5 @@
 
 public interface ICachingSource<TKey, TValue>
 {
-    IObservable<TValue> Load(TKey key, CancellationToken cancellationToken);
+    IObservable<TValue> Get(TKey key);
 }
