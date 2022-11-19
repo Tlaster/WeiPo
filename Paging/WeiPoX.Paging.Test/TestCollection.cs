@@ -1,5 +1,4 @@
 using System.Collections.Immutable;
-using System.Reflection;
 
 namespace WeiPoX.Paging.Test;
 
@@ -50,7 +49,7 @@ public class TestCollection
     }
 }
 
-class TestPagingSource : IPagingSource<int?, string>
+internal class TestPagingSource : IPagingSource<int?, string>
 {
     public async Task<ILoadResult> Load(ILoadParams<int?> loadParams, CancellationToken cancellationToken)
     {
@@ -58,7 +57,8 @@ class TestPagingSource : IPagingSource<int?, string>
         return loadParams switch
         {
             LoadParams.Append<int?> append => new LoadResult.Page<int?, string>(
-                Enumerable.Range(0, Convert.ToInt32(append.LoadSize)).Select(i => (i * append.Key ?? 1).ToString()).ToImmutableList(), append.Key == 3 ? null : append.Key + 1),
+                Enumerable.Range(0, Convert.ToInt32(append.LoadSize)).Select(i => (i * append.Key ?? 1).ToString())
+                    .ToImmutableList(), append.Key == 3 ? null : append.Key + 1),
             LoadParams.Refresh<int?> refresh => new LoadResult.Page<int?, string>(
                 Enumerable.Range(0, Convert.ToInt32(refresh.LoadSize)).Select(i => i.ToString()).ToImmutableList(), 2),
             _ => throw new ArgumentOutOfRangeException(nameof(loadParams))

@@ -5,7 +5,7 @@ namespace WeiPoX.DeclarativeUI.WinUI3.Renderer;
 
 internal class ColumnRenderer : RendererObject<Column, StackPanel>
 {
-    protected internal override StackPanel Create()
+    protected override StackPanel Create()
     {
         return new StackPanel
         {
@@ -13,7 +13,7 @@ internal class ColumnRenderer : RendererObject<Column, StackPanel>
         };
     }
 
-    protected internal override void Update(StackPanel control, Column widget)
+    protected override void Update(StackPanel control, Column widget)
     {
     }
 }

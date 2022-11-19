@@ -1,43 +1,44 @@
 using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using WeiPoX.DeclarativeUI.Internal;
 
 namespace WeiPoX.DeclarativeUI.WinUI3.Renderer;
 
-internal abstract class RendererObject<TWidget, TControl> : IRenderer
+internal abstract class RendererObject<TWidget, TControl> : IRenderer<UIElement>
     where TWidget : WidgetObject where TControl : class, new()
 {
-    public void Update(FrameworkElement control, WidgetObject widget)
+    public void Update(UIElement control, WidgetObject widget)
     {
         Update(control as TControl ?? throw new InvalidOperationException(), (TWidget)widget);
     }
 
-    public void AddChild(FrameworkElement control, FrameworkElement childControl)
+    public void AddChild(UIElement control, UIElement childControl)
     {
         AddChild(control as TControl ?? throw new InvalidOperationException(), childControl);
     }
 
-    public void RemoveChild(FrameworkElement control, FrameworkElement childControl)
+    public void RemoveChild(UIElement control, UIElement childControl)
     {
         RemoveChild(control as TControl ?? throw new InvalidOperationException(), childControl);
     }
 
-    public void ReplaceChild(FrameworkElement control, int index, FrameworkElement newChildControl)
+    public void ReplaceChild(UIElement control, int index, UIElement newChildControl)
     {
         ReplaceChild(control as TControl ?? throw new InvalidOperationException(), index, newChildControl);
     }
 
-    FrameworkElement IRenderer.Create()
+    UIElement IRenderer<UIElement>.Create()
     {
         return Create() as Control ?? throw new InvalidOperationException();
     }
 
-    protected internal virtual TControl Create()
+    protected virtual TControl Create()
     {
         return new TControl();
     }
 
-    protected internal virtual void AddChild(TControl control, FrameworkElement childControl)
+    protected virtual void AddChild(TControl control, UIElement childControl)
     {
         switch (control)
         {
@@ -54,7 +55,7 @@ internal abstract class RendererObject<TWidget, TControl> : IRenderer
         }
     }
 
-    protected internal virtual void RemoveChild(TControl control, FrameworkElement childControl)
+    protected virtual void RemoveChild(TControl control, UIElement childControl)
     {
         switch (control)
         {
@@ -71,7 +72,7 @@ internal abstract class RendererObject<TWidget, TControl> : IRenderer
         }
     }
 
-    protected internal virtual void ReplaceChild(TControl control, int index, FrameworkElement newChildControl)
+    protected virtual void ReplaceChild(TControl control, int index, UIElement newChildControl)
     {
         switch (control)
         {
@@ -88,14 +89,5 @@ internal abstract class RendererObject<TWidget, TControl> : IRenderer
         }
     }
 
-    protected internal abstract void Update(TControl control, TWidget widget);
-}
-
-internal interface IRenderer
-{
-    FrameworkElement Create();
-    void Update(FrameworkElement control, WidgetObject widget);
-    void AddChild(FrameworkElement control, FrameworkElement childControl);
-    void RemoveChild(FrameworkElement control, FrameworkElement childControl);
-    void ReplaceChild(FrameworkElement control, int index, FrameworkElement newChildControl);
+    protected abstract void Update(TControl control, TWidget widget);
 }

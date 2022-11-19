@@ -5,7 +5,7 @@ namespace WeiPoX.DeclarativeUI.WinUI3.Renderer;
 
 internal class BoxRenderer : RendererObject<Box, Grid>
 {
-    protected internal override void Update(Grid control, Box widget)
+    protected override void Update(Grid control, Box widget)
     {
     }
 }

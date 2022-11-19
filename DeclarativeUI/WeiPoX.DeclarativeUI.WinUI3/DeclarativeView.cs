@@ -12,30 +12,22 @@ public class DeclarativeView : UserControl
 
     protected void Render(WidgetObject widget)
     {
-        if (Content is Control control)
-        {
-            Content = _renderer.RenderIfNeeded(_widget, widget, control);
-        }
-        else
-        {
-            Content = _renderer.RenderIfNeeded(_widget, widget, null);
-        }
-
+        Content = _renderer.RenderIfNeeded(_widget, widget, Content != null ? Content : null);
         _widget = widget;
     }
 }
 
-
 public abstract class DeclarativeView<T> : DeclarativeView
 {
     private IDisposable? _disposable;
-    protected abstract IObservable<T> State { get; }
 
-    public DeclarativeView()
+    protected DeclarativeView()
     {
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
     }
+
+    protected abstract IObservable<T> State { get; }
 
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {

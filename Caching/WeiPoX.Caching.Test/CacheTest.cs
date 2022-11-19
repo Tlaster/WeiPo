@@ -1,6 +1,4 @@
-using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Reflection;
 using CSharpFunctionalExtensions;
 
 namespace WeiPoX.Caching.Test;
@@ -27,7 +25,7 @@ public class CacheTest
         Assert.IsInstanceOfType(stateList[1], typeof(LoadState.Success<string>));
         Assert.AreEqual("1", (stateList[1] as LoadState.Success<string>)?.Value);
     }
-    
+
     [TestMethod]
     public async Task TestRemoteFailure()
     {
@@ -60,7 +58,7 @@ public class CacheTest
         Assert.IsInstanceOfType(stateList[1], typeof(LoadState.Success<string>));
         Assert.AreEqual("1", (stateList[1] as LoadState.Success<string>)?.Value);
     }
-    
+
     [TestMethod]
     public async Task TestRemoteSuccessWithPreCache()
     {
@@ -83,8 +81,7 @@ public class CacheTest
     }
 }
 
-
-class TestCachingSource : ICachingSource<int, string>
+internal class TestCachingSource : ICachingSource<int, string>
 {
     private readonly ReplaySubject<string> _data = new();
 
@@ -92,14 +89,14 @@ class TestCachingSource : ICachingSource<int, string>
     {
         return _data;
     }
-    
+
     public void Emit(string data)
     {
         _data.OnNext(data);
     }
 }
 
-class TestSuccessRemoteMediator : IRemoteMediator
+internal class TestSuccessRemoteMediator : IRemoteMediator
 {
     public async Task<Result> RefreshAsync()
     {
@@ -108,7 +105,7 @@ class TestSuccessRemoteMediator : IRemoteMediator
     }
 }
 
-class TestFailureRemoteMediator : IRemoteMediator
+internal class TestFailureRemoteMediator : IRemoteMediator
 {
     public async Task<Result> RefreshAsync()
     {

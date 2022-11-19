@@ -5,5 +5,5 @@ public enum Arrangement
     Top,
     Bottom,
     Left,
-    Right,
+    Right
 }

@@ -31,7 +31,8 @@ public class PagingCollection<TKey, TValue> : ObservableCollection<TValue>
 
     private void LoadIfNeeded(int index)
     {
-        if (index >= Count - _config.PrefetchDistance && _loadStateCollection.GetAppend().IsInComplete() && _loadStateCollection.GetRefresh().IsComplete())
+        if (index >= Count - _config.PrefetchDistance && _loadStateCollection.GetAppend().IsInComplete() &&
+            _loadStateCollection.GetRefresh().IsComplete())
         {
             _ = LoadAsync(LoadType.Append, _config.PageSize, new CancellationToken(false));
         }

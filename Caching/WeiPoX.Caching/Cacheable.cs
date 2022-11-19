@@ -1,26 +1,25 @@
 ﻿using System.Reactive;
 using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using CSharpFunctionalExtensions;
-using ReactiveUI;
 
 namespace WeiPoX.Caching;
 
 public class Cacheable<TKey, TValue>
 {
-    private readonly ICachingSource<TKey, TValue> _source;
     private readonly IRemoteMediator _remoteMediator;
+    private readonly ICachingSource<TKey, TValue> _source;
 
     public Cacheable(ICachingSource<TKey, TValue> source, IRemoteMediator remoteMediator)
     {
         _source = source;
         _remoteMediator = remoteMediator;
     }
-    
+
     public IObservable<LoadState> Get(TKey key)
     {
         var remoteObservable = Observable.FromAsync(() => _remoteMediator.RefreshAsync())
-            .Select<Result, LoadState>(it => it.IsSuccess ? new LoadState.Success<Unit>(Unit.Default) : new LoadState.Failure(it.Error))
+            .Select<Result, LoadState>(it =>
+                it.IsSuccess ? new LoadState.Success<Unit>(Unit.Default) : new LoadState.Failure(it.Error))
             .StartWith(new LoadState.Loading());
         var localObservable = _source.Get(key)
             .Select<TValue, LoadState>(it => new LoadState.Success<TValue>(it))
@@ -42,7 +41,7 @@ public class Cacheable<TKey, TValue>
 public record LoadState
 {
     public record Loading : LoadState;
-    
+
     public record NoData : LoadState;
 
     public record Success<T>(T Value) : LoadState;
