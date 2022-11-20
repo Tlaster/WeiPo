@@ -25,7 +25,7 @@ public partial class App : Application
         // Ensure the current window is active
         window.Activate();
 
-        UITestMethodAttribute.DispatcherQueue = window.DispatcherQueue;
+        // UITestMethodAttribute.DispatcherQueue = window.DispatcherQueue;
 
         // Replace back with e.Arguments when https://github.com/microsoft/microsoft-ui-xaml/issues/3368 is fixed
         UnitTestClient.Run(Environment.CommandLine);
