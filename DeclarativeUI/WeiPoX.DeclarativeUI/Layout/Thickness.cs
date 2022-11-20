@@ -1,37 +1,16 @@
 ﻿namespace WeiPoX.DeclarativeUI.Layout;
 
-public class Thickness
+public record Thickness(double Start, double Top, double End, double Bottom)
 {
     public static readonly Thickness Zero = new(0, 0, 0, 0);
 
-    public Thickness(double start, double top, double end, double bottom)
+    public Thickness(double value) : this(value, value, value, value)
     {
-        Start = start;
-        Top = top;
-        End = end;
-        Bottom = bottom;
     }
 
-    public Thickness(double value)
+    public Thickness(double vertical, double horizontal) : this(horizontal, vertical, horizontal, vertical)
     {
-        Start = value;
-        Top = value;
-        End = value;
-        Bottom = value;
     }
-
-    public Thickness(double vertical, double horizontal)
-    {
-        Start = horizontal;
-        Top = vertical;
-        End = horizontal;
-        Bottom = vertical;
-    }
-
-    public double Start { get; }
-    public double Top { get; }
-    public double End { get; }
-    public double Bottom { get; }
 
     public static Thickness operator +(Thickness left, Thickness right)
     {

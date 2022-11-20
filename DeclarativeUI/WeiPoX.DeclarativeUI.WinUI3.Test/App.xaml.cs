@@ -2,7 +2,6 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.VisualStudio.TestPlatform.TestExecutor;
-using Microsoft.VisualStudio.TestTools.UnitTesting.AppContainer;
 
 namespace WeiPoX.DeclarativeUI.WinUI3.Test;
 
