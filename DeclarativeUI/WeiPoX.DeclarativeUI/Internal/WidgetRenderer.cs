@@ -63,7 +63,7 @@ internal abstract class WidgetRenderer<T>
             {
                 renderer.AddChild(control, Render(newChild));
             }
-            else if (oldChildControl != null && newChild ==  null)
+            else if (oldChildControl != null && newChild == null)
             {
                 renderer.RemoveChild(control, oldChildControl);
             }

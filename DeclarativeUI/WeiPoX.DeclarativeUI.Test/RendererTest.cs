@@ -19,7 +19,7 @@ public class RendererTest
     {
         var control = new TestControl
         {
-            UpdateCount = 1,
+            UpdateCount = 1
         };
         var renderer = new TestWidgetRenderer();
         var result = renderer.RenderIfNeeded(
@@ -41,7 +41,7 @@ public class RendererTest
         );
         Assert.AreEqual(2, result.UpdateCount);
     }
-    
+
     [TestMethod]
     public void TestRendererNotUpdate()
     {
@@ -53,6 +53,7 @@ public class RendererTest
         );
         Assert.AreEqual(1, result.UpdateCount);
     }
+
     [TestMethod]
     public void TestChildrenUpdateReference()
     {
@@ -73,7 +74,7 @@ public class RendererTest
         Assert.IsInstanceOfType(result, typeof(TestPanel));
         Assert.AreSame(child, ((TestPanel)result).Children[0]);
     }
-    
+
     [TestMethod]
     public void TestChildrenUpdate()
     {
@@ -93,7 +94,7 @@ public class RendererTest
         Assert.IsInstanceOfType(result, typeof(TestPanel));
         Assert.AreEqual(2, ((TestPanel)result).Children[0].UpdateCount);
     }
-    
+
     [TestMethod]
     public void TestChildAdd()
     {
@@ -114,7 +115,7 @@ public class RendererTest
         Assert.AreEqual(1, ((TestPanel)result).Children[0].UpdateCount);
         Assert.AreEqual(1, ((TestPanel)result).Children[1].UpdateCount);
     }
-    
+
     [TestMethod]
     public void TestChildRemove()
     {

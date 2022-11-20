@@ -18,7 +18,7 @@ internal static class RendererPool
             { typeof(Button), new ButtonRenderer() },
             { typeof(Column), new ColumnRenderer() },
             { typeof(Row), new RowRenderer() },
-            { typeof(Padding), new PaddingRenderer() },
+            { typeof(Padding), new PaddingRenderer() }
         }.ToImmutableDictionary();
 
     public static IRenderer<UIElement> GetRenderer(Type type)
@@ -27,6 +27,7 @@ internal static class RendererPool
         {
             return renderer;
         }
+
         throw new NotSupportedException($"Renderer for {type} is not supported.");
     }
 }

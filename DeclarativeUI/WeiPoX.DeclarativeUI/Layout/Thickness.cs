@@ -11,7 +11,7 @@ public class Thickness
         End = end;
         Bottom = bottom;
     }
-    
+
     public Thickness(double value)
     {
         Start = value;
@@ -19,7 +19,7 @@ public class Thickness
         End = value;
         Bottom = value;
     }
-    
+
     public Thickness(double vertical, double horizontal)
     {
         Start = horizontal;
@@ -27,7 +27,7 @@ public class Thickness
         End = horizontal;
         Bottom = vertical;
     }
-    
+
     public double Start { get; }
     public double Top { get; }
     public double End { get; }
@@ -35,12 +35,14 @@ public class Thickness
 
     public static Thickness operator +(Thickness left, Thickness right)
     {
-        return new Thickness(left.Start + right.Start, left.Top + right.Top, left.End + right.End, left.Bottom + right.Bottom);
+        return new Thickness(left.Start + right.Start, left.Top + right.Top, left.End + right.End,
+            left.Bottom + right.Bottom);
     }
 
     public static Thickness operator -(Thickness left, Thickness right)
     {
-        return new Thickness(left.Start - right.Start, left.Top - right.Top, left.End - right.End, left.Bottom - right.Bottom);
+        return new Thickness(left.Start - right.Start, left.Top - right.Top, left.End - right.End,
+            left.Bottom - right.Bottom);
     }
 
     public static Thickness operator *(Thickness left, double right)
