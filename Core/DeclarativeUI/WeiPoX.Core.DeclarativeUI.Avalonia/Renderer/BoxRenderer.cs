@@ -1,5 +1,5 @@
 using Avalonia.Controls;
-using WeiPoX.Core.DeclarativeUI.Layout;
+using WeiPoX.Core.DeclarativeUI.Widget.Layout;
 
 namespace WeiPoX.Core.DeclarativeUI.Avalonia.Renderer;
 

@@ -1,4 +1,4 @@
-﻿namespace WeiPoX.Core.DeclarativeUI.Layout;
+﻿namespace WeiPoX.Core.DeclarativeUI.Widget.Layout;
 
 public record Alignment
 {

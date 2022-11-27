@@ -1,3 +1,5 @@
+using WeiPoX.Core.DeclarativeUI.Widget;
+
 namespace WeiPoX.Core.DeclarativeUI.Internal;
 
 internal abstract class WidgetRenderer<T>

@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using Microsoft.UI.Xaml;
 using WeiPoX.Core.DeclarativeUI.Internal;
-using WeiPoX.Core.DeclarativeUI.Layout;
+using WeiPoX.Core.DeclarativeUI.Widget;
+using WeiPoX.Core.DeclarativeUI.Widget.Layout;
 using WeiPoX.Core.DeclarativeUI.WinUI3.Renderer;
 
 namespace WeiPoX.Core.DeclarativeUI.WinUI3.Internal;

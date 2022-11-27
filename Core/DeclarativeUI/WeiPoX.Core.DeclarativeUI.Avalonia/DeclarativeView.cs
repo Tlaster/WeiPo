@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.LogicalTree;
 using WeiPoX.Core.DeclarativeUI.Avalonia.Internal;
+using WeiPoX.Core.DeclarativeUI.Widget;
 
 namespace WeiPoX.Core.DeclarativeUI.Avalonia;
 

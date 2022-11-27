@@ -1,8 +1,8 @@
-﻿namespace WeiPoX.Core.DeclarativeUI.Layout;
+﻿namespace WeiPoX.Core.DeclarativeUI.Widget.Layout;
 
-public record Thickness(double Start, double Top, double End, double Bottom)
+public record Thickness(double Start = 0, double Top = 0, double End = 0, double Bottom = 0)
 {
-    public static readonly Thickness Zero = new(0, 0, 0, 0);
+    public static readonly Thickness Zero = new();
 
     public Thickness(double value) : this(value, value, value, value)
     {

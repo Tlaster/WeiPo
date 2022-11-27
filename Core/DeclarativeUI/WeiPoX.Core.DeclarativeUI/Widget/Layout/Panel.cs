@@ -1,6 +1,6 @@
 using System.Collections.Immutable;
 
-namespace WeiPoX.Core.DeclarativeUI.Layout;
+namespace WeiPoX.Core.DeclarativeUI.Widget.Layout;
 
 public record Panel(ImmutableList<WidgetObject> Children) : WidgetObject, IPanelWidget
 {
