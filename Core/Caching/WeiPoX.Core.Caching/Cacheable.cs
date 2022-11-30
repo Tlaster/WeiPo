@@ -1,50 +1,54 @@
 ﻿using System.Reactive;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using CSharpFunctionalExtensions;
 
 namespace WeiPoX.Core.Caching;
 
-public class Cacheable<TKey, TValue>
+public class Cacheable<TValue>
 {
-    private readonly IRemoteMediator _remoteMediator;
-    private readonly ICachingSource<TKey, TValue> _source;
+    private readonly ReplaySubject<int> _invalidationSubject = new();
 
-    public Cacheable(ICachingSource<TKey, TValue> source, IRemoteMediator remoteMediator)
+    public Cacheable(Func<IObservable<TValue>> source, Func<Task<LoadResult>> remoteMediator)
     {
-        _source = source;
-        _remoteMediator = remoteMediator;
-    }
-
-    public IObservable<LoadState> Get(TKey key)
-    {
-        var remoteObservable = Observable.FromAsync(() => _remoteMediator.RefreshAsync())
-            .Select<Result, LoadState>(it =>
-                it.IsSuccess ? new LoadState.Success<Unit>(Unit.Default) : new LoadState.Failure(it.Error))
-            .StartWith(new LoadState.Loading());
-        var localObservable = _source.Get(key)
-            .Select<TValue, LoadState>(it => new LoadState.Success<TValue>(it))
-            .StartWith(new LoadState.NoData());
-        return remoteObservable.CombineLatest(localObservable, (remote, local) =>
-        {
-            return local switch
+        Data = source.Invoke().Select(it => new CacheState.Success<TValue>(it) as CacheState)
+            .StartWith(new CacheState.Empty());
+        RefreshState = _invalidationSubject
+            .SelectMany(Observable.FromAsync(remoteMediator.Invoke))
+            .Select<LoadResult, LoadState>(it => it switch
             {
-                LoadState.Failure failure => failure,
-                LoadState.Loading loading => loading,
-                LoadState.NoData => remote is not LoadState.Failure ? new LoadState.Loading() : remote,
-                LoadState.Success<TValue> success => success,
-                _ => throw new ArgumentOutOfRangeException(nameof(local))
-            };
-        }).DistinctUntilChanged();
+                LoadResult.Error error => new LoadState.Error(error.Exception),
+                LoadResult.Success => new LoadState.Success(),
+                _ => throw new ArgumentOutOfRangeException(nameof(it))
+            })
+            .StartWith(new LoadState.Loading());
+    }
+    public IObservable<CacheState> Data { get; }
+    
+    public IObservable<LoadState> RefreshState { get; }
+
+    public void Refresh()
+    {
+        _invalidationSubject.OnNext(0);
     }
 }
 
-public record LoadState
+
+public abstract record LoadResult
+{
+    public record Success : LoadResult;
+    public record Error(Exception Exception) : LoadResult;
+}
+
+public abstract record LoadState
 {
     public record Loading : LoadState;
+    public record Success : LoadState;
+    public record Error(Exception Exception) : LoadState;
+}
 
-    public record NoData : LoadState;
-
-    public record Success<T>(T Value) : LoadState;
-
-    public record Failure(string Exception) : LoadState;
+public abstract record CacheState
+{
+    public record Empty : CacheState;
+    public record Success<T>(T Value) : CacheState;
 }

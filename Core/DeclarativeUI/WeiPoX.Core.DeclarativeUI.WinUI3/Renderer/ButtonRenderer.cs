@@ -1,6 +1,6 @@
 using System;
 using ABI.System.Windows.Input;
-using WeiPoX.Core.DeclarativeUI.Widget;
+using WeiPoX.Core.DeclarativeUI.Widgets;
 
 namespace WeiPoX.Core.DeclarativeUI.WinUI3.Renderer;
 

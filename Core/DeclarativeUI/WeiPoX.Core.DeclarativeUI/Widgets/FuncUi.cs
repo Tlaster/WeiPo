@@ -1,7 +1,7 @@
 using System.Collections.Immutable;
-using WeiPoX.Core.DeclarativeUI.Widget.Layout;
+using WeiPoX.Core.DeclarativeUI.Widgets.Layout;
 
-namespace WeiPoX.Core.DeclarativeUI.Widget;
+namespace WeiPoX.Core.DeclarativeUI.Widgets;
 
 public static class FuncUi
 {
@@ -10,27 +10,27 @@ public static class FuncUi
         return new Text(text);
     }
 
-    public static Button Button(Action onClick, params WidgetObject[] children)
+    public static Button Button(Action onClick, params Widget[] children)
     {
         return new Button(onClick, children.ToImmutableList());
     }
 
-    public static Column Column(params WidgetObject[] children)
+    public static Column Column(params Widget[] children)
     {
         return new Column(children.ToImmutableList());
     }
 
-    public static Row Row(params WidgetObject[] children)
+    public static Row Row(params Widget[] children)
     {
         return new Row(children.ToImmutableList());
     }
 
-    public static Box Box(params WidgetObject[] children)
+    public static Box Box(params Widget[] children)
     {
         return new Box(children.ToImmutableList());
     }
 
-    public static Padding Padding(Thickness thickness, WidgetObject child)
+    public static Padding Padding(Thickness thickness, Widget child)
     {
         return new Padding(thickness, child);
     }

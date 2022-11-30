@@ -1,8 +1,8 @@
 using System.Collections.Immutable;
 using WeiPoX.Core.DeclarativeUI.Internal;
 using WeiPoX.Core.DeclarativeUI.Mac.Renderer;
-using WeiPoX.Core.DeclarativeUI.Widget;
-using WeiPoX.Core.DeclarativeUI.Widget.Layout;
+using WeiPoX.Core.DeclarativeUI.Widgets;
+using WeiPoX.Core.DeclarativeUI.Widgets.Layout;
 
 namespace WeiPoX.Core.DeclarativeUI.Mac.Internal;
 

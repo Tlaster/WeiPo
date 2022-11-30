@@ -2,9 +2,9 @@ using System.Collections.Immutable;
 using Avalonia.Controls;
 using WeiPoX.Core.DeclarativeUI.Avalonia.Renderer;
 using WeiPoX.Core.DeclarativeUI.Internal;
-using WeiPoX.Core.DeclarativeUI.Widget;
-using WeiPoX.Core.DeclarativeUI.Widget.Layout;
-using Button = WeiPoX.Core.DeclarativeUI.Widget.Button;
+using WeiPoX.Core.DeclarativeUI.Widgets;
+using WeiPoX.Core.DeclarativeUI.Widgets.Layout;
+using Button = WeiPoX.Core.DeclarativeUI.Widgets.Button;
 
 namespace WeiPoX.Core.DeclarativeUI.Avalonia.Internal;
 

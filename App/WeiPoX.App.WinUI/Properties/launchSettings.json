@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "WeiPoX.App.WinUI (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "WeiPoX.App.WinUI (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

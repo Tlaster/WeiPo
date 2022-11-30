@@ -1,12 +1,12 @@
-﻿using WeiPoX.Core.DeclarativeUI.Widget;
-using WeiPoX.Core.DeclarativeUI.Widget.Layout;
+﻿using WeiPoX.Core.DeclarativeUI.Widgets;
+using WeiPoX.Core.DeclarativeUI.Widgets.Layout;
 
 namespace WeiPoX.Core.DeclarativeUI.Test;
 
 [TestClass]
 public class HooksTest
 {
-    private WidgetObject HookUseStateWidget()
+    private Widget HookUseStateWidget()
     {
         var (value, setValue) = UseState(0);
         return Row(
@@ -18,7 +18,7 @@ public class HooksTest
         );
     }
 
-    private WidgetObject HookUseEffectWidget(Action action)
+    private Widget HookUseEffectWidget(Action action) 
     {
         var (value, setValue) = UseState(0);
         UseEffect(action.Invoke, value);

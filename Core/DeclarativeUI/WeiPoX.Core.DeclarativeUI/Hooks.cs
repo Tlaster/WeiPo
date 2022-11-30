@@ -1,4 +1,4 @@
-﻿using WeiPoX.Core.DeclarativeUI.Widget;
+﻿using WeiPoX.Core.DeclarativeUI.Widgets;
 
 namespace WeiPoX.Core.DeclarativeUI;
 
@@ -9,7 +9,7 @@ public static class Hooks
     private static readonly List<object> _hooks = new();
     private static int _hookId;
 
-    internal static WidgetObject RenderWithHooks(Func<WidgetObject> render)
+    internal static Widget RenderWithHooks(Func<Widget> render)
     {
         _hookId = 0;
         return render();

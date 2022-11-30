@@ -1,5 +1,5 @@
 ﻿using WeiPoX.Core.DeclarativeUI.Internal;
-using WeiPoX.Core.DeclarativeUI.Widget;
+using WeiPoX.Core.DeclarativeUI.Widgets;
 
 namespace WeiPoX.Core.DeclarativeUI.Test;
 
@@ -195,7 +195,7 @@ internal class TestRenderer : IRenderer<TestControl>
         return new TestControl();
     }
 
-    public void Update(TestControl control, WidgetObject widget)
+    public void Update(TestControl control, Widget widget)
     {
         control.UpdateCount++;
     }

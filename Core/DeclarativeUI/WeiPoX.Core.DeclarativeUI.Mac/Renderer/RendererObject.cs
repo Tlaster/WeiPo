@@ -1,12 +1,12 @@
 using WeiPoX.Core.DeclarativeUI.Internal;
-using WeiPoX.Core.DeclarativeUI.Widget;
+using WeiPoX.Core.DeclarativeUI.Widgets;
 
 namespace WeiPoX.Core.DeclarativeUI.Mac.Renderer;
 
 internal abstract class RendererObject<TWidget, TControl> : IRenderer<NSView>
-    where TWidget : WidgetObject where TControl : class, new()
+    where TWidget : Widget where TControl : class, new()
 {
-    public void Update(NSView control, WidgetObject widget)
+    public void Update(NSView control, Widget widget)
     {
         Update(control as TControl ?? throw new InvalidOperationException(), (TWidget)widget);
     }

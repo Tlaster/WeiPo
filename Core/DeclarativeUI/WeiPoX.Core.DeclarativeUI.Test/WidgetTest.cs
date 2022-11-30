@@ -1,5 +1,5 @@
-using WeiPoX.Core.DeclarativeUI.Widget;
-using WeiPoX.Core.DeclarativeUI.Widget.Layout;
+using WeiPoX.Core.DeclarativeUI.Widgets;
+using WeiPoX.Core.DeclarativeUI.Widgets.Layout;
 
 namespace WeiPoX.Core.DeclarativeUI.Test;
 

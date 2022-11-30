@@ -1,8 +1,8 @@
 using System.Collections.Immutable;
 
-namespace WeiPoX.Core.DeclarativeUI.Widget.Layout;
+namespace WeiPoX.Core.DeclarativeUI.Widgets.Layout;
 
-public record Panel(ImmutableList<WidgetObject> Children) : WidgetObject, IPanelWidget
+public record Panel(ImmutableList<Widget> Children) : Widget, IPanelWidget
 {
     public virtual bool Equals(Panel? other)
     {

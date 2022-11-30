@@ -2,14 +2,14 @@ using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using WeiPoX.Core.DeclarativeUI.Internal;
-using WeiPoX.Core.DeclarativeUI.Widget;
+using WeiPoX.Core.DeclarativeUI.Widgets;
 
 namespace WeiPoX.Core.DeclarativeUI.WinUI3.Renderer;
 
 internal abstract class RendererObject<TWidget, TControl> : IRenderer<UIElement>
-    where TWidget : WidgetObject where TControl : class, new()
+    where TWidget : Widget where TControl : class, new()
 {
-    public void Update(UIElement control, WidgetObject widget)
+    public void Update(UIElement control, Widget widget)
     {
         Update(control as TControl ?? throw new InvalidOperationException(), (TWidget)widget);
     }

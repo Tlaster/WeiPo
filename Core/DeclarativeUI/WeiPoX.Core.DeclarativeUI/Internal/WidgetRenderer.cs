@@ -1,15 +1,15 @@
-using WeiPoX.Core.DeclarativeUI.Widget;
+using WeiPoX.Core.DeclarativeUI.Widgets;
 
 namespace WeiPoX.Core.DeclarativeUI.Internal;
 
 internal abstract class WidgetRenderer<T>
 {
-    private bool IsChanged(WidgetObject oldValue, WidgetObject newValue)
+    private bool IsChanged(Widget oldValue, Widget newValue)
     {
         return oldValue != newValue;
     }
 
-    private T Render(WidgetObject widget)
+    private T Render(Widget widget)
     {
         var renderer = GetRenderer(widget.GetType());
         var control = renderer.Create();
@@ -27,7 +27,7 @@ internal abstract class WidgetRenderer<T>
         return control;
     }
 
-    public T RenderIfNeeded(WidgetObject? oldValue, WidgetObject newValue, T? control)
+    public T RenderIfNeeded(Widget? oldValue, Widget newValue, T? control)
     {
         if (oldValue == null || control == null)
         {

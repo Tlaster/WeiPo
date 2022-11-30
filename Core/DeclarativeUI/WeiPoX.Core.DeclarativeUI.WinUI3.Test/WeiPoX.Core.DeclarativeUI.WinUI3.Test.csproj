@@ -13,27 +13,27 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Content Include="Assets\SplashScreen.scale-200.png"/>
-        <Content Include="Assets\LockScreenLogo.scale-200.png"/>
-        <Content Include="Assets\Square150x150Logo.scale-200.png"/>
-        <Content Include="Assets\Square44x44Logo.scale-200.png"/>
-        <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png"/>
-        <Content Include="Assets\StoreLogo.png"/>
-        <Content Include="Assets\Wide310x150Logo.scale-200.png"/>
+        <Content Include="Assets\SplashScreen.scale-200.png" />
+        <Content Include="Assets\LockScreenLogo.scale-200.png" />
+        <Content Include="Assets\Square150x150Logo.scale-200.png" />
+        <Content Include="Assets\Square44x44Logo.scale-200.png" />
+        <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
+        <Content Include="Assets\StoreLogo.png" />
+        <Content Include="Assets\Wide310x150Logo.scale-200.png" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221109.1"/>
-        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.755"/>
-        <Manifest Include="$(ApplicationManifest)"/>
-        <PackageReference Include="MSTest.TestAdapter" Version="2.2.4"/>
-        <PackageReference Include="MSTest.TestFramework" Version="2.2.4"/>
+        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221116.1" />
+        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.755" />
+        <Manifest Include="$(ApplicationManifest)" />
+        <PackageReference Include="MSTest.TestAdapter" Version="2.2.7" />
+        <PackageReference Include="MSTest.TestFramework" Version="2.2.4" />
         <PackageReference Include="Microsoft.TestPlatform.TestHost" Version="17.4.0">
             <ExcludeAssets>build</ExcludeAssets>
         </PackageReference>
     </ItemGroup>
     <ItemGroup>
-        <ProjectCapability Include="TestContainer"/>
+        <ProjectCapability Include="TestContainer" />
     </ItemGroup>
 
     <!-- 
@@ -42,11 +42,11 @@
     package has not yet been restored.
   -->
     <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
-        <ProjectCapability Include="Msix"/>
+        <ProjectCapability Include="Msix" />
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\WeiPoX.Core.DeclarativeUI.WinUI3\WeiPoX.Core.DeclarativeUI.WinUI3.csproj"/>
-        <ProjectReference Include="..\WeiPoX.Core.DeclarativeUI\WeiPoX.Core.DeclarativeUI.csproj"/>
+        <ProjectReference Include="..\WeiPoX.Core.DeclarativeUI.WinUI3\WeiPoX.Core.DeclarativeUI.WinUI3.csproj" />
+        <ProjectReference Include="..\WeiPoX.Core.DeclarativeUI\WeiPoX.Core.DeclarativeUI.csproj" />
     </ItemGroup>
 
     <!-- 

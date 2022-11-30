@@ -1,4 +1,4 @@
-using WeiPoX.Core.DeclarativeUI.Widget.Layout;
+using WeiPoX.Core.DeclarativeUI.Widgets.Layout;
 
 namespace WeiPoX.Core.DeclarativeUI.Mac.Renderer;
 

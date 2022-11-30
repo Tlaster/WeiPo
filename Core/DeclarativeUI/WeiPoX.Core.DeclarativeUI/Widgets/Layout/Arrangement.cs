@@ -1,4 +1,4 @@
-﻿namespace WeiPoX.Core.DeclarativeUI.Widget.Layout;
+﻿namespace WeiPoX.Core.DeclarativeUI.Widgets.Layout;
 
 public enum Arrangement
 {

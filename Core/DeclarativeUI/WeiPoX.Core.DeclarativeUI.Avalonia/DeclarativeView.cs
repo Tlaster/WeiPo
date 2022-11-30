@@ -2,16 +2,16 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.LogicalTree;
 using WeiPoX.Core.DeclarativeUI.Avalonia.Internal;
-using WeiPoX.Core.DeclarativeUI.Widget;
+using WeiPoX.Core.DeclarativeUI.Widgets;
 
 namespace WeiPoX.Core.DeclarativeUI.Avalonia;
 
 public class DeclarativeView : UserControl
 {
     private readonly WidgetRenderer _renderer = new();
-    private WidgetObject? _widget;
+    private Widget? _widget;
 
-    protected void Render(WidgetObject widget)
+    protected void Render(Widget widget)
     {
         if (Content is Control control)
         {
@@ -43,5 +43,5 @@ public abstract class DeclarativeView<T> : DeclarativeView
         _disposable?.Dispose();
     }
 
-    protected abstract WidgetObject Render(T state);
+    protected abstract Widget Render(T state);
 }

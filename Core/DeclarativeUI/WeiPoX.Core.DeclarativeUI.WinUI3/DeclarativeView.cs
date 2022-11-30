@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using WeiPoX.Core.DeclarativeUI.Widget;
+using WeiPoX.Core.DeclarativeUI.Widgets;
 using WeiPoX.Core.DeclarativeUI.WinUI3.Internal;
 
 namespace WeiPoX.Core.DeclarativeUI.WinUI3;
@@ -9,9 +9,9 @@ namespace WeiPoX.Core.DeclarativeUI.WinUI3;
 public class DeclarativeView : UserControl
 {
     private readonly WidgetRenderer _renderer = new();
-    private WidgetObject? _widget;
+    private Widget? _widget;
 
-    protected void Render(WidgetObject widget)
+    protected void Render(Widget widget)
     {
         Content = _renderer.RenderIfNeeded(_widget, widget, Content != null ? Content : null);
         _widget = widget;
@@ -40,5 +40,5 @@ public abstract class DeclarativeView<T> : DeclarativeView
         _disposable = State.Subscribe(state => Render(Render(state)));
     }
 
-    protected abstract WidgetObject Render(T state);
+    protected abstract Widget Render(T state);
 }

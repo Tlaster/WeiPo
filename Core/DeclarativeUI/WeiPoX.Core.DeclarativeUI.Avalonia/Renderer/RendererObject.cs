@@ -1,13 +1,13 @@
 using Avalonia.Controls;
 using WeiPoX.Core.DeclarativeUI.Internal;
-using WeiPoX.Core.DeclarativeUI.Widget;
+using WeiPoX.Core.DeclarativeUI.Widgets;
 
 namespace WeiPoX.Core.DeclarativeUI.Avalonia.Renderer;
 
 internal abstract class RendererObject<TWidget, TControl> : IRenderer<IControl>
-    where TWidget : WidgetObject where TControl : class, new()
+    where TWidget : Widget where TControl : class, new()
 {
-    public void Update(IControl control, WidgetObject widget)
+    public void Update(IControl control, Widget widget)
     {
         Update(control as TControl ?? throw new InvalidOperationException(), (TWidget)widget);
     }

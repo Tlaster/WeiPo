@@ -1,5 +1,5 @@
 using System.Windows.Input;
-using WeiPoX.Core.DeclarativeUI.Widget;
+using WeiPoX.Core.DeclarativeUI.Widgets;
 
 namespace WeiPoX.Core.DeclarativeUI.Mac.Renderer;
 

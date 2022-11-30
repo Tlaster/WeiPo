@@ -1,4 +1,4 @@
-﻿namespace WeiPoX.Core.DeclarativeUI.Widget.Layout;
+﻿namespace WeiPoX.Core.DeclarativeUI.Widgets.Layout;
 
 public record Thickness(double Start = 0, double Top = 0, double End = 0, double Bottom = 0)
 {
