@@ -7,9 +7,9 @@ using WeiPoX.Core.DeclarativeUI.Widgets;
 namespace WeiPoX.Core.DeclarativeUI.WinUI3.Renderer;
 
 internal abstract class RendererObject<TWidget, TControl> : IRenderer<UIElement>
-    where TWidget : Widget where TControl : class, new()
+    where TWidget : MappingWidget where TControl : class, new()
 {
-    public void Update(UIElement control, Widget widget)
+    public void Update(UIElement control, MappingWidget widget)
     {
         Update(control as TControl ?? throw new InvalidOperationException(), (TWidget)widget);
     }

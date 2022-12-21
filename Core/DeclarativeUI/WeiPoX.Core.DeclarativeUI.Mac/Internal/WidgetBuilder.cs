@@ -2,7 +2,7 @@
 
 namespace WeiPoX.Core.DeclarativeUI.Mac.Internal;
 
-internal class WidgetRenderer : WidgetRenderer<NSView>
+internal class WidgetBuilder : WidgetBuilder<NSView>
 {
     protected override NSView? GetChildAt(NSView control, int index)
     {
@@ -22,5 +22,9 @@ internal class WidgetRenderer : WidgetRenderer<NSView>
     protected override bool IsPanel(NSView value)
     {
         return value is NSGridView or NSStackView;
+    }
+    
+    public WidgetBuilder(IBuildOwner owner) : base(owner)
+    {
     }
 }

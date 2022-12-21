@@ -10,8 +10,8 @@ public class RowTest
     public void TestCreateRow()
     {
         var row = Row();
-        var renderer = new WidgetRenderer();
-        var control = renderer.RenderIfNeeded(null, row, null);
+        var renderer = new WidgetBuilder();
+        var control = renderer.BuildIfNeeded(null, row, null);
         Assert.IsInstanceOfType(control, typeof(StackPanel));
         Assert.AreEqual(Orientation.Horizontal, ((StackPanel)control).Orientation);
     }

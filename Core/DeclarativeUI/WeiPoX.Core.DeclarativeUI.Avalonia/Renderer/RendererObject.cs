@@ -5,9 +5,9 @@ using WeiPoX.Core.DeclarativeUI.Widgets;
 namespace WeiPoX.Core.DeclarativeUI.Avalonia.Renderer;
 
 internal abstract class RendererObject<TWidget, TControl> : IRenderer<IControl>
-    where TWidget : Widget where TControl : class, new()
+    where TWidget : MappingWidget where TControl : class, new()
 {
-    public void Update(IControl control, Widget widget)
+    public void Update(IControl control, MappingWidget widget)
     {
         Update(control as TControl ?? throw new InvalidOperationException(), (TWidget)widget);
     }

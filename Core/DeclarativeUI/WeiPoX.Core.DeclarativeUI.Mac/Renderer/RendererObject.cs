@@ -4,9 +4,9 @@ using WeiPoX.Core.DeclarativeUI.Widgets;
 namespace WeiPoX.Core.DeclarativeUI.Mac.Renderer;
 
 internal abstract class RendererObject<TWidget, TControl> : IRenderer<NSView>
-    where TWidget : Widget where TControl : class, new()
+    where TWidget : MappingWidget where TControl : class, new()
 {
-    public void Update(NSView control, Widget widget)
+    public void Update(NSView control, MappingWidget widget)
     {
         Update(control as TControl ?? throw new InvalidOperationException(), (TWidget)widget);
     }

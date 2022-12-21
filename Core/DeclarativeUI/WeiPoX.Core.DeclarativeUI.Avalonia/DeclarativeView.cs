@@ -2,27 +2,48 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.LogicalTree;
 using WeiPoX.Core.DeclarativeUI.Avalonia.Internal;
+using WeiPoX.Core.DeclarativeUI.Internal;
 using WeiPoX.Core.DeclarativeUI.Widgets;
 
 namespace WeiPoX.Core.DeclarativeUI.Avalonia;
 
-public class DeclarativeView : UserControl
+public class DeclarativeView : UserControl, IBuildOwner
 {
-    private readonly WidgetRenderer _renderer = new();
+    private readonly WidgetBuilder _renderer;
     private Widget? _widget;
+
+    public DeclarativeView()
+    {
+        _renderer = new WidgetBuilder(this);
+    }
 
     protected void Render(Widget widget)
     {
         if (Content is Control control)
         {
-            Content = _renderer.RenderIfNeeded(_widget, widget, control);
+            Content = _renderer.BuildIfNeeded(_widget, widget, control);
         }
         else
         {
-            Content = _renderer.RenderIfNeeded(_widget, widget, null);
+            Content = _renderer.BuildIfNeeded(_widget, widget, null);
         }
 
         _widget = widget;
+    }
+
+
+    public void MarkNeedsBuild(Widget widget)
+    {
+    }
+
+    public bool IsBuildScheduled(Widget widget)
+    {
+        return false;
+    }
+
+    public void CleanUp()
+    {
+        
     }
 }
 

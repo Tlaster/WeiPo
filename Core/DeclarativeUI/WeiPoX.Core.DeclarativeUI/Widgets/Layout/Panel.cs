@@ -2,7 +2,7 @@ using System.Collections.Immutable;
 
 namespace WeiPoX.Core.DeclarativeUI.Widgets.Layout;
 
-public record Panel(ImmutableList<Widget> Children) : Widget, IPanelWidget
+public record Panel(ImmutableList<Widget> Children) : MappingWidget, IPanelWidget
 {
     public virtual bool Equals(Panel? other)
     {

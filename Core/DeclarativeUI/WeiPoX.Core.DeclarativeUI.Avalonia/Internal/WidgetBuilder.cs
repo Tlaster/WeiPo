@@ -3,7 +3,7 @@ using WeiPoX.Core.DeclarativeUI.Internal;
 
 namespace WeiPoX.Core.DeclarativeUI.Avalonia.Internal;
 
-internal class WidgetRenderer : WidgetRenderer<IControl>
+internal class WidgetBuilder : WidgetBuilder<IControl>
 {
     protected override IRenderer<IControl> GetRenderer(Type widgetType)
     {
@@ -23,5 +23,9 @@ internal class WidgetRenderer : WidgetRenderer<IControl>
         }
 
         return null;
+    }
+
+    public WidgetBuilder(IBuildOwner owner) : base(owner)
+    {
     }
 }

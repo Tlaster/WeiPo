@@ -6,7 +6,7 @@ using WeiPoX.Core.DeclarativeUI.Internal;
 
 namespace WeiPoX.Core.DeclarativeUI.WinUI3.Internal;
 
-internal class WidgetRenderer : WidgetRenderer<UIElement>
+internal class WidgetBuilder : WidgetBuilder<UIElement>
 {
     protected override UIElement? GetChildAt(UIElement control, int index)
     {
@@ -26,5 +26,9 @@ internal class WidgetRenderer : WidgetRenderer<UIElement>
     protected override bool IsPanel(UIElement value)
     {
         return value is Panel;
+    }
+    
+    public WidgetBuilder(IBuildOwner owner) : base(owner)
+    {
     }
 }
