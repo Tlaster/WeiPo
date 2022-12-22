@@ -91,9 +91,10 @@ internal abstract class WidgetBuilder<T>
         switch (newValue)
         {
             case StatefulWidget statefulWidget:
-                var result = statefulWidget.BuildInternal();
-                statefulWidget.CachedBuild = result;
-                return BuildIfNeeded((oldValue as StatefulWidget)?.CachedBuild, result, control);
+                var oldBuild = (oldValue as StatefulWidget)?.CachedBuild;
+                var newBuild = statefulWidget.BuildInternal();
+                statefulWidget.CachedBuild = newBuild;
+                return BuildIfNeeded(oldBuild, newBuild, control);
             case StatelessWidget statelessWidget:
                 return BuildIfNeeded((oldValue as StatelessWidget)?.Content, statelessWidget.Content, control);
             default:
@@ -122,11 +123,14 @@ internal abstract class WidgetBuilder<T>
             var oldChildControl = GetChildAt(control, i);
             if (oldChildControl == null && newChild != null)
             {
-                renderer.AddChild(control, Create(newChild));
+                var newChildControl = Create(newChild);
+                renderer.AddChild(control, newChildControl);
+                OnChildAdded(newChild, newChildControl);
             }
             else if (oldChildControl != null && newChild == null)
             {
                 renderer.RemoveChild(control, oldChildControl);
+                OnChildRemoved(oldChild, oldChildControl);
             }
             else if (oldChildControl != null && newChild != null)
             {
@@ -134,6 +138,8 @@ internal abstract class WidgetBuilder<T>
                 if (!ReferenceEquals(newChildControl, oldChildControl))
                 {
                     renderer.ReplaceChild(control, i, newChildControl);
+                    OnChildRemoved(oldChild, oldChildControl);
+                    OnChildAdded(newChild, newChildControl);
                 }
             }
             else if (oldChildControl == null && newChild == null)
@@ -146,6 +152,18 @@ internal abstract class WidgetBuilder<T>
         }
 
         return control;
+    }
+    
+    private void OnChildAdded(Widget child, T childControl)
+    {
+    }
+
+    private void OnChildRemoved(Widget? oldChild, T oldChildControl)
+    {
+        if (oldChild is IDisposable disposable)
+        {
+            disposable.Dispose();
+        }
     }
 
     protected abstract IRenderer<T> GetRenderer(Type widgetType);

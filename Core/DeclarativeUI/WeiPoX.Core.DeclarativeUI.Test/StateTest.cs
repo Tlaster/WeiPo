@@ -106,6 +106,61 @@ public class StateTest
         Assert.IsInstanceOfType(newButton.Children[0], typeof(Text));
         var newText2 = (Text) newButton.Children[0];
         Assert.AreEqual("Click", newText2.Content);
-        
+    }
+
+    record TestDisposeWidget : StatefulWidget
+    {
+        protected override Widget Build()
+        {
+            var (value, setValue) = UseState(0);
+            return Row(
+                Button(
+                    () => { setValue.Invoke(value + 1); },
+                    Text("Click")
+                ),
+                value == 1 ? new TestUseStateWidget() : Text(value.ToString())
+            );
+        }
+    }
+
+    [TestMethod]
+    public void TestStatefulWidgetDispose()
+    {
+        var owner = new TestBuildOwner();
+        var widget = new TestDisposeWidget();
+        var builder = new TestWidgetBuilder(owner);
+        var result = builder.BuildIfNeeded(null, widget, null);
+        var cache = widget.CachedBuild;
+        Assert.IsNotNull(cache);
+        Assert.IsInstanceOfType(cache, typeof(Row));
+        var row = (Row) cache;
+        Assert.AreEqual(2, row.Children.Count);
+        Assert.IsInstanceOfType(row.Children[0], typeof(Button));
+        Assert.IsInstanceOfType(row.Children[1], typeof(Text));
+        var button = (Button) row.Children[0];
+        button.OnClick.Invoke();
+        result = builder.BuildIfNeeded(widget, widget, result);
+        owner.CleanUp();
+        cache = widget.CachedBuild;
+        Assert.IsNotNull(cache);
+        Assert.IsInstanceOfType(cache, typeof(Row));
+        row = (Row) cache;
+        Assert.AreEqual(2, row.Children.Count);
+        Assert.IsInstanceOfType(row.Children[0], typeof(Button));
+        Assert.IsInstanceOfType(row.Children[1], typeof(TestUseStateWidget));
+        var stateWidget = (TestUseStateWidget) row.Children[1];
+        Assert.IsFalse(stateWidget.Disposed);
+        button = (Button) row.Children[0];
+        button.OnClick.Invoke();
+        result = builder.BuildIfNeeded(widget, widget, result);
+        owner.CleanUp();
+        cache = widget.CachedBuild;
+        Assert.IsNotNull(cache);
+        Assert.IsInstanceOfType(cache, typeof(Row));
+        row = (Row) cache;
+        Assert.AreEqual(2, row.Children.Count);
+        Assert.IsInstanceOfType(row.Children[0], typeof(Button));
+        Assert.IsInstanceOfType(row.Children[1], typeof(Text));
+        Assert.IsTrue(stateWidget.Disposed);
     }
 }

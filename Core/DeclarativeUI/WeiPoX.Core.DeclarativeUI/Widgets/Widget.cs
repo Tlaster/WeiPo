@@ -36,12 +36,13 @@ public abstract record StatelessWidget : StateWidget
     }
 }
 
-public abstract record StatefulWidget : StateWidget
+public abstract record StatefulWidget : StateWidget, IDisposable
 {
     private readonly ObservableCollection<object> _hooks = new();
     private int _hookId = 0;
     private bool _dirty = true;
     
+    internal bool Disposed { get; private set; }
     internal Widget? CachedBuild { get; set; }
     internal IBuildOwner? BuildOwner { get; set; }
 
@@ -58,6 +59,7 @@ public abstract record StatefulWidget : StateWidget
             {
                 return;
             }
+
             _dirty = true;
 #if DEBUG
             if (BuildOwner == null)
@@ -143,6 +145,19 @@ public abstract record StatefulWidget : StateWidget
     public override int GetHashCode()
     {
         return HashCode.Combine(base.GetHashCode(), _hooks);
+    }
+
+    public void Dispose()
+    {
+        foreach (var hook in _hooks)
+        {
+            if (hook is IDisposable disposable)
+            {
+                disposable.Dispose();
+            }
+        }
+
+        Disposed = true;
     }
 }
 
