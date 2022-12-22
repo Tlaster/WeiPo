@@ -27,7 +27,3 @@ public record State<T>(T Value, Action<T> SetValue)
         return EqualityComparer<T>.Default.GetHashCode(Value!);
     }
 }
-
-public static class ObservableExtensions
-{
-}

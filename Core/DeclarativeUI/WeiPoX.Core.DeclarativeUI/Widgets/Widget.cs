@@ -81,7 +81,7 @@ public abstract record StatefulWidget : StateWidget, IDisposable
 
     protected abstract Widget Build();
 
-    protected State<T> UseState<T>(T initialState) where T : notnull
+    protected internal State<T> UseState<T>(T initialState) where T : notnull
     {
         if (_hooks.Count <= _hookId)
         {
@@ -94,7 +94,7 @@ public abstract record StatefulWidget : StateWidget, IDisposable
     }
 
 
-    protected State<T> UseState<T>(Func<T> initialState) where T : notnull
+    protected internal State<T> UseState<T>(Func<T> initialState) where T : notnull
     {
         if (_hooks.Count <= _hookId)
         {
@@ -106,7 +106,7 @@ public abstract record StatefulWidget : StateWidget, IDisposable
         return new State<T>((T)_hooks[_hookId++], setState);
     }
 
-    protected void UseEffect(Action effect, params object[] dependencies)
+    protected internal void UseEffect(Action effect, params object[] dependencies)
     {
         var hasNoDependencies = dependencies.Length == 0;
         var deps = _hooks.Count <= _hookId ? null : (object[])_hooks[_hookId];
@@ -121,6 +121,30 @@ public abstract record StatefulWidget : StateWidget, IDisposable
             else
             {
                 _hooks[_hookId] = dependencies;
+            }
+        }
+
+        _hookId++;
+    }
+    
+    
+    protected internal void UseEffect(Func<Action> effect, params object[] dependencies)
+    {
+        var hasNoDependencies = dependencies.Length == 0;
+        var disposableEffect = _hooks.Count <= _hookId ? null : (DisposableEffect)_hooks[_hookId];
+        var deps = disposableEffect?.Dependencies;
+        var hasChanged = deps == null || !deps.SequenceEqual(dependencies);
+        if (hasNoDependencies || hasChanged)
+        {
+            disposableEffect?.Dispose();
+            var disposable = effect();
+            if (_hooks.Count <= _hookId)
+            {
+                _hooks.Add(new DisposableEffect(disposable, dependencies));
+            }
+            else
+            {
+                _hooks[_hookId] = new DisposableEffect(disposable, dependencies);
             }
         }
 
@@ -161,6 +185,23 @@ public abstract record StatefulWidget : StateWidget, IDisposable
     }
 }
 
+internal record DisposableEffect : IDisposable
+{
+    private readonly Action _dispose;
+
+    public DisposableEffect(Action dispose, object[] dependencies)
+    {
+        _dispose = dispose;
+        Dependencies = dependencies;
+    }
+
+    public object[] Dependencies { get; }
+    
+    public void Dispose()
+    {
+        _dispose();
+    }
+}
 
 internal interface IPanelWidget
 {

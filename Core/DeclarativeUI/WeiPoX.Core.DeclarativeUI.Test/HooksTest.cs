@@ -34,13 +34,35 @@ record HookUseEffectWidget(Action Action): StatefulWidget
     }
 }
 
+record HookUseEffectDisposableWidget(Func<Action> Action): StatefulWidget
+{
+    protected override Widget Build()
+    {
+        var (value, setValue) = UseState(0);
+        UseEffect(() =>
+        {
+            var result = Action.Invoke();
+            return result;
+        }, value);
+        return Row(
+            Button(
+                () => { setValue.Invoke(value + 1); },
+                Text("Click")
+            ),
+            Text(value.ToString())
+        );
+    }
+}
+
 [TestClass]
 public class HooksTest
 {
     [TestMethod]
     public void TestHookUseStateWidget()
     {
+        var owner = new TestBuildOwner();
         var widget = new HookUseStateWidget();
+        widget.BuildOwner = owner;
         var build = widget.BuildInternal();
         var row = (Row)build;
         var button = (Button)row.Children[0];
@@ -56,8 +78,10 @@ public class HooksTest
     [TestMethod]
     public void TestHooksUseEffectWidget()
     {
+        var owner = new TestBuildOwner();
         var count = 0;
         var widget = new HookUseEffectWidget(() => { count++; });
+        widget.BuildOwner = owner;
         var build = widget.BuildInternal();
         var row = (Row)build;
         var button = (Button)row.Children[0];
@@ -67,5 +91,23 @@ public class HooksTest
         Assert.IsTrue(count == 2);
         widget.BuildInternal();
         Assert.IsTrue(count == 2);
+    }
+    
+    [TestMethod]
+    public void TestHooksUseEffectDisposableWidget()
+    {
+        var owner = new TestBuildOwner();
+        var count = 0;
+        var disposableCount = 0;
+        var widget = new HookUseEffectDisposableWidget(() => { count++; return () => { disposableCount++; }; });
+        widget.BuildOwner = owner;
+        var build = widget.BuildInternal();
+        var row = (Row)build;
+        var button = (Button)row.Children[0];
+        Assert.AreEqual(1, count);
+        button.OnClick();
+        widget.BuildInternal();
+        Assert.AreEqual(2, count);
+        Assert.AreEqual(1, disposableCount);
     }
 }
