@@ -108,47 +108,43 @@ public abstract record StatefulWidget : StateWidget, IDisposable
 
     public void UseEffect(Action effect, params object[] dependencies)
     {
-        var hasNoDependencies = dependencies.Length == 0;
-        var deps = _hooks.Count <= _hookId ? null : (object[])_hooks[_hookId];
-        var hasChanged = deps == null || !deps.SequenceEqual(dependencies);
-        if (hasNoDependencies || hasChanged)
+        UseMemo(() =>
         {
-            effect();
-            if (_hooks.Count <= _hookId)
-            {
-                _hooks.Add(dependencies);
-            }
-            else
-            {
-                _hooks[_hookId] = dependencies;
-            }
-        }
-
-        _hookId++;
+            effect.Invoke();
+            return true;
+        }, dependencies);
     }
-    
     
     public void UseEffect(Func<Action> effect, params object[] dependencies)
     {
+        UseMemo(() =>
+        {
+            var dispose = effect.Invoke();
+            return new DisposableEffect(dispose);
+        }, dependencies);
+    }
+    
+    public T UseMemo<T>(Func<T> factory, params object[] dependencies)
+    {
         var hasNoDependencies = dependencies.Length == 0;
-        var disposableEffect = _hooks.Count <= _hookId ? null : (DisposableEffect)_hooks[_hookId];
-        var deps = disposableEffect?.Dependencies;
+        var memo = _hooks.Count <= _hookId ? null : (Memo<T>)_hooks[_hookId];
+        var deps = memo?.Dependencies;
         var hasChanged = deps == null || !deps.SequenceEqual(dependencies);
         if (hasNoDependencies || hasChanged)
         {
-            disposableEffect?.Dispose();
-            var disposable = effect();
+            memo?.Dispose();
+            var value = factory();
             if (_hooks.Count <= _hookId)
             {
-                _hooks.Add(new DisposableEffect(disposable, dependencies));
+                _hooks.Add(new Memo<T>(value, dependencies));
             }
             else
             {
-                _hooks[_hookId] = new DisposableEffect(disposable, dependencies);
+                _hooks[_hookId] = new Memo<T>(value, dependencies);
             }
         }
 
-        _hookId++;
+        return ((Memo<T>)_hooks[_hookId++]).Value;
     }
 
     public virtual bool Equals(StatefulWidget? other)
@@ -182,6 +178,18 @@ public abstract record StatefulWidget : StateWidget, IDisposable
         }
 
         Disposed = true;
+        GC.SuppressFinalize(this);
+    }
+}
+
+internal record Memo<T>(T Value, object[] Dependencies) : IDisposable
+{
+    public void Dispose()
+    {
+        if (Value is IDisposable disposable)
+        {
+            disposable.Dispose();
+        }
     }
 }
 
@@ -189,14 +197,10 @@ internal record DisposableEffect : IDisposable
 {
     private readonly Action _dispose;
 
-    public DisposableEffect(Action dispose, object[] dependencies)
+    public DisposableEffect(Action dispose)
     {
         _dispose = dispose;
-        Dependencies = dependencies;
     }
-
-    public object[] Dependencies { get; }
-    
     public void Dispose()
     {
         _dispose();

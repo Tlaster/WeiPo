@@ -54,6 +54,22 @@ record HookUseEffectDisposableWidget(Func<Action> Action): StatefulWidget
     }
 }
 
+record HookUseMemoWidget(Func<int, int> Memo): StatefulWidget
+{
+    protected override Widget Build()
+    {
+        var (value, setValue) = UseState(0);
+        var memo = UseMemo(() => Memo.Invoke(value), value);
+        return Row(
+            Button(
+                () => { setValue.Invoke(value + 1); },
+                Text("Click")
+            ),
+            Text(memo.ToString())
+        );
+    }
+}
+
 [TestClass]
 public class HooksTest
 {
@@ -109,5 +125,31 @@ public class HooksTest
         widget.BuildInternal();
         Assert.AreEqual(2, count);
         Assert.AreEqual(1, disposableCount);
+    }
+    
+    [TestMethod]
+    public void TestHooksUseMemoWidget()
+    {
+        var owner = new TestBuildOwner();
+        var count = 0;
+        var widget = new HookUseMemoWidget(i => { count++; return i * 2; });
+        widget.BuildOwner = owner;
+        var build = widget.BuildInternal();
+        var row = (Row)build;
+        var button = (Button)row.Children[0];
+        var text = (Text)row.Children[1];
+        Assert.AreEqual(1, count);
+        Assert.AreEqual("0", text.Content);
+        button.OnClick();
+        build = widget.BuildInternal();
+        Assert.AreEqual(2, count);
+        row = (Row)build;
+        text = (Text)row.Children[1];
+        Assert.AreEqual("2", text.Content);
+        build = widget.BuildInternal();
+        Assert.AreEqual(2, count);
+        row = (Row)build;
+        text = (Text)row.Children[1];
+        Assert.AreEqual("2", text.Content);
     }
 }
