@@ -81,7 +81,7 @@ public abstract record StatefulWidget : StateWidget, IDisposable
 
     protected abstract Widget Build();
 
-    protected internal State<T> UseState<T>(T initialState) where T : notnull
+    public State<T> UseState<T>(T initialState) where T : notnull
     {
         if (_hooks.Count <= _hookId)
         {
@@ -94,7 +94,7 @@ public abstract record StatefulWidget : StateWidget, IDisposable
     }
 
 
-    protected internal State<T> UseState<T>(Func<T> initialState) where T : notnull
+    public State<T> UseState<T>(Func<T> initialState) where T : notnull
     {
         if (_hooks.Count <= _hookId)
         {
@@ -106,7 +106,7 @@ public abstract record StatefulWidget : StateWidget, IDisposable
         return new State<T>((T)_hooks[_hookId++], setState);
     }
 
-    protected internal void UseEffect(Action effect, params object[] dependencies)
+    public void UseEffect(Action effect, params object[] dependencies)
     {
         var hasNoDependencies = dependencies.Length == 0;
         var deps = _hooks.Count <= _hookId ? null : (object[])_hooks[_hookId];
@@ -128,7 +128,7 @@ public abstract record StatefulWidget : StateWidget, IDisposable
     }
     
     
-    protected internal void UseEffect(Func<Action> effect, params object[] dependencies)
+    public void UseEffect(Func<Action> effect, params object[] dependencies)
     {
         var hasNoDependencies = dependencies.Length == 0;
         var disposableEffect = _hooks.Count <= _hookId ? null : (DisposableEffect)_hooks[_hookId];
