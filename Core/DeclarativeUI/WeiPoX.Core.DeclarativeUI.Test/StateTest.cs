@@ -163,4 +163,155 @@ public class StateTest
         Assert.IsInstanceOfType(row.Children[1], typeof(Text));
         Assert.IsTrue(stateWidget.Disposed);
     }
+    
+    record TestStateHolder : StatefulWidget
+    {
+        protected override Widget Build()
+        {
+            var (value, setValue) = UseState(0);
+            return Row(
+                Button(
+                    () => { setValue.Invoke(value + 1); },
+                    Text("Click")
+                ),
+                new TestStateReceiver(value)
+            );
+        }
+    }
+    
+    record TestStateReceiver(int Value) : StatefulWidget
+    {
+        protected override Widget Build()
+        {
+            return Text(Value.ToString());
+        }
+    }
+    
+    [TestMethod]
+    public void TestWithNestedState()
+    {
+        var owner = new TestBuildOwner();
+        var widget = new TestStateHolder();
+        var builder = new TestWidgetBuilder(owner);
+        var result = builder.BuildIfNeeded(null, widget, null);
+        var cache = widget.CachedBuild;
+        Assert.IsNotNull(cache);
+        Assert.IsInstanceOfType(cache, typeof(Row));
+        var row = (Row) cache;
+        Assert.AreEqual(2, row.Children.Count);
+        Assert.IsInstanceOfType(row.Children[0], typeof(Button));
+        Assert.IsInstanceOfType(row.Children[1], typeof(TestStateReceiver));
+        var button = (Button) row.Children[0];
+        var receiver = (TestStateReceiver) row.Children[1];
+        Assert.AreEqual(0, receiver.Value);
+        var receiverCachedBuild = receiver.CachedBuild;
+        Assert.IsNotNull(receiverCachedBuild);
+        Assert.IsInstanceOfType(receiverCachedBuild, typeof(Text));
+        var text = (Text) receiverCachedBuild;
+        Assert.AreEqual("0", text.Content);
+        
+        button.OnClick.Invoke();
+        result = builder.BuildIfNeeded(widget, widget, result);
+        owner.CleanUp();
+        cache = widget.CachedBuild;
+        Assert.IsNotNull(cache);
+        Assert.IsInstanceOfType(cache, typeof(Row));
+        row = (Row) cache;
+        Assert.AreEqual(2, row.Children.Count);
+        Assert.IsInstanceOfType(row.Children[0], typeof(Button));
+        Assert.IsInstanceOfType(row.Children[1], typeof(TestStateReceiver));
+        button = (Button) row.Children[0];
+        var receiver2 = (TestStateReceiver) row.Children[1];
+        Assert.AreNotSame(receiver, receiver2);
+        Assert.AreEqual(1, receiver2.Value);
+        receiverCachedBuild = receiver2.CachedBuild;
+        Assert.IsNotNull(receiverCachedBuild);
+        Assert.IsInstanceOfType(receiverCachedBuild, typeof(Text));
+        text = (Text) receiverCachedBuild;
+        Assert.AreEqual("1", text.Content);
+        
+    }
+    
+    
+    
+    record TestHookContext(int Value);
+
+    record TestHookContextHolder : StatefulWidget
+    {
+        protected override Widget Build()
+        {
+            var (value, setValue) = UseState(0);
+            return ContextProvider(new[]
+            {
+                (typeof(TestHookContext), new TestHookContext(value) as object)
+            }, Row(
+                Button(
+                    () => { setValue.Invoke(value + 1); },
+                    Text("Click")
+                ),
+                new TestHookContextConsumer()
+            ));
+        }
+    }
+
+    record TestHookContextConsumer : StatefulWidget
+    {
+        protected override Widget Build()
+        {
+            var context = UseContext<TestHookContext>();
+            return Text(context.Value.ToString());
+        }
+    }
+    
+    [TestMethod]
+    public void TestHooksUseContextWidget()
+    {
+        var owner = new TestBuildOwner();
+        var widget = new TestHookContextHolder();
+        var builder = new TestWidgetBuilder(owner);
+        var result = builder.BuildIfNeeded(null, widget, null);
+        var cache = widget.CachedBuild;
+        Assert.IsNotNull(cache);
+        Assert.IsInstanceOfType<ContextProvider>(cache);
+        var contextProvider = (ContextProvider) cache;
+        Assert.AreEqual(1, contextProvider.Providers.Count);
+        Assert.AreEqual(typeof(TestHookContext), contextProvider.Providers.First().Key);
+        Assert.AreEqual(0, ((TestHookContext) contextProvider.Providers.First().Value).Value);
+        Assert.IsInstanceOfType<Row>(contextProvider.Child);
+        var row = (Row) contextProvider.Child;
+        Assert.AreEqual(2, row.Children.Count);
+        Assert.IsInstanceOfType<Button>(row.Children[0]);
+        Assert.IsInstanceOfType<TestHookContextConsumer>(row.Children[1]);
+        var button = (Button) row.Children[0];
+        var consumer = (TestHookContextConsumer) row.Children[1];
+        var consumerCachedBuild = consumer.CachedBuild;
+        Assert.IsNotNull(consumerCachedBuild);
+        Assert.IsInstanceOfType<Text>(consumerCachedBuild);
+        var text = (Text) consumerCachedBuild;
+        Assert.AreEqual("0", text.Content);
+        
+        button.OnClick.Invoke();
+        result = builder.BuildIfNeeded(widget, widget, result);
+        owner.CleanUp();
+        cache = widget.CachedBuild;
+        Assert.IsNotNull(cache);
+        Assert.IsInstanceOfType<ContextProvider>(cache);
+        contextProvider = (ContextProvider) cache;
+        Assert.AreEqual(1, contextProvider.Providers.Count);
+        Assert.AreEqual(typeof(TestHookContext), contextProvider.Providers.First().Key);
+        Assert.AreEqual(1, ((TestHookContext) contextProvider.Providers.First().Value).Value);
+        Assert.IsInstanceOfType<Row>(contextProvider.Child);
+        row = (Row) contextProvider.Child;
+        Assert.AreEqual(2, row.Children.Count);
+        Assert.IsInstanceOfType<Button>(row.Children[0]);
+        Assert.IsInstanceOfType<TestHookContextConsumer>(row.Children[1]);
+        button = (Button) row.Children[0];
+        var consumer2 = (TestHookContextConsumer) row.Children[1];
+        Assert.AreNotSame(consumer, consumer2);
+        consumerCachedBuild = consumer2.CachedBuild;
+        Assert.IsNotNull(consumerCachedBuild);
+        Assert.IsInstanceOfType<Text>(consumerCachedBuild);
+        text = (Text) consumerCachedBuild;
+        Assert.AreEqual("1", text.Content);
+    }
 }

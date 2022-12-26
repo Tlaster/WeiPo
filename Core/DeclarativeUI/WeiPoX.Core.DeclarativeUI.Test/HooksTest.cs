@@ -80,12 +80,14 @@ public class HooksTest
         var widget = new HookUseStateWidget();
         widget.BuildOwner = owner;
         var build = widget.BuildInternal();
+        owner.CleanUp();
         var row = (Row)build;
         var button = (Button)row.Children[0];
         var text = (Text)row.Children[1];
         Assert.IsTrue("0" == text.Content);
         button.OnClick();
         var newBuild = widget.BuildInternal();
+        owner.CleanUp();
         var newRow = (Row)newBuild;
         var newText = (Text)newRow.Children[1];
         Assert.IsTrue("1" == newText.Content);
@@ -99,13 +101,16 @@ public class HooksTest
         var widget = new HookUseEffectWidget(() => { count++; });
         widget.BuildOwner = owner;
         var build = widget.BuildInternal();
+        owner.CleanUp();
         var row = (Row)build;
         var button = (Button)row.Children[0];
         Assert.IsTrue(count == 1);
         button.OnClick();
         widget.BuildInternal();
+        owner.CleanUp();
         Assert.IsTrue(count == 2);
         widget.BuildInternal();
+        owner.CleanUp();
         Assert.IsTrue(count == 2);
     }
     
@@ -118,11 +123,13 @@ public class HooksTest
         var widget = new HookUseEffectDisposableWidget(() => { count++; return () => { disposableCount++; }; });
         widget.BuildOwner = owner;
         var build = widget.BuildInternal();
+        owner.CleanUp();
         var row = (Row)build;
         var button = (Button)row.Children[0];
         Assert.AreEqual(1, count);
         button.OnClick();
         widget.BuildInternal();
+        owner.CleanUp();
         Assert.AreEqual(2, count);
         Assert.AreEqual(1, disposableCount);
     }
@@ -135,6 +142,7 @@ public class HooksTest
         var widget = new HookUseMemoWidget(i => { count++; return i * 2; });
         widget.BuildOwner = owner;
         var build = widget.BuildInternal();
+        owner.CleanUp();
         var row = (Row)build;
         var button = (Button)row.Children[0];
         var text = (Text)row.Children[1];
@@ -142,11 +150,13 @@ public class HooksTest
         Assert.AreEqual("0", text.Content);
         button.OnClick();
         build = widget.BuildInternal();
+        owner.CleanUp();
         Assert.AreEqual(2, count);
         row = (Row)build;
         text = (Text)row.Children[1];
         Assert.AreEqual("2", text.Content);
         build = widget.BuildInternal();
+        owner.CleanUp();
         Assert.AreEqual(2, count);
         row = (Row)build;
         text = (Text)row.Children[1];

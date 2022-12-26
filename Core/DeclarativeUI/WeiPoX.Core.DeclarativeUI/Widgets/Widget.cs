@@ -11,6 +11,11 @@ public abstract record MappingWidget : Widget;
 
 public abstract record StateWidget : Widget;
 
+public record ContextProvider(ImmutableDictionary<Type, object> Providers, Widget Child) : StateWidget, IContextProvider, IPanelWidget
+{
+    public ImmutableList<Widget> Children { get; } = ImmutableList.Create(Child);
+}
+
 public abstract record StatelessWidget : StateWidget
 {
     protected internal abstract Widget Content { get; }
@@ -45,6 +50,7 @@ public abstract record StatefulWidget : StateWidget, IDisposable
     internal bool Disposed { get; private set; }
     internal Widget? CachedBuild { get; set; }
     internal IBuildOwner? BuildOwner { get; set; }
+    internal BuildContext? BuildContext { get; set; }
 
     protected StatefulWidget()
     {
@@ -146,6 +152,17 @@ public abstract record StatefulWidget : StateWidget, IDisposable
 
         return ((Memo<T>)_hooks[_hookId++]).Value;
     }
+    
+    public T UseContext<T>()
+    {
+        if (BuildContext == null)
+        {
+            throw new Exception("BuildContext is null");
+        }
+
+        return BuildContext.Get<T>() ?? throw new Exception($"Context {typeof(T)} not found");
+    }
+
 
     public virtual bool Equals(StatefulWidget? other)
     {
@@ -159,12 +176,12 @@ public abstract record StatefulWidget : StateWidget, IDisposable
             return true;
         }
 
-        return base.Equals(other) && _hooks.SequenceEqual(other._hooks);
+        return base.Equals(other) && _hooks.SequenceEqual(other._hooks) && Equals(CachedBuild, other.CachedBuild);
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(base.GetHashCode(), _hooks);
+        return HashCode.Combine(base.GetHashCode(), _hooks, CachedBuild);
     }
 
     public void Dispose()
@@ -210,4 +227,9 @@ internal record DisposableEffect : IDisposable
 internal interface IPanelWidget
 {
     ImmutableList<Widget> Children { get; }
+}
+
+internal interface IContextProvider
+{
+    ImmutableDictionary<Type, object> Providers { get; }
 }

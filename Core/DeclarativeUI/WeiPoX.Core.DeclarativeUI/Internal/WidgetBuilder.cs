@@ -1,3 +1,5 @@
+using System.Collections.Immutable;
+using System.Diagnostics;
 using WeiPoX.Core.DeclarativeUI.Widgets;
 
 namespace WeiPoX.Core.DeclarativeUI.Internal;
@@ -16,33 +18,35 @@ internal abstract class WidgetBuilder<T>
         return oldValue != newValue || _owner.IsBuildScheduled(newValue);
     }
 
-    private T Create(Widget widget)
+    private T Create(Widget widget, BuildContext context)
     {
         return widget switch
         {
-            MappingWidget mappingWidget => CreateMappingWidget(mappingWidget),
-            StateWidget stateWidget => CreateStateWidget(stateWidget),
+            MappingWidget mappingWidget => CreateMappingWidget(mappingWidget, context),
+            StateWidget stateWidget => CreateStateWidget(stateWidget, context),
             _ => throw new NotSupportedException()
         };
     }
 
-    private T CreateStateWidget(StateWidget widget)
+    private T CreateStateWidget(StateWidget widget, BuildContext context)
     {
         switch (widget)
         {
+            case ContextProvider contextProvider:
+                return Create(contextProvider.Child, context + contextProvider.Providers);
             case StatefulWidget statefulWidget:
                 statefulWidget.BuildOwner = _owner;
-                var result = statefulWidget.BuildInternal();
-                statefulWidget.CachedBuild = result;
-                return Create(result);
+                statefulWidget.BuildContext = context;
+                var result = BuildStatefulWidget(statefulWidget);
+                return Create(result, context);
             case StatelessWidget statelessWidget:
-                return Create(statelessWidget.Content);
+                return Create(statelessWidget.Content, context);
             default:
-                throw new ArgumentOutOfRangeException(nameof(widget));
+                throw new NotImplementedException();
         }
     }
 
-    private T CreateMappingWidget(MappingWidget widget)
+    private T CreateMappingWidget(MappingWidget widget, BuildContext context)
     {
         var renderer = GetRenderer(widget.GetType());
         var control = renderer.Create();
@@ -53,19 +57,19 @@ internal abstract class WidgetBuilder<T>
             return control;
         }
 
-        foreach (var childControl in panel.Children.Select(Create))
+        foreach (var childControl in panel.Children.Select(it => Create(it, context)))
         {
             renderer.AddChild(control, childControl);
         }
 
         return control;
     }
-
-    public T BuildIfNeeded(Widget? oldValue, Widget newValue, T? control)
+    
+    public T BuildIfNeeded(Widget? oldValue, Widget newValue, T? control, BuildContext context)
     {
         if (oldValue == null || control == null)
         {
-            return Create(newValue);
+            return Create(newValue, context);
         }
 
         if (!IsChanged(oldValue, newValue))
@@ -75,34 +79,52 @@ internal abstract class WidgetBuilder<T>
 
         if (oldValue.GetType() != newValue.GetType()) // tree changed
         {
-            return Create(newValue);
+            return Create(newValue, context);
         }
 
         return newValue switch
         {
-            StateWidget stateWidget => BuildStateWidget(oldValue as StateWidget, stateWidget, control),
-            MappingWidget mappingWidget => BuildMappingWidget(oldValue, mappingWidget, control),
+            StateWidget stateWidget => BuildStateWidget(oldValue as StateWidget, stateWidget, control, context),
+            MappingWidget mappingWidget => BuildMappingWidget(oldValue, mappingWidget, control, context),
             _ => throw new NotImplementedException()
         };
     }
+    
+    public T BuildIfNeeded(Widget? oldValue, Widget newValue, T? control)
+    {
+        return BuildIfNeeded(oldValue, newValue, control, new BuildContext(ImmutableDictionary<Type, object>.Empty));
+    }
 
-    private T BuildStateWidget(StateWidget? oldValue, StateWidget newValue, T control)
+    private T BuildStateWidget(StateWidget? oldValue, StateWidget newValue, T control, BuildContext context)
     {
         switch (newValue)
         {
+            case ContextProvider contextProvider:
+                return BuildIfNeeded((oldValue as ContextProvider)?.Child, contextProvider.Child, control, context + contextProvider.Providers);
             case StatefulWidget statefulWidget:
-                var oldBuild = (oldValue as StatefulWidget)?.CachedBuild;
-                var newBuild = statefulWidget.BuildInternal();
-                statefulWidget.CachedBuild = newBuild;
-                return BuildIfNeeded(oldBuild, newBuild, control);
+                // check if the new value is not created from CreateStateWidget
+                // it only occurs when the parent widget is rebuilt
+                // Test case: TestHooksUseContextWidget
+                // TODO: optimize: only rebuild the parent widget and the sub tree that use the context, not the whole tree
+                if (oldValue != null && !ReferenceEquals(oldValue, newValue))
+                {
+                    // go through the create process
+                    return CreateStateWidget(statefulWidget, context);
+                }
+                else
+                {
+                    var oldBuild = (oldValue as StatefulWidget)?.CachedBuild;
+                    var newBuild = BuildStatefulWidget(statefulWidget);
+                    return BuildIfNeeded(oldBuild, newBuild, control, context);
+                }
             case StatelessWidget statelessWidget:
-                return BuildIfNeeded((oldValue as StatelessWidget)?.Content, statelessWidget.Content, control);
+                return BuildIfNeeded((oldValue as StatelessWidget)?.Content, statelessWidget.Content, control, context);
             default:
-                throw new ArgumentOutOfRangeException(nameof(newValue));
+                throw new NotImplementedException();
         }
     }
 
-    private T BuildMappingWidget(Widget oldValue, MappingWidget newValue, T control)
+    private T BuildMappingWidget(Widget oldValue, MappingWidget newValue, T control, BuildContext context)
     {
         var renderer = GetRenderer(newValue.GetType());
         renderer.Update(control, newValue);
@@ -123,7 +145,7 @@ internal abstract class WidgetBuilder<T>
             var oldChildControl = GetChildAt(control, i);
             if (oldChildControl == null && newChild != null)
             {
-                var newChildControl = Create(newChild);
+                var newChildControl = Create(newChild, context);
                 renderer.AddChild(control, newChildControl);
                 OnChildAdded(newChild, newChildControl);
             }
@@ -134,7 +156,7 @@ internal abstract class WidgetBuilder<T>
             }
             else if (oldChildControl != null && newChild != null)
             {
-                var newChildControl = BuildIfNeeded(oldChild, newChild, oldChildControl);
+                var newChildControl = BuildIfNeeded(oldChild, newChild, oldChildControl, context);
                 if (!ReferenceEquals(newChildControl, oldChildControl))
                 {
                     renderer.ReplaceChild(control, i, newChildControl);
@@ -164,6 +186,13 @@ internal abstract class WidgetBuilder<T>
         {
             disposable.Dispose();
         }
+    }
+    
+    private static Widget BuildStatefulWidget(StatefulWidget statefulWidget)
+    {
+        var result = statefulWidget.BuildInternal();
+        statefulWidget.CachedBuild = result;
+        return result;
     }
 
     protected abstract IRenderer<T> GetRenderer(Type widgetType);
