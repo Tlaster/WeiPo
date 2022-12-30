@@ -3,73 +3,6 @@ using WeiPoX.Core.DeclarativeUI.Widgets.Layout;
 
 namespace WeiPoX.Core.DeclarativeUI.Test;
 
-record HookUseStateWidget: StatefulWidget
-{
-    protected override Widget Build()
-    {
-        var (value, setValue) = UseState(0);
-        return Row(
-            Button(
-                () => { setValue.Invoke(value + 1); },
-                Text("Click")
-            ),
-            Text(value.ToString())
-        );
-    }
-}
-
-record HookUseEffectWidget(Action Action): StatefulWidget
-{
-    protected override Widget Build()
-    {
-        var (value, setValue) = UseState(0);
-        UseEffect(Action.Invoke, value);
-        return Row(
-            Button(
-                () => { setValue.Invoke(value + 1); },
-                Text("Click")
-            ),
-            Text(value.ToString())
-        );
-    }
-}
-
-record HookUseEffectDisposableWidget(Func<Action> Action): StatefulWidget
-{
-    protected override Widget Build()
-    {
-        var (value, setValue) = UseState(0);
-        UseEffect(() =>
-        {
-            var result = Action.Invoke();
-            return result;
-        }, value);
-        return Row(
-            Button(
-                () => { setValue.Invoke(value + 1); },
-                Text("Click")
-            ),
-            Text(value.ToString())
-        );
-    }
-}
-
-record HookUseMemoWidget(Func<int, int> Memo): StatefulWidget
-{
-    protected override Widget Build()
-    {
-        var (value, setValue) = UseState(0);
-        var memo = UseMemo(() => Memo.Invoke(value), value);
-        return Row(
-            Button(
-                () => { setValue.Invoke(value + 1); },
-                Text("Click")
-            ),
-            Text(memo.ToString())
-        );
-    }
-}
-
 [TestClass]
 public class HooksTest
 {
@@ -78,7 +11,7 @@ public class HooksTest
     {
         var owner = new TestBuildOwner();
         var widget = new HookUseStateWidget();
-        widget.BuildOwner = owner;
+        widget.State.BuildOwner = owner;
         var build = widget.BuildInternal();
         owner.CleanUp();
         var row = (Row)build;
@@ -99,7 +32,7 @@ public class HooksTest
         var owner = new TestBuildOwner();
         var count = 0;
         var widget = new HookUseEffectWidget(() => { count++; });
-        widget.BuildOwner = owner;
+        widget.State.BuildOwner = owner;
         var build = widget.BuildInternal();
         owner.CleanUp();
         var row = (Row)build;
@@ -113,15 +46,19 @@ public class HooksTest
         owner.CleanUp();
         Assert.IsTrue(count == 2);
     }
-    
+
     [TestMethod]
     public void TestHooksUseEffectDisposableWidget()
     {
         var owner = new TestBuildOwner();
         var count = 0;
         var disposableCount = 0;
-        var widget = new HookUseEffectDisposableWidget(() => { count++; return () => { disposableCount++; }; });
-        widget.BuildOwner = owner;
+        var widget = new HookUseEffectDisposableWidget(() =>
+        {
+            count++;
+            return () => { disposableCount++; };
+        });
+        widget.State.BuildOwner = owner;
         var build = widget.BuildInternal();
         owner.CleanUp();
         var row = (Row)build;
@@ -133,14 +70,18 @@ public class HooksTest
         Assert.AreEqual(2, count);
         Assert.AreEqual(1, disposableCount);
     }
-    
+
     [TestMethod]
     public void TestHooksUseMemoWidget()
     {
         var owner = new TestBuildOwner();
         var count = 0;
-        var widget = new HookUseMemoWidget(i => { count++; return i * 2; });
-        widget.BuildOwner = owner;
+        var widget = new HookUseMemoWidget(i =>
+        {
+            count++;
+            return i * 2;
+        });
+        widget.State.BuildOwner = owner;
         var build = widget.BuildInternal();
         owner.CleanUp();
         var row = (Row)build;
@@ -161,5 +102,72 @@ public class HooksTest
         row = (Row)build;
         text = (Text)row.Children[1];
         Assert.AreEqual("2", text.Content);
+    }
+
+    private record HookUseStateWidget : StatefulWidget
+    {
+        protected override Widget Build()
+        {
+            var (value, setValue) = UseState(0);
+            return Row(
+                Button(
+                    () => { setValue.Invoke(value + 1); },
+                    Text("Click")
+                ),
+                Text(value.ToString())
+            );
+        }
+    }
+
+    private record HookUseEffectWidget(Action Action) : StatefulWidget
+    {
+        protected override Widget Build()
+        {
+            var (value, setValue) = UseState(0);
+            UseEffect(Action.Invoke, value);
+            return Row(
+                Button(
+                    () => { setValue.Invoke(value + 1); },
+                    Text("Click")
+                ),
+                Text(value.ToString())
+            );
+        }
+    }
+
+    private record HookUseEffectDisposableWidget(Func<Action> Action) : StatefulWidget
+    {
+        protected override Widget Build()
+        {
+            var (value, setValue) = UseState(0);
+            UseEffect(() =>
+            {
+                var result = Action.Invoke();
+                return result;
+            }, value);
+            return Row(
+                Button(
+                    () => { setValue.Invoke(value + 1); },
+                    Text("Click")
+                ),
+                Text(value.ToString())
+            );
+        }
+    }
+
+    private record HookUseMemoWidget(Func<int, int> Memo) : StatefulWidget
+    {
+        protected override Widget Build()
+        {
+            var (value, setValue) = UseState(0);
+            var memo = UseMemo(() => Memo.Invoke(value), value);
+            return Row(
+                Button(
+                    () => { setValue.Invoke(value + 1); },
+                    Text("Click")
+                ),
+                Text(memo.ToString())
+            );
+        }
     }
 }

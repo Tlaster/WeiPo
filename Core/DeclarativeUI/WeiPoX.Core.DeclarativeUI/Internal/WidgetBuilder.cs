@@ -1,5 +1,4 @@
 using System.Collections.Immutable;
-using System.Diagnostics;
 using WeiPoX.Core.DeclarativeUI.Widgets;
 
 namespace WeiPoX.Core.DeclarativeUI.Internal;
@@ -16,6 +15,19 @@ internal abstract class WidgetBuilder<T>
     private bool IsChanged(Widget oldValue, Widget newValue)
     {
         return oldValue != newValue || _owner.IsBuildScheduled(newValue);
+    }
+
+    private bool IsContextChanged(StatefulWidget widget, BuildContext context)
+    {
+        foreach (var (key, value) in widget.State.UsedProviders)
+        {
+            if (!context.ContextMap.ContainsKey(key) || context.ContextMap[key] != value)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private T Create(Widget widget, BuildContext context)
@@ -35,9 +47,8 @@ internal abstract class WidgetBuilder<T>
             case ContextProvider contextProvider:
                 return Create(contextProvider.Child, context + contextProvider.Providers);
             case StatefulWidget statefulWidget:
-                statefulWidget.BuildOwner = _owner;
-                statefulWidget.BuildContext = context;
-                var result = BuildStatefulWidget(statefulWidget);
+                statefulWidget.State.BuildOwner = _owner;
+                var result = BuildStatefulWidget(statefulWidget, context);
                 return Create(result, context);
             case StatelessWidget statelessWidget:
                 return Create(statelessWidget.Content, context);
@@ -64,17 +75,17 @@ internal abstract class WidgetBuilder<T>
 
         return control;
     }
-    
-    public T BuildIfNeeded(Widget? oldValue, Widget newValue, T? control, BuildContext context)
+
+    public T BuildIfNeeded(Widget? oldValue, Widget newValue, T? control)
+    {
+        return BuildIfNeeded(oldValue, newValue, control, new BuildContext(ImmutableDictionary<Type, object>.Empty));
+    }
+
+    private T BuildIfNeeded(Widget? oldValue, Widget newValue, T? control, BuildContext context)
     {
         if (oldValue == null || control == null)
         {
             return Create(newValue, context);
-        }
-
-        if (!IsChanged(oldValue, newValue))
-        {
-            return control;
         }
 
         if (oldValue.GetType() != newValue.GetType()) // tree changed
@@ -90,33 +101,23 @@ internal abstract class WidgetBuilder<T>
         };
     }
     
-    public T BuildIfNeeded(Widget? oldValue, Widget newValue, T? control)
-    {
-        return BuildIfNeeded(oldValue, newValue, control, new BuildContext(ImmutableDictionary<Type, object>.Empty));
-    }
-
     private T BuildStateWidget(StateWidget? oldValue, StateWidget newValue, T control, BuildContext context)
     {
         switch (newValue)
         {
             case ContextProvider contextProvider:
-                return BuildIfNeeded((oldValue as ContextProvider)?.Child, contextProvider.Child, control, context + contextProvider.Providers);
+                return BuildIfNeeded((oldValue as ContextProvider)?.Child, contextProvider.Child, control,
+                    context + contextProvider.Providers);
             case StatefulWidget statefulWidget:
-                // check if the new value is not created from CreateStateWidget
-                // it only occurs when the parent widget is rebuilt
-                // Test case: TestHooksUseContextWidget
-                // TODO: optimize: only rebuild the parent widget and the sub tree that use the context, not the whole tree
-                if (oldValue != null && !ReferenceEquals(oldValue, newValue))
+                if (oldValue is StatefulWidget oldStatefulWidget && !ReferenceEquals(oldValue, newValue))
                 {
-                    // go through the create process
-                    return CreateStateWidget(statefulWidget, context);
+                    statefulWidget.Merge(oldStatefulWidget);
                 }
-                else
-                {
-                    var oldBuild = (oldValue as StatefulWidget)?.CachedBuild;
-                    var newBuild = BuildStatefulWidget(statefulWidget);
-                    return BuildIfNeeded(oldBuild, newBuild, control, context);
-                }
+
+                var oldBuild = (oldValue as StatefulWidget)?.State.CachedBuild;
+                var forceRebuild = oldBuild != newValue;
+                var newBuild = BuildStatefulWidget(statefulWidget, context, forceRebuild);
+                return BuildIfNeeded(oldBuild, newBuild, control, context);
             case StatelessWidget statelessWidget:
                 return BuildIfNeeded((oldValue as StatelessWidget)?.Content, statelessWidget.Content, control, context);
             default:
@@ -126,6 +127,11 @@ internal abstract class WidgetBuilder<T>
 
     private T BuildMappingWidget(Widget oldValue, MappingWidget newValue, T control, BuildContext context)
     {
+        if (!IsChanged(oldValue, newValue))
+        {
+            return control;
+        }
+
         var renderer = GetRenderer(newValue.GetType());
         renderer.Update(control, newValue);
         if (newValue is not IPanelWidget newPanel || oldValue is not IPanelWidget oldPanel || !IsPanel(control))
@@ -175,7 +181,7 @@ internal abstract class WidgetBuilder<T>
 
         return control;
     }
-    
+
     private void OnChildAdded(Widget child, T childControl)
     {
     }
@@ -187,11 +193,18 @@ internal abstract class WidgetBuilder<T>
             disposable.Dispose();
         }
     }
-    
-    private static Widget BuildStatefulWidget(StatefulWidget statefulWidget)
+
+    private Widget BuildStatefulWidget(StatefulWidget statefulWidget, BuildContext context, bool forceRebuild = false)
     {
+        statefulWidget.State.BuildContext = context;
+        if (!forceRebuild && statefulWidget.State is { Dirty: false, CachedBuild: { } } &&
+            !IsContextChanged(statefulWidget, context))
+        {
+            return statefulWidget.State.CachedBuild;
+        }
+
         var result = statefulWidget.BuildInternal();
-        statefulWidget.CachedBuild = result;
+        statefulWidget.State.CachedBuild = result;
         return result;
     }
 

@@ -41,75 +41,107 @@ public abstract record StatelessWidget : StateWidget
     }
 }
 
-public abstract record StatefulWidget : StateWidget, IDisposable
+internal class StatefulWidgetState : IDisposable
 {
-    private readonly ObservableCollection<object> _hooks = new();
-    private int _hookId = 0;
-    private bool _dirty = true;
-    
-    internal bool Disposed { get; private set; }
+    public ObservableCollection<object> Hooks { get; } = new();
+    public int HookId { get; set; }
+    public bool Dirty { get; set; }
+    public IBuildOwner? BuildOwner { get; set; }
+    public BuildContext? BuildContext { get; set; }
+    public Dictionary<Type, object> UsedProviders { get; } = new();
+    public Widget? Widget { get; set; }
     internal Widget? CachedBuild { get; set; }
-    internal IBuildOwner? BuildOwner { get; set; }
-    internal BuildContext? BuildContext { get; set; }
 
-    protected StatefulWidget()
+    public StatefulWidgetState()
     {
-        _hooks.CollectionChanged += (sender, args) =>
+        Hooks.CollectionChanged += (sender, args) =>
         {
             if (args.Action != NotifyCollectionChangedAction.Replace)
             {
                 return;
             }
 
-            if (_dirty)
+            if (Dirty)
             {
                 return;
             }
 
-            _dirty = true;
+            Dirty = true;
 #if DEBUG
             if (BuildOwner == null)
             {
                 throw new Exception("BuildOwner is null");
             }
 #endif
-            BuildOwner?.MarkNeedsBuild(this);
+            if (Widget != null)
+            {
+                BuildOwner?.MarkNeedsBuild(Widget);
+            }
         };
+    }
+
+    public void Dispose()
+    {
+        foreach (var hook in Hooks)
+        {
+            if (hook is IDisposable disposable)
+            {
+                disposable.Dispose();
+            }
+        }
+    }
+}
+
+public abstract record StatefulWidget : StateWidget, IDisposable
+{
+    internal StatefulWidgetState State { get; private set; } = new();
+    // for testing only
+    internal bool Disposed { get; private set; }
+
+    protected StatefulWidget()
+    {
+        State.Widget = this;
     }
 
     internal Widget BuildInternal()
     {
-        _hookId = 0;
+        State.HookId = 0;
         var result = Build();
-        _dirty = false;
+        State.Dirty = false;
         return result;
+    }
+    
+    internal void Merge(StatefulWidget other)
+    {
+        State = other.State;
+        State.Widget = this;
     }
 
     protected abstract Widget Build();
 
     public State<T> UseState<T>(T initialState) where T : notnull
     {
-        if (_hooks.Count <= _hookId)
+        if (State.Hooks.Count <= State.HookId)
         {
-            _hooks.Add(initialState);
+            State.Hooks.Add(initialState);
         }
 
-        var index = _hookId;
-        var setState = new Action<T>(value => { _hooks[index] = value; });
-        return new State<T>((T)_hooks[_hookId++], setState);
+        var index = State.HookId;
+        var setState = new Action<T>(value => { State.Hooks[index] = value; });
+        return new State<T>((T)State.Hooks[State.HookId++], setState);
     }
 
 
     public State<T> UseState<T>(Func<T> initialState) where T : notnull
     {
-        if (_hooks.Count <= _hookId)
+        if (State.Hooks.Count <= State.HookId)
         {
-            _hooks.Add(initialState.Invoke());
+            State.Hooks.Add(initialState.Invoke());
         }
 
-        var index = _hookId;
-        var setState = new Action<T>(value => { _hooks[index] = value; });
-        return new State<T>((T)_hooks[_hookId++], setState);
+        var index = State.HookId;
+        var setState = new Action<T>(value => { State.Hooks[index] = value; });
+        return new State<T>((T)State.Hooks[State.HookId++], setState);
     }
 
     public void UseEffect(Action effect, params object[] dependencies)
@@ -133,36 +165,36 @@ public abstract record StatefulWidget : StateWidget, IDisposable
     public T UseMemo<T>(Func<T> factory, params object[] dependencies)
     {
         var hasNoDependencies = dependencies.Length == 0;
-        var memo = _hooks.Count <= _hookId ? null : (Memo<T>)_hooks[_hookId];
+        var memo = State.Hooks.Count <= State.HookId ? null : (Memo<T>)State.Hooks[State.HookId];
         var deps = memo?.Dependencies;
         var hasChanged = deps == null || !deps.SequenceEqual(dependencies);
         if (hasNoDependencies || hasChanged)
         {
             memo?.Dispose();
             var value = factory();
-            if (_hooks.Count <= _hookId)
+            if (State.Hooks.Count <= State.HookId)
             {
-                _hooks.Add(new Memo<T>(value, dependencies));
+                State.Hooks.Add(new Memo<T>(value, dependencies));
             }
             else
             {
-                _hooks[_hookId] = new Memo<T>(value, dependencies);
+                State.Hooks[State.HookId] = new Memo<T>(value, dependencies);
             }
         }
 
-        return ((Memo<T>)_hooks[_hookId++]).Value;
+        return ((Memo<T>)State.Hooks[State.HookId++]).Value;
     }
     
     public T UseContext<T>()
     {
-        if (BuildContext == null)
+        if (State.BuildContext == null)
         {
             throw new Exception("BuildContext is null");
         }
-
-        return BuildContext.Get<T>() ?? throw new Exception($"Context {typeof(T)} not found");
+        var value = State.BuildContext.Get<T>() ?? throw new Exception($"Context {typeof(T)} not found");
+        State.UsedProviders[typeof(T)] = value;
+        return value;
     }
-
 
     public virtual bool Equals(StatefulWidget? other)
     {
@@ -176,24 +208,17 @@ public abstract record StatefulWidget : StateWidget, IDisposable
             return true;
         }
 
-        return base.Equals(other) && _hooks.SequenceEqual(other._hooks) && Equals(CachedBuild, other.CachedBuild);
+        return base.Equals(other);
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(base.GetHashCode(), _hooks, CachedBuild);
+        return HashCode.Combine(base.GetHashCode());
     }
 
     public void Dispose()
     {
-        foreach (var hook in _hooks)
-        {
-            if (hook is IDisposable disposable)
-            {
-                disposable.Dispose();
-            }
-        }
-
+        State.Dispose();
         Disposed = true;
         GC.SuppressFinalize(this);
     }
