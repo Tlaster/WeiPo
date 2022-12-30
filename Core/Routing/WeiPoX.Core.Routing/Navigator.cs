@@ -2,4 +2,7 @@
 
 public class Navigator
 {
+    private readonly RouteStackManager _routeStackManager = new();
+    
+    
 }

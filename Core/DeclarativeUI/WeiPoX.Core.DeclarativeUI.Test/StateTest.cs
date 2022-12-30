@@ -323,15 +323,16 @@ public class StateTest
         {
             var (value, setValue) = UseState(0);
             return ContextProvider(new[]
-            {
-                (typeof(TestHookContext), new TestHookContext(value) as object)
-            }, Row(
-                Button(
-                    () => { setValue.Invoke(value + 1); },
-                    Text("Click")
-                ),
-                new TestHookContextConsumer()
-            ));
+                {
+                    (typeof(TestHookContext), new TestHookContext(value) as object)
+                },
+                Row(
+                    Button(
+                        () => { setValue.Invoke(value + 1); },
+                        Text("Click")
+                    ),
+                    new TestHookContextConsumer()
+                ));
         }
     }
 

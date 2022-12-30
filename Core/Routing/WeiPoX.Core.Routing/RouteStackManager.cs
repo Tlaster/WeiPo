@@ -1,28 +1,29 @@
 ﻿using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using WeiPoX.Core.DeclarativeUI.Widgets;
 
 namespace WeiPoX.Core.Routing;
 
 internal class RouteStackManager
 {
-    private readonly ReplaySubject<IRoute?> _currentRoute = new();
-    private readonly Stack<IRoute> _routeStack = new();
-    public IObservable<IRoute?> CurrentRoute => _currentRoute.AsObservable();
+    private readonly ReplaySubject<Route?> _currentRoute = new();
+    private readonly Stack<Route> _routeStack = new();
+    public IObservable<Route?> CurrentRoute => _currentRoute.AsObservable();
 
-    public void Push(IRoute route)
+    public void Push(Route route)
     {
         _routeStack.Push(route);
         _currentRoute.OnNext(route);
     }
 
-    public IRoute Pop()
+    public Route Pop()
     {
         var result = _routeStack.Pop();
         _currentRoute.OnNext(_routeStack.Peek());
         return result;
     }
 
-    public IRoute Peek()
+    public Route Peek()
     {
         return _routeStack.Peek();
     }
@@ -33,11 +34,4 @@ internal class RouteStackManager
     }
 }
 
-internal interface IRoute
-{
-}
-
-internal interface ITypeRoute : IRoute
-{
-    Type Type { get; }
-}
+public record Route(string Path, Func<BackstackEntry, Widget> Content);
