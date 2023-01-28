@@ -35,9 +35,13 @@ public static class FuncUi
         return new Padding(thickness, child);
     }
 
-    public static ContextProvider ContextProvider(IEnumerable<(Type, object)> providers, Widget child)
+    public static ContextProvider ContextProvider(IDictionary<Type, object> providers, Widget child)
     {
-        return new ContextProvider(
-            providers.Select(it => KeyValuePair.Create(it.Item1, it.Item2)).ToImmutableDictionary(), child);
+        return new ContextProvider(providers.ToImmutableDictionary(), child);
+    }
+    
+    public static ImmutableDictionary<Type, object> Providers(params (Type, object)[] providers)
+    {
+        return providers.ToImmutableDictionary(it => it.Item1, it => it.Item2);
     }
 }

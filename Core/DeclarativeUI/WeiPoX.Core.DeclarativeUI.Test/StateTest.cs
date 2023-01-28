@@ -322,10 +322,8 @@ public class StateTest
         protected override Widget Build()
         {
             var (value, setValue) = UseState(0);
-            return ContextProvider(new[]
-                {
-                    (typeof(TestHookContext), new TestHookContext(value) as object)
-                },
+            return ContextProvider(
+                Providers((typeof(TestHookContext), new TestHookContext(value))),
                 Row(
                     Button(
                         () => { setValue.Invoke(value + 1); },
@@ -350,17 +348,16 @@ public class StateTest
         protected override Widget Build()
         {
             var (value, setValue) = UseState(0);
-            return ContextProvider(new[]
-            {
-                (typeof(TestHookContext), new TestHookContext(value) as object)
-            }, Row(
-                Button(
-                    () => { setValue.Invoke(value + 1); },
-                    Text("Click")
-                ),
-                new TestHookContextConsumer(),
-                new TestHooksNonContextWidget()
-            ));
+            return ContextProvider(
+                Providers((typeof(TestHookContext), new TestHookContext(value))),
+                Row(
+                    Button(
+                        () => { setValue.Invoke(value + 1); },
+                        Text("Click")
+                    ),
+                    new TestHookContextConsumer(),
+                    new TestHooksNonContextWidget()
+                ));
         }
     }
 
