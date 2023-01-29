@@ -39,9 +39,14 @@ public static class FuncUi
     {
         return new ContextProvider(providers.ToImmutableDictionary(), child);
     }
-    
+
     public static ImmutableDictionary<Type, object> Providers(params (Type, object)[] providers)
     {
         return providers.ToImmutableDictionary(it => it.Item1, it => it.Item2);
+    }
+    
+    public static ImmutableList<T> ImmutableListOf<T>(params T[] items)
+    {
+        return items.ToImmutableList();
     }
 }

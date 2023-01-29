@@ -10,3 +10,5 @@ internal record Memo<T>(T Value, object[] Dependencies) : IDisposable
         }
     }
 }
+
+internal record StateValue<T>(T Value);

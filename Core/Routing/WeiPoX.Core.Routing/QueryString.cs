@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 
 namespace WeiPoX.Core.Routing;
 
@@ -21,5 +22,5 @@ public record QueryString
                 ImmutableDictionary<string, ImmutableList<string>>.Empty;
     }
 
-    public ImmutableDictionary<string,ImmutableList<string>> Value { get; }
+    public ImmutableDictionary<string, ImmutableList<string>> Value { get; }
 }

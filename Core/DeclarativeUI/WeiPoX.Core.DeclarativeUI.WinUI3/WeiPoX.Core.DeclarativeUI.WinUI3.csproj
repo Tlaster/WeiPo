@@ -9,12 +9,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221209.1" />
-        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.755" />
+        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221209.1"/>
+        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.755"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\WeiPoX.Core.DeclarativeUI\WeiPoX.Core.DeclarativeUI.csproj" />
-        <PackageReference Include="ReactiveUI.WinUI" Version="18.4.1" />
+        <ProjectReference Include="..\WeiPoX.Core.DeclarativeUI\WeiPoX.Core.DeclarativeUI.csproj"/>
+        <PackageReference Include="ReactiveUI.WinUI" Version="18.4.1"/>
     </ItemGroup>
 </Project>

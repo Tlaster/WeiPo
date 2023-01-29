@@ -11,6 +11,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\DeclarativeUI\WeiPoX.Core.DeclarativeUI\WeiPoX.Core.DeclarativeUI.csproj" />
+        <ProjectReference Include="..\..\DeclarativeUI\WeiPoX.Core.DeclarativeUI\WeiPoX.Core.DeclarativeUI.csproj" />
     </ItemGroup>
 </Project>

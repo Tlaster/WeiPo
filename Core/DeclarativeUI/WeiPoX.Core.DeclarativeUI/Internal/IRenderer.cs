@@ -14,8 +14,8 @@ internal interface IRenderer<T>
 internal interface IBuildOwner
 {
     void MarkNeedsBuild(Widget widget);
-    
+
     bool IsBuildScheduled(Widget widget);
-    
+
     void CleanUp();
 }

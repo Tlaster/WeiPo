@@ -19,11 +19,10 @@ public class RowTest
     }
 }
 
-class TestOwner : IBuildOwner
+internal class TestOwner : IBuildOwner
 {
     public void MarkNeedsBuild(Widget widget)
     {
-        
     }
 
     public bool IsBuildScheduled(Widget widget)

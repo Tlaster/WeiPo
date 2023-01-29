@@ -2,13 +2,36 @@ namespace WeiPoX.Core.DeclarativeUI.Widgets;
 
 public abstract record StatefulWidget : StateWidget, IDisposable
 {
-    internal StatefulWidgetState State { get; private set; } = new();
-    // for testing only
-    internal bool Disposed { get; private set; }
-
     protected StatefulWidget()
     {
         State.Widget = this;
+    }
+
+    internal StatefulWidgetState State { get; private set; } = new();
+
+    // for testing only
+    internal bool Disposed { get; private set; }
+
+    public void Dispose()
+    {
+        State.Dispose();
+        Disposed = true;
+        GC.SuppressFinalize(this);
+    }
+
+    public virtual bool Equals(StatefulWidget? other)
+    {
+        if (ReferenceEquals(null, other))
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return base.Equals(other);
     }
 
     internal Widget BuildInternal()
@@ -18,7 +41,7 @@ public abstract record StatefulWidget : StateWidget, IDisposable
         State.Dirty = false;
         return result;
     }
-    
+
     internal void Merge(StatefulWidget other)
     {
         State = other.State;
@@ -27,21 +50,26 @@ public abstract record StatefulWidget : StateWidget, IDisposable
 
     protected abstract Widget Build();
 
-    public State<T> UseState<T>(T? initialState) where T : notnull
+    public State<T> UseState<T>(T initialState)
     {
         return UseState(() => initialState);
     }
 
-    public State<T> UseState<T>(Func<T?> initialState) where T : notnull
+    public State<T> UseState<T>(Func<T> initialState)
     {
         if (State.Hooks.Count <= State.HookId)
         {
-            State.Hooks.Add(initialState.Invoke());
+            State.Hooks.Add(new StateValue<T>(initialState.Invoke()));
         }
 
         var index = State.HookId;
-        var setState = new Action<T>(value => { State.Hooks[index] = value; });
-        return new State<T>((T)State.Hooks[State.HookId++], setState);
+        var setState = new Action<T>(value => { State.Hooks[index] = new StateValue<T>(value); });
+        if (State.Hooks[State.HookId++] is not StateValue<T> state)
+        {
+            throw new Exception("State is null");
+        }
+        
+        return new State<T>(state.Value, setState);
     }
 
     public void UseEffect(Action effect, params object[] dependencies)
@@ -52,7 +80,7 @@ public abstract record StatefulWidget : StateWidget, IDisposable
             return true;
         }, dependencies);
     }
-    
+
     public void UseEffect(Func<Action> effect, params object[] dependencies)
     {
         UseMemo(() =>
@@ -61,7 +89,7 @@ public abstract record StatefulWidget : StateWidget, IDisposable
             return new DisposableEffect(dispose);
         }, dependencies);
     }
-    
+
     public T UseMemo<T>(Func<T> factory, params object[] dependencies)
     {
         var hasNoDependencies = dependencies.Length == 0;
@@ -84,42 +112,21 @@ public abstract record StatefulWidget : StateWidget, IDisposable
 
         return ((Memo<T>)State.Hooks[State.HookId++]).Value;
     }
-    
+
     public T UseContext<T>()
     {
         if (State.BuildContext == null)
         {
             throw new Exception("BuildContext is null");
         }
+
         var value = State.BuildContext.Get<T>() ?? throw new Exception($"Context {typeof(T)} not found");
         State.UsedProviders[typeof(T)] = value;
         return value;
     }
 
-    public virtual bool Equals(StatefulWidget? other)
-    {
-        if (ReferenceEquals(null, other))
-        {
-            return false;
-        }
-
-        if (ReferenceEquals(this, other))
-        {
-            return true;
-        }
-
-        return base.Equals(other);
-    }
-
     public override int GetHashCode()
     {
         return HashCode.Combine(base.GetHashCode());
-    }
-
-    public void Dispose()
-    {
-        State.Dispose();
-        Disposed = true;
-        GC.SuppressFinalize(this);
     }
 }

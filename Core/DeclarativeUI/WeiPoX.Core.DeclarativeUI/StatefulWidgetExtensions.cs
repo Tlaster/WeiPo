@@ -1,11 +1,10 @@
-﻿using System.Reactive.Subjects;
-using WeiPoX.Core.DeclarativeUI.Widgets;
+﻿using WeiPoX.Core.DeclarativeUI.Widgets;
 
 namespace WeiPoX.Core.DeclarativeUI;
 
 public static class StatefulWidgetExtensions
 {
-    public static T? UseObservable<T>(this StatefulWidget statefulWidget, IObservable<T> observable, T? initialValue) where T: notnull
+    public static T UseObservable<T>(this StatefulWidget statefulWidget, IObservable<T> observable, T initialValue)
     {
         var state = statefulWidget.UseState(initialValue);
         statefulWidget.UseEffect(() =>

@@ -1,4 +1,3 @@
-using System.Net.Mime;
 using WeiPoX.Core.DeclarativeUI.Widgets;
 using WeiPoX.Core.DeclarativeUI.Widgets.Layout;
 
@@ -16,30 +15,6 @@ public class WidgetTest
         Assert.AreEqual("Hello", (box.Children[0] as Text)?.Content);
         Assert.IsInstanceOfType(box.Children[1], typeof(Text));
         Assert.AreEqual("World", (box.Children[1] as Text)?.Content);
-    }
-    
-    record TestStatefulWithNestedStatefulWidget : StatefulWidget
-    {
-        protected override Widget Build()
-        {
-            var (value, setValue) = UseState(0);
-            return Box(
-                Button(() => setValue(value + 1)),
-                new TestNestedStatefulWidget()
-            );
-        }
-    }
-    
-    record TestNestedStatefulWidget : StatefulWidget
-    {
-        protected override Widget Build()
-        {
-            var (value, setValue) = UseState(0);
-            return Box(
-                Button(() => setValue(value + 1)),
-                Text(value.ToString())
-            );
-        }
     }
 
     [TestMethod]
@@ -66,15 +41,15 @@ public class WidgetTest
         var text = nestedBox.Children[1] as Text;
         Assert.IsNotNull(text);
         Assert.AreEqual("0", text.Content);
-        
+
         button.OnClick.Invoke();
-        
+
         result = builder.BuildIfNeeded(widget, widget, result);
         owner.CleanUp();
 
         Assert.IsInstanceOfType(widget.State.CachedBuild, typeof(Box));
         box = widget.State.CachedBuild as Box;
-        Assert.IsNotNull(box);     
+        Assert.IsNotNull(box);
         Assert.IsInstanceOfType(box.Children[0], typeof(Button));
         button = box.Children[0] as Button;
         Assert.IsNotNull(button);
@@ -89,31 +64,6 @@ public class WidgetTest
         text = nestedBox.Children[1] as Text;
         Assert.IsNotNull(text);
         Assert.AreEqual("0", text.Content);
-    }
-    
-    record TestStatefulWithParameterNestedStatefulWidget : StatefulWidget
-    {
-        protected override Widget Build()
-        {
-            var (value, setValue) = UseState(0);
-            return Box(
-                Button(() => setValue(value + 1)),
-                new TestParameterNestedStatefulWidget(value)
-            );
-        }
-    }
-    
-    record TestParameterNestedStatefulWidget(int Value) : StatefulWidget
-    {
-        protected override Widget Build()
-        {
-            var (value, setValue) = UseState(0);
-            return Box(
-                Button(() => setValue(value + 1)),
-                Text(value.ToString()),
-                Text(Value.ToString())
-            );
-        }
     }
 
     [TestMethod]
@@ -149,7 +99,7 @@ public class WidgetTest
 
         result = builder.BuildIfNeeded(widget, widget, result);
         owner.CleanUp();
-        
+
         Assert.IsInstanceOfType(widget.State.CachedBuild, typeof(Box));
         box = widget.State.CachedBuild as Box;
         Assert.IsNotNull(box);
@@ -173,11 +123,11 @@ public class WidgetTest
         text2 = nestedBox.Children[2] as Text;
         Assert.IsNotNull(text2);
         Assert.AreEqual("1", text2.Content);
-        
+
         nestedButton.OnClick.Invoke();
         result = builder.BuildIfNeeded(widget, widget, result);
         owner.CleanUp();
-        
+
         Assert.IsInstanceOfType(widget.State.CachedBuild, typeof(Box));
         box = widget.State.CachedBuild as Box;
         Assert.IsNotNull(box);
@@ -199,5 +149,54 @@ public class WidgetTest
         text2 = nestedBox.Children[2] as Text;
         Assert.IsNotNull(text2);
         Assert.AreEqual("1", text2.Content);
+    }
+
+    private record TestStatefulWithNestedStatefulWidget : StatefulWidget
+    {
+        protected override Widget Build()
+        {
+            var (value, setValue) = UseState(0);
+            return Box(
+                Button(() => setValue(value + 1)),
+                new TestNestedStatefulWidget()
+            );
+        }
+    }
+
+    private record TestNestedStatefulWidget : StatefulWidget
+    {
+        protected override Widget Build()
+        {
+            var (value, setValue) = UseState(0);
+            return Box(
+                Button(() => setValue(value + 1)),
+                Text(value.ToString())
+            );
+        }
+    }
+
+    private record TestStatefulWithParameterNestedStatefulWidget : StatefulWidget
+    {
+        protected override Widget Build()
+        {
+            var (value, setValue) = UseState(0);
+            return Box(
+                Button(() => setValue(value + 1)),
+                new TestParameterNestedStatefulWidget(value)
+            );
+        }
+    }
+
+    private record TestParameterNestedStatefulWidget(int Value) : StatefulWidget
+    {
+        protected override Widget Build()
+        {
+            var (value, setValue) = UseState(0);
+            return Box(
+                Button(() => setValue(value + 1)),
+                Text(value.ToString()),
+                Text(Value.ToString())
+            );
+        }
     }
 }

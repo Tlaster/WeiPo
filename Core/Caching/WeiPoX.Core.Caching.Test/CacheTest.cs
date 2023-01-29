@@ -1,5 +1,4 @@
 using System.Reactive.Subjects;
-using CSharpFunctionalExtensions;
 
 namespace WeiPoX.Core.Caching.Test;
 
@@ -37,7 +36,7 @@ public class CacheTest
         Assert.AreEqual(2, loadStateList.Count);
         Assert.IsInstanceOfType(loadStateList[1], typeof(LoadState.Success));
     }
-    
+
     [TestMethod]
     public async Task TestRemoteFailure()
     {
@@ -67,7 +66,7 @@ public class CacheTest
         Assert.AreEqual(2, loadStateList.Count);
         Assert.IsInstanceOfType(loadStateList[1], typeof(LoadState.Error));
     }
-    
+
     [TestMethod]
     public async Task TestLocalSuccess()
     {
@@ -99,7 +98,7 @@ public class CacheTest
         Assert.AreEqual(2, loadStateList.Count);
         Assert.IsInstanceOfType(loadStateList[1], typeof(LoadState.Success));
     }
-    
+
     [TestMethod]
     public async Task TestLocalFailure()
     {

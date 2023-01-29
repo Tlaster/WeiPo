@@ -100,7 +100,7 @@ internal abstract class WidgetBuilder<T>
             _ => throw new NotImplementedException()
         };
     }
-    
+
     private T BuildStateWidget(StateWidget? oldValue, StateWidget newValue, T control, BuildContext context)
     {
         switch (newValue)

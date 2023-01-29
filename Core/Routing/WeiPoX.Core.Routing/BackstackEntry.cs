@@ -1,19 +1,31 @@
 ﻿using System.Collections.Immutable;
+using System.Security.Cryptography;
 
 namespace WeiPoX.Core.Routing;
 
-public record BackstackEntry(Route Route, ImmutableDictionary<string, string> PathMap, QueryString? QueryString = null) : IDisposable
+public sealed record BackstackEntry(
+    string Id,
+    Route Route,
+    StateHolder ParentStateHolder,
+    ImmutableDictionary<string, string> PathMap,
+    QueryString? QueryString = null
+) : IDisposable
 {
-    private bool _destroyAfterTransition = false;
-    public StateHolder State { get; } = new();
-    public Lifecycle Lifecycle { get; } = new();
-    
-    public void Active()
+    private bool _destroyAfterTransition;
+    internal StateHolder State => ParentStateHolder.GetOrElse(Id, new StateHolder()); 
+    internal Lifecycle Lifecycle { get; } = new();
+
+    public void Dispose()
+    {
+        State.Dispose();
+    }
+
+    internal void Active()
     {
         Lifecycle.CurrentState = Lifecycle.State.Active;
     }
-    
-    public void InActive()
+
+    internal void InActive()
     {
         Lifecycle.CurrentState = Lifecycle.State.InActive;
         if (_destroyAfterTransition)
@@ -21,8 +33,8 @@ public record BackstackEntry(Route Route, ImmutableDictionary<string, string> Pa
             Destroy();
         }
     }
-    
-    public void Destroy()
+
+    internal void Destroy()
     {
         if (Lifecycle.CurrentState != Lifecycle.State.InActive)
         {
@@ -34,9 +46,49 @@ public record BackstackEntry(Route Route, ImmutableDictionary<string, string> Pa
             Dispose();
         }
     }
-
-    public void Dispose()
+    
+    public T? Path<T>(string key, T? defaultValue = default)
     {
-        State.Dispose();
+        if (PathMap.TryGetValue(key, out var value))
+        {
+            return (T) Convert.ChangeType(value, typeof(T));
+        }
+
+        return defaultValue;
+    }
+    
+    public T? Query<T>(string key, T? defaultValue = default)
+    {
+        if (QueryString is null)
+        {
+            return defaultValue;
+        }
+
+        if (!QueryString.Value.TryGetValue(key, out var value))
+        {
+            return defaultValue;
+        }
+
+        var first = value.FirstOrDefault();
+        if (first is null)
+        {
+            return defaultValue;
+        }
+        return (T) Convert.ChangeType(first, typeof(T));
+    }
+    
+    public ImmutableList<T> QueryList<T>(string key)
+    {
+        if (QueryString is null)
+        {
+            return ImmutableList<T>.Empty;
+        }
+
+        if (!QueryString.Value.TryGetValue(key, out var value))
+        {
+            return ImmutableList<T>.Empty;
+        }
+
+        return value.Select(v => (T) Convert.ChangeType(v, typeof(T))).ToImmutableList();
     }
 }

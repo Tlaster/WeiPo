@@ -6,15 +6,6 @@ namespace WeiPoX.Core.DeclarativeUI.Widgets;
 
 internal class StatefulWidgetState : IDisposable
 {
-    public ObservableCollection<object> Hooks { get; } = new();
-    public int HookId { get; set; }
-    public bool Dirty { get; set; }
-    public IBuildOwner? BuildOwner { get; set; }
-    public BuildContext? BuildContext { get; set; }
-    public Dictionary<Type, object> UsedProviders { get; } = new();
-    public Widget? Widget { get; set; }
-    internal Widget? CachedBuild { get; set; }
-
     public StatefulWidgetState()
     {
         Hooks.CollectionChanged += (sender, args) =>
@@ -42,6 +33,15 @@ internal class StatefulWidgetState : IDisposable
             }
         };
     }
+
+    public ObservableCollection<object> Hooks { get; } = new();
+    public int HookId { get; set; }
+    public bool Dirty { get; set; }
+    public IBuildOwner? BuildOwner { get; set; }
+    public BuildContext? BuildContext { get; set; }
+    public Dictionary<Type, object> UsedProviders { get; } = new();
+    public Widget? Widget { get; set; }
+    internal Widget? CachedBuild { get; set; }
 
     public void Dispose()
     {

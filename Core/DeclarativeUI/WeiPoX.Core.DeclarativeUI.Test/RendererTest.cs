@@ -182,10 +182,10 @@ internal class TestPanel : TestControl
 internal class TestBuildOwner : IBuildOwner
 {
     public List<Widget> RebuiltWidgets { get; } = new();
-    
+
     public bool NeedsBuild => RebuiltWidgets.Count > 0;
 
-    
+
     public void MarkNeedsBuild(Widget widget)
     {
         RebuiltWidgets.Add(widget);
@@ -195,7 +195,7 @@ internal class TestBuildOwner : IBuildOwner
     {
         return RebuiltWidgets.Contains(widget);
     }
-    
+
     public void CleanUp()
     {
         RebuiltWidgets.Clear();
@@ -204,16 +204,18 @@ internal class TestBuildOwner : IBuildOwner
 
 internal class TestWidgetBuilder : WidgetBuilder<TestControl>
 {
+    public TestWidgetBuilder(IBuildOwner owner) : base(owner)
+    {
+    }
+
     protected override IRenderer<TestControl> GetRenderer(Type widgetType)
     {
         if (typeof(IPanelWidget).IsAssignableFrom(widgetType))
         {
             return new TestPanelRenderer();
         }
-        else
-        {
-            return new TestRenderer();
-        }
+
+        return new TestRenderer();
     }
 
     protected override bool IsPanel(TestControl value)
@@ -224,10 +226,6 @@ internal class TestWidgetBuilder : WidgetBuilder<TestControl>
     protected override TestControl? GetChildAt(TestControl control, int index)
     {
         return control is TestPanel panel ? panel.Children.ElementAtOrDefault(index) : null;
-    }
-
-    public TestWidgetBuilder(IBuildOwner owner) : base(owner)
-    {
     }
 }
 

@@ -7,13 +7,20 @@ using WeiPoX.Core.Routing.Parser;
 
 namespace WeiPoX.Core.Routing;
 
-internal class RouteStackManager
+internal class RouteStackManager : ILifecycleObserver
 {
     private readonly ReplaySubject<BackstackEntry?> _currentRoute = new();
-    private readonly Stack<BackstackEntry> _routeStack = new();
-    public IObservable<BackstackEntry> CurrentRoute => _currentRoute.WhereNotNull().AsObservable();
-
     private readonly RouteParser _routeParser = new();
+    private readonly Stack<BackstackEntry> _routeStack = new();
+    private readonly StateHolder _stateHolderParent;
+
+    public RouteStackManager(StateHolder stateHolderParent, Lifecycle lifecycleParent)
+    {
+        _stateHolderParent = stateHolderParent;
+        lifecycleParent.AddObserver(this);
+    }
+
+    public IObservable<BackstackEntry> CurrentRoute => _currentRoute.WhereNotNull().AsObservable();
 
     internal void Init(string initialRoute, ImmutableList<Route> routes)
     {
@@ -24,9 +31,10 @@ internal class RouteStackManager
                 _routeParser.Insert(expandOptionalVariable, route);
             }
         }
+
         Push(initialRoute);
     }
-    
+
     public void Push(string path)
     {
         var query = path.Split('?').LastOrDefault() ?? string.Empty;
@@ -36,16 +44,23 @@ internal class RouteStackManager
         {
             throw new Exception("Route not found");
         }
-        var backstackEntry = new BackstackEntry(matchResult.Route, matchResult.PathMap, new QueryString(query));
+
+        var backstackEntry = new BackstackEntry(
+            Guid.NewGuid().ToString(),
+            matchResult.Route,
+            _stateHolderParent,
+            matchResult.PathMap,
+            new QueryString(query)
+        );
         _routeStack.Push(backstackEntry);
         _currentRoute.OnNext(backstackEntry);
     }
 
-    public BackstackEntry Pop()
+    public void Pop()
     {
         var result = _routeStack.Pop();
         _currentRoute.OnNext(_routeStack.Peek());
-        return result;
+        result.Destroy();
     }
 
     public BackstackEntry Peek()
@@ -56,6 +71,30 @@ internal class RouteStackManager
     public bool IsEmpty()
     {
         return _routeStack.Count == 0;
+    }
+
+    public void OnStateChanged(Lifecycle.State state)
+    {
+        switch (state)
+        {
+            case Lifecycle.State.Initialized:
+                break;
+            case Lifecycle.State.Active:
+                _routeStack.LastOrDefault()?.Active();
+                break;
+            case Lifecycle.State.InActive:
+                _routeStack.LastOrDefault()?.InActive();
+                break;
+            case Lifecycle.State.Destroyed:
+                foreach (var backstackEntry in _routeStack)
+                {
+                    backstackEntry.Destroy();
+                }
+                _routeStack.Clear();
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(state), state, null);
+        }
     }
 }
 

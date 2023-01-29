@@ -58,7 +58,7 @@ internal class RouteParser
         var staticRoute = _staticPaths.GetValueOrDefault(path);
         return staticRoute == null
             ? FindInternal(path)
-            : new RouteMatchResult(staticRoute,  ImmutableDictionary<string, string>.Empty);
+            : new RouteMatchResult(staticRoute, ImmutableDictionary<string, string>.Empty);
     }
 
     private RouteMatchResult? FindInternal(string path)
@@ -153,8 +153,10 @@ internal class RouteParser
                         value.Append(prev);
                     }
                 }
+
                 paths[index] = value;
             }
+
             paths[index].Append(segment);
         }
 
@@ -174,7 +176,7 @@ internal class RouteParser
 
                 segment.Append(ch);
                 i += 1;
-            } 
+            }
             else if (ch == '{')
             {
                 segment.Append(ch);
@@ -187,7 +189,7 @@ internal class RouteParser
                     if (next == '{')
                     {
                         curly += 1;
-                    } 
+                    }
                     else if (next == '}')
                     {
                         curly -= 1;
@@ -206,6 +208,7 @@ internal class RouteParser
                     {
                         paths[0] = new StringBuilder("/");
                     }
+
                     PathAppender(++key, segment);
                 }
                 else
@@ -213,6 +216,7 @@ internal class RouteParser
                     isLastOptional = false;
                     PathAppender(key, segment);
                 }
+
                 segment.Clear();
                 i = j;
             }
@@ -242,7 +246,7 @@ internal class RouteParser
 
         return paths.Values.Select(it => it.ToString()).ToList();
     }
-    
+
 
     private record Segment(int NodeType = 0, string RexPat = "", char Tail = '\0', int StartIndex = 0,
         int EndIndex = 0);
@@ -352,7 +356,7 @@ internal class RouteParser
                 }
 
                 // Create a new edge for the node
-                var subchild = new Node(NtStatic, Label: search[0], Prefix: search);
+                var subchild = new Node(Label: search[0], Prefix: search);
                 var hn = child.AddChild(subchild, search);
                 hn.ApplyRoute(route);
                 return hn;
@@ -417,7 +421,7 @@ internal class RouteParser
                             // its not possible to have adjacent param nodes, so its certainly
                             // going to be a static node next.
                             searchStr = searchStr[segStartIdx..]; // advance search position
-                            var nn = new Node(NtStatic, Label: searchStr[0], Prefix: searchStr);
+                            var nn = new Node(Label: searchStr[0], Prefix: searchStr);
                             hn = child.AddChild(nn, searchStr);
                         }
                     }

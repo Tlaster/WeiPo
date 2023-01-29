@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\WeiPoX.Data.Common\WeiPoX.Data.Common.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Realm" Version="10.18.0"/>
+    </ItemGroup>
+
+</Project>

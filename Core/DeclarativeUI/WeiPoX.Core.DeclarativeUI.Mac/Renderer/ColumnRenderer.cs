@@ -8,7 +8,7 @@ internal class ColumnRenderer : RendererObject<Column, NSStackView>
     {
         return new NSStackView
         {
-            Orientation = NSUserInterfaceLayoutOrientation.Vertical,
+            Orientation = NSUserInterfaceLayoutOrientation.Vertical
         };
     }
 

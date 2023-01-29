@@ -5,6 +5,10 @@ namespace WeiPoX.Core.DeclarativeUI.Avalonia.Internal;
 
 internal class WidgetBuilder : WidgetBuilder<IControl>
 {
+    public WidgetBuilder(IBuildOwner owner) : base(owner)
+    {
+    }
+
     protected override IRenderer<IControl> GetRenderer(Type widgetType)
     {
         return RendererPool.GetRenderer(widgetType);
@@ -23,9 +27,5 @@ internal class WidgetBuilder : WidgetBuilder<IControl>
         }
 
         return null;
-    }
-
-    public WidgetBuilder(IBuildOwner owner) : base(owner)
-    {
     }
 }

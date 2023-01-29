@@ -8,6 +8,7 @@ internal record DisposableEffect : IDisposable
     {
         _dispose = dispose;
     }
+
     public void Dispose()
     {
         _dispose();

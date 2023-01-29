@@ -10,21 +10,17 @@ public partial class ViewController : NSViewController
         // Do not put any initialization here, use ViewDidLoad instead.
     }
 
+    public override NSObject RepresentedObject
+    {
+        get => base.RepresentedObject;
+        set => base.RepresentedObject = value;
+        // Update the view, if already loaded.
+    }
+
     public override void ViewDidLoad()
     {
         base.ViewDidLoad();
 
         // Do any additional setup after loading the view.
-    }
-
-    public override NSObject RepresentedObject
-    {
-        get => base.RepresentedObject;
-        set
-        {
-            base.RepresentedObject = value;
-
-            // Update the view, if already loaded.
-        }
     }
 }

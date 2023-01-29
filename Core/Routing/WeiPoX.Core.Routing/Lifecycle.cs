@@ -7,8 +7,9 @@ public class Lifecycle : IDisposable
         Initialized,
         Active,
         InActive,
-        Destroyed,
+        Destroyed
     }
+
     private readonly List<ILifecycleObserver> _observers = new();
     private State _currentState = State.Initialized;
 
@@ -21,9 +22,15 @@ public class Lifecycle : IDisposable
             {
                 return;
             }
+
             _currentState = value;
             DispatchStateChange(value);
         }
+    }
+
+    public void Dispose()
+    {
+        _observers.Clear();
     }
 
     private void DispatchStateChange(State value)
@@ -33,22 +40,17 @@ public class Lifecycle : IDisposable
             observer.OnStateChanged(value);
         }
     }
-    
+
     public void AddObserver(ILifecycleObserver observer)
     {
         _observers.Add(observer);
     }
-    
+
     public void RemoveObserver(ILifecycleObserver observer)
     {
         _observers.Remove(observer);
     }
-    
-    public void Dispose()
-    {
-        _observers.Clear();
-    }
-    
+
     public bool HasObservers()
     {
         return _observers.Count > 0;

@@ -4,6 +4,10 @@ namespace WeiPoX.Core.DeclarativeUI.Mac.Internal;
 
 internal class WidgetBuilder : WidgetBuilder<NSView>
 {
+    public WidgetBuilder(IBuildOwner owner) : base(owner)
+    {
+    }
+
     protected override NSView? GetChildAt(NSView control, int index)
     {
         if (control is NSGridView panel)
@@ -22,9 +26,5 @@ internal class WidgetBuilder : WidgetBuilder<NSView>
     protected override bool IsPanel(NSView value)
     {
         return value is NSGridView or NSStackView;
-    }
-    
-    public WidgetBuilder(IBuildOwner owner) : base(owner)
-    {
     }
 }

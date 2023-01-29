@@ -1,7 +1,5 @@
-﻿using System.Reactive;
-using System.Reactive.Linq;
+﻿using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using CSharpFunctionalExtensions;
 
 namespace WeiPoX.Core.Caching;
 
@@ -23,8 +21,9 @@ public class Cacheable<TValue>
             })
             .StartWith(new LoadState.Loading());
     }
+
     public IObservable<CacheState> Data { get; }
-    
+
     public IObservable<LoadState> RefreshState { get; }
 
     public void Refresh()
@@ -33,22 +32,25 @@ public class Cacheable<TValue>
     }
 }
 
-
 public abstract record LoadResult
 {
     public record Success : LoadResult;
+
     public record Error(Exception Exception) : LoadResult;
 }
 
 public abstract record LoadState
 {
     public record Loading : LoadState;
+
     public record Success : LoadState;
+
     public record Error(Exception Exception) : LoadState;
 }
 
 public abstract record CacheState
 {
     public record Empty : CacheState;
+
     public record Success<T>(T Value) : CacheState;
 }

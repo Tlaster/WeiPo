@@ -17,12 +17,6 @@ public class DeclarativeView : UserControl, IBuildOwner
         _renderer = new WidgetBuilder(this);
     }
 
-    protected void Render(Widget widget)
-    {
-        Content = _renderer.BuildIfNeeded(_widget, widget, Content != null ? Content : null);
-        _widget = widget;
-    }
-
     public void MarkNeedsBuild(Widget widget)
     {
     }
@@ -34,7 +28,12 @@ public class DeclarativeView : UserControl, IBuildOwner
 
     public void CleanUp()
     {
-        
+    }
+
+    protected void Render(Widget widget)
+    {
+        Content = _renderer.BuildIfNeeded(_widget, widget, Content != null ? Content : null);
+        _widget = widget;
     }
 }
 
