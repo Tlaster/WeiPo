@@ -22,7 +22,7 @@ public record NavHost(Navigator Navigator, string InitialRoute, ImmutableList<Ro
         {
             currentRoute.Active();
             return currentRoute.InActive;
-        });
+        }, currentRoute);
         return Box(
             ContextProvider(
                 Providers(
