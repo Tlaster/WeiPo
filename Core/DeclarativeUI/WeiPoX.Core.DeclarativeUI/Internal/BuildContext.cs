@@ -38,4 +38,14 @@ internal record BuildContext(ImmutableDictionary<Type, object> ContextMap)
     {
         return ContextMap.TryGetValue(typeof(T), out var value) ? (T)value : default;
     }
+
+    public BuildContext Merge(ImmutableDictionary<Type,object> contextProviderProviders)
+    {
+        var dictionary = ContextMap.ToDictionary(x => x.Key, x => x.Value);
+        foreach (var (key, value) in contextProviderProviders)
+        {
+            dictionary[key] = value;
+        }
+        return new BuildContext(dictionary.ToImmutableDictionary());
+    }
 }

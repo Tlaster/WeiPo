@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using WeiPoX.Core.DeclarativeUI;
 using WeiPoX.Core.DeclarativeUI.Widgets;
+using WeiPoX.Core.Lifecycle;
 
 namespace WeiPoX.Core.Routing;
 
@@ -8,7 +9,9 @@ public record NavHost(Navigator Navigator, string InitialRoute, ImmutableList<Ro
 {
     protected override Widget Build()
     {
-        UseEffect(() => { Navigator.Init(InitialRoute, Routes); });
+        var stateHolder = UseContext<StateHolder>();
+        var lifecycleHolder = UseContext<LifecycleHolder>();
+        UseEffect(() => { Navigator.Init(InitialRoute, Routes, stateHolder, lifecycleHolder); }, true);
         var currentRoute = this.UseObservable(Navigator.CurrentRoute, null);
         if (currentRoute is null)
         {
@@ -24,20 +27,10 @@ public record NavHost(Navigator Navigator, string InitialRoute, ImmutableList<Ro
             ContextProvider(
                 Providers(
                     (typeof(StateHolder), currentRoute.State),
-                    (typeof(Lifecycle), currentRoute.Lifecycle)
+                    (typeof(LifecycleHolder), currentRoute.Lifecycle)
                 ),
                 currentRoute.Route.Content.Invoke(currentRoute)
             )
         );
-    }
-}
-
-public static class NavigatorExtensions
-{
-    public static Navigator UseNavigator(this StatefulWidget widget)
-    {
-        var stateHolder = widget.UseContext<StateHolder>();
-        var lifecycle = widget.UseContext<Lifecycle>();
-        return widget.UseMemo(() => new Navigator(stateHolder, lifecycle));
     }
 }

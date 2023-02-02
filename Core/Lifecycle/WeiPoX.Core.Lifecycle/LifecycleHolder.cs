@@ -1,29 +1,21 @@
-﻿namespace WeiPoX.Core.Routing;
+﻿namespace WeiPoX.Core.Lifecycle;
 
-public class Lifecycle : IDisposable
+public sealed class LifecycleHolder : IDisposable
 {
-    public enum State
-    {
-        Initialized,
-        Active,
-        InActive,
-        Destroyed
-    }
-
     private readonly List<ILifecycleObserver> _observers = new();
-    private State _currentState = State.Initialized;
+    private LifecycleState _currentLifecycleState = LifecycleState.Initialized;
 
-    public State CurrentState
+    public LifecycleState CurrentLifecycleState
     {
-        get => _currentState;
+        get => _currentLifecycleState;
         set
         {
-            if (_currentState == State.Destroyed || value == State.Initialized)
+            if (_currentLifecycleState == LifecycleState.Destroyed || value == LifecycleState.Initialized)
             {
                 return;
             }
 
-            _currentState = value;
+            _currentLifecycleState = value;
             DispatchStateChange(value);
         }
     }
@@ -33,7 +25,7 @@ public class Lifecycle : IDisposable
         _observers.Clear();
     }
 
-    private void DispatchStateChange(State value)
+    private void DispatchStateChange(LifecycleState value)
     {
         foreach (var observer in _observers)
         {
@@ -55,4 +47,12 @@ public class Lifecycle : IDisposable
     {
         return _observers.Count > 0;
     }
+}
+
+public enum LifecycleState
+{
+    Initialized,
+    Active,
+    InActive,
+    Destroyed
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using System.Security.Cryptography;
+using WeiPoX.Core.Lifecycle;
 
 namespace WeiPoX.Core.Routing;
 
@@ -13,7 +14,7 @@ public sealed record BackstackEntry(
 {
     private bool _destroyAfterTransition;
     internal StateHolder State => ParentStateHolder.GetOrElse(Id, new StateHolder()); 
-    internal Lifecycle Lifecycle { get; } = new();
+    internal LifecycleHolder Lifecycle { get; } = new();
 
     public void Dispose()
     {
@@ -22,12 +23,12 @@ public sealed record BackstackEntry(
 
     internal void Active()
     {
-        Lifecycle.CurrentState = Lifecycle.State.Active;
+        Lifecycle.CurrentLifecycleState = LifecycleState.Active;
     }
 
     internal void InActive()
     {
-        Lifecycle.CurrentState = Lifecycle.State.InActive;
+        Lifecycle.CurrentLifecycleState = LifecycleState.InActive;
         if (_destroyAfterTransition)
         {
             Destroy();
@@ -36,13 +37,13 @@ public sealed record BackstackEntry(
 
     internal void Destroy()
     {
-        if (Lifecycle.CurrentState != Lifecycle.State.InActive)
+        if (Lifecycle.CurrentLifecycleState != LifecycleState.InActive)
         {
             _destroyAfterTransition = true;
         }
         else
         {
-            Lifecycle.CurrentState = Lifecycle.State.Destroyed;
+            Lifecycle.CurrentLifecycleState = LifecycleState.Destroyed;
             Dispose();
         }
     }

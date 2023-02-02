@@ -1,21 +1,17 @@
 ﻿using System.Collections.Immutable;
+using WeiPoX.Core.Lifecycle;
 
 namespace WeiPoX.Core.Routing;
 
 public class Navigator
 {
-    private readonly RouteStackManager _routeStackManager;
-
-    public Navigator(StateHolder holder, Lifecycle lifecycle)
-    {
-        _routeStackManager = new RouteStackManager(holder, lifecycle);
-    }
+    private readonly RouteStackManager _routeStackManager = new();
 
     internal IObservable<BackstackEntry> CurrentRoute => _routeStackManager.CurrentRoute;
 
-    internal void Init(string initialRoute, ImmutableList<Route> routes)
+    internal void Init(string initialRoute, ImmutableList<Route> routes, StateHolder stateHolder, LifecycleHolder lifecycleHolder)
     {
-        _routeStackManager.Init(initialRoute, routes);
+        _routeStackManager.Init(initialRoute, routes, stateHolder, lifecycleHolder);
     }
 
     public void Push(string route)

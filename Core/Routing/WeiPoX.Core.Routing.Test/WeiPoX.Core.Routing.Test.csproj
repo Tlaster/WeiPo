@@ -16,6 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\DeclarativeUI\WeiPoX.Core.DeclarativeUI.Testing\WeiPoX.Core.DeclarativeUI.Testing.csproj" />
       <ProjectReference Include="..\WeiPoX.Core.Routing\WeiPoX.Core.Routing.csproj" />
     </ItemGroup>
 

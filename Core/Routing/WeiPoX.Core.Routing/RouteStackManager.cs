@@ -3,6 +3,7 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using ReactiveUI;
 using WeiPoX.Core.DeclarativeUI.Widgets;
+using WeiPoX.Core.Lifecycle;
 using WeiPoX.Core.Routing.Parser;
 
 namespace WeiPoX.Core.Routing;
@@ -12,18 +13,17 @@ internal class RouteStackManager : ILifecycleObserver
     private readonly ReplaySubject<BackstackEntry?> _currentRoute = new();
     private readonly RouteParser _routeParser = new();
     private readonly Stack<BackstackEntry> _routeStack = new();
-    private readonly StateHolder _stateHolderParent;
-
-    public RouteStackManager(StateHolder stateHolderParent, Lifecycle lifecycleParent)
-    {
-        _stateHolderParent = stateHolderParent;
-        lifecycleParent.AddObserver(this);
-    }
+    private StateHolder? _stateHolderParent;
+    private LifecycleHolder? _lifecycleHolderParent;
 
     public IObservable<BackstackEntry> CurrentRoute => _currentRoute.WhereNotNull().AsObservable();
 
-    internal void Init(string initialRoute, ImmutableList<Route> routes)
+    internal void Init(string initialRoute, ImmutableList<Route> routes, StateHolder stateHolder, LifecycleHolder lifecycleHolder)
     {
+        _lifecycleHolderParent?.RemoveObserver(this);
+        _lifecycleHolderParent = lifecycleHolder;
+        _lifecycleHolderParent.AddObserver(this);
+        _stateHolderParent = stateHolder;
         foreach (var route in routes)
         {
             foreach (var expandOptionalVariable in RouteParser.ExpandOptionalVariables(route.Path))
@@ -37,6 +37,10 @@ internal class RouteStackManager : ILifecycleObserver
 
     public void Push(string path)
     {
+        if (_stateHolderParent is null)
+        {
+            return;
+        }
         var query = path.Split('?').LastOrDefault() ?? string.Empty;
         var route = path.Split('?').FirstOrDefault() ?? throw new Exception("Route not found");
         var matchResult = _routeParser.Find(route);
@@ -73,19 +77,19 @@ internal class RouteStackManager : ILifecycleObserver
         return _routeStack.Count == 0;
     }
 
-    public void OnStateChanged(Lifecycle.State state)
+    public void OnStateChanged(LifecycleState state)
     {
         switch (state)
         {
-            case Lifecycle.State.Initialized:
+            case LifecycleState.Initialized:
                 break;
-            case Lifecycle.State.Active:
+            case LifecycleState.Active:
                 _routeStack.LastOrDefault()?.Active();
                 break;
-            case Lifecycle.State.InActive:
+            case LifecycleState.InActive:
                 _routeStack.LastOrDefault()?.InActive();
                 break;
-            case Lifecycle.State.Destroyed:
+            case LifecycleState.Destroyed:
                 foreach (var backstackEntry in _routeStack)
                 {
                     backstackEntry.Destroy();
