@@ -16,7 +16,12 @@ internal class RouteStackManager : ILifecycleObserver
     private StateHolder? _stateHolderParent;
     private LifecycleHolder? _lifecycleHolderParent;
 
-    public IObservable<BackstackEntry> CurrentRoute => _currentRoute.WhereNotNull().AsObservable();
+    public RouteStackManager()
+    {
+        CurrentRoute = _currentRoute.WhereNotNull().AsObservable();
+    }
+
+    public IObservable<BackstackEntry> CurrentRoute { get; }
 
     internal void Init(string initialRoute, ImmutableList<Route> routes, StateHolder stateHolder, LifecycleHolder lifecycleHolder)
     {

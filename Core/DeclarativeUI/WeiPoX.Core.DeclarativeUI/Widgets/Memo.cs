@@ -1,6 +1,6 @@
 namespace WeiPoX.Core.DeclarativeUI.Widgets;
 
-internal record Memo<T>(T Value, object[] Dependencies) : IDisposable
+internal record Memo<T>(T Value, params object[] Dependencies) : IDisposable
 {
     public void Dispose()
     {
@@ -10,5 +10,3 @@ internal record Memo<T>(T Value, object[] Dependencies) : IDisposable
         }
     }
 }
-
-internal record StateValue<T>(T Value);

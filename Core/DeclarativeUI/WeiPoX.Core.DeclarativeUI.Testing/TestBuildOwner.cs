@@ -5,11 +5,13 @@ namespace WeiPoX.Core.DeclarativeUI.Testing;
 
 internal class TestBuildOwner : IBuildOwner
 {
+    public event Action? OnRequestBuild;
     public List<Widget> RebuiltWidgets { get; } = new();
 
     public void MarkNeedsBuild(Widget widget)
     {
         RebuiltWidgets.Add(widget);
+        OnRequestBuild?.Invoke();
     }
 
     public bool IsBuildScheduled(Widget widget)

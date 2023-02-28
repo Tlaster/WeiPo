@@ -13,8 +13,6 @@ public class NavHostTest
     {
         var navigator = new Navigator();
         var tester = new AppWidget(new TestNavHost(navigator)).Test();
-        tester.Render();
-        tester.Render();
         var navHost = tester.GetWidget<AppWidget>().GetChild<ContextProvider>()?.FindChildAtIndex<TestNavHost>(0)?.GetChild<NavHost>();
         Assert.IsNotNull(navHost);
         var box = navHost.GetChild<Box>();
@@ -23,7 +21,6 @@ public class NavHostTest
         Assert.IsNotNull(text);
         Assert.AreEqual("Home", text.Content);
         navigator.Push("detail");
-        tester.Render();
         navHost = tester.GetWidget<AppWidget>().GetChild<ContextProvider>()?.FindChildAtIndex<TestNavHost>(0)?.GetChild<NavHost>();
         Assert.IsNotNull(navHost);
         box = navHost.GetChild<Box>();

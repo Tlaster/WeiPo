@@ -31,7 +31,10 @@ public class HooksTest
     {
         var owner = new TestBuildOwner();
         var count = 0;
-        var widget = new HookUseEffectWidget(() => { count++; });
+        var widget = new HookUseEffectWidget(() =>
+        {
+            count++;
+        });
         widget.State.BuildOwner = owner;
         var build = widget.BuildInternal();
         owner.CleanUp();

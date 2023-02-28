@@ -59,12 +59,15 @@ public abstract record StatefulWidget : StateWidget, IDisposable
     {
         if (State.Hooks.Count <= State.HookId)
         {
-            State.Hooks.Add(new StateValue<T>(initialState.Invoke()));
+            State.Hooks.Add(new Memo<T>(initialState.Invoke()));
         }
 
         var index = State.HookId;
-        var setState = new Action<T>(value => { State.Hooks[index] = new StateValue<T>(value); });
-        if (State.Hooks[State.HookId++] is not StateValue<T> state)
+        var setState = new Action<T>(value =>
+        {
+            State.Hooks[index] = new Memo<T>(value);
+        });
+        if (State.Hooks[State.HookId++] is not Memo<T> state)
         {
             throw new Exception("State is null");
         }

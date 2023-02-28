@@ -2,9 +2,9 @@
 
 [assembly: InternalsVisibleTo("WeiPoX.Core.DeclarativeUI.Test")]
 [assembly: InternalsVisibleTo("WeiPoX.Core.DeclarativeUI.Testing")]
-[assembly: InternalsVisibleTo("WeiPoX.Core.DeclarativeUI.WinUI3")]
-[assembly: InternalsVisibleTo("WeiPoX.Core.DeclarativeUI.WinUI3.Test")]
-[assembly: InternalsVisibleTo("WeiPoX.Core.DeclarativeUI.Avalonia")]
-[assembly: InternalsVisibleTo("WeiPoX.Core.DeclarativeUI.Mac")]
+[assembly: InternalsVisibleTo("WeiPoX.Core.DeclarativeUI.Platform.WinUI3")]
+[assembly: InternalsVisibleTo("WeiPoX.Core.DeclarativeUI.Platform.WinUI3.Test")]
+[assembly: InternalsVisibleTo("WeiPoX.Core.DeclarativeUI.Platform.Avalonia")]
+[assembly: InternalsVisibleTo("WeiPoX.Core.DeclarativeUI.Platform.Mac")]
 
 namespace WeiPoX.Core.DeclarativeUI;
