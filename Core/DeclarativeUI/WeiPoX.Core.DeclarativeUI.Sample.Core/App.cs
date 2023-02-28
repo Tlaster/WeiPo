@@ -11,7 +11,10 @@ public record App : StatefulWidget
         var (value, setValue) = UseState(0);
         return Column(
             Button(
-                onClick: () => { },
+                onClick: () =>
+                {
+                    setValue(value + 1);
+                },
                 Text("Click me")
             ),
             Text("Value: " + value)

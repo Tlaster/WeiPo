@@ -8,12 +8,11 @@ public abstract class DeclarativeView : NSControl, IBuildOwner
 {
     public List<Widget> RebuiltWidgets { get; } = new();
     private readonly WidgetBuilder _renderer;
-    private Widget? _widget;
     private NSView? _content;
     private bool _rendering;
     private bool _requireReRender;
 
-    public DeclarativeView()
+    protected DeclarativeView()
     {
         _renderer = new WidgetBuilder(this);
     }
@@ -44,8 +43,7 @@ public abstract class DeclarativeView : NSControl, IBuildOwner
     protected void Render()
     {
         _rendering = true;
-        _content = _renderer.BuildIfNeeded(_widget, Content, _content);
-        _widget = Content;
+        _content = _renderer.BuildIfNeeded(Content, Content, _content);
         if (!Subviews.Any())
         {
             AddSubview(_content);
@@ -72,6 +70,7 @@ public class Declarative : DeclarativeView
     public Declarative(Widget content)
     {
         Content = content;
+        Render();
     }
 
     protected override Widget Content { get; }
