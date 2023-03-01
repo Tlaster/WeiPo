@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using WeiPoX.Core.DeclarativeUI.Internal;
@@ -7,10 +8,13 @@ using WeiPoX.Core.DeclarativeUI.Widgets;
 
 namespace WeiPoX.Core.DeclarativeUI.Platform.WinUI3;
 
-public class DeclarativeView : UserControl, IBuildOwner
+public abstract class DeclarativeView : UserControl, IBuildOwner
 {
+    public List<Widget> RebuiltWidgets { get; } = new();
     private readonly WidgetBuilder _renderer;
-    private Widget? _widget;
+    private UIElement? _renderedControl;
+    private bool _rendering;
+    private bool _requireReRender;
 
     public DeclarativeView()
     {
@@ -19,45 +23,51 @@ public class DeclarativeView : UserControl, IBuildOwner
 
     public void MarkNeedsBuild(Widget widget)
     {
+        RebuiltWidgets.Add(widget);
+        if (_rendering)
+        {
+            _requireReRender = true;
+        }
+        else
+        {
+            Render();
+        }
     }
 
     public bool IsBuildScheduled(Widget widget)
     {
-        return false;
+        return RebuiltWidgets.Contains(widget);
     }
 
     public void CleanUp()
     {
+        RebuiltWidgets.Clear();
     }
 
-    protected void Render(Widget widget)
+    protected void Render()
     {
-        Content = _renderer.BuildIfNeeded(_widget, widget, Content != null ? Content : null);
-        _widget = widget;
+        _rendering = true;
+        _renderedControl = _renderer.BuildIfNeeded(Widget, Widget, _renderedControl);
+        _rendering = false;
+        if (!_requireReRender)
+        {
+            Content = _renderedControl;
+            return;
+        }
+
+        _requireReRender = false;
+        Render();
     }
+
+    protected abstract Widget Widget { get; }
 }
-
-public abstract class DeclarativeView<T> : DeclarativeView
+public class Declarative : DeclarativeView
 {
-    private IDisposable? _disposable;
-
-    protected DeclarativeView()
+    public Declarative(Widget widget)
     {
-        Loaded += OnLoaded;
-        Unloaded += OnUnloaded;
+        Widget = widget;
+        Render();
     }
 
-    protected abstract IObservable<T> State { get; }
-
-    private void OnUnloaded(object sender, RoutedEventArgs e)
-    {
-        _disposable?.Dispose();
-    }
-
-    private void OnLoaded(object sender, RoutedEventArgs e)
-    {
-        _disposable = State.Subscribe(state => Render(Render(state)));
-    }
-
-    protected abstract Widget Render(T state);
+    protected override Widget Widget { get; }
 }

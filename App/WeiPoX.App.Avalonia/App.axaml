@@ -4,7 +4,7 @@
              x:Class="WeiPoX.App.Avalonia.App">
     <Application.Styles>
         <styling:FluentAvaloniaTheme />
-        <FluentTheme Mode="Light" />
+        <FluentTheme />
         <StyleInclude Source="avares://FluentAvalonia.UI.Windowing/Styles/FAWindowingStyles.axaml" />
     </Application.Styles>
 </Application>

@@ -8,6 +8,7 @@ internal class ButtonRenderer : RendererObject<Button, global::Avalonia.Controls
     protected override void Update(global::Avalonia.Controls.Button control, Button widget)
     {
         control.Command = new RelayCommand(widget.OnClick);
+        control.Content = widget.Text;
     }
 }
 

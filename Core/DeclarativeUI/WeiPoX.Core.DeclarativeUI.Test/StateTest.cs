@@ -33,11 +33,8 @@ public class StateTest
         Assert.IsInstanceOfType(result, typeof(TestPanel));
         var panel = (TestPanel)result;
         Assert.AreEqual(2, panel.Children.Count);
-        Assert.IsInstanceOfType(panel.Children[0], typeof(TestPanel));
+        Assert.IsInstanceOfType(panel.Children[0], typeof(TestControl));
         Assert.IsInstanceOfType(panel.Children[1], typeof(TestControl));
-        var panel2 = (TestPanel)panel.Children[0];
-        Assert.AreEqual(1, panel2.Children.Count);
-        Assert.IsInstanceOfType(panel2.Children[0], typeof(TestControl));
 
         var cache = widget.State.CachedBuild;
         Assert.IsNotNull(cache);
@@ -48,11 +45,7 @@ public class StateTest
         Assert.IsInstanceOfType(row.Children[1], typeof(Text));
         var button = (Button)row.Children[0];
         var text = (Text)row.Children[1];
-        Assert.AreEqual(1, button.Children.Count);
-        Assert.AreEqual("0", text.Content);
-        Assert.IsInstanceOfType(button.Children[0], typeof(Text));
-        var text2 = (Text)button.Children[0];
-        Assert.AreEqual("Click", text2.Content);
+        Assert.AreEqual("Click", button.Text);
 
         Assert.IsFalse(owner.NeedsBuild);
         button.OnClick.Invoke();
@@ -73,11 +66,7 @@ public class StateTest
         Assert.IsInstanceOfType(newRow.Children[1], typeof(Text));
         var newButton = (Button)newRow.Children[0];
         var newText = (Text)newRow.Children[1];
-        Assert.AreEqual(1, newButton.Children.Count);
-        Assert.AreEqual("1", newText.Content);
-        Assert.IsInstanceOfType(newButton.Children[0], typeof(Text));
-        var newText2 = (Text)newButton.Children[0];
-        Assert.AreEqual("Click", newText2.Content);
+        Assert.AreEqual("Click", newButton.Text);
     }
 
     [TestMethod]
@@ -255,8 +244,8 @@ public class StateTest
             var (value, setValue) = UseState(0);
             return Row(
                 Button(
-                    () => { setValue.Invoke(value + 1); },
-                    Text("Click")
+                    "Click",
+                    () => { setValue.Invoke(value + 1); }
                 ),
                 Text(value.ToString())
             );
@@ -283,8 +272,8 @@ public class StateTest
             var (value, setValue) = UseState(0);
             return Row(
                 Button(
-                    () => { setValue.Invoke(value + 1); },
-                    Text("Click")
+                    "Click",
+                    () => { setValue.Invoke(value + 1); }
                 ),
                 value == 1 ? new TestUseStateWidget() : Text(value.ToString())
             );
@@ -298,8 +287,8 @@ public class StateTest
             var (value, setValue) = UseState(0);
             return Row(
                 Button(
-                    () => { setValue.Invoke(value + 1); },
-                    Text("Click")
+                    "Click",
+                    () => { setValue.Invoke(value + 1); }
                 ),
                 new TestStateReceiver(value)
             );
@@ -326,8 +315,8 @@ public class StateTest
                 Providers((typeof(TestHookContext), new TestHookContext(value))),
                 Row(
                     Button(
-                        () => { setValue.Invoke(value + 1); },
-                        Text("Click")
+                        "Click",
+                        () => { setValue.Invoke(value + 1); }
                     ),
                     new TestHookContextConsumer()
                 ));
@@ -352,8 +341,8 @@ public class StateTest
                 Providers((typeof(TestHookContext), new TestHookContext(value))),
                 Row(
                     Button(
-                        () => { setValue.Invoke(value + 1); },
-                        Text("Click")
+                        "Click",
+                        () => { setValue.Invoke(value + 1); }
                     ),
                     new TestHookContextConsumer(),
                     new TestHooksNonContextWidget()

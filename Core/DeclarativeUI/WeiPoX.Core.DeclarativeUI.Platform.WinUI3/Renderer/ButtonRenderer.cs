@@ -9,6 +9,7 @@ internal class ButtonRenderer : RendererObject<Button, Microsoft.UI.Xaml.Control
     protected override void Update(Microsoft.UI.Xaml.Controls.Button control, Button widget)
     {
         control.Command = new RelayCommand(widget.OnClick);
+        control.Content = widget.Text;
     }
 }
 

@@ -7,11 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\WeiPoX.Data.Common\WeiPoX.Data.Common.csproj"/>
+        <ProjectReference Include="..\WeiPoX.Data.Common\WeiPoX.Data.Common.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Realm" Version="10.18.0"/>
+        <PackageReference Include="Realm" Version="10.20.0" />
     </ItemGroup>
 
 </Project>

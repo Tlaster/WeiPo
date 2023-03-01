@@ -10,8 +10,8 @@ namespace WeiPoX.Core.DeclarativeUI.Platform.Avalonia.Internal;
 
 internal static class RendererPool
 {
-    private static readonly ImmutableDictionary<Type, IRenderer<IControl>> Renderers =
-        new Dictionary<Type, IRenderer<IControl>>
+    private static readonly ImmutableDictionary<Type, IRenderer<Control>> Renderers =
+        new Dictionary<Type, IRenderer<Control>>
         {
             { typeof(Text), new TextRenderer() },
             { typeof(Box), new BoxRenderer() },
@@ -21,7 +21,7 @@ internal static class RendererPool
             { typeof(Padding), new PaddingRenderer() }
         }.ToImmutableDictionary();
 
-    public static IRenderer<IControl> GetRenderer(Type type)
+    public static IRenderer<Control> GetRenderer(Type type)
     {
         if (Renderers.TryGetValue(type, out var renderer))
         {

@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">WeiPoX.Core.DeclarativeUI.Sample.Android</string>
+    <string name="app_text">Hello, Android!</string>
+</resources>

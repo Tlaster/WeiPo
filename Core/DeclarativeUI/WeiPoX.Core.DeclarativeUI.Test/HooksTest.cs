@@ -114,8 +114,8 @@ public class HooksTest
             var (value, setValue) = UseState(0);
             return Row(
                 Button(
-                    () => { setValue.Invoke(value + 1); },
-                    Text("Click")
+                    "Click",
+                    () => { setValue.Invoke(value + 1); }
                 ),
                 Text(value.ToString())
             );
@@ -130,8 +130,8 @@ public class HooksTest
             UseEffect(Action.Invoke, value);
             return Row(
                 Button(
-                    () => { setValue.Invoke(value + 1); },
-                    Text("Click")
+                    "Click",
+                    () => { setValue.Invoke(value + 1); }
                 ),
                 Text(value.ToString())
             );
@@ -150,8 +150,8 @@ public class HooksTest
             }, value);
             return Row(
                 Button(
-                    () => { setValue.Invoke(value + 1); },
-                    Text("Click")
+                    "Click",
+                    () => { setValue.Invoke(value + 1); }
                 ),
                 Text(value.ToString())
             );
@@ -166,8 +166,8 @@ public class HooksTest
             var memo = UseMemo(() => Memo.Invoke(value), value);
             return Row(
                 Button(
-                    () => { setValue.Invoke(value + 1); },
-                    Text("Click")
+                    "Click",
+                    () => { setValue.Invoke(value + 1); }
                 ),
                 Text(memo.ToString())
             );

@@ -12,7 +12,7 @@ public class AppDelegate : NSApplicationDelegate
             NSWindowStyle.Titled | NSWindowStyle.Closable | NSWindowStyle.Miniaturizable | NSWindowStyle.Resizable,
             NSBackingStore.Buffered, false)
         {
-            ContentView = new Declarative(new App())
+            ContentView = new Declarative(new SampleApp())
         };
         window.Center();
         window.OrderFrontRegardless();

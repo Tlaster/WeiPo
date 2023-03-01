@@ -10,9 +10,9 @@ public static class FuncUi
         return new Text(text);
     }
 
-    public static Button Button(Action onClick, params Widget[] children)
+    public static Button Button(string text, Action onClick)
     {
-        return new Button(onClick, children.ToImmutableList());
+        return new Button(text, onClick);
     }
 
     public static Column Column(params Widget[] children)

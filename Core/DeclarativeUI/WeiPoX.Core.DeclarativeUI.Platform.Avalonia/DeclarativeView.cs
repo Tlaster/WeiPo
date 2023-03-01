@@ -7,61 +7,66 @@ using WeiPoX.Core.DeclarativeUI.Widgets;
 
 namespace WeiPoX.Core.DeclarativeUI.Platform.Avalonia;
 
-public class DeclarativeView : UserControl, IBuildOwner
+public abstract class DeclarativeView : UserControl, IBuildOwner
 {
+    public List<Widget> RebuiltWidgets { get; } = new();
     private readonly WidgetBuilder _renderer;
-    private Widget? _widget;
+    private Control? _renderedControl;
+    private bool _rendering;
+    private bool _requireReRender;
 
     public DeclarativeView()
     {
         _renderer = new WidgetBuilder(this);
     }
 
-
     public void MarkNeedsBuild(Widget widget)
     {
+        RebuiltWidgets.Add(widget);
+        if (_rendering)
+        {
+            _requireReRender = true;
+        }
+        else
+        {
+            Render();
+        }
     }
 
     public bool IsBuildScheduled(Widget widget)
     {
-        return false;
+        return RebuiltWidgets.Contains(widget);
     }
 
     public void CleanUp()
     {
+        RebuiltWidgets.Clear();
     }
 
-    protected void Render(Widget widget)
+    protected void Render()
     {
-        if (Content is Control control)
+        _rendering = true;
+        _renderedControl = _renderer.BuildIfNeeded(Widget, Widget, _renderedControl);
+        _rendering = false;
+        if (!_requireReRender)
         {
-            Content = _renderer.BuildIfNeeded(_widget, widget, control);
-        }
-        else
-        {
-            Content = _renderer.BuildIfNeeded(_widget, widget, null);
+            Content = _renderedControl;
+            return;
         }
 
-        _widget = widget;
+        _requireReRender = false;
+        Render();
     }
+
+    protected abstract Widget Widget { get; }
 }
-
-public abstract class DeclarativeView<T> : DeclarativeView
+public class Declarative : DeclarativeView
 {
-    private IDisposable? _disposable;
-    protected abstract IObservable<T> State { get; }
-
-    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    public Declarative(Widget widget)
     {
-        base.OnAttachedToVisualTree(e);
-        _disposable = State.Subscribe(state => Render(Render(state)));
+        Widget = widget;
+        Render();
     }
 
-    protected override void OnDetachedFromLogicalTree(LogicalTreeAttachmentEventArgs e)
-    {
-        base.OnDetachedFromLogicalTree(e);
-        _disposable?.Dispose();
-    }
-
-    protected abstract Widget Render(T state);
+    protected override Widget Widget { get; }
 }

@@ -157,7 +157,8 @@ public class WidgetTest
         {
             var (value, setValue) = UseState(0);
             return Box(
-                Button(() => setValue(value + 1)),
+                Button(
+                    "Click",() => setValue(value + 1)),
                 new TestNestedStatefulWidget()
             );
         }
@@ -169,7 +170,8 @@ public class WidgetTest
         {
             var (value, setValue) = UseState(0);
             return Box(
-                Button(() => setValue(value + 1)),
+                Button(
+                    "Click",() => setValue(value + 1)),
                 Text(value.ToString())
             );
         }
@@ -181,7 +183,8 @@ public class WidgetTest
         {
             var (value, setValue) = UseState(0);
             return Box(
-                Button(() => setValue(value + 1)),
+                Button(
+                    "Click",() => setValue(value + 1)),
                 new TestParameterNestedStatefulWidget(value)
             );
         }
@@ -193,7 +196,8 @@ public class WidgetTest
         {
             var (value, setValue) = UseState(0);
             return Box(
-                Button(() => setValue(value + 1)),
+                Button(
+                    "Click",() => setValue(value + 1)),
                 Text(value.ToString()),
                 Text(Value.ToString())
             );

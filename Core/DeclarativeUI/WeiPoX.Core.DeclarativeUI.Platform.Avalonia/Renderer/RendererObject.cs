@@ -4,30 +4,30 @@ using WeiPoX.Core.DeclarativeUI.Widgets;
 
 namespace WeiPoX.Core.DeclarativeUI.Platform.Avalonia.Renderer;
 
-internal abstract class RendererObject<TWidget, TControl> : IRenderer<IControl>
+internal abstract class RendererObject<TWidget, TControl> : IRenderer<Control>
     where TWidget : MappingWidget where TControl : class, new()
 {
-    public void Update(IControl control, MappingWidget widget)
+    public void Update(Control control, MappingWidget widget)
     {
         Update(control as TControl ?? throw new InvalidOperationException(), (TWidget)widget);
     }
 
-    public void AddChild(IControl control, IControl childControl)
+    public void AddChild(Control control, Control childControl)
     {
         AddChild(control as TControl ?? throw new InvalidOperationException(), childControl);
     }
 
-    public void RemoveChild(IControl control, IControl childControl)
+    public void RemoveChild(Control control, Control childControl)
     {
         RemoveChild(control as TControl ?? throw new InvalidOperationException(), childControl);
     }
 
-    public void ReplaceChild(IControl control, int index, IControl newChildControl)
+    public void ReplaceChild(Control control, int index, Control newChildControl)
     {
         ReplaceChild(control as TControl ?? throw new InvalidOperationException(), index, newChildControl);
     }
 
-    IControl IRenderer<IControl>.Create()
+    Control IRenderer<Control>.Create()
     {
         return Create() as Control ?? throw new InvalidOperationException();
     }
@@ -37,7 +37,7 @@ internal abstract class RendererObject<TWidget, TControl> : IRenderer<IControl>
         return new TControl();
     }
 
-    protected virtual void AddChild(TControl control, IControl childControl)
+    protected virtual void AddChild(TControl control, Control childControl)
     {
         switch (control)
         {
@@ -54,7 +54,7 @@ internal abstract class RendererObject<TWidget, TControl> : IRenderer<IControl>
         }
     }
 
-    protected virtual void RemoveChild(TControl control, IControl childControl)
+    protected virtual void RemoveChild(TControl control, Control childControl)
     {
         switch (control)
         {
@@ -71,7 +71,7 @@ internal abstract class RendererObject<TWidget, TControl> : IRenderer<IControl>
         }
     }
 
-    protected virtual void ReplaceChild(TControl control, int index, IControl newChildControl)
+    protected virtual void ReplaceChild(TControl control, int index, Control newChildControl)
     {
         switch (control)
         {

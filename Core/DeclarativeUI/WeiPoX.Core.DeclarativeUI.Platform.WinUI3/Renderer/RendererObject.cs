@@ -31,7 +31,7 @@ internal abstract class RendererObject<TWidget, TControl> : IRenderer<UIElement>
 
     UIElement IRenderer<UIElement>.Create()
     {
-        return Create() as Control ?? throw new InvalidOperationException();
+        return Create() as UIElement ?? throw new InvalidOperationException();
     }
 
     protected virtual TControl Create()

@@ -4,18 +4,18 @@ using static WeiPoX.Core.DeclarativeUI.Widgets.FuncUi;
 
 namespace WeiPoX.Core.DeclarativeUI.Sample.Core;
 
-public record App : StatefulWidget
+public record SampleApp : StatefulWidget
 {
     protected override Widget Build()
     {
         var (value, setValue) = UseState(0);
         return Column(
             Button(
+                "Click me!",
                 onClick: () =>
                 {
                     setValue(value + 1);
-                },
-                Text("Click me")
+                }
             ),
             Text("Value: " + value)
         );

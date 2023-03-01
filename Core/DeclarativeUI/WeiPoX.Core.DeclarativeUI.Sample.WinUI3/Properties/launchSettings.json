@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "WeiPoX.Core.DeclarativeUI.Sample.WinUI3 (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "WeiPoX.Core.DeclarativeUI.Sample.WinUI3 (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
