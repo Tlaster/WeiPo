@@ -2,9 +2,9 @@
 
 namespace WeiPoX.Core.DeclarativeUI.Platform.Mac.Renderer;
 
-internal class PaddingRenderer : RendererObject<Padding, NSView>
+internal class PaddingRenderer : RendererObject<Padding, UIView>
 {
-    protected override void Update(NSView control, Padding widget)
+    protected override void Update(UIView control, Padding widget)
     {
     }
 }

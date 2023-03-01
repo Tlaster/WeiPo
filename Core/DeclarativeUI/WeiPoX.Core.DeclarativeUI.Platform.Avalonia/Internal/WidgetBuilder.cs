@@ -13,19 +13,4 @@ internal class WidgetBuilder : WidgetBuilder<Control>
     {
         return RendererPool.GetRenderer(widgetType);
     }
-
-    protected override bool IsPanel(Control value)
-    {
-        return value is Panel;
-    }
-
-    protected override Control? GetChildAt(Control control, int index)
-    {
-        if (control is Panel panel)
-        {
-            return panel.Children.ElementAtOrDefault(index);
-        }
-
-        return null;
-    }
 }

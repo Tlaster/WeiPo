@@ -1,14 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net7.0-maccatalyst</TargetFramework>
-        <RuntimeIdentifier>maccatalyst-x64</RuntimeIdentifier>
+        <TargetFramework>net7.0-ios</TargetFramework>
         <OutputType>Exe</OutputType>
         <Nullable>enable</Nullable>
         <ImplicitUsings>true</ImplicitUsings>
-        <SupportedOSPlatformVersion>14.2</SupportedOSPlatformVersion>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-      <CodesignKey>Apple Development: tlaster@outlook.com (33TP8Y2Q6H)</CodesignKey>
+        <SupportedOSPlatformVersion>13.0</SupportedOSPlatformVersion>
     </PropertyGroup>
     <ItemGroup>
       <ProjectReference Include="..\WeiPoX.Core.DeclarativeUI.Platform.Mac\WeiPoX.Core.DeclarativeUI.Platform.Mac.csproj" />

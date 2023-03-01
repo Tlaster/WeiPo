@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using WeiPoX.Core.DeclarativeUI.Internal;
@@ -27,6 +28,21 @@ internal abstract class RendererObject<TWidget, TControl> : IRenderer<UIElement>
     public void ReplaceChild(UIElement control, int index, UIElement newChildControl)
     {
         ReplaceChild(control as TControl ?? throw new InvalidOperationException(), index, newChildControl);
+    }
+
+    public virtual UIElement? GetChildAt(UIElement control, int index)
+    {
+        if (control is Panel panel)
+        {
+            return panel.Children.ElementAtOrDefault(index);
+        }
+
+        return null;
+    }
+
+    public bool IsPanel(UIElement value)
+    {
+        return value is Panel;
     }
 
     UIElement IRenderer<UIElement>.Create()

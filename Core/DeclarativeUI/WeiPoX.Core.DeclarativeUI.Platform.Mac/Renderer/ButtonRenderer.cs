@@ -2,10 +2,17 @@ using WeiPoX.Core.DeclarativeUI.Widgets;
 
 namespace WeiPoX.Core.DeclarativeUI.Platform.Mac.Renderer;
 
-internal class ButtonRenderer : RendererObject<Button, NSButton>
+internal class ButtonRenderer : RendererObject<Button, UIButton>
 {
-    protected override void Update(NSButton control, Button widget)
+    protected override UIButton Create()
     {
-        // control.Action = new ObjCRuntime.Selector("OnClicked");
+        return new UIButton(UIButtonType.System);
+    }
+
+    protected override void Update(UIButton control, Button widget)
+    {
+        control.SetTitle(widget.Text, UIControlState.Normal);
+        control.RemoveTarget(null, null, UIControlEvent.TouchUpInside);
+        control.AddTarget((_, _) => widget.OnClick.Invoke(), UIControlEvent.TouchUpInside);
     }
 }

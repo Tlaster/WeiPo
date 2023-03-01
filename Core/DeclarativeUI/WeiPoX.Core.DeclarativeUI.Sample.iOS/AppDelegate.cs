@@ -1,7 +1,7 @@
 using WeiPoX.Core.DeclarativeUI.Platform.Mac;
 using WeiPoX.Core.DeclarativeUI.Sample.Core;
 
-namespace WeiPoX.Core.DeclarativeUI.Sample.Mac;
+namespace WeiPoX.Core.DeclarativeUI.Sample.iOS;
 
 [Register("AppDelegate")]
 public class AppDelegate : UIApplicationDelegate
@@ -13,7 +13,7 @@ public class AppDelegate : UIApplicationDelegate
         Window = new UIWindow(UIScreen.MainScreen.Bounds);
         Window.RootViewController = new Declarative(new SampleApp());
         Window.MakeKeyAndVisible();
+
         return true;
     }
-    
 }

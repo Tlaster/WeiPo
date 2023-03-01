@@ -2,29 +2,14 @@
 
 namespace WeiPoX.Core.DeclarativeUI.Platform.Mac.Internal;
 
-internal class WidgetBuilder : WidgetBuilder<NSView>
+internal class WidgetBuilder : WidgetBuilder<UIView>
 {
     public WidgetBuilder(IBuildOwner owner) : base(owner)
     {
     }
 
-    protected override NSView? GetChildAt(NSView control, int index)
-    {
-        if (control is NSGridView panel)
-        {
-            return panel.Subviews.ElementAtOrDefault(index);
-        }
-
-        return null;
-    }
-
-    protected override IRenderer<NSView> GetRenderer(Type widgetType)
+    protected override IRenderer<UIView> GetRenderer(Type widgetType)
     {
         return RendererPool.GetRenderer(widgetType);
-    }
-
-    protected override bool IsPanel(NSView value)
-    {
-        return value is NSGridView or NSStackView;
     }
 }

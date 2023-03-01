@@ -2,18 +2,15 @@ using WeiPoX.Core.DeclarativeUI.Widgets;
 
 namespace WeiPoX.Core.DeclarativeUI.Platform.Mac.Renderer;
 
-internal class TextRenderer : RendererObject<Text, NSTextField>
+internal class TextRenderer : RendererObject<Text, UILabel>
 {
-    protected override NSTextField Create()
+    protected override UILabel Create()
     {
-        return new NSTextField
-        {
-            Editable = false
-        };
+        return new UILabel();
     }
 
-    protected override void Update(NSTextField control, Text widget)
+    protected override void Update(UILabel control, Text widget)
     {
-        control.StringValue = widget.Content;
+        control.Text = widget.Content;
     }
 }

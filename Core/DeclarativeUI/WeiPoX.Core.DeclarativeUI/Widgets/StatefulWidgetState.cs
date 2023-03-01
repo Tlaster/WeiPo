@@ -37,7 +37,10 @@ internal class StatefulWidgetState : IDisposable
     public ObservableCollection<object> Hooks { get; } = new();
     public int HookId { get; set; }
     public bool Dirty { get; set; }
-    public IBuildOwner? BuildOwner { get; set; }
+    public IBuildOwner? BuildOwner {
+        get;
+        set;
+    }
     public BuildContext? BuildContext { get; set; }
     public Dictionary<Type, object> UsedProviders { get; } = new();
     public Widget? Widget { get; set; }

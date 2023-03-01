@@ -134,10 +134,10 @@ internal abstract class WidgetBuilder<T>
 
         var renderer = GetRenderer(newValue.GetType());
         renderer.Update(control, newValue);
-        if (newValue is not IPanelWidget newPanel || oldValue is not IPanelWidget oldPanel || !IsPanel(control))
+        if (newValue is not IPanelWidget newPanel || oldValue is not IPanelWidget oldPanel || !renderer.IsPanel(control))
         {
             return control;
-        }
+        }   
 
         var oldChildren = oldPanel.Children;
         var newChildren = newPanel.Children;
@@ -148,7 +148,7 @@ internal abstract class WidgetBuilder<T>
         {
             var oldChild = oldChildren.ElementAtOrDefault(i);
             var newChild = newChildren.ElementAtOrDefault(i);
-            var oldChildControl = GetChildAt(control, i);
+            var oldChildControl = renderer.GetChildAt(control, i);
             if (oldChildControl == null && newChild != null)
             {
                 var newChildControl = Create(newChild, context);
@@ -209,6 +209,4 @@ internal abstract class WidgetBuilder<T>
     }
 
     protected abstract IRenderer<T> GetRenderer(Type widgetType);
-    protected abstract bool IsPanel(T value);
-    protected abstract T? GetChildAt(T control, int index);
 }

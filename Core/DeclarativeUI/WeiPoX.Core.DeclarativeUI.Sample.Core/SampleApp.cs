@@ -1,5 +1,4 @@
 ﻿using WeiPoX.Core.DeclarativeUI.Widgets;
-using WeiPoX.Core.DeclarativeUI.Widgets.Layout;
 using static WeiPoX.Core.DeclarativeUI.Widgets.FuncUi;
 
 namespace WeiPoX.Core.DeclarativeUI.Sample.Core;
@@ -11,7 +10,7 @@ public record SampleApp : StatefulWidget
         var (value, setValue) = UseState(0);
         return Column(
             Button(
-                "Click me!",
+                text: "Click me!",
                 onClick: () =>
                 {
                     setValue(value + 1);

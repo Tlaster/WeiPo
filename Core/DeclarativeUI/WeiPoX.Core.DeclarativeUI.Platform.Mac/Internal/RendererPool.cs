@@ -8,8 +8,8 @@ namespace WeiPoX.Core.DeclarativeUI.Platform.Mac.Internal;
 
 internal static class RendererPool
 {
-    private static readonly ImmutableDictionary<Type, IRenderer<NSView>> Renderers =
-        new Dictionary<Type, IRenderer<NSView>>
+    private static readonly ImmutableDictionary<Type, IRenderer<UIView>> Renderers =
+        new Dictionary<Type, IRenderer<UIView>>
         {
             { typeof(Text), new TextRenderer() },
             { typeof(Box), new BoxRenderer() },
@@ -19,7 +19,7 @@ internal static class RendererPool
             { typeof(Padding), new PaddingRenderer() }
         }.ToImmutableDictionary();
 
-    public static IRenderer<NSView> GetRenderer(Type type)
+    public static IRenderer<UIView> GetRenderer(Type type)
     {
         if (Renderers.TryGetValue(type, out var renderer))
         {

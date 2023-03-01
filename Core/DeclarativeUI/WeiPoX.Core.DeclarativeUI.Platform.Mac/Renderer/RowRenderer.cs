@@ -2,17 +2,51 @@ using WeiPoX.Core.DeclarativeUI.Widgets.Layout;
 
 namespace WeiPoX.Core.DeclarativeUI.Platform.Mac.Renderer;
 
-internal class RowRenderer : RendererObject<Row, NSStackView>
+internal class RowRenderer : RendererObject<Row, UIStackView>
 {
-    protected override NSStackView Create()
+    protected override UIStackView Create()
     {
-        return new NSStackView
+        var outer = new UIStackView
         {
-            Orientation = NSUserInterfaceLayoutOrientation.Horizontal
+            Axis = UILayoutConstraintAxis.Vertical,
+            Alignment = UIStackViewAlignment.Leading,
         };
+        var inner = new UIStackView
+        {
+            Axis = UILayoutConstraintAxis.Horizontal,
+            Alignment = UIStackViewAlignment.Top,
+        };
+        outer.AddArrangedSubview(inner);
+        return outer;
+    }
+    
+    protected override void Update(UIStackView control, Row widget)
+    {
+    }
+    
+    protected override void AddChild(UIStackView control, UIView childControl)
+    {
+        var realControl = control.ArrangedSubviews[0] as UIStackView;
+        realControl?.AddArrangedSubview(childControl);
     }
 
-    protected override void Update(NSStackView control, Row widget)
+    protected override void RemoveChild(UIStackView control, UIView childControl)
     {
+        var realControl = control.ArrangedSubviews[0] as UIStackView;
+        realControl?.RemoveArrangedSubview(childControl);
+    }
+    
+    protected override void ReplaceChild(UIStackView control, int index, UIView newChildControl)
+    {
+        var realControl = control.ArrangedSubviews[0] as UIStackView;
+        realControl?.ArrangedSubviews[index].RemoveFromSuperview();
+        realControl?.InsertArrangedSubview(newChildControl, Convert.ToUInt32(index));
+    }
+
+    public override UIView? GetChildAt(UIView control, int index)
+    {
+        var realControl = control as UIStackView;
+        var realInnerControl = realControl?.ArrangedSubviews[0] as UIStackView;
+        return realInnerControl?.ArrangedSubviews[index];
     }
 }

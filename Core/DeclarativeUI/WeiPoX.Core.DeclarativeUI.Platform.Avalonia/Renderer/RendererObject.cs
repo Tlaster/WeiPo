@@ -27,6 +27,21 @@ internal abstract class RendererObject<TWidget, TControl> : IRenderer<Control>
         ReplaceChild(control as TControl ?? throw new InvalidOperationException(), index, newChildControl);
     }
 
+    public bool IsPanel(Control value)
+    {
+        return value is Panel;
+    }
+
+    public virtual Control? GetChildAt(Control control, int index)
+    {
+        if (control is Panel panel)
+        {
+            return panel.Children.ElementAtOrDefault(index);
+        }
+
+        return null;
+    }
+
     Control IRenderer<Control>.Create()
     {
         return Create() as Control ?? throw new InvalidOperationException();

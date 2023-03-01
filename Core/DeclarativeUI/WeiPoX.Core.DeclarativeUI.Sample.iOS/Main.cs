@@ -1,4 +1,4 @@
-using WeiPoX.Core.DeclarativeUI.Sample.Mac;
+using WeiPoX.Core.DeclarativeUI.Sample.iOS;
 
 // This is the main entry point of the application.
 // If you want to use a different Application Delegate class from "AppDelegate"

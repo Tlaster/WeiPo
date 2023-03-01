@@ -4,11 +4,11 @@ using WeiPoX.Core.DeclarativeUI.Widgets;
 
 namespace WeiPoX.Core.DeclarativeUI.Platform.Mac;
 
-public abstract class DeclarativeView : NSControl, IBuildOwner
+public abstract class DeclarativeView : UIViewController, IBuildOwner
 {
     public List<Widget> RebuiltWidgets { get; } = new();
     private readonly WidgetBuilder _renderer;
-    private NSView? _content;
+    private UIView? _content;
     private bool _rendering;
     private bool _requireReRender;
 
@@ -42,26 +42,78 @@ public abstract class DeclarativeView : NSControl, IBuildOwner
 
     protected void Render()
     {
-        _rendering = true;
-        _content = _renderer.BuildIfNeeded(Content, Content, _content);
-        if (!Subviews.Any())
+        try
         {
-            AddSubview(_content);
+            _rendering = true;
+            _content = _renderer.BuildIfNeeded(Content, Content, _content);
+            _rendering = false;
+            if (!_requireReRender)
+            {
+                if (View == null)
+                {
+                    return;
+                }
+
+                if (View.Subviews.Length == 0)
+                {
+                    View.AddSubview(_content);
+                    ApplySafeArea();
+                }
+                else if (!View.Subviews[0].Equals(_content))
+                {
+                    View.Subviews[0].RemoveFromSuperview();
+                    View.AddSubview(_content);
+                    ApplySafeArea();
+                }
+                return;
+            }
+
+            _requireReRender = false;
+            Render();
         }
-        else
+        catch (Exception ex)
         {
-            ReplaceSubviewWith(Subviews[0], _content);
+            Console.WriteLine(ex);
         }
-        _rendering = false;
-        if (!_requireReRender)
+    }
+
+    private void ApplySafeArea()
+    {
+        if (_content == null)
         {
             return;
         }
-
-        _requireReRender = false;
-        Render();
+        _content.TranslatesAutoresizingMaskIntoConstraints = false;
+        var guide = View?.LayoutMarginsGuide;
+        if (guide != null)
+        {
+            NSLayoutConstraint.ActivateConstraints(new[]
+            {
+                _content.LeadingAnchor.ConstraintEqualTo(guide.LeadingAnchor),
+                _content.TrailingAnchor.ConstraintEqualTo(guide.TrailingAnchor),
+            });
+        }
+        var safeGuide = View?.SafeAreaLayoutGuide;
+        if (safeGuide != null)
+        {
+            NSLayoutConstraint.ActivateConstraints(new[]
+            {
+                _content.TopAnchor.ConstraintEqualToSystemSpacingBelowAnchor(safeGuide.TopAnchor, 1),
+                _content.BottomAnchor.ConstraintEqualToSystemSpacingBelowAnchor(safeGuide.BottomAnchor, 1),
+            });
+        }
     }
-    
+
+    public override void ViewDidLoad()
+    {
+        base.ViewDidLoad();
+
+        if (View != null)
+        {
+            View.BackgroundColor = UIColor.SystemBackground;
+        }
+    }
+
     protected abstract Widget Content { get; }
 }
 

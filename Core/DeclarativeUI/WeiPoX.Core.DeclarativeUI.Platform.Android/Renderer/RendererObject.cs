@@ -34,6 +34,21 @@ internal abstract class RendererObject<TWidget, TControl> : IRenderer<View>
     {
         ReplaceChild(control as TControl ?? throw new InvalidOperationException(), index, newChildControl);
     }
+    
+    public bool IsPanel(View value)
+    {
+        return value is ViewGroup;
+    }
+
+    public virtual View? GetChildAt(View control, int index)
+    {
+        if (control is ViewGroup panel)
+        {
+            return panel.GetChildAt(index);
+        }
+
+        return null;
+    }
 
     View IRenderer<View>.Create()
     {

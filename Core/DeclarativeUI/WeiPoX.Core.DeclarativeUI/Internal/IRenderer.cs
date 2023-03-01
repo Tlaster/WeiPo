@@ -9,6 +9,8 @@ internal interface IRenderer<T>
     void AddChild(T control, T childControl);
     void RemoveChild(T control, T childControl);
     void ReplaceChild(T control, int index, T newChildControl);
+    T? GetChildAt(T control, int index);
+    bool IsPanel(T value);
 }
 
 internal interface IBuildOwner

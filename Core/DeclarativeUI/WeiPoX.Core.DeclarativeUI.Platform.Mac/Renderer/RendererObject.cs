@@ -3,32 +3,42 @@ using WeiPoX.Core.DeclarativeUI.Widgets;
 
 namespace WeiPoX.Core.DeclarativeUI.Platform.Mac.Renderer;
 
-internal abstract class RendererObject<TWidget, TControl> : IRenderer<NSView>
+internal abstract class RendererObject<TWidget, TControl> : IRenderer<UIView>
     where TWidget : MappingWidget where TControl : class, new()
 {
-    public void Update(NSView control, MappingWidget widget)
+    public void Update(UIView control, MappingWidget widget)
     {
-        Update(control as TControl ?? throw new InvalidOperationException(), (TWidget)widget);
+        Update(control as TControl ?? throw new InvalidOperationException() , (TWidget)widget);
     }
 
-    public void AddChild(NSView control, NSView childControl)
+    public void AddChild(UIView control, UIView childControl)
     {
-        AddChild(control as TControl ?? throw new InvalidOperationException(), childControl);
+        AddChild(control as TControl ?? throw new InvalidOperationException() , childControl);
     }
 
-    public void RemoveChild(NSView control, NSView childControl)
+    public void RemoveChild(UIView control, UIView childControl)
     {
-        RemoveChild(control as TControl ?? throw new InvalidOperationException(), childControl);
+        RemoveChild(control as TControl ?? throw new InvalidOperationException() , childControl);
     }
 
-    public void ReplaceChild(NSView control, int index, NSView newChildControl)
+    public void ReplaceChild(UIView control, int index, UIView newChildControl)
     {
-        ReplaceChild(control as TControl ?? throw new InvalidOperationException(), index, newChildControl);
+        ReplaceChild(control as TControl ?? throw new InvalidOperationException() , index, newChildControl);
     }
 
-    NSView IRenderer<NSView>.Create()
+    public virtual UIView? GetChildAt(UIView control, int index)
     {
-        return Create() as NSView ?? throw new InvalidOperationException();
+        return control.Subviews[index];
+    }
+
+    public bool IsPanel(UIView value)
+    {
+        return true;
+    }
+
+    UIView IRenderer<UIView>.Create()
+    {
+        return Create() as UIView ?? throw new InvalidOperationException();
     }
 
     protected virtual TControl Create()
@@ -36,27 +46,28 @@ internal abstract class RendererObject<TWidget, TControl> : IRenderer<NSView>
         return new TControl();
     }
 
-    protected virtual void AddChild(TControl control, NSView childControl)
+    protected virtual void AddChild(TControl control, UIView childControl)
     {
         switch (control)
         {
-            case NSView panel:
+            case UIView panel:
                 panel.AddSubview(childControl);
                 break;
         }
     }
 
-    protected virtual void RemoveChild(TControl control, NSView childControl)
+    protected virtual void RemoveChild(TControl control, UIView childControl)
     {
         childControl.RemoveFromSuperview();
     }
 
-    protected virtual void ReplaceChild(TControl control, int index, NSView newChildControl)
+    protected virtual void ReplaceChild(TControl control, int index, UIView newChildControl)
     {
         switch (control)
         {
-            case NSView panel:
-                panel.ReplaceSubviewWith(panel.Subviews[index], newChildControl);
+            case UIView panel:
+                panel.Subviews[index].RemoveFromSuperview();
+                panel.InsertSubview(newChildControl, index);
                 break;
         }
     }

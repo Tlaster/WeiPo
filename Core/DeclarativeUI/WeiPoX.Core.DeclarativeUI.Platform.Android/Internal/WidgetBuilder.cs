@@ -36,19 +36,4 @@ internal class WidgetBuilder : WidgetBuilder<View>
 
         throw new NotSupportedException($"Renderer for {widgetType} is not supported.");
     }
-
-    protected override bool IsPanel(View value)
-    {
-        return value is ViewGroup;
-    }
-
-    protected override View? GetChildAt(View control, int index)
-    {
-        if (control is ViewGroup panel)
-        {
-            return panel.GetChildAt(index);
-        }
-
-        return null;
-    }
 }

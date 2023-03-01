@@ -217,16 +217,6 @@ internal class TestWidgetBuilder : WidgetBuilder<TestControl>
 
         return new TestRenderer();
     }
-
-    protected override bool IsPanel(TestControl value)
-    {
-        return value is TestPanel;
-    }
-
-    protected override TestControl? GetChildAt(TestControl control, int index)
-    {
-        return control is TestPanel panel ? panel.Children.ElementAtOrDefault(index) : null;
-    }
 }
 
 internal class TestPanelRenderer : IRenderer<TestControl>
@@ -264,6 +254,16 @@ internal class TestPanelRenderer : IRenderer<TestControl>
             panel.Children[index] = newChildControl;
         }
     }
+    
+    public bool IsPanel(TestControl value)
+    {
+        return value is TestPanel;
+    }
+
+    public TestControl? GetChildAt(TestControl control, int index)
+    {
+        return control is TestPanel panel ? panel.Children.ElementAtOrDefault(index) : null;
+    }
 }
 
 internal class TestRenderer : IRenderer<TestControl>
@@ -300,5 +300,15 @@ internal class TestRenderer : IRenderer<TestControl>
         {
             panel.Children[index] = newChildControl;
         }
+    }
+    
+    public bool IsPanel(TestControl value)
+    {
+        return value is TestPanel;
+    }
+
+    public TestControl? GetChildAt(TestControl control, int index)
+    {
+        return control is TestPanel panel ? panel.Children.ElementAtOrDefault(index) : null;
     }
 }

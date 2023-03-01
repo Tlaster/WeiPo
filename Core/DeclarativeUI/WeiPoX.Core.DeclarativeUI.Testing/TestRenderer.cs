@@ -38,4 +38,14 @@ internal class TestRenderer : IRenderer<TestControl>
             panel.Children[index] = newChildControl;
         }
     }
+    
+    public bool IsPanel(TestControl value)
+    {
+        return value is TestPanel;
+    }
+
+    public TestControl? GetChildAt(TestControl control, int index)
+    {
+        return control is TestPanel panel ? panel.Children.ElementAtOrDefault(index) : null;
+    }
 }
