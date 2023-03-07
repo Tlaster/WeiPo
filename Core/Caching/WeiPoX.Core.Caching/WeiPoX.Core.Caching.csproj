@@ -7,6 +7,6 @@
 
     <ItemGroup>
         <PackageReference Include="CSharpFunctionalExtensions" Version="2.37.0" />
-        <PackageReference Include="ReactiveUI" Version="18.4.22" />
+        <PackageReference Include="ReactiveUI" Version="18.4.25" />
     </ItemGroup>
 </Project>

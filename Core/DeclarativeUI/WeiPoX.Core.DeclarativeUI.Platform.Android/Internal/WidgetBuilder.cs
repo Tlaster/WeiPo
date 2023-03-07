@@ -23,7 +23,8 @@ internal class WidgetBuilder : WidgetBuilder<View>
             { typeof(Widgets.Button), new ButtonRenderer(_context) },
             { typeof(Column), new ColumnRenderer(_context) },
             { typeof(Row), new RowRenderer(_context) },
-            { typeof(Padding), new PaddingRenderer(_context) }
+            { typeof(Padding), new PaddingRenderer(_context) },
+            { typeof(Input), new InputRenderer(_context) },
         }.ToImmutableDictionary();
     }
 

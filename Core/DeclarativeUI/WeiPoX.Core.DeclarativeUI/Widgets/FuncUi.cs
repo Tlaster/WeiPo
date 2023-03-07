@@ -49,4 +49,9 @@ public static class FuncUi
     {
         return items.ToImmutableList();
     }
+
+    public static Input Input(InputState text, Action<InputState> onTextChanged)
+    {
+        return new Input(text, onTextChanged);
+    }
 }

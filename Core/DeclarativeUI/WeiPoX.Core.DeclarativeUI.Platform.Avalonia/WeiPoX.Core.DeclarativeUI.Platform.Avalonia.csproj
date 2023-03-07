@@ -10,8 +10,6 @@
     <ItemGroup>
         <PackageReference Include="Avalonia" Version="11.0.0-preview5" />
         <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.0-preview5" />
-        <PackageReference Include="FluentAvaloniaUI" Version="2.0.0-preview4" />
-        <PackageReference Include="FluentAvalonia.UI.Windowing" Version="2.0.0-preview4" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\WeiPoX.Core.DeclarativeUI\WeiPoX.Core.DeclarativeUI.csproj" />

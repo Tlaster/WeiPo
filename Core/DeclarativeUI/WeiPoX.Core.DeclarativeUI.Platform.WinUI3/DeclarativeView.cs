@@ -51,7 +51,10 @@ public abstract class DeclarativeView : UserControl, IBuildOwner
         _rendering = false;
         if (!_requireReRender)
         {
-            Content = _renderedControl;
+            if (Content != _renderedControl)
+            {
+                Content = _renderedControl;
+            }
             return;
         }
 

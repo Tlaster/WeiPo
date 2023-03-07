@@ -1,20 +1,16 @@
 ﻿using Avalonia;
-using System;
+using Avalonia.Themes.Fluent;
+using WeiPoX.Core.DeclarativeUI.Platform.Avalonia;
+using WeiPoX.Core.DeclarativeUI.Sample.Core;
 
-namespace WeiPoX.Core.DeclarativeUI.Sample.Avalonia;
-
-class Program
-{
-    // Initialization code. Don't use any Avalonia, third-party APIs or any
-    // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
-    // yet and stuff might break.
-    [STAThread]
-    public static void Main(string[] args) => BuildAvaloniaApp()
-        .StartWithClassicDesktopLifetime(args);
-
-    // Avalonia configuration, don't remove; also used by visual designer.
-    public static AppBuilder BuildAvaloniaApp()
-        => AppBuilder.Configure<App>()
-            .UsePlatformDetect()
-            .LogToTrace();
-}
+AppBuilder.Configure(() => new WeiPoXDeclarativeUiApp<SampleApp>
+    {
+        Styles =
+        {
+            new FluentTheme()
+        },
+        Title = "WeiPoX Declarative UI for Avalonia Sample"
+    })
+    .UsePlatformDetect()
+    .LogToTrace()
+    .StartWithClassicDesktopLifetime(args);

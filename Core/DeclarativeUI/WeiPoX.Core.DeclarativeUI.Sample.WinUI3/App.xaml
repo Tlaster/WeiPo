@@ -1,8 +1,9 @@
-<Application
+<winUi3:WeiPoXDeclarativeUiApp
     x:Class="WeiPoX.Core.DeclarativeUI.Sample.WinUI3.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:WeiPoX.Core.DeclarativeUI.Sample.WinUI3">
+    xmlns:local="using:WeiPoX.Core.DeclarativeUI.Sample.WinUI3"
+    xmlns:winUi3="using:WeiPoX.Core.DeclarativeUI.Platform.WinUI3">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -12,4 +13,4 @@
             <!-- Other app resources here -->
         </ResourceDictionary>
     </Application.Resources>
-</Application>
+</winUi3:WeiPoXDeclarativeUiApp>
