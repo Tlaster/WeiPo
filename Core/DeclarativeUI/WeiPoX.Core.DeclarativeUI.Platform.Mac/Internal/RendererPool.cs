@@ -16,7 +16,8 @@ internal static class RendererPool
             { typeof(Button), new ButtonRenderer() },
             { typeof(Column), new ColumnRenderer() },
             { typeof(Row), new RowRenderer() },
-            { typeof(Padding), new PaddingRenderer() }
+            { typeof(Padding), new PaddingRenderer() },
+            { typeof(Input), new InputRenderer() },
         }.ToImmutableDictionary();
 
     public static IRenderer<UIView> GetRenderer(Type type)
