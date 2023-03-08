@@ -19,11 +19,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeiPoX.Core.Caching.Test", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeiPoX.Core.DeclarativeUI", "Core\DeclarativeUI\WeiPoX.Core.DeclarativeUI\WeiPoX.Core.DeclarativeUI.csproj", "{A7A66D10-7459-4B18-AF9B-BC585F4B6845}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeiPoX.Core.DeclarativeUI.Platform.WinUI3", "Core\DeclarativeUI\WeiPoX.Core.DeclarativeUI.Platform.WinUI3\WeiPoX.Core.DeclarativeUI.Platform.WinUI3.csproj", "{62C017EB-4CFB-495B-BCDF-6B5ACB465420}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeiPoX.Core.DeclarativeUI.Platform.WinUI3", "Core\DeclarativeUI\Platform\WeiPoX.Core.DeclarativeUI.Platform.WinUI3\WeiPoX.Core.DeclarativeUI.Platform.WinUI3.csproj", "{62C017EB-4CFB-495B-BCDF-6B5ACB465420}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeiPoX.Core.DeclarativeUI.Test", "Core\DeclarativeUI\WeiPoX.Core.DeclarativeUI.Test\WeiPoX.Core.DeclarativeUI.Test.csproj", "{9EE2C839-D4FD-4880-BBF5-80B598CCB6BE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeiPoX.Core.DeclarativeUI.Platform.WinUI3.Test", "Core\DeclarativeUI\WeiPoX.Core.DeclarativeUI.Platform.WinUI3.Test\WeiPoX.Core.DeclarativeUI.Platform.WinUI3.Test.csproj", "{4DFBA97C-3D21-49CA-A298-709EFE41CE41}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeiPoX.Core.DeclarativeUI.Platform.WinUI3.Test", "Core\DeclarativeUI\Platform\WeiPoX.Core.DeclarativeUI.Platform.WinUI3.Test\WeiPoX.Core.DeclarativeUI.Platform.WinUI3.Test.csproj", "{4DFBA97C-3D21-49CA-A298-709EFE41CE41}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{C487D92C-1FDD-428C-AAC6-68F51020A258}"
 EndProject
@@ -39,7 +39,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Features", "Features", "{55
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{153B0D63-22E2-4738-B2AC-F9936F6AB553}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeiPoX.Core.DeclarativeUI.Platform.Avalonia", "Core\DeclarativeUI\WeiPoX.Core.DeclarativeUI.Platform.Avalonia\WeiPoX.Core.DeclarativeUI.Platform.Avalonia.csproj", "{D690E6B2-538E-45DE-99A3-FE920111AC8A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeiPoX.Core.DeclarativeUI.Platform.Avalonia", "Core\DeclarativeUI\Platform\WeiPoX.Core.DeclarativeUI.Platform.Avalonia\WeiPoX.Core.DeclarativeUI.Platform.Avalonia.csproj", "{D690E6B2-538E-45DE-99A3-FE920111AC8A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Routing", "Routing", "{3FFB6E69-E8A5-4034-906F-1547BCA7A2B6}"
 EndProject
@@ -49,7 +49,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeiPoX.App.Avalonia", "App\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeiPoX.App.Mac", "App\WeiPoX.App.Mac\WeiPoX.App.Mac.csproj", "{F2F9C88E-623F-49E5-A5B4-BE27645DE4DC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeiPoX.Core.DeclarativeUI.Platform.Mac", "Core\DeclarativeUI\WeiPoX.Core.DeclarativeUI.Platform.Mac\WeiPoX.Core.DeclarativeUI.Platform.Mac.csproj", "{E01CAB26-8976-430B-99E7-DA9E9DF999B3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeiPoX.Core.DeclarativeUI.Platform.UIKit", "Core\DeclarativeUI\Platform\WeiPoX.Core.DeclarativeUI.Platform.UIKit\WeiPoX.Core.DeclarativeUI.Platform.UIKit.csproj", "{E01CAB26-8976-430B-99E7-DA9E9DF999B3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeiPoX.App.WinUI", "App\WeiPoX.App.WinUI\WeiPoX.App.WinUI.csproj", "{7A1AF82E-4F1D-4E9A-AEC0-3929404C35A6}"
 EndProject
@@ -73,19 +73,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Platform", "Platform", "{7E
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sample", "Sample", "{6683F1D8-C92F-49C4-B4DD-2EFEFAB178CA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeiPoX.Core.DeclarativeUI.Sample.Core", "Core\DeclarativeUI\WeiPoX.Core.DeclarativeUI.Sample.Core\WeiPoX.Core.DeclarativeUI.Sample.Core.csproj", "{AE32F4D3-6576-40C0-94C8-F838E3649E2C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeiPoX.Core.DeclarativeUI.Sample.Core", "Core\DeclarativeUI\Sample\WeiPoX.Core.DeclarativeUI.Sample.Core\WeiPoX.Core.DeclarativeUI.Sample.Core.csproj", "{AE32F4D3-6576-40C0-94C8-F838E3649E2C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeiPoX.Core.DeclarativeUI.Sample.WinUI3", "Core\DeclarativeUI\WeiPoX.Core.DeclarativeUI.Sample.WinUI3\WeiPoX.Core.DeclarativeUI.Sample.WinUI3.csproj", "{1AA11910-9BE3-48B1-AEF5-56EA11A56949}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeiPoX.Core.DeclarativeUI.Sample.WinUI3", "Core\DeclarativeUI\Sample\WeiPoX.Core.DeclarativeUI.Sample.WinUI3\WeiPoX.Core.DeclarativeUI.Sample.WinUI3.csproj", "{1AA11910-9BE3-48B1-AEF5-56EA11A56949}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeiPoX.Core.DeclarativeUI.Sample.Avalonia", "Core\DeclarativeUI\WeiPoX.Core.DeclarativeUI.Sample.Avalonia\WeiPoX.Core.DeclarativeUI.Sample.Avalonia.csproj", "{D454463D-763B-4F22-83DA-A90DE23217A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeiPoX.Core.DeclarativeUI.Sample.Avalonia", "Core\DeclarativeUI\Sample\WeiPoX.Core.DeclarativeUI.Sample.Avalonia\WeiPoX.Core.DeclarativeUI.Sample.Avalonia.csproj", "{D454463D-763B-4F22-83DA-A90DE23217A5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeiPoX.Core.DeclarativeUI.Platform.Android", "Core\DeclarativeUI\WeiPoX.Core.DeclarativeUI.Platform.Android\WeiPoX.Core.DeclarativeUI.Platform.Android.csproj", "{CE335A29-C2E7-4AF6-BF30-E44E326B8A6E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeiPoX.Core.DeclarativeUI.Platform.Android", "Core\DeclarativeUI\Platform\WeiPoX.Core.DeclarativeUI.Platform.Android\WeiPoX.Core.DeclarativeUI.Platform.Android.csproj", "{CE335A29-C2E7-4AF6-BF30-E44E326B8A6E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeiPoX.Core.DeclarativeUI.Sample.Android", "Core\DeclarativeUI\WeiPoX.Core.DeclarativeUI.Sample.Android\WeiPoX.Core.DeclarativeUI.Sample.Android.csproj", "{492CAD5B-C410-46B9-8531-C0761B17630D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeiPoX.Core.DeclarativeUI.Sample.Android", "Core\DeclarativeUI\Sample\WeiPoX.Core.DeclarativeUI.Sample.Android\WeiPoX.Core.DeclarativeUI.Sample.Android.csproj", "{492CAD5B-C410-46B9-8531-C0761B17630D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeiPoX.Core.DeclarativeUI.Sample.Mac", "Core\DeclarativeUI\WeiPoX.Core.DeclarativeUI.Sample.Mac\WeiPoX.Core.DeclarativeUI.Sample.Mac.csproj", "{42D4CB96-EAE5-4D1E-9351-EF2A2EA3A524}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeiPoX.Core.DeclarativeUI.Sample.Mac", "Core\DeclarativeUI\Sample\WeiPoX.Core.DeclarativeUI.Sample.Mac\WeiPoX.Core.DeclarativeUI.Sample.Mac.csproj", "{42D4CB96-EAE5-4D1E-9351-EF2A2EA3A524}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeiPoX.Core.DeclarativeUI.Sample.iOS", "Core\DeclarativeUI\WeiPoX.Core.DeclarativeUI.Sample.iOS\WeiPoX.Core.DeclarativeUI.Sample.iOS.csproj", "{E7A9FE43-371A-40CF-AF81-9A4BA83A8B5E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeiPoX.Core.DeclarativeUI.Sample.iOS", "Core\DeclarativeUI\Sample\WeiPoX.Core.DeclarativeUI.Sample.iOS\WeiPoX.Core.DeclarativeUI.Sample.iOS.csproj", "{E7A9FE43-371A-40CF-AF81-9A4BA83A8B5E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,5 +1,6 @@
 ﻿using WeiPoX.Core.DeclarativeUI.Internal;
 using WeiPoX.Core.DeclarativeUI.Widgets;
+using WeiPoX.Core.DeclarativeUI.Widgets.Layout;
 
 namespace WeiPoX.Core.DeclarativeUI.Test;
 
@@ -10,7 +11,10 @@ public class RendererTest
     public void TestRenderer()
     {
         var owner = new TestBuildOwner();
-        var box = Box(Text("hello"));
+        var box = new Box
+        {
+            new Text("hello")
+        };
         var renderer = new TestWidgetBuilder(owner);
         var result = renderer.BuildIfNeeded(null, box, null);
         Assert.AreEqual(1, result.UpdateCount);
@@ -26,8 +30,14 @@ public class RendererTest
         };
         var renderer = new TestWidgetBuilder(owner);
         var result = renderer.BuildIfNeeded(
-            Box(Text("hello")),
-            Box(Text("world")),
+            new Box
+            {
+                new Text("hello")
+            },
+            new Box
+            { 
+                new Text("world")
+            },
             control
         );
         Assert.AreSame(control, result);
@@ -39,8 +49,14 @@ public class RendererTest
         var owner = new TestBuildOwner();
         var renderer = new TestWidgetBuilder(owner);
         var result = renderer.BuildIfNeeded(
-            Box(Text("hello")),
-            Box(Text("world")),
+            new Box
+            {
+                new Text("hello"),
+            },
+            new Box
+            {
+                new Text("world"),
+            },
             new TestControl { UpdateCount = 1 }
         );
         Assert.AreEqual(2, result.UpdateCount);
@@ -52,8 +68,14 @@ public class RendererTest
         var owner = new TestBuildOwner();
         var renderer = new TestWidgetBuilder(owner);
         var result = renderer.BuildIfNeeded(
-            Box(Text("hello")),
-            Box(Text("hello")),
+            new Box
+            {
+                new Text("hello"),
+            },
+            new Box
+            {
+                new Text("hello")
+            },
             new TestControl { UpdateCount = 1 }
         );
         Assert.AreEqual(1, result.UpdateCount);
@@ -66,8 +88,14 @@ public class RendererTest
         var renderer = new TestWidgetBuilder(owner);
         var child = new TestControl { UpdateCount = 1 };
         var result = renderer.BuildIfNeeded(
-            Box(Text("hello")),
-            Box(Text("world")),
+            new Box
+            {
+                new Text("hello"),
+            },
+            new Box
+            {
+                new Text("world"),
+            },
             new TestPanel
             {
                 UpdateCount = 1,
@@ -87,8 +115,14 @@ public class RendererTest
         var owner = new TestBuildOwner();
         var renderer = new TestWidgetBuilder(owner);
         var result = renderer.BuildIfNeeded(
-            Box(Text("hello")),
-            Box(Text("world")),
+            new Box
+            {
+                new Text("hello")
+            },
+            new Box
+            {
+                new Text("world")
+            },
             new TestPanel
             {
                 UpdateCount = 1,
@@ -108,8 +142,15 @@ public class RendererTest
         var owner = new TestBuildOwner();
         var renderer = new TestWidgetBuilder(owner);
         var result = renderer.BuildIfNeeded(
-            Box(Text("hello")),
-            Box(Text("hello"), Text("world")),
+            new Box
+            {
+                new Text("hello")
+            },
+            new Box
+            {
+                new Text("hello"), 
+                new Text("world")
+            },
             new TestPanel
             {
                 UpdateCount = 1,
@@ -130,8 +171,15 @@ public class RendererTest
         var owner = new TestBuildOwner();
         var renderer = new TestWidgetBuilder(owner);
         var result = renderer.BuildIfNeeded(
-            Box(Text("hello"), Text("world")),
-            Box(Text("hello")),
+            new Box
+            {
+                new Text("hello"), 
+                new Text("world")
+            },
+            new Box
+            {
+                new Text("hello")
+            },
             new TestPanel
             {
                 UpdateCount = 1,
@@ -153,8 +201,15 @@ public class RendererTest
         var renderer = new TestWidgetBuilder(owner);
         var child = new TestControl { UpdateCount = 1 };
         var result = renderer.BuildIfNeeded(
-            Box(Text("hello1")),
-            Box(Text("hello2"), Text("world")),
+            new Box
+            {
+                new Text("hello1")
+            },
+            new Box
+            {
+                new Text("hello2"), 
+                new Text("world")
+            },
             new TestPanel
             {
                 UpdateCount = 1,

@@ -3,8 +3,10 @@
         <TargetFrameworks>net7.0-maccatalyst;net7.0-ios</TargetFrameworks>
         <Nullable>enable</Nullable>
         <ImplicitUsings>true</ImplicitUsings>
+        <AssemblyName>WeiPoX.Core.DeclarativeUI.Platform.UIKit</AssemblyName>
+        <RootNamespace>WeiPoX.Core.DeclarativeUI.Platform.UIKit</RootNamespace>
     </PropertyGroup>
     <ItemGroup>
-        <ProjectReference Include="..\WeiPoX.Core.DeclarativeUI\WeiPoX.Core.DeclarativeUI.csproj" />
+        <ProjectReference Include="..\..\WeiPoX.Core.DeclarativeUI\WeiPoX.Core.DeclarativeUI.csproj" />
     </ItemGroup>
 </Project>

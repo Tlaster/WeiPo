@@ -2,4 +2,7 @@
 
 namespace WeiPoX.Core.DeclarativeUI.Widgets;
 
-public record Padding(Thickness Thickness, Widget Child) : SingleChildPanel(Child);
+public record Padding : Panel
+{
+    public required Thickness Thickness { get; init; }
+}

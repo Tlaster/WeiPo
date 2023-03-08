@@ -7,7 +7,7 @@
         <SupportedOSPlatformVersion>13.0</SupportedOSPlatformVersion>
     </PropertyGroup>
     <ItemGroup>
-      <ProjectReference Include="..\WeiPoX.Core.DeclarativeUI.Platform.Mac\WeiPoX.Core.DeclarativeUI.Platform.Mac.csproj" />
+      <ProjectReference Include="..\..\Platform\WeiPoX.Core.DeclarativeUI.Platform.UIKit\WeiPoX.Core.DeclarativeUI.Platform.UIKit.csproj" />
       <ProjectReference Include="..\WeiPoX.Core.DeclarativeUI.Sample.Core\WeiPoX.Core.DeclarativeUI.Sample.Core.csproj" />
     </ItemGroup>
 </Project>

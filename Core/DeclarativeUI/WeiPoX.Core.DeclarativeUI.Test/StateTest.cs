@@ -1,4 +1,5 @@
-﻿using WeiPoX.Core.DeclarativeUI.Widgets;
+﻿using System.Collections.Immutable;
+using WeiPoX.Core.DeclarativeUI.Widgets;
 using WeiPoX.Core.DeclarativeUI.Widgets.Layout;
 
 namespace WeiPoX.Core.DeclarativeUI.Test;
@@ -242,27 +243,33 @@ public class StateTest
         protected override Widget Build()
         {
             var (value, setValue) = UseState(0);
-            return Row(
-                Button(
-                    "Click",
-                    () => { setValue.Invoke(value + 1); }
-                ),
-                Text(value.ToString())
-            );
+            return new Row
+            {
+                new Button
+                {
+                    Text = "Click",
+                    OnClick = () => { setValue.Invoke(value + 1); }
+                },
+                new Text(value.ToString())
+            };
         }
     }
 
     private record TestStatelessWidget : StatelessWidget
     {
-        protected internal override Widget Content { get; } = Column(
-            Text("Hello"),
-            new NestedStatelessWidget()
-        );
+        protected internal override Widget Content { get; } = new Column
+        {
+            new Text("Hello"),
+            new NestedStatelessWidget(),
+        };
     }
 
     private record NestedStatelessWidget : StatelessWidget
     {
-        protected internal override Widget Content { get; } = Column(Text("World"));
+        protected internal override Widget Content { get; } = new Column
+        {
+            new Text("World")
+        };
     }
 
     private record TestDisposeWidget : StatefulWidget
@@ -270,13 +277,15 @@ public class StateTest
         protected override Widget Build()
         {
             var (value, setValue) = UseState(0);
-            return Row(
-                Button(
-                    "Click",
-                    () => { setValue.Invoke(value + 1); }
-                ),
-                value == 1 ? new TestUseStateWidget() : Text(value.ToString())
-            );
+            return new Row
+            {
+                new Button
+                {
+                    Text = "Click",
+                    OnClick = () => { setValue.Invoke(value + 1); }
+                },
+                value == 1 ? new TestUseStateWidget() : new Text(value.ToString())
+            };
         }
     }
 
@@ -285,13 +294,15 @@ public class StateTest
         protected override Widget Build()
         {
             var (value, setValue) = UseState(0);
-            return Row(
-                Button(
-                    "Click",
-                    () => { setValue.Invoke(value + 1); }
-                ),
+            return new Row
+            {
+                new Button
+                {
+                    Text = "Click",
+                    OnClick = () => { setValue.Invoke(value + 1); }
+                },
                 new TestStateReceiver(value)
-            );
+            };
         }
     }
 
@@ -299,7 +310,7 @@ public class StateTest
     {
         protected override Widget Build()
         {
-            return Text(Value.ToString());
+            return new Text(Value.ToString());
         }
     }
 
@@ -311,15 +322,22 @@ public class StateTest
         protected override Widget Build()
         {
             var (value, setValue) = UseState(0);
-            return ContextProvider(
-                Providers((typeof(TestHookContext), new TestHookContext(value))),
-                Row(
-                    Button(
-                        "Click",
-                        () => { setValue.Invoke(value + 1); }
-                    ),
+            return new ContextProvider
+            {
+                Providers =
+                {
+                    {typeof(TestHookContext), new TestHookContext(value)}
+                },
+                Child = new Row
+                {
+                    new Button
+                    {
+                        Text = "Click",
+                        OnClick = () => { setValue.Invoke(value + 1); }
+                    },
                     new TestHookContextConsumer()
-                ));
+                },
+            };
         }
     }
 
@@ -328,7 +346,7 @@ public class StateTest
         protected override Widget Build()
         {
             var context = UseContext<TestHookContext>();
-            return Text(context.Value.ToString());
+            return new Text(context.Value.ToString());
         }
     }
 
@@ -337,16 +355,22 @@ public class StateTest
         protected override Widget Build()
         {
             var (value, setValue) = UseState(0);
-            return ContextProvider(
-                Providers((typeof(TestHookContext), new TestHookContext(value))),
-                Row(
-                    Button(
-                        "Click",
-                        () => { setValue.Invoke(value + 1); }
-                    ),
+            return new ContextProvider
+            {
+                Providers = {
+                    {typeof(TestHookContext), new TestHookContext(value)}
+                },
+                Child = new Row
+                {
+                    new Button
+                    {
+                        Text = "Click",
+                        OnClick = () => { setValue.Invoke(value + 1); }
+                    },
                     new TestHookContextConsumer(),
                     new TestHooksNonContextWidget()
-                ));
+                }
+            };
         }
     }
 
@@ -354,7 +378,7 @@ public class StateTest
     {
         protected override Widget Build()
         {
-            return Text("hello");
+            return new Text("hello");
         }
     }
 }

@@ -9,7 +9,11 @@ public class WidgetTest
     [TestMethod]
     public void TestWidget()
     {
-        var box = Box(Text("Hello"), Text("World"));
+        var box = new Box
+        {
+            new Text("Hello"), 
+            new Text("World")
+        };
         Assert.IsInstanceOfType(box, typeof(Box));
         Assert.IsInstanceOfType(box.Children[0], typeof(Text));
         Assert.AreEqual("Hello", (box.Children[0] as Text)?.Content);
@@ -156,11 +160,15 @@ public class WidgetTest
         protected override Widget Build()
         {
             var (value, setValue) = UseState(0);
-            return Box(
-                Button(
-                    "Click",() => setValue(value + 1)),
+            return new Box
+            {
+                new Button
+                {
+                    Text = "Click",
+                    OnClick = () => setValue(value + 1)
+                },
                 new TestNestedStatefulWidget()
-            );
+            };
         }
     }
 
@@ -169,11 +177,15 @@ public class WidgetTest
         protected override Widget Build()
         {
             var (value, setValue) = UseState(0);
-            return Box(
-                Button(
-                    "Click",() => setValue(value + 1)),
-                Text(value.ToString())
-            );
+            return new Box
+            {
+                new Button
+                {
+                    Text = "Click",
+                    OnClick = () => setValue(value + 1)
+                },
+                new Text(value.ToString())
+            };
         }
     }
 
@@ -182,11 +194,15 @@ public class WidgetTest
         protected override Widget Build()
         {
             var (value, setValue) = UseState(0);
-            return Box(
-                Button(
-                    "Click",() => setValue(value + 1)),
+            return new Box
+            {
+                new Button
+                {
+                    Text = "Click",
+                    OnClick = () => setValue(value + 1)
+                },
                 new TestParameterNestedStatefulWidget(value)
-            );
+            };
         }
     }
 
@@ -195,12 +211,16 @@ public class WidgetTest
         protected override Widget Build()
         {
             var (value, setValue) = UseState(0);
-            return Box(
-                Button(
-                    "Click",() => setValue(value + 1)),
-                Text(value.ToString()),
-                Text(Value.ToString())
-            );
+            return new Box
+            {
+                new Button
+                {
+                    Text = "Click",
+                    OnClick = () => setValue(value + 1)
+                },
+                new Text(value.ToString()),
+                new Text(Value.ToString())
+            };
         }
     }
 }

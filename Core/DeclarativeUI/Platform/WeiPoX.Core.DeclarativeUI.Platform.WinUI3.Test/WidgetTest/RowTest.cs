@@ -2,6 +2,7 @@
 using WeiPoX.Core.DeclarativeUI.Internal;
 using WeiPoX.Core.DeclarativeUI.Widgets;
 using WeiPoX.Core.DeclarativeUI.Platform.WinUI3.Internal;
+using WeiPoX.Core.DeclarativeUI.Widgets.Layout;
 
 namespace WeiPoX.Core.DeclarativeUI.Platform.WinUI3.Test.WidgetTest;
 
@@ -11,7 +12,7 @@ public class RowTest
     [TestMethod]
     public void TestCreateRow()
     {
-        var row = Row();
+        var row = new Row();
         var renderer = new WidgetBuilder(new TestOwner());
         var control = renderer.BuildIfNeeded(null, row, null);
         Assert.IsInstanceOfType(control, typeof(StackPanel));

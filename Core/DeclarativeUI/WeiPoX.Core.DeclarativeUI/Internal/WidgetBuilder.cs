@@ -45,7 +45,7 @@ internal abstract class WidgetBuilder<T>
         switch (widget)
         {
             case ContextProvider contextProvider:
-                return Create(contextProvider.Child, context.Merge(contextProvider.Providers));
+                return Create(contextProvider.Child, context.Merge((contextProvider as IContextProvider).Providers));
             case StatefulWidget statefulWidget:
                 statefulWidget.State.BuildOwner = _owner;
                 var result = BuildStatefulWidget(statefulWidget, context);
@@ -107,7 +107,7 @@ internal abstract class WidgetBuilder<T>
         {
             case ContextProvider contextProvider:
                 return BuildIfNeeded((oldValue as ContextProvider)?.Child, contextProvider.Child, control,
-                    context.Merge(contextProvider.Providers));
+                    context.Merge((contextProvider as IContextProvider).Providers));
             case StatefulWidget statefulWidget:
                 if (oldValue is StatefulWidget oldStatefulWidget && !ReferenceEquals(oldValue, newValue))
                 {

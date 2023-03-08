@@ -31,10 +31,7 @@ public class HooksTest
     {
         var owner = new TestBuildOwner();
         var count = 0;
-        var widget = new HookUseEffectWidget(() =>
-        {
-            count++;
-        });
+        var widget = new HookUseEffectWidget(() => { count++; });
         widget.State.BuildOwner = owner;
         var build = widget.BuildInternal();
         owner.CleanUp();
@@ -112,13 +109,15 @@ public class HooksTest
         protected override Widget Build()
         {
             var (value, setValue) = UseState(0);
-            return Row(
-                Button(
-                    "Click",
-                    () => { setValue.Invoke(value + 1); }
-                ),
-                Text(value.ToString())
-            );
+            return new Row
+            {
+                new Button
+                {
+                    Text = "Click",
+                    OnClick = () => { setValue.Invoke(value + 1); }
+                },
+                new Text(value.ToString())
+            };
         }
     }
 
@@ -128,13 +127,15 @@ public class HooksTest
         {
             var (value, setValue) = UseState(0);
             UseEffect(Action.Invoke, value);
-            return Row(
-                Button(
-                    "Click",
-                    () => { setValue.Invoke(value + 1); }
-                ),
-                Text(value.ToString())
-            );
+            return new Row
+            {
+                new Button
+                {
+                    Text = "Click",
+                    OnClick = () => { setValue.Invoke(value + 1); }
+                },
+                new Text(value.ToString())
+            };
         }
     }
 
@@ -148,13 +149,15 @@ public class HooksTest
                 var result = Action.Invoke();
                 return result;
             }, value);
-            return Row(
-                Button(
-                    "Click",
-                    () => { setValue.Invoke(value + 1); }
-                ),
-                Text(value.ToString())
-            );
+            return new Row
+            {
+                new Button
+                {
+                    Text = "Click",
+                    OnClick = () => { setValue.Invoke(value + 1); }
+                },
+                new Text(value.ToString())
+            };
         }
     }
 
@@ -164,13 +167,15 @@ public class HooksTest
         {
             var (value, setValue) = UseState(0);
             var memo = UseMemo(() => Memo.Invoke(value), value);
-            return Row(
-                Button(
-                    "Click",
-                    () => { setValue.Invoke(value + 1); }
-                ),
-                Text(memo.ToString())
-            );
+            return new Row
+            {
+                new Button
+                {
+                    Text = "Click",
+                    OnClick = () => { setValue.Invoke(value + 1); }
+                },
+                new Text(memo.ToString())
+            };
         }
     }
 }

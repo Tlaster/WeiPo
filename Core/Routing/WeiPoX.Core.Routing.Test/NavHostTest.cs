@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using WeiPoX.Core.DeclarativeUI.Testing;
 using WeiPoX.Core.DeclarativeUI.Widgets;
 using WeiPoX.Core.DeclarativeUI.Widgets.Layout;
@@ -34,20 +35,24 @@ public class NavHostTest
     {
         protected override Widget Build()
         {
-            return new NavHost(
-                Navigator,
-                "home",
-                ImmutableListOf(
-                    new Route(
-                        "home",
-                        entry => Text("Home")
-                    ),
-                    new Route(
-                        "detail",
-                        entry => Text("Detail")
-                    )
-                )
-            );
+            return new NavHost
+            {
+                Navigator = Navigator,
+                InitialRoute = "home",
+                Routes = new []
+                {
+                    new Route
+                    {
+                      Path  = "home",
+                      Content = entry => new Text("Home")
+                    },
+                    new Route
+                    {
+                      Path  = "detail",
+                      Content = entry => new Text("Detail")
+                    }
+                }.ToImmutableList()
+            };
         }
     }
 }
@@ -56,12 +61,14 @@ public record AppWidget(Widget Child) : StatefulWidget
 {
     protected override Widget Build()
     {
-        return ContextProvider(
-            Providers(
-                (typeof(StateHolder), new StateHolder()),
-                (typeof(LifecycleHolder), new LifecycleHolder())
-            ),
-            Child
-        );
+        return new ContextProvider
+        {
+            Providers =
+            {
+                {typeof(StateHolder), new StateHolder()},
+                {typeof(LifecycleHolder), new LifecycleHolder()},
+            },
+            Child = Child,
+        };
     }
 }

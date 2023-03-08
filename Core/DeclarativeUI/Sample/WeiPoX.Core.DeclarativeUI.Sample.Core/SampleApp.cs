@@ -1,5 +1,5 @@
 ﻿using WeiPoX.Core.DeclarativeUI.Widgets;
-using static WeiPoX.Core.DeclarativeUI.Widgets.FuncUi;
+using WeiPoX.Core.DeclarativeUI.Widgets.Layout;
 
 namespace WeiPoX.Core.DeclarativeUI.Sample.Core;
 
@@ -9,18 +9,18 @@ public record SampleApp : StatefulWidget
     {
         var (value, setValue) = UseState(0);
         var (text, setText) = UseState(new InputState("Hello World!"));
-        return Column(
-            Button(
-                text: "Click me!",
-                onClick: () =>
-                {
-                    setValue(value + 1);
-                }
-            ),
-            Text("Value: " + value),
-            Input(
-                text: text,
-                onTextChanged: newValue =>
+        return new Column
+        {
+            new Button
+            {
+                Text = "Click me!",
+                OnClick = () => setValue(value + 1)
+            },
+            new Text("Value: " + value),
+            new Input
+            {
+                State = text,
+                OnStateChanged = newValue =>
                 {
                     if (!newValue.Text.EndsWith('0'))
                     {
@@ -31,8 +31,8 @@ public record SampleApp : StatefulWidget
                         setText(newValue with { Text = text.Text });
                     }
                 }
-            ),
-            Text("Text: " + text.Text)
-        );
+            },
+            new Text("Text: " + text.Text)
+        };
     }
 }

@@ -107,4 +107,8 @@ internal class RouteStackManager : ILifecycleObserver
     }
 }
 
-public record Route(string Path, Func<BackstackEntry, Widget> Content);
+public record Route
+{
+    public required string Path { get; init; }
+    public required Func<BackstackEntry, Widget> Content { get; init; }
+}

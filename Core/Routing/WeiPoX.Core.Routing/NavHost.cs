@@ -1,12 +1,17 @@
 ﻿using System.Collections.Immutable;
 using WeiPoX.Core.DeclarativeUI;
 using WeiPoX.Core.DeclarativeUI.Widgets;
+using WeiPoX.Core.DeclarativeUI.Widgets.Layout;
 using WeiPoX.Core.Lifecycle;
 
 namespace WeiPoX.Core.Routing;
 
-public record NavHost(Navigator Navigator, string InitialRoute, ImmutableList<Route> Routes) : StatefulWidget
+public record NavHost : StatefulWidget
 {
+    public required Navigator Navigator { get; init; }
+    public required string InitialRoute { get; init; }
+    public required ImmutableList<Route> Routes { get; init; }
+
     protected override Widget Build()
     {
         var stateHolder = UseContext<StateHolder>();
@@ -15,7 +20,7 @@ public record NavHost(Navigator Navigator, string InitialRoute, ImmutableList<Ro
         var currentRoute = this.UseObservable(Navigator.CurrentRoute, null);
         if (currentRoute is null)
         {
-            return Box();
+            return new Box();
         }
 
         UseEffect(() =>
@@ -23,14 +28,17 @@ public record NavHost(Navigator Navigator, string InitialRoute, ImmutableList<Ro
             currentRoute.Active();
             return currentRoute.InActive;
         }, currentRoute);
-        return Box(
-            ContextProvider(
-                Providers(
-                    (typeof(StateHolder), currentRoute.State),
-                    (typeof(LifecycleHolder), currentRoute.Lifecycle)
-                ),
-                currentRoute.Route.Content.Invoke(currentRoute)
-            )
-        );
+        return new Box
+        {
+            new ContextProvider
+            {
+                Providers =
+                {
+                    { typeof(StateHolder), currentRoute.State },
+                    { typeof(LifecycleHolder), currentRoute.Lifecycle }
+                },
+                Child = currentRoute.Route.Content.Invoke(currentRoute)
+            }
+        };
     }
 }

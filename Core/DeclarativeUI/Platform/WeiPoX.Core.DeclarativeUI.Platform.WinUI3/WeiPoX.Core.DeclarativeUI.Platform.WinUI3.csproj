@@ -14,7 +14,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\WeiPoX.Core.DeclarativeUI\WeiPoX.Core.DeclarativeUI.csproj" />
-        <PackageReference Include="ReactiveUI.WinUI" Version="18.4.22" />
+        <ProjectReference Include="..\..\WeiPoX.Core.DeclarativeUI\WeiPoX.Core.DeclarativeUI.csproj" />
+        <PackageReference Include="ReactiveUI.WinUI" Version="18.4.25" />
     </ItemGroup>
 </Project>

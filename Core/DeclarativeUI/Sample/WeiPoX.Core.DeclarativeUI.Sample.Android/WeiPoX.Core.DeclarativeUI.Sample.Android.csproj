@@ -10,7 +10,7 @@
         <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
     </PropertyGroup>
     <ItemGroup>
-      <ProjectReference Include="..\WeiPoX.Core.DeclarativeUI.Platform.Android\WeiPoX.Core.DeclarativeUI.Platform.Android.csproj" />
+      <ProjectReference Include="..\..\Platform\WeiPoX.Core.DeclarativeUI.Platform.Android\WeiPoX.Core.DeclarativeUI.Platform.Android.csproj" />
       <ProjectReference Include="..\WeiPoX.Core.DeclarativeUI.Sample.Core\WeiPoX.Core.DeclarativeUI.Sample.Core.csproj" />
     </ItemGroup>
     <ItemGroup>

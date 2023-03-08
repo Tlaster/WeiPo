@@ -38,7 +38,7 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WeiPoX.Core.DeclarativeUI.Platform.WinUI3\WeiPoX.Core.DeclarativeUI.Platform.WinUI3.csproj" />
+    <ProjectReference Include="..\..\Platform\WeiPoX.Core.DeclarativeUI.Platform.WinUI3\WeiPoX.Core.DeclarativeUI.Platform.WinUI3.csproj" />
     <ProjectReference Include="..\WeiPoX.Core.DeclarativeUI.Sample.Core\WeiPoX.Core.DeclarativeUI.Sample.Core.csproj" />
   </ItemGroup>
 
