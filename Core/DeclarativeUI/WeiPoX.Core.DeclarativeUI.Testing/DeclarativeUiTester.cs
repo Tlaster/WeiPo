@@ -7,18 +7,27 @@ public class DeclarativeUiTester
 {
     private readonly TestBuildOwner _buildOwner;
     private readonly TestWidgetBuilder _widgetBuilder;
+    private readonly bool _enableAsyncBuilder;
     private readonly Widget _widget;
     private TestControl? _control;
     private bool _rendering;
     private bool _requireReRender;
 
-    public DeclarativeUiTester(Widget widget)
+    public DeclarativeUiTester(Widget widget, bool enableAsyncBuilder = false)
     {
         _buildOwner = new TestBuildOwner();
         _buildOwner.OnRequestBuild += BuildOwnerOnOnRequestBuild;
         _widgetBuilder = new TestWidgetBuilder(_buildOwner);
         _widget = widget;
-        Render();
+        _enableAsyncBuilder = enableAsyncBuilder;
+        if (_enableAsyncBuilder)
+        {
+            _ = RenderAsync();
+        }
+        else
+        {
+            Render();
+        }
     }
 
     private void BuildOwnerOnOnRequestBuild()
@@ -29,7 +38,14 @@ public class DeclarativeUiTester
         }
         else
         {
-            Render();
+            if (_enableAsyncBuilder)
+            {
+                _ = RenderAsync();
+            }
+            else
+            {
+                Render();
+            }
         }
     }
 
@@ -45,6 +61,20 @@ public class DeclarativeUiTester
         }
         _requireReRender = false;
         Render();
+    }
+
+    public async Task RenderAsync()
+    {
+        _rendering = true;
+        _control = await _widgetBuilder.BuildIfNeededAsync(_widget, _widget, _control);
+        _buildOwner.CleanUp();
+        _rendering = false;
+        if (!_requireReRender)
+        {
+            return;
+        }
+        _requireReRender = false;
+        _ = RenderAsync();
     }
 
     public T GetWidget<T>() where T : Widget

@@ -1,11 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
     <PropertyGroup>
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <AssemblyName>WeiPoX.Core.DeclarativeUI.Platform.Avalonia</AssemblyName>
         <RootNamespace>WeiPoX.Core.DeclarativeUI.Platform.Avalonia</RootNamespace>
+        <DefineConstants>AVALONIA</DefineConstants>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Avalonia" Version="11.0.0-preview5" />
@@ -14,5 +14,6 @@
     <ItemGroup>
         <ProjectReference Include="..\..\WeiPoX.Core.DeclarativeUI\WeiPoX.Core.DeclarativeUI.csproj" />
     </ItemGroup>
+    <Import Project="..\WeiPoX.Core.DeclarativeUI.Platform.Shared\WeiPoX.Core.DeclarativeUI.Platform.Shared.projitems" Label="Shared" />
 
 </Project>

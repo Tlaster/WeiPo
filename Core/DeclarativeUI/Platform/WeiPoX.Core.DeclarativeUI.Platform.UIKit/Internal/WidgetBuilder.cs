@@ -1,6 +1,6 @@
 ﻿using WeiPoX.Core.DeclarativeUI.Internal;
 
-namespace WeiPoX.Core.DeclarativeUI.Platform.Mac.Internal;
+namespace WeiPoX.Core.DeclarativeUI.Platform.UIKit.Internal;
 
 internal class WidgetBuilder : WidgetBuilder<UIView>
 {

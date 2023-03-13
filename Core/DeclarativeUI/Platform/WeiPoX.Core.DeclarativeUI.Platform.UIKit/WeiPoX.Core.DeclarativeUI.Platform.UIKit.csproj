@@ -5,8 +5,10 @@
         <ImplicitUsings>true</ImplicitUsings>
         <AssemblyName>WeiPoX.Core.DeclarativeUI.Platform.UIKit</AssemblyName>
         <RootNamespace>WeiPoX.Core.DeclarativeUI.Platform.UIKit</RootNamespace>
+        <DefineConstants>UIKIT</DefineConstants>
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\WeiPoX.Core.DeclarativeUI\WeiPoX.Core.DeclarativeUI.csproj" />
     </ItemGroup>
+    <Import Project="..\WeiPoX.Core.DeclarativeUI.Platform.Shared\WeiPoX.Core.DeclarativeUI.Platform.Shared.projitems" Label="Shared" />
 </Project>

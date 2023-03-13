@@ -1,7 +1,7 @@
 using WeiPoX.Core.DeclarativeUI.Internal;
 using WeiPoX.Core.DeclarativeUI.Widgets;
 
-namespace WeiPoX.Core.DeclarativeUI.Platform.Mac.Renderer;
+namespace WeiPoX.Core.DeclarativeUI.Platform.UIKit.Renderer;
 
 internal abstract class RendererObject<TWidget, TControl> : IRenderer<UIView>
     where TWidget : MappingWidget where TControl : class, new()

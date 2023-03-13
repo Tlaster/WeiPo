@@ -1,10 +1,10 @@
 using System.Collections.Immutable;
 using WeiPoX.Core.DeclarativeUI.Internal;
-using WeiPoX.Core.DeclarativeUI.Platform.Mac.Renderer;
+using WeiPoX.Core.DeclarativeUI.Platform.UIKit.Renderer;
 using WeiPoX.Core.DeclarativeUI.Widgets;
 using WeiPoX.Core.DeclarativeUI.Widgets.Layout;
 
-namespace WeiPoX.Core.DeclarativeUI.Platform.Mac.Internal;
+namespace WeiPoX.Core.DeclarativeUI.Platform.UIKit.Internal;
 
 internal static class RendererPool
 {

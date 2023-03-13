@@ -1,4 +1,4 @@
-using WeiPoX.Core.DeclarativeUI.Platform.Mac;
+using WeiPoX.Core.DeclarativeUI.Platform.UIKit;
 using WeiPoX.Core.DeclarativeUI.Sample.Core;
 
 namespace WeiPoX.Core.DeclarativeUI.Sample.iOS;
@@ -11,7 +11,7 @@ public class AppDelegate : UIApplicationDelegate
     public override bool FinishedLaunching(UIApplication application, NSDictionary launchOptions)
     {
         Window = new UIWindow(UIScreen.MainScreen.Bounds);
-        Window.RootViewController = new Declarative(new SampleApp());
+        Window.RootViewController = new DeclarativeView(new SampleApp());
         Window.MakeKeyAndVisible();
 
         return true;

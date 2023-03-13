@@ -11,6 +11,6 @@ public class MainActivity : ComponentActivity
     protected override void OnCreate(Bundle? savedInstanceState)
     {
         base.OnCreate(savedInstanceState);
-        SetContentView(new Declarative(this, new SampleApp()));
+        SetContentView(new DeclarativeView(this, new SampleApp()));
     }
 }

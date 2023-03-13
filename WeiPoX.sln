@@ -87,6 +87,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeiPoX.Core.DeclarativeUI.S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeiPoX.Core.DeclarativeUI.Sample.iOS", "Core\DeclarativeUI\Sample\WeiPoX.Core.DeclarativeUI.Sample.iOS\WeiPoX.Core.DeclarativeUI.Sample.iOS.csproj", "{E7A9FE43-371A-40CF-AF81-9A4BA83A8B5E}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "WeiPoX.Core.DeclarativeUI.Platform.Shared", "Core\DeclarativeUI\Platform\WeiPoX.Core.DeclarativeUI.Platform.Shared\WeiPoX.Core.DeclarativeUI.Platform.Shared.shproj", "{95A1AE33-E449-409A-B47B-2A18BA6DFCCD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -616,6 +618,7 @@ Global
 		{492CAD5B-C410-46B9-8531-C0761B17630D} = {6683F1D8-C92F-49C4-B4DD-2EFEFAB178CA}
 		{42D4CB96-EAE5-4D1E-9351-EF2A2EA3A524} = {6683F1D8-C92F-49C4-B4DD-2EFEFAB178CA}
 		{E7A9FE43-371A-40CF-AF81-9A4BA83A8B5E} = {6683F1D8-C92F-49C4-B4DD-2EFEFAB178CA}
+		{95A1AE33-E449-409A-B47B-2A18BA6DFCCD} = {7E732B48-5E33-472A-B721-56C7C4A3F867}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2EF5A3C1-B0AD-4D47-A567-87ED1B9C164D}

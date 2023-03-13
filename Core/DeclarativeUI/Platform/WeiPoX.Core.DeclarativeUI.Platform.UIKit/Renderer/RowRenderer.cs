@@ -1,6 +1,6 @@
 using WeiPoX.Core.DeclarativeUI.Widgets.Layout;
 
-namespace WeiPoX.Core.DeclarativeUI.Platform.Mac.Renderer;
+namespace WeiPoX.Core.DeclarativeUI.Platform.UIKit.Renderer;
 
 internal class RowRenderer : RendererObject<Row, UIStackView>
 {
