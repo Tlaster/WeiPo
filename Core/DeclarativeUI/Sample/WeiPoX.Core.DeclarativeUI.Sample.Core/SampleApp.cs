@@ -11,28 +11,33 @@ public record SampleApp : StatefulWidget
         var (text, setText) = UseState(new InputState("Hello World!"));
         return new Column
         {
-            new Button
+            Horizontal = Alignment.Horizontal.Center,
+            Vertical = Alignment.Vertical.Center,
+            Children =
             {
-                Text = "Click me!",
-                OnClick = () => setValue(value + 1)
-            },
-            new Text("Value: " + value),
-            new Input
-            {
-                State = text,
-                OnStateChanged = newValue =>
+                new Button
                 {
-                    if (!newValue.Text.EndsWith('0'))
+                    Text = "Click me!",
+                    OnClick = () => setValue(value + 1)
+                },
+                new Text("Value: " + value),
+                new Input
+                {
+                    State = text,
+                    OnStateChanged = newValue =>
                     {
-                        setText(newValue);
+                        if (!newValue.Text.EndsWith('0'))
+                        {
+                            setText(newValue);
+                        }
+                        else
+                        {
+                            setText(newValue with { Text = text.Text });
+                        }
                     }
-                    else
-                    {
-                        setText(newValue with { Text = text.Text });
-                    }
-                }
+                },
+                new Text("Text: " + text.Text)
             },
-            new Text("Text: " + text.Text)
         };
     }
 }

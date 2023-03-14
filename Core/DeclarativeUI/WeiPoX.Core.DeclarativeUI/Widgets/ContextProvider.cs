@@ -5,7 +5,7 @@ namespace WeiPoX.Core.DeclarativeUI.Widgets;
 
 public record ContextProvider : StateWidget, IContextProvider, IPanelWidget
 {
-    public Dictionary<Type, object> Providers { get; init; } = new();
+    public Dictionary<Type, object> Providers { get; } = new();
 
     public required Widget Child { get; init; }
     public ImmutableList<Widget> Children => new [] { Child }.ToImmutableList();

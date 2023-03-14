@@ -13,6 +13,7 @@ internal class BoxRenderer : RendererObject<Box, FrameLayout>
 
     protected override void Update(FrameLayout control, Box widget)
     {
+        // control.SetGravity(widget.Horizontal.ToGravityFlags() | widget.Vertical.ToGravityFlags());
     }
 
     public BoxRenderer(Context context) : base(context)

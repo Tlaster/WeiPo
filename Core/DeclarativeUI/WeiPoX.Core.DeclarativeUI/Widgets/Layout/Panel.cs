@@ -5,11 +5,8 @@ namespace WeiPoX.Core.DeclarativeUI.Widgets.Layout;
 
 public record Panel : MappingWidget, IPanelWidget, IEnumerable
 {
-    private readonly List<Widget> _children = new();
+    public List<Widget> Children { get; } = new();
 
-    public ImmutableList<Widget> Children => _children.ToImmutableList();
-
-    // init => _children = value;
     public virtual bool Equals(Panel? other)
     {
         if (ReferenceEquals(null, other))
@@ -22,21 +19,23 @@ public record Panel : MappingWidget, IPanelWidget, IEnumerable
             return true;
         }
 
-        return base.Equals(other) && _children.SequenceEqual(other._children);
+        return base.Equals(other) && Children.SequenceEqual(other.Children);
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(base.GetHashCode(), _children);
+        return HashCode.Combine(base.GetHashCode(), Children);
     }
 
     public IEnumerator GetEnumerator()
     {
-        return _children.GetEnumerator();
+        return Children.GetEnumerator();
     }
     
     public void Add(Widget widget)
     {
-        _children.Add(widget);
+        Children.Add(widget);
     }
+
+    ImmutableList<Widget> IPanelWidget.Children => Children.ToImmutableList();
 }
