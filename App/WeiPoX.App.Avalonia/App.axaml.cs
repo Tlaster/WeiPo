@@ -1,5 +1,8 @@
+using System.Linq;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Controls.Templates;
 using Avalonia.Data.Core;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
@@ -21,6 +24,20 @@ public class App : Application
             // Without this line you will get duplicate validations from both Avalonia and CT
             // ExpressionObserver.DataValidators.RemoveAll(x => x is DataAnnotationsValidationPlugin);
             // desktop.MainWindow = new MainWindow();
+            desktop.MainWindow = new Window
+            {
+                Content = new ScrollViewer
+                {
+                    Content = new ItemsRepeater
+                    {
+                        Items = Enumerable.Range(0, 100).ToList(),
+                        ItemTemplate = new FuncDataTemplate<int>((i, _) => new TextBlock
+                        {
+                            Text = $"Item {i}"
+                        })
+                    }
+                }
+            };
         }
 
         base.OnFrameworkInitializationCompleted();

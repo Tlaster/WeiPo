@@ -1,3 +1,5 @@
+using WeiPoX.Core.DeclarativeUI.Internal;
+
 namespace WeiPoX.Core.DeclarativeUI.Widgets;
 
 public abstract record StatefulWidget : StateWidget, IDisposable

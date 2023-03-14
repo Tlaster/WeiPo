@@ -20,6 +20,7 @@ internal static class RendererPool
             { typeof(Row), new RowRenderer() },
             { typeof(Padding), new PaddingRenderer() },
             { typeof(Input), new InputRenderer() },
+            { typeof(LazyColumn), new LazyColumnRenderer() },
         }.ToImmutableDictionary();
 
     public static IRenderer<Control> GetRenderer(Type type)

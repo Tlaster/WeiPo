@@ -1,4 +1,4 @@
-namespace WeiPoX.Core.DeclarativeUI.Widgets;
+namespace WeiPoX.Core.DeclarativeUI.Internal;
 
 internal record Memo<T>(T Value, params object[] Dependencies) : IDisposable
 {
