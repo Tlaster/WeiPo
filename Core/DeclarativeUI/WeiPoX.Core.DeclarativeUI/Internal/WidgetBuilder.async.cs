@@ -128,7 +128,7 @@ internal partial class WidgetBuilder<T>
             var oldChildControl = renderer.GetChildAt(control, i);
             if (oldChildControl == null && newChild != null)
             {
-                var newChildControl = Create(newChild, context);
+                var newChildControl = await CreateAsync(newChild, context);
                 renderer.AddChild(control, newChildControl);
                 OnChildAdded(newChild, newChildControl);
             }

@@ -11,9 +11,7 @@ internal class InputRenderer : RendererObject<Input, WeiPoXTextBox>
     protected override void Update(WeiPoXTextBox control, Input widget)
     {
         control.Updating = true;
-        control.Text = widget.State.Text;
-        control.SelectionStart = Math.Clamp(widget.State.SelectionStart, 0, widget.State.Text.Length);
-        control.SelectionLength = Math.Clamp(widget.State.SelectionEnd - widget.State.SelectionStart, 0, widget.State.Text.Length);
+        control.UpdateState(widget.State);
         control.TextChangedCallback = widget.OnStateChanged;
         control.Updating = false;
     }
@@ -26,6 +24,20 @@ internal class WeiPoXTextBox : TextBox
     public WeiPoXTextBox()
     {
         TextChanging += OnTextChanging;
+    }
+    
+    public void UpdateState(InputState state)
+    {
+        if (Text != state.Text)
+        {
+            Text = state.Text;
+        }
+
+        if (SelectionStart != state.SelectionStart || SelectionLength != state.SelectionEnd - state.SelectionStart)
+        {
+            SelectionStart = Math.Clamp(state.SelectionStart, 0, state.Text.Length);
+            SelectionLength = Math.Clamp(state.SelectionEnd - state.SelectionStart, 0, state.Text.Length);
+        }
     }
 
     private void OnTextChanging(TextBox sender, TextBoxTextChangingEventArgs args)

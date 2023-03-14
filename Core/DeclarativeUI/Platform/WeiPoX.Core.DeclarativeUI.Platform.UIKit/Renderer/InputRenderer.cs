@@ -7,10 +7,7 @@ internal class InputRenderer : RendererObject<Input, WeiPoXTextField>
     protected override void Update(WeiPoXTextField control, Input widget)
     {
         control.Updating = true;
-        control.Text = widget.State.Text;
-        control.SelectedTextRange = control.GetTextRange(
-            control.GetPosition(control.BeginningOfDocument, widget.State.SelectionStart),
-            control.GetPosition(control.BeginningOfDocument, widget.State.SelectionEnd));
+        control.UpdateState(widget.State);
         control.TextChangedCallback = widget.OnStateChanged;
         control.Updating = false;
     }
@@ -24,6 +21,26 @@ internal class WeiPoXTextField : UITextField
     public WeiPoXTextField()
     {
         EditingChanged += OnEditingChanged;
+    }
+    
+    public void UpdateState(InputState state)
+    {
+        if (Text != state.Text)
+        {
+            Text = state.Text;
+        }
+
+        if (SelectedTextRange != null)
+        {
+            var start = GetOffsetFromPosition(BeginningOfDocument, SelectedTextRange.Start);
+            var end = GetOffsetFromPosition(BeginningOfDocument, SelectedTextRange.End);
+            if (start != state.SelectionStart || end != state.SelectionEnd)
+            {
+                SelectedTextRange = GetTextRange(
+                    GetPosition(BeginningOfDocument, state.SelectionStart),
+                    GetPosition(BeginningOfDocument, state.SelectionEnd));
+            }
+        }
     }
 
     private void OnEditingChanged(object? sender, EventArgs e)

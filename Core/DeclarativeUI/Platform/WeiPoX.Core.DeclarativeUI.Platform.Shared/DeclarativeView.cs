@@ -91,7 +91,10 @@ public class DeclarativeView : UserControl, IBuildOwner
             if (_requestBuildCount == 0)
             {
                 UpdateChild(_renderedControl);
-                return;
+            }
+            else
+            {
+                _requestBuildCount = 1;
             }
         }
     }

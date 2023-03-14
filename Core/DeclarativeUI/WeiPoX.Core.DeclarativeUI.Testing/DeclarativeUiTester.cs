@@ -11,9 +11,9 @@ public class DeclarativeUiTester
     private readonly Widget _widget;
     private TestControl? _control;
     private bool _rendering;
-    private bool _requireReRender;
+    private int _requestBuildCount = 1;
 
-    public DeclarativeUiTester(Widget widget, bool enableAsyncBuilder = false)
+    public DeclarativeUiTester(Widget widget, bool enableAsyncBuilder = true)
     {
         _buildOwner = new TestBuildOwner();
         _buildOwner.OnRequestBuild += BuildOwnerOnOnRequestBuild;
@@ -32,11 +32,8 @@ public class DeclarativeUiTester
 
     private void BuildOwnerOnOnRequestBuild()
     {
-        if (_rendering)
-        {
-            _requireReRender = true;
-        }
-        else
+        _requestBuildCount++;
+        if (!_rendering)
         {
             if (_enableAsyncBuilder)
             {
@@ -49,32 +46,36 @@ public class DeclarativeUiTester
         }
     }
 
-    public void Render()
+    private void Render()
     {
-        _rendering = true;
-        _control = _widgetBuilder.BuildIfNeeded(_widget, _widget, _control);
-        _buildOwner.CleanUp();
-        _rendering = false;
-        if (!_requireReRender)
+        while (_requestBuildCount > 0)
         {
-            return;
+            _rendering = true;
+            _control = _widgetBuilder.BuildIfNeeded(_widget, _widget, _control);
+            _buildOwner.CleanUp();
+            _rendering = false;
+            _requestBuildCount--;
+            if (_requestBuildCount != 0)
+            {
+                _requestBuildCount = 1;
+            }
         }
-        _requireReRender = false;
-        Render();
     }
 
-    public async Task RenderAsync()
+    private async Task RenderAsync()
     {
-        _rendering = true;
-        _control = await _widgetBuilder.BuildIfNeededAsync(_widget, _widget, _control);
-        _buildOwner.CleanUp();
-        _rendering = false;
-        if (!_requireReRender)
+        while (_requestBuildCount > 0)
         {
-            return;
+            _rendering = true;
+            _control = await _widgetBuilder.BuildIfNeededAsync(_widget, _widget, _control);
+            _buildOwner.CleanUp();
+            _rendering = false;
+            _requestBuildCount--;
+            if (_requestBuildCount != 0)
+            {
+                _requestBuildCount = 1;
+            }
         }
-        _requireReRender = false;
-        _ = RenderAsync();
     }
 
     public T GetWidget<T>() where T : Widget

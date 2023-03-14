@@ -1,4 +1,5 @@
 ﻿using Android.Content;
+using Android.Text;
 using Google.Android.Material.TextField;
 using Java.Lang;
 using WeiPoX.Core.DeclarativeUI.Widgets;
@@ -20,14 +21,7 @@ internal class InputRenderer : RendererObject<Input, WeiPoXTextInputEditText>
     protected override void Update(WeiPoXTextInputEditText control, Input widget)
     {
         control.Updating = true;
-        // TODO: Japanese input method is not working
-        // take the react native code as reference
-        // https://github.com/facebook/react-native/blob/b73dd6726d88ca4d8ffe71f69cd7a7f668582f21/ReactAndroid/src/main/java/com/facebook/react/views/textinput/ReactEditText.java#L679
-        control.Text = widget.State.Text;
-        control.SetSelection(
-            Math.Clamp(widget.State.SelectionStart, 0, widget.State.Text.Length),
-            Math.Clamp(widget.State.SelectionEnd, 0, widget.State.Text.Length)
-        );
+        control.UpdateState(widget.State);
         control.TextChangedCallback = widget.OnStateChanged;
         control.Updating = false;
     }
@@ -41,6 +35,23 @@ internal class WeiPoXTextInputEditText : TextInputEditText
 
     public bool Updating { get; set; }
     public Action<InputState>? TextChangedCallback { get; set; }
+
+    public void UpdateState(InputState state)
+    {
+        if (Text != state.Text)
+        {
+            EditableText?.Replace(0, EditableText.Length(), state.Text);
+        }
+
+        if (SelectionStart != state.SelectionStart || SelectionEnd != state.SelectionEnd)
+        {
+            SetSelection(
+                Math.Clamp(state.SelectionStart, 0, state.Text.Length),
+                Math.Clamp(state.SelectionEnd, 0, state.Text.Length)
+            );
+        }
+    }
+    
 
     protected override void OnTextChanged(ICharSequence? text, int start, int lengthBefore, int lengthAfter)
     {
