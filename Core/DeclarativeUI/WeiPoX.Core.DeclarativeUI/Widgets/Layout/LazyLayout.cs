@@ -51,9 +51,18 @@ public abstract record LazyLayout : MappingWidget, ILazyWidget, IEnumerable
 
 
 public abstract record LazyItem;
-public record Item : LazyItem
+public record Item : LazyItem, IEnumerable
 {
-    public required Widget Content { get; init; }
+    public Widget Content { get; private set; } = new Box();
+    public void Add(Widget widget)
+    {
+        Content = widget;
+    }
+
+    public IEnumerator GetEnumerator()
+    {
+        return new[] {Content}.GetEnumerator();
+    }
 }
 
 public record Items(int Count) : LazyItem
