@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml.Controls;
+﻿using System.Threading.Tasks;
+using Microsoft.UI.Xaml.Controls;
 using WeiPoX.Core.DeclarativeUI.Internal;
 using WeiPoX.Core.DeclarativeUI.Widgets;
 using WeiPoX.Core.DeclarativeUI.Platform.WinUI3.Internal;
@@ -10,11 +11,11 @@ namespace WeiPoX.Core.DeclarativeUI.Platform.WinUI3.Test.WidgetTest;
 public class RowTest
 {
     [TestMethod]
-    public void TestCreateRow()
+    public async Task TestCreateRow()
     {
         var row = new Row();
         var renderer = new WidgetBuilder(new TestOwner());
-        var control = renderer.BuildIfNeeded(null, row, null);
+        var control = await renderer.BuildIfNeededAsync(null, row, null);
         Assert.IsInstanceOfType(control, typeof(StackPanel));
         Assert.AreEqual(Orientation.Horizontal, ((StackPanel)control).Orientation);
     }

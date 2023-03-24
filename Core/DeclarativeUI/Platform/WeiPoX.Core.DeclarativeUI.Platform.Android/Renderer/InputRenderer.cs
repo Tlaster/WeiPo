@@ -1,7 +1,10 @@
 ﻿using Android.Content;
 using Android.Text;
+using Android.Views;
 using Google.Android.Material.TextField;
 using Java.Lang;
+using WeiPoX.Core.DeclarativeUI.Internal;
+using WeiPoX.Core.DeclarativeUI.Platform.Android.Internal;
 using WeiPoX.Core.DeclarativeUI.Widgets;
 using Math = System.Math;
 
@@ -13,7 +16,7 @@ internal class InputRenderer : RendererObject<Input, WeiPoXTextInputEditText>
     {
     }
 
-    protected override WeiPoXTextInputEditText Create(Context context)
+    protected override WeiPoXTextInputEditText Create(Context context, WidgetBuilder renderer)
     {
         return new WeiPoXTextInputEditText(context);
     }

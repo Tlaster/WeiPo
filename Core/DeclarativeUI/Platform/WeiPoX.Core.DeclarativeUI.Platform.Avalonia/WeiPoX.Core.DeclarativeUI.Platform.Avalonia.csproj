@@ -8,9 +8,9 @@
         <DefineConstants>AVALONIA</DefineConstants>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="11.0.0-preview5" />
-        <PackageReference Include="Avalonia.Controls.ItemsRepeater" Version="11.0.0-preview5" />
-        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.0-preview5" />
+        <PackageReference Include="Avalonia" Version="11.0.0-preview6" />
+        <PackageReference Include="Avalonia.Controls.ItemsRepeater" Version="11.0.0-preview6" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.0-preview6" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\WeiPoX.Core.DeclarativeUI\WeiPoX.Core.DeclarativeUI.csproj" />

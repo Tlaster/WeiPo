@@ -1,4 +1,7 @@
 using Android.Content;
+using Android.Views;
+using WeiPoX.Core.DeclarativeUI.Internal;
+using WeiPoX.Core.DeclarativeUI.Platform.Android.Internal;
 using WeiPoX.Core.DeclarativeUI.Widgets;
 
 namespace WeiPoX.Core.DeclarativeUI.Platform.Android.Renderer;
@@ -10,7 +13,7 @@ internal class TextRenderer : RendererObject<Text, TextView>
     {
     }
 
-    protected override TextView Create(Context context)
+    protected override TextView Create(Context context, WidgetBuilder renderer)
     {
         return new TextView(context);
     }

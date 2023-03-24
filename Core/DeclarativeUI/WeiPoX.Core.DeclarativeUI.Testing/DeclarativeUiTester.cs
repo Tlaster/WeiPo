@@ -46,12 +46,12 @@ public class DeclarativeUiTester
         }
     }
 
-    private void Render()
+    private async void Render()
     {
         while (_requestBuildCount > 0)
         {
             _rendering = true;
-            _control = _widgetBuilder.BuildIfNeeded(_widget, _widget, _control);
+            _control = await _widgetBuilder.BuildIfNeededAsync(_widget, _widget, _control);
             _buildOwner.CleanUp();
             _rendering = false;
             _requestBuildCount--;

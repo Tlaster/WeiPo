@@ -7,6 +7,7 @@ internal class TestBuildOwner : IBuildOwner
 {
     public event Action? OnRequestBuild;
     public List<Widget> RebuiltWidgets { get; } = new();
+    public bool NeedsBuild => RebuiltWidgets.Count > 0;
 
     public void MarkNeedsBuild(Widget widget)
     {

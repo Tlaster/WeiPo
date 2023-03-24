@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using WeiPoX.Core.DeclarativeUI.Testing;
 using WeiPoX.Core.DeclarativeUI.Widgets;
 using WeiPoX.Core.DeclarativeUI.Widgets.Layout;
 
@@ -8,12 +9,12 @@ namespace WeiPoX.Core.DeclarativeUI.Test;
 public class StateTest
 {
     [TestMethod]
-    public void TestNestedWidget()
+    public async Task TestNestedWidget()
     {
         var owner = new TestBuildOwner();
         var widget = new TestStatelessWidget();
         var builder = new TestWidgetBuilder(owner);
-        var result = builder.BuildIfNeeded(null, widget, null);
+        var result = await builder.BuildIfNeededAsync(null, widget, null);
         Assert.IsInstanceOfType(result, typeof(TestPanel));
         var panel = (TestPanel)result;
         Assert.AreEqual(2, panel.Children.Count);
@@ -25,12 +26,12 @@ public class StateTest
     }
 
     [TestMethod]
-    public void TestStatefulState()
+    public async Task TestStatefulState()
     {
         var owner = new TestBuildOwner();
         var widget = new TestUseStateWidget();
         var builder = new TestWidgetBuilder(owner);
-        var result = builder.BuildIfNeeded(null, widget, null);
+        var result = await builder.BuildIfNeededAsync(null, widget, null);
         Assert.IsInstanceOfType(result, typeof(TestPanel));
         var panel = (TestPanel)result;
         Assert.AreEqual(2, panel.Children.Count);
@@ -52,7 +53,7 @@ public class StateTest
         button.OnClick.Invoke();
         Assert.IsTrue(owner.NeedsBuild);
         Assert.AreEqual(1, owner.RebuiltWidgets.Count);
-        var newResult = builder.BuildIfNeeded(widget, widget, result);
+        var newResult = await builder.BuildIfNeededAsync(widget, widget, result);
         owner.CleanUp();
         Assert.IsFalse(owner.NeedsBuild);
         Assert.AreSame(result, newResult);
@@ -71,12 +72,12 @@ public class StateTest
     }
 
     [TestMethod]
-    public void TestStatefulWidgetDispose()
+    public async Task TestStatefulWidgetDispose()
     {
         var owner = new TestBuildOwner();
         var widget = new TestDisposeWidget();
         var builder = new TestWidgetBuilder(owner);
-        var result = builder.BuildIfNeeded(null, widget, null);
+        var result = await builder.BuildIfNeededAsync(null, widget, null);
         var cache = widget.State.CachedBuild;
         Assert.IsNotNull(cache);
         Assert.IsInstanceOfType(cache, typeof(Row));
@@ -86,7 +87,7 @@ public class StateTest
         Assert.IsInstanceOfType(row.Children[1], typeof(Text));
         var button = (Button)row.Children[0];
         button.OnClick.Invoke();
-        result = builder.BuildIfNeeded(widget, widget, result);
+        result = await builder.BuildIfNeededAsync(widget, widget, result);
         owner.CleanUp();
         cache = widget.State.CachedBuild;
         Assert.IsNotNull(cache);
@@ -99,7 +100,7 @@ public class StateTest
         Assert.IsFalse(stateWidget.Disposed);
         button = (Button)row.Children[0];
         button.OnClick.Invoke();
-        result = builder.BuildIfNeeded(widget, widget, result);
+        result = await builder.BuildIfNeededAsync(widget, widget, result);
         owner.CleanUp();
         cache = widget.State.CachedBuild;
         Assert.IsNotNull(cache);
@@ -112,12 +113,12 @@ public class StateTest
     }
 
     [TestMethod]
-    public void TestWithNestedState()
+    public async Task TestWithNestedState()
     {
         var owner = new TestBuildOwner();
         var widget = new TestStateHolder();
         var builder = new TestWidgetBuilder(owner);
-        var result = builder.BuildIfNeeded(null, widget, null);
+        var result = await builder.BuildIfNeededAsync(null, widget, null);
         var cache = widget.State.CachedBuild;
         Assert.IsNotNull(cache);
         Assert.IsInstanceOfType(cache, typeof(Row));
@@ -135,7 +136,7 @@ public class StateTest
         Assert.AreEqual("0", text.Content);
 
         button.OnClick.Invoke();
-        result = builder.BuildIfNeeded(widget, widget, result);
+        result = await builder.BuildIfNeededAsync(widget, widget, result);
         owner.CleanUp();
         cache = widget.State.CachedBuild;
         Assert.IsNotNull(cache);
@@ -156,12 +157,12 @@ public class StateTest
     }
 
     [TestMethod]
-    public void TestHooksUseContextWidget()
+    public async Task TestHooksUseContextWidget()
     {
         var owner = new TestBuildOwner();
         var widget = new TestHookContextHolder();
         var builder = new TestWidgetBuilder(owner);
-        var result = builder.BuildIfNeeded(null, widget, null);
+        var result = await builder.BuildIfNeededAsync(null, widget, null);
         var cache = widget.State.CachedBuild;
         Assert.IsNotNull(cache);
         Assert.IsInstanceOfType<ContextProvider>(cache);
@@ -183,7 +184,7 @@ public class StateTest
         Assert.AreEqual("0", text.Content);
 
         button.OnClick.Invoke();
-        result = builder.BuildIfNeeded(widget, widget, result);
+        result = await builder.BuildIfNeededAsync(widget, widget, result);
         owner.CleanUp();
         cache = widget.State.CachedBuild;
         Assert.IsNotNull(cache);
@@ -208,12 +209,12 @@ public class StateTest
     }
 
     [TestMethod]
-    public void TestHooksUseContextWidgetWithNonContextWidget()
+    public async Task TestHooksUseContextWidgetWithNonContextWidget()
     {
         var owner = new TestBuildOwner();
         var widget = new TestHookContextHolderWithNonContext();
         var builder = new TestWidgetBuilder(owner);
-        var result = builder.BuildIfNeeded(null, widget, null);
+        var result = await builder.BuildIfNeededAsync(null, widget, null);
         var cache = widget.State.CachedBuild;
         Assert.IsNotNull(cache);
         var contextProvider = (ContextProvider)cache;
@@ -227,7 +228,7 @@ public class StateTest
 
         var button = (Button)row.Children[0];
         button.OnClick.Invoke();
-        result = builder.BuildIfNeeded(widget, widget, result);
+        result = await builder.BuildIfNeededAsync(widget, widget, result);
         owner.CleanUp();
         cache = widget.State.CachedBuild;
         Assert.IsNotNull(cache);

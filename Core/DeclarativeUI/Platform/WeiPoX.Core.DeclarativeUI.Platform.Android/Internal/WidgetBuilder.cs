@@ -25,6 +25,7 @@ internal class WidgetBuilder : WidgetBuilder<View>
             { typeof(Row), new RowRenderer(_context) },
             { typeof(Padding), new PaddingRenderer(_context) },
             { typeof(Input), new InputRenderer(_context) },
+            { typeof(LazyColumn), new LazyColumnRenderer(context) },
         }.ToImmutableDictionary();
     }
 

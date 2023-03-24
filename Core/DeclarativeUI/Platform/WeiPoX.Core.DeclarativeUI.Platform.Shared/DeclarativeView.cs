@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using WeiPoX.Core.DeclarativeUI.Internal;
 using WeiPoX.Core.DeclarativeUI.Widgets;
 
@@ -34,9 +36,9 @@ namespace WeiPoX.Core.DeclarativeUI.Platform.WinUI3;
 
 
 
-public class DeclarativeView : UserControl, IBuildOwner
+public class DeclarativeView : AbsDeclarativeControl, IBuildOwner
 {
-    private List<Widget> RebuiltWidgets { get; } = new();
+    private readonly List<Widget> _rebuiltWidgets = new();
     private readonly WidgetBuilder _renderer;
     private Control? _renderedControl;
     private bool _rendering;
@@ -48,39 +50,38 @@ public class DeclarativeView : UserControl, IBuildOwner
     {
         _widget = widget;
         _renderer = new WidgetBuilder(this, context);
-        Render();
+        _ = Render();
     }
 #else 
     public DeclarativeView(Widget widget)
     {
         _widget = widget;
         _renderer = new WidgetBuilder(this);
-        Render();
+        _ = Render();
     }
 #endif
-
-
+    
     public void MarkNeedsBuild(Widget widget)
     {
-        RebuiltWidgets.Add(widget);
+        _rebuiltWidgets.Add(widget);
         _requestBuildCount++;
         if (!_rendering)
         {
-            Render();
+            _ = Render();
         }
     }
 
     public bool IsBuildScheduled(Widget widget)
     {
-        return RebuiltWidgets.Contains(widget);
+        return _rebuiltWidgets.Contains(widget);
     }
 
     public void CleanUp()
     {
-        RebuiltWidgets.Clear();
+        _rebuiltWidgets.Clear();
     }
 
-    private async void Render()
+    private async Task Render()
     {
         while (_requestBuildCount > 0)
         {
@@ -91,6 +92,7 @@ public class DeclarativeView : UserControl, IBuildOwner
             if (_requestBuildCount == 0)
             {
                 UpdateChild(_renderedControl);
+                CleanUp();
             }
             else
             {
@@ -98,85 +100,4 @@ public class DeclarativeView : UserControl, IBuildOwner
             }
         }
     }
-
-    private void UpdateChild(Control control)
-    {
-#if ANDROID
-        if (ChildCount == 0)
-        {
-            AddView(control);
-        }
-        else if (control != GetChildAt(0))
-        {
-            RemoveViewAt(0);
-            AddView(control);
-        }
-#elif AVALONIA
-        if (!Equals(Content, control))
-        {
-            Content = control;
-        }
-#elif UIKIT
-        if (View == null)
-        {
-            return;
-        }
-        if (View.Subviews.Length == 0)
-        {
-            View.AddSubview(control);
-            ApplySafeArea();
-        }
-        else if (!View.Subviews[0].Equals(control))
-        {
-            View.Subviews[0].RemoveFromSuperview();
-            View.AddSubview(control);
-            ApplySafeArea();
-        }
-#elif WINUI3
-        if (!Equals(Content, control))
-        {
-            Content = control;
-        }
-#endif
-    }
-    
-#if UIKIT
-    private void ApplySafeArea()
-    {
-        if (_renderedControl == null)
-        {
-            return;
-        }
-        _renderedControl.TranslatesAutoresizingMaskIntoConstraints = false;
-        var guide = View?.LayoutMarginsGuide;
-        if (guide != null)
-        {
-            NSLayoutConstraint.ActivateConstraints(new[]
-            {
-                _renderedControl.LeadingAnchor.ConstraintEqualTo(guide.LeadingAnchor),
-                _renderedControl.TrailingAnchor.ConstraintEqualTo(guide.TrailingAnchor),
-            });
-        }
-        var safeGuide = View?.SafeAreaLayoutGuide;
-        if (safeGuide != null)
-        {
-            NSLayoutConstraint.ActivateConstraints(new[]
-            {
-                _renderedControl.TopAnchor.ConstraintEqualToSystemSpacingBelowAnchor(safeGuide.TopAnchor, 1),
-                _renderedControl.BottomAnchor.ConstraintEqualToSystemSpacingBelowAnchor(safeGuide.BottomAnchor, 1),
-            });
-        }
-    }
-    
-    public override void ViewDidLoad()
-    {
-        base.ViewDidLoad();
-        if (View != null)
-        {
-            View.BackgroundColor = UIColor.SystemBackground;
-        }
-    }
-#endif
-    
-
 }

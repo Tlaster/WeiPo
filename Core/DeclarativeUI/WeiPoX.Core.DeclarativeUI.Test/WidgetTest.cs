@@ -1,3 +1,4 @@
+using WeiPoX.Core.DeclarativeUI.Testing;
 using WeiPoX.Core.DeclarativeUI.Widgets;
 using WeiPoX.Core.DeclarativeUI.Widgets.Layout;
 
@@ -22,12 +23,12 @@ public class WidgetTest
     }
 
     [TestMethod]
-    public void TestWidgetWithNestedStatefulWidget()
+    public async Task TestWidgetWithNestedStatefulWidget()
     {
         var owner = new TestBuildOwner();
         var widget = new TestStatefulWithNestedStatefulWidget();
         var builder = new TestWidgetBuilder(owner);
-        var result = builder.BuildIfNeeded(null, widget, null);
+        var result = await builder.BuildIfNeededAsync(null, widget, null);
         Assert.IsInstanceOfType(widget.State.CachedBuild, typeof(Box));
         var box = widget.State.CachedBuild as Box;
         Assert.IsNotNull(box);
@@ -48,7 +49,7 @@ public class WidgetTest
 
         button.OnClick.Invoke();
 
-        result = builder.BuildIfNeeded(widget, widget, result);
+        result = await builder.BuildIfNeededAsync(widget, widget, result);
         owner.CleanUp();
 
         Assert.IsInstanceOfType(widget.State.CachedBuild, typeof(Box));
@@ -71,12 +72,12 @@ public class WidgetTest
     }
 
     [TestMethod]
-    public void TestWidgetWithParameterNestedStatefulWidget()
+    public async Task TestWidgetWithParameterNestedStatefulWidget()
     {
         var owner = new TestBuildOwner();
         var widget = new TestStatefulWithParameterNestedStatefulWidget();
         var builder = new TestWidgetBuilder(owner);
-        var result = builder.BuildIfNeeded(null, widget, null);
+        var result = await builder.BuildIfNeededAsync(null, widget, null);
         Assert.IsInstanceOfType(widget.State.CachedBuild, typeof(Box));
         var box = widget.State.CachedBuild as Box;
         Assert.IsNotNull(box);
@@ -101,7 +102,7 @@ public class WidgetTest
 
         button.OnClick.Invoke();
 
-        result = builder.BuildIfNeeded(widget, widget, result);
+        result = await builder.BuildIfNeededAsync(widget, widget, result);
         owner.CleanUp();
 
         Assert.IsInstanceOfType(widget.State.CachedBuild, typeof(Box));
@@ -129,7 +130,7 @@ public class WidgetTest
         Assert.AreEqual("1", text2.Content);
 
         nestedButton.OnClick.Invoke();
-        result = builder.BuildIfNeeded(widget, widget, result);
+        result = await builder.BuildIfNeededAsync(widget, widget, result);
         owner.CleanUp();
 
         Assert.IsInstanceOfType(widget.State.CachedBuild, typeof(Box));

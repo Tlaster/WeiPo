@@ -3,6 +3,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Templates;
+using Avalonia.Data;
 using Avalonia.Data.Core;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
@@ -32,9 +33,9 @@ public class App : Application
                     {
                         Items = Enumerable.Range(0, 100).ToList(),
                         ItemTemplate = new FuncDataTemplate<int>((i, _) => new TextBlock
-                        {
-                            Text = $"Item {i}"
-                        })
+                        {       
+                            [!TextBlock.TextProperty] = new Binding(),
+                        }, true)
                     }
                 }
             };

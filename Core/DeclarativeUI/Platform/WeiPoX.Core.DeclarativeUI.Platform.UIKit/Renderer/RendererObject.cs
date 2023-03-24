@@ -36,7 +36,7 @@ internal abstract class RendererObject<TWidget, TControl> : IRenderer<UIView>
         return true;
     }
 
-    UIView IRenderer<UIView>.Create()
+    UIView IRenderer<UIView>.Create(WidgetBuilder<UIView> renderer)
     {
         return Create() as UIView ?? throw new InvalidOperationException();
     }

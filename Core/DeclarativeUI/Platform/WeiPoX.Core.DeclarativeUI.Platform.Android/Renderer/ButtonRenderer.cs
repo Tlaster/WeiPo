@@ -4,6 +4,8 @@ using Android.Views;
 using Google.Android.Material.Button;
 using Java.Interop;
 using ReactiveUI;
+using WeiPoX.Core.DeclarativeUI.Internal;
+using WeiPoX.Core.DeclarativeUI.Platform.Android.Internal;
 
 namespace WeiPoX.Core.DeclarativeUI.Platform.Android.Renderer;
 
@@ -13,7 +15,7 @@ internal class ButtonRenderer : RendererObject<WeiPoX.Core.DeclarativeUI.Widgets
     {
     }
 
-    protected override Button Create(Context context)
+    protected override Button Create(Context context, WidgetBuilder renderer)
     {
         var button = new MaterialButton(context);
         button.LayoutParameters = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);

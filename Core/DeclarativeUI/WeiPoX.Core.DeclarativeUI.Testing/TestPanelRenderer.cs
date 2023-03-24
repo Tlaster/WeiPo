@@ -5,7 +5,7 @@ namespace WeiPoX.Core.DeclarativeUI.Testing;
 
 internal class TestPanelRenderer : IRenderer<TestControl>
 {
-    public TestControl Create()
+    public TestControl Create(WidgetBuilder<TestControl> renderer)
     {
         return new TestPanel();
     }

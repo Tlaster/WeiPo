@@ -3,7 +3,7 @@ using System.Collections.Immutable;
 
 namespace WeiPoX.Core.DeclarativeUI.Widgets.Layout;
 
-public record Panel : MappingWidget, IPanelWidget, IEnumerable
+public abstract record Panel : MappingWidget, IPanelWidget, IEnumerable
 {
     public List<Widget> Children { get; } = new();
 

@@ -1,12 +1,14 @@
 using Android.Content;
 using Android.Views;
+using WeiPoX.Core.DeclarativeUI.Internal;
+using WeiPoX.Core.DeclarativeUI.Platform.Android.Internal;
 using WeiPoX.Core.DeclarativeUI.Widgets.Layout;
 
 namespace WeiPoX.Core.DeclarativeUI.Platform.Android.Renderer;
 
 internal class BoxRenderer : RendererObject<Box, FrameLayout>
 {
-    protected override FrameLayout Create(Context context)
+    protected override FrameLayout Create(Context context, WidgetBuilder renderer)
     {
         return new FrameLayout(context);
     }

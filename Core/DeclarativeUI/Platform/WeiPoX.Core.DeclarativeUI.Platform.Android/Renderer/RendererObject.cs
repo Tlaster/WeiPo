@@ -1,6 +1,7 @@
 using Android.Content;
 using Android.Views;
 using WeiPoX.Core.DeclarativeUI.Internal;
+using WeiPoX.Core.DeclarativeUI.Platform.Android.Internal;
 using WeiPoX.Core.DeclarativeUI.Widgets;
 
 namespace WeiPoX.Core.DeclarativeUI.Platform.Android.Renderer;
@@ -50,12 +51,13 @@ internal abstract class RendererObject<TWidget, TControl> : IRenderer<View>
         return null;
     }
 
-    View IRenderer<View>.Create()
+    View IRenderer<View>.Create(WidgetBuilder<View> renderer)
     {
-        return Create(_context) as View ?? throw new InvalidOperationException();
+        return Create(_context, renderer as WidgetBuilder ?? throw new InvalidOperationException()) as View ??
+               throw new InvalidOperationException();
     }
 
-    protected abstract TControl Create(Context context);
+    protected abstract TControl Create(Context context, WidgetBuilder renderer);
 
     protected virtual void AddChild(TControl control, View childControl)
     {
@@ -89,4 +91,33 @@ internal abstract class RendererObject<TWidget, TControl> : IRenderer<View>
     }
 
     protected abstract void Update(TControl control, TWidget widget);
+}
+
+internal abstract class LazyRendererObject<TWidget, TControl> : RendererObject<TWidget, TControl>, ILazyRenderer<View>
+    where TWidget : MappingWidget where TControl : class
+{
+    public bool IsVisible(View control, int index)
+    {
+        return IsVisible(control as TControl ?? throw new InvalidOperationException(), index);
+    }
+    
+    public View? GetVisibleChild(View control, int index)
+    {
+        return GetVisibleChild(control as TControl ?? throw new InvalidOperationException(), index);
+    }
+
+    public void UpdateChild(View control, int index, View childControl)
+    {
+        UpdateChild(control as TControl ?? throw new InvalidOperationException(), index, childControl);
+    }
+
+    protected abstract bool IsVisible(TControl control, int index);
+
+    protected abstract View? GetVisibleChild(TControl control, int index);
+
+    protected abstract void UpdateChild(TControl control, int index, View childControl);
+
+    protected LazyRendererObject(Context context) : base(context)
+    {
+    }
 }

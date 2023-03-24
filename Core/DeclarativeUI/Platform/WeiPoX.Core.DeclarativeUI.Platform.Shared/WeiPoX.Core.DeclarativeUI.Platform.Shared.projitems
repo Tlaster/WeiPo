@@ -9,6 +9,8 @@
     <Import_RootNamespace>WeiPoX.Core.DeclarativeUI.Platform.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)AbsDeclarativeControl.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DeclarativeView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SubDeclarativeView.cs" />
   </ItemGroup>
 </Project>

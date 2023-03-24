@@ -1,4 +1,6 @@
 using Android.Content;
+using Android.Views;
+using WeiPoX.Core.DeclarativeUI.Internal;
 using WeiPoX.Core.DeclarativeUI.Platform.Android.Internal;
 using WeiPoX.Core.DeclarativeUI.Widgets.Layout;
 
@@ -10,7 +12,7 @@ internal class RowRenderer : RendererObject<Row, LinearLayout>
     {
     }
 
-    protected override LinearLayout Create(Context context)
+    protected override LinearLayout Create(Context context, WidgetBuilder renderer)
     {
         return new LinearLayout(context)
         {

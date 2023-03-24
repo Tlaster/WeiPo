@@ -1,4 +1,5 @@
 ﻿using WeiPoX.Core.DeclarativeUI.Internal;
+using WeiPoX.Core.DeclarativeUI.Testing;
 using WeiPoX.Core.DeclarativeUI.Widgets;
 using WeiPoX.Core.DeclarativeUI.Widgets.Layout;
 
@@ -8,7 +9,7 @@ namespace WeiPoX.Core.DeclarativeUI.Test;
 public class RendererTest
 {
     [TestMethod]
-    public void TestRenderer()
+    public async Task TestRenderer()
     {
         var owner = new TestBuildOwner();
         var box = new Box
@@ -16,12 +17,12 @@ public class RendererTest
             new Text("hello")
         };
         var renderer = new TestWidgetBuilder(owner);
-        var result = renderer.BuildIfNeeded(null, box, null);
+        var result = await renderer.BuildIfNeededAsync(null, box, null);
         Assert.AreEqual(1, result.UpdateCount);
     }
 
     [TestMethod]
-    public void TestRendererUpdateReference()
+    public async Task TestRendererUpdateReference()
     {
         var owner = new TestBuildOwner();
         var control = new TestControl
@@ -29,7 +30,7 @@ public class RendererTest
             UpdateCount = 1
         };
         var renderer = new TestWidgetBuilder(owner);
-        var result = renderer.BuildIfNeeded(
+        var result = await renderer.BuildIfNeededAsync(
             new Box
             {
                 new Text("hello")
@@ -44,11 +45,11 @@ public class RendererTest
     }
 
     [TestMethod]
-    public void TestRendererUpdate()
+    public async Task TestRendererUpdate()
     {
         var owner = new TestBuildOwner();
         var renderer = new TestWidgetBuilder(owner);
-        var result = renderer.BuildIfNeeded(
+        var result = await renderer.BuildIfNeededAsync(
             new Box
             {
                 new Text("hello"),
@@ -63,11 +64,11 @@ public class RendererTest
     }
 
     [TestMethod]
-    public void TestRendererNotUpdate()
+    public async Task TestRendererNotUpdate()
     {
         var owner = new TestBuildOwner();
         var renderer = new TestWidgetBuilder(owner);
-        var result = renderer.BuildIfNeeded(
+        var result = await renderer.BuildIfNeededAsync(
             new Box
             {
                 new Text("hello"),
@@ -82,12 +83,12 @@ public class RendererTest
     }
 
     [TestMethod]
-    public void TestChildrenUpdateReference()
+    public async Task TestChildrenUpdateReference()
     {
         var owner = new TestBuildOwner();
         var renderer = new TestWidgetBuilder(owner);
         var child = new TestControl { UpdateCount = 1 };
-        var result = renderer.BuildIfNeeded(
+        var result = await renderer.BuildIfNeededAsync(
             new Box
             {
                 new Text("hello"),
@@ -110,11 +111,11 @@ public class RendererTest
     }
 
     [TestMethod]
-    public void TestChildrenUpdate()
+    public async Task TestChildrenUpdate()
     {
         var owner = new TestBuildOwner();
         var renderer = new TestWidgetBuilder(owner);
-        var result = renderer.BuildIfNeeded(
+        var result = await renderer.BuildIfNeededAsync(
             new Box
             {
                 new Text("hello")
@@ -137,11 +138,11 @@ public class RendererTest
     }
 
     [TestMethod]
-    public void TestChildAdd()
+    public async Task TestChildAdd()
     {
         var owner = new TestBuildOwner();
         var renderer = new TestWidgetBuilder(owner);
-        var result = renderer.BuildIfNeeded(
+        var result = await renderer.BuildIfNeededAsync(
             new Box
             {
                 new Text("hello")
@@ -166,11 +167,11 @@ public class RendererTest
     }
 
     [TestMethod]
-    public void TestChildRemove()
+    public async Task TestChildRemove()
     {
         var owner = new TestBuildOwner();
         var renderer = new TestWidgetBuilder(owner);
-        var result = renderer.BuildIfNeeded(
+        var result = await renderer.BuildIfNeededAsync(
             new Box
             {
                 new Text("hello"), 
@@ -195,12 +196,12 @@ public class RendererTest
     }
 
     [TestMethod]
-    public void TestChildAddUpdateReference()
+    public async Task TestChildAddUpdateReference()
     {
         var owner = new TestBuildOwner();
         var renderer = new TestWidgetBuilder(owner);
         var child = new TestControl { UpdateCount = 1 };
-        var result = renderer.BuildIfNeeded(
+        var result = await renderer.BuildIfNeededAsync(
             new Box
             {
                 new Text("hello1")
@@ -224,146 +225,107 @@ public class RendererTest
     }
 }
 
-internal class TestControl
-{
-    public int UpdateCount { get; set; }
-}
-
-internal class TestPanel : TestControl
-{
-    public List<TestControl> Children { get; } = new();
-}
-
-internal class TestBuildOwner : IBuildOwner
-{
-    public List<Widget> RebuiltWidgets { get; } = new();
-
-    public bool NeedsBuild => RebuiltWidgets.Count > 0;
-
-
-    public void MarkNeedsBuild(Widget widget)
-    {
-        RebuiltWidgets.Add(widget);
-    }
-
-    public bool IsBuildScheduled(Widget widget)
-    {
-        return RebuiltWidgets.Contains(widget);
-    }
-
-    public void CleanUp()
-    {
-        RebuiltWidgets.Clear();
-    }
-}
-
-internal class TestWidgetBuilder : WidgetBuilder<TestControl>
-{
-    public TestWidgetBuilder(IBuildOwner owner) : base(owner)
-    {
-    }
-
-    protected override IRenderer<TestControl> GetRenderer(Type widgetType)
-    {
-        if (typeof(IPanelWidget).IsAssignableFrom(widgetType))
-        {
-            return new TestPanelRenderer();
-        }
-
-        return new TestRenderer();
-    }
-}
-
-internal class TestPanelRenderer : IRenderer<TestControl>
-{
-    public TestControl Create()
-    {
-        return new TestPanel();
-    }
-
-    public void Update(TestControl control, MappingWidget widget)
-    {
-        control.UpdateCount++;
-    }
-
-    public void AddChild(TestControl control, TestControl childControl)
-    {
-        if (control is TestPanel panel)
-        {
-            panel.Children.Add(childControl);
-        }
-    }
-
-    public void RemoveChild(TestControl control, TestControl childControl)
-    {
-        if (control is TestPanel panel)
-        {
-            panel.Children.Remove(childControl);
-        }
-    }
-
-    public void ReplaceChild(TestControl control, int index, TestControl newChildControl)
-    {
-        if (control is TestPanel panel)
-        {
-            panel.Children[index] = newChildControl;
-        }
-    }
-    
-    public bool IsPanel(TestControl value)
-    {
-        return value is TestPanel;
-    }
-
-    public TestControl? GetChildAt(TestControl control, int index)
-    {
-        return control is TestPanel panel ? panel.Children.ElementAtOrDefault(index) : null;
-    }
-}
-
-internal class TestRenderer : IRenderer<TestControl>
-{
-    public TestControl Create()
-    {
-        return new TestControl();
-    }
-
-    public void Update(TestControl control, MappingWidget widget)
-    {
-        control.UpdateCount++;
-    }
-
-    public void AddChild(TestControl control, TestControl childControl)
-    {
-        if (control is TestPanel panel)
-        {
-            panel.Children.Add(childControl);
-        }
-    }
-
-    public void RemoveChild(TestControl control, TestControl childControl)
-    {
-        if (control is TestPanel panel)
-        {
-            panel.Children.Remove(childControl);
-        }
-    }
-
-    public void ReplaceChild(TestControl control, int index, TestControl newChildControl)
-    {
-        if (control is TestPanel panel)
-        {
-            panel.Children[index] = newChildControl;
-        }
-    }
-    
-    public bool IsPanel(TestControl value)
-    {
-        return value is TestPanel;
-    }
-
-    public TestControl? GetChildAt(TestControl control, int index)
-    {
-        return control is TestPanel panel ? panel.Children.ElementAtOrDefault(index) : null;
-    }
-}
+// internal class TestControl
+// {
+//     public int UpdateCount { get; set; }
+// }
+//
+// internal class TestPanel : TestControl
+// {
+//     public List<TestControl> Children { get; } = new();
+// }
+//
+// internal class TestBuildOwner : IBuildOwner
+// {
+//     public List<Widget> RebuiltWidgets { get; } = new();
+//
+//     public bool NeedsBuild => RebuiltWidgets.Count > 0;
+//
+//
+//     public void MarkNeedsBuild(Widget widget)
+//     {
+//         RebuiltWidgets.Add(widget);
+//     }
+//
+//     public bool IsBuildScheduled(Widget widget)
+//     {
+//         return RebuiltWidgets.Contains(widget);
+//     }
+//
+//     public void CleanUp()
+//     {
+//         RebuiltWidgets.Clear();
+//     }
+// }
+//
+// internal class TestWidgetBuilder : WidgetBuilder<TestControl>
+// {
+//     public TestWidgetBuilder(IBuildOwner owner) : base(owner)
+//     {
+//     }
+//
+//     protected override IRenderer<TestControl> GetRenderer(Type widgetType)
+//     {
+//         if (typeof(IPanelWidget).IsAssignableFrom(widgetType))
+//         {
+//             return new TestPanelRenderer();
+//         }
+//
+//         return new TestRenderer();
+//     }
+// }
+//
+// internal class TestPanelRenderer : IPanelRenderer<TestControl>
+// {
+//     public TestControl Create()
+//     {
+//         return new TestPanel();
+//     }
+//
+//     public void Update(TestControl control, MappingWidget widget)
+//     {
+//         control.UpdateCount++;
+//     }
+//
+//     public void AddChild(TestControl control, TestControl childControl)
+//     {
+//         if (control is TestPanel panel)
+//         {
+//             panel.Children.Add(childControl);
+//         }
+//     }
+//
+//     public void RemoveChild(TestControl control, TestControl childControl)
+//     {
+//         if (control is TestPanel panel)
+//         {
+//             panel.Children.Remove(childControl);
+//         }
+//     }
+//
+//     public void ReplaceChild(TestControl control, int index, TestControl newChildControl)
+//     {
+//         if (control is TestPanel panel)
+//         {
+//             panel.Children[index] = newChildControl;
+//         }
+//     }
+//
+//     public TestControl? GetChildAt(TestControl control, int index)
+//     {
+//         return control is TestPanel panel ? panel.Children.ElementAtOrDefault(index) : null;
+//     }
+// }
+//
+// internal class TestRenderer : IRenderer<TestControl>
+// {
+//     public TestControl Create()
+//     {
+//         return new TestControl();
+//     }
+//
+//     public void Update(TestControl control, MappingWidget widget)
+//     {
+//         control.UpdateCount++;
+//     }
+// }

@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using WeiPoX.Core.DeclarativeUI.Internal;
+using WeiPoX.Core.DeclarativeUI.Platform.WinUI3.Internal;
 using WeiPoX.Core.DeclarativeUI.Widgets;
 
 namespace WeiPoX.Core.DeclarativeUI.Platform.WinUI3.Renderer;
@@ -45,12 +46,12 @@ internal abstract class RendererObject<TWidget, TControl> : IRenderer<UIElement>
         return value is Panel;
     }
 
-    UIElement IRenderer<UIElement>.Create()
+    UIElement IRenderer<UIElement>.Create(WidgetBuilder<UIElement> renderer)
     {
-        return Create() as UIElement ?? throw new InvalidOperationException();
+        return Create(renderer as WidgetBuilder ?? throw new InvalidOperationException()) as UIElement ?? throw new InvalidOperationException();
     }
 
-    protected virtual TControl Create()
+    protected virtual TControl Create(WidgetBuilder renderer)
     {
         return new TControl();
     }
@@ -107,4 +108,30 @@ internal abstract class RendererObject<TWidget, TControl> : IRenderer<UIElement>
     }
 
     protected abstract void Update(TControl control, TWidget widget);
+}
+
+
+internal abstract class LazyRendererObject<TWidget, TControl> : RendererObject<TWidget, TControl>, ILazyRenderer<Control>
+    where TWidget : MappingWidget where TControl : class, new()
+{
+    public bool IsVisible(Control control, int index)
+    {
+        return IsVisible(control as TControl ?? throw new InvalidOperationException(), index);
+    }
+    
+    public Control? GetVisibleChild(Control control, int index)
+    {
+        return GetVisibleChild(control as TControl ?? throw new InvalidOperationException(), index);
+    }
+
+    public void UpdateChild(Control control, int index, Control childControl)
+    {
+        UpdateChild(control as TControl ?? throw new InvalidOperationException(), index, childControl);
+    }
+
+    protected abstract bool IsVisible(TControl control, int index);
+
+    protected abstract Control? GetVisibleChild(TControl control, int index);
+
+    protected abstract void UpdateChild(TControl control, int index, Control childControl);
 }

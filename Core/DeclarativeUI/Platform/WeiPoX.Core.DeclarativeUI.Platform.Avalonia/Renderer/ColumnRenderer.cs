@@ -7,7 +7,7 @@ namespace WeiPoX.Core.DeclarativeUI.Platform.Avalonia.Renderer;
 
 internal class ColumnRenderer : RendererObject<Column, StackPanel>
 {
-    protected override StackPanel Create()
+    protected override StackPanel Create(WidgetBuilder renderer)
     {
         return new StackPanel
         {

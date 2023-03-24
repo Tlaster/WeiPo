@@ -5,8 +5,6 @@ namespace WeiPoX.Core.DeclarativeUI.Internal;
 
 internal partial class WidgetBuilder<T>
 {
-    
-
     private Task<T> CreateAsync(Widget widget, BuildContext context)
     {
         return widget switch
@@ -22,7 +20,8 @@ internal partial class WidgetBuilder<T>
         switch (widget)
         {
             case ContextProvider contextProvider:
-                return CreateAsync(contextProvider.Child, context.Merge((contextProvider as IContextProvider).Providers));
+                return CreateAsync(contextProvider.Child,
+                    context.Merge((contextProvider as IContextProvider).Providers));
             case StatefulWidget statefulWidget:
                 statefulWidget.State.BuildOwner = _owner;
                 var result = BuildStatefulWidget(statefulWidget, context);
@@ -37,37 +36,40 @@ internal partial class WidgetBuilder<T>
     private async Task<T> CreateMappingWidgetAsync(MappingWidget widget, BuildContext context)
     {
         var renderer = GetRenderer(widget.GetType());
-        var control = renderer.Create();
+        var control = renderer.Create(this);
         renderer.Update(control, widget);
 
-        if (widget is not IPanelWidget panel)
+        if (widget is not IPanelWidget panel || !renderer.IsPanel(control))
         {
             return control;
         }
+
         var child = await Task.WhenAll(panel.Children.Select(it => CreateAsync(it, context)));
         foreach (var c in child)
         {
             renderer.AddChild(control, c);
         }
+
         return control;
     }
 
-    
+
     public Task<T> BuildIfNeededAsync(Widget? oldValue, Widget newValue, T? control)
     {
-        return BuildIfNeededAsync(oldValue, newValue, control, new BuildContext(ImmutableDictionary<Type, object>.Empty));
+        return BuildIfNeededAsync(oldValue, newValue, control,
+            new BuildContext(ImmutableDictionary<Type, object>.Empty));
     }
 
     private Task<T> BuildIfNeededAsync(Widget? oldValue, Widget newValue, T? control, BuildContext context)
     {
         if (oldValue == null || control == null)
         {
-            return Task.FromResult(Create(newValue, context));
+            return CreateAsync(newValue, context);
         }
 
         if (oldValue.GetType() != newValue.GetType()) // tree changed
         {
-            return Task.FromResult(Create(newValue, context));
+            return CreateAsync(newValue, context);
         }
 
         return newValue switch
@@ -96,13 +98,15 @@ internal partial class WidgetBuilder<T>
                 var newBuild = BuildStatefulWidget(statefulWidget, context, forceRebuild);
                 return BuildIfNeededAsync(oldBuild, newBuild, control, context);
             case StatelessWidget statelessWidget:
-                return BuildIfNeededAsync((oldValue as StatelessWidget)?.Content, statelessWidget.Content, control, context);
+                return BuildIfNeededAsync((oldValue as StatelessWidget)?.Content, statelessWidget.Content, control,
+                    context);
             default:
                 throw new NotImplementedException();
         }
     }
 
-    private async Task<T> BuildMappingWidgetAsync(Widget oldValue, MappingWidget newValue, T control, BuildContext context)
+    private async Task<T> BuildMappingWidgetAsync(Widget oldValue, MappingWidget newValue, T control,
+        BuildContext context)
     {
         if (!IsChanged(oldValue, newValue))
         {
@@ -111,11 +115,60 @@ internal partial class WidgetBuilder<T>
 
         var renderer = GetRenderer(newValue.GetType());
         renderer.Update(control, newValue);
-        if (newValue is not IPanelWidget newPanel || oldValue is not IPanelWidget oldPanel || !renderer.IsPanel(control))
+        if (newValue is IPanelWidget newPanel && oldValue is IPanelWidget oldPanel &&
+            renderer.IsPanel(control))
         {
-            return control;
-        }   
+            await BuildPanel(control, context, oldPanel, newPanel, renderer);
+        }
 
+        if (newValue is ILazyWidget newLazyWidget && oldValue is ILazyWidget oldLazyWidget &&
+            renderer is ILazyRenderer<T> lazyRenderer)
+        {
+            await BuildLazyWidget(control, context, oldLazyWidget, newLazyWidget, lazyRenderer);
+        }
+
+        return control;
+    }
+
+    private async Task BuildLazyWidget(
+        T control,
+        BuildContext context,
+        ILazyWidget oldLazyWidget,
+        ILazyWidget newLazyWidget,
+        ILazyRenderer<T> lazyRenderer
+    )
+    {
+        var oldItemsCount = oldLazyWidget.Items.Count;
+        var newItemsCount = newLazyWidget.Items.Count;
+        var count = Math.Max(oldItemsCount, newItemsCount);
+        await Task.WhenAll(Enumerable.Range(0, count).Select(async i =>
+        {
+            var oldItem = oldLazyWidget.Items.ElementAtOrDefault(i);
+            var newItem = newLazyWidget.Items.ElementAtOrDefault(i);
+            if (lazyRenderer.IsVisible(control, i))
+            {
+                if (oldItem != null && newItem != null)
+                {
+                    var oldItemControl = lazyRenderer.GetVisibleChild(control, i);
+                    var newItemControl = await BuildIfNeededAsync(
+                        oldItem.Builder.Invoke(),
+                        newItem.Builder.Invoke(),
+                        oldItemControl, 
+                        context);
+                    lazyRenderer.UpdateChild(control, i, newItemControl);
+                }
+            }
+        }));
+    }
+
+    private async Task BuildPanel(
+        T control,
+        BuildContext context,
+        IPanelWidget oldPanel,
+        IPanelWidget newPanel,
+        IRenderer<T> renderer
+    )
+    {
         var oldChildren = oldPanel.Children;
         var newChildren = newPanel.Children;
         var oldCount = oldChildren.Count;
@@ -155,7 +208,5 @@ internal partial class WidgetBuilder<T>
 #endif
             }
         }));
-
-        return control;
     }
 }

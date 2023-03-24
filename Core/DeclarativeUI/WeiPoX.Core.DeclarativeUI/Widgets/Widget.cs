@@ -17,3 +17,10 @@ internal interface IContextProvider
 {
     ImmutableDictionary<Type, object> Providers { get; }
 }
+
+internal interface ILazyWidget
+{
+    ImmutableList<ActualLazyItem> Items { get; }
+}
+
+internal record ActualLazyItem(int Index, Func<Widget> Builder);
