@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Markup;
 using WeiPoX.Core.DeclarativeUI.Platform.WinUI3.Internal;
 using WeiPoX.Core.DeclarativeUI.Widgets;
 using WeiPoX.Core.DeclarativeUI.Widgets.Layout;
@@ -29,7 +30,7 @@ internal class LazyColumnRenderer : LazyRendererObject<LazyColumn, WeiPoXItemsRe
 
     protected override Control? GetVisibleChild(WeiPoXItemsRepeater control, int index)
     {
-        return (control.Repeater.TryGetElement(index) as DeclarativeView)?.Content as Control;
+        return (control.Repeater.TryGetElement(index) as SubDeclarativeView)?.Content as Control;
     }
 
     protected override void UpdateChild(WeiPoXItemsRepeater control, int index, Control childControl)

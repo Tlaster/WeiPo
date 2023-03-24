@@ -25,7 +25,7 @@ internal class LazyColumnRenderer : LazyRendererObject<LazyColumn, WeiPoXItemsRe
 
     protected override Control? GetVisibleChild(WeiPoXItemsRepeater control, int index)
     {
-        return (control.Repeater.TryGetElement(index) as DeclarativeView)?.Content as Control;
+        return (control.Repeater.TryGetElement(index) as SubDeclarativeView)?.Content as Control;
     }
 
     protected override void UpdateChild(WeiPoXItemsRepeater control, int index, Control childControl)
