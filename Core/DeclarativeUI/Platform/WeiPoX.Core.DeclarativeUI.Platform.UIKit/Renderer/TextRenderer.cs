@@ -1,10 +1,11 @@
+using WeiPoX.Core.DeclarativeUI.Platform.UIKit.Internal;
 using WeiPoX.Core.DeclarativeUI.Widgets;
 
 namespace WeiPoX.Core.DeclarativeUI.Platform.UIKit.Renderer;
 
 internal class TextRenderer : RendererObject<Text, UILabel>
 {
-    protected override UILabel Create()
+    protected override UILabel Create(WidgetBuilder renderer)
     {
         return new UILabel();
     }

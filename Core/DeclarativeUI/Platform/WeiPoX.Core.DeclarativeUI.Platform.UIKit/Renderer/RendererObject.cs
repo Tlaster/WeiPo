@@ -1,4 +1,5 @@
 using WeiPoX.Core.DeclarativeUI.Internal;
+using WeiPoX.Core.DeclarativeUI.Platform.UIKit.Internal;
 using WeiPoX.Core.DeclarativeUI.Widgets;
 
 namespace WeiPoX.Core.DeclarativeUI.Platform.UIKit.Renderer;
@@ -38,10 +39,10 @@ internal abstract class RendererObject<TWidget, TControl> : IRenderer<UIView>
 
     UIView IRenderer<UIView>.Create(WidgetBuilder<UIView> renderer)
     {
-        return Create() as UIView ?? throw new InvalidOperationException();
+        return Create(renderer as WidgetBuilder ?? throw new InvalidOperationException()) as UIView ?? throw new InvalidOperationException();
     }
 
-    protected virtual TControl Create()
+    protected virtual TControl Create(WidgetBuilder renderer)
     {
         return new TControl();
     }
@@ -73,4 +74,30 @@ internal abstract class RendererObject<TWidget, TControl> : IRenderer<UIView>
     }
 
     protected abstract void Update(TControl control, TWidget widget);
+}
+
+
+internal abstract class LazyRendererObject<TWidget, TControl> : RendererObject<TWidget, TControl>, ILazyRenderer<UIView>
+    where TWidget : MappingWidget where TControl : class, new()
+{
+    public bool IsVisible(UIView control, int index)
+    {
+        return IsVisible(control as TControl ?? throw new InvalidOperationException(), index);
+    }
+
+    public UIView? GetVisibleChild(UIView control, int index)
+    {
+        return GetVisibleChild(control as TControl ?? throw new InvalidOperationException(), index);
+    }
+
+    public void UpdateChild(UIView control, int index, UIView childControl)
+    {
+        UpdateChild(control as TControl ?? throw new InvalidOperationException(), index, childControl);
+    }
+
+    protected abstract bool IsVisible(TControl control, int index);
+
+    protected abstract UIView? GetVisibleChild(TControl control, int index);
+
+    protected abstract void UpdateChild(TControl control, int index, UIView childControl);
 }

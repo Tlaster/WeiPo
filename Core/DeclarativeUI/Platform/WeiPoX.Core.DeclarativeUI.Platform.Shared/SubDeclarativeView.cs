@@ -19,7 +19,7 @@ using UserControl = Avalonia.Controls.UserControl;
 #elif UIKIT
 using WeiPoX.Core.DeclarativeUI.Platform.UIKit.Internal;
 using Control = UIKit.UIView;
-using UserControl = UIKit.UIViewController;
+using UserControl = UIKit.UIView;
 #elif WINUI3
 using WeiPoX.Core.DeclarativeUI.Platform.WinUI3.Internal;
 using Control = Microsoft.UI.Xaml.UIElement;
@@ -37,23 +37,41 @@ namespace WeiPoX.Core.DeclarativeUI.Platform.UIKit;
 namespace WeiPoX.Core.DeclarativeUI.Platform.WinUI3;
 #endif
 
-internal class SubDeclarativeView : AbsDeclarativeControl
+internal class SubDeclarativeView :
+#if UIKIT
+    UserControl
+#else
+    AbsDeclarativeControl
+#endif
 {
-    private readonly WidgetBuilder _renderer;
     private Control? _renderedControl;
     private Widget? _previousWidget;
-    private readonly Func<int, ActualLazyItem> _builder;
+    public Func<int, ActualLazyItem>? Builder
+    {
+        get;
+#if UIKIT
+        set;
+#endif
+    }
+
+    public WidgetBuilder? Renderer
+    {
+        get;
+#if UIKIT
+        set;
+#endif
+    }
 #if ANDROID
     public SubDeclarativeView(Context context, Func<int, ActualLazyItem> builder, WidgetBuilder renderer) : base(context)
     {
-        _builder = builder;
-        _renderer = renderer;
+        Renderer = renderer;
+        Builder = builder;
     }
-#else
+#elif !UIKIT
     public SubDeclarativeView(WidgetBuilder renderer, Func<int, ActualLazyItem> builder)
     {
-        _renderer = renderer;
-        _builder = builder;
+        Renderer = renderer;
+        Builder = builder;
     }
 #endif
     
@@ -61,12 +79,53 @@ internal class SubDeclarativeView : AbsDeclarativeControl
     {
         _ = Render(index);
     }
-    
-    internal async Task Render(int index)
+
+    private async Task Render(int index)
     {
-        var widget = _builder.Invoke(index).Builder.Invoke();
-        _renderedControl = await _renderer.BuildIfNeededAsync(_previousWidget, widget, _renderedControl);
+#if UIKIT
+        if (Builder == null || Renderer == null)
+        {
+            return;
+        }
+#endif
+        var widget = Builder.Invoke(index).Builder.Invoke();
+        _renderedControl = await Renderer.BuildIfNeededAsync(_previousWidget, widget, _renderedControl);
         _previousWidget = widget;
         UpdateChild(_renderedControl);
     }
+
+#if UIKIT
+    internal void UpdateChild(Control control)
+    {
+        if (Subviews.Length == 0)
+        {
+            AddSubview(control);
+            ApplySafeArea(control);
+        }
+        else if (!Subviews[0].Equals(control))
+        {
+            Subviews[0].RemoveFromSuperview();
+            AddSubview(control);
+            ApplySafeArea(control);
+        }
+    }
+    private void ApplySafeArea(Control control)
+    {
+        control.TranslatesAutoresizingMaskIntoConstraints = false;
+        var guide = LayoutMarginsGuide;
+        NSLayoutConstraint.ActivateConstraints(new[]
+        {
+            control.LeadingAnchor.ConstraintEqualTo(guide.LeadingAnchor),
+            control.TrailingAnchor.ConstraintEqualTo(guide.TrailingAnchor),
+        });
+        if (SafeAreaLayoutGuide is { } safeGuide)
+        {
+            NSLayoutConstraint.ActivateConstraints(new[]
+            {
+                control.TopAnchor.ConstraintEqualToSystemSpacingBelowAnchor(safeGuide.TopAnchor, 1),
+                control.BottomAnchor.ConstraintEqualToSystemSpacingBelowAnchor(safeGuide.BottomAnchor, 1),
+            });
+        }
+    }
+#endif
 }

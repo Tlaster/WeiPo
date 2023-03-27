@@ -116,9 +116,13 @@ internal class WeiPoXRecyclerViewAdapter : RecyclerView.Adapter
     {
         if (generateActualLazyItems.Count != _actualLazyItems.Count)
         {
+            _actualLazyItems = generateActualLazyItems;
             NotifyDataSetChanged();
         }
-        _actualLazyItems = generateActualLazyItems;
+        else
+        {
+            _actualLazyItems = generateActualLazyItems;
+        }
     }
 }
 
