@@ -1,10 +1,11 @@
+using WeiPoX.Core.DeclarativeUI.Platform.UIKit.Internal;
 using WeiPoX.Core.DeclarativeUI.Widgets.Layout;
 
 namespace WeiPoX.Core.DeclarativeUI.Platform.UIKit.Renderer;
 
 internal class RowRenderer : RendererObject<Row, UIStackView>
 {
-    protected override UIStackView Create()
+    protected override UIStackView Create(WidgetBuilder renderer)
     {
         var outer = new UIStackView
         {
