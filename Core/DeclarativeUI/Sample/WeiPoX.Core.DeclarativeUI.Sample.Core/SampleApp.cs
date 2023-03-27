@@ -13,7 +13,7 @@ public record SampleApp : StatefulWidget
         {
             new Item
             {
-                Content = new Column
+                new Column
                 {
                     Horizontal = Alignment.Horizontal.Center,
                     Vertical = Alignment.Vertical.Center,
@@ -35,42 +35,13 @@ public record SampleApp : StatefulWidget
             },
             new Items(100)
             {
-                Builder = index => new Text($"item {index}, value: {value}")
+                Builder = index => new Column
+                {
+                    new Text($"item {index}, value: {value}"),
+                    new Text($"text: {text.Text}")
+                }
             }
         };
-
-        // var (value, setValue) = UseState(0);
-        // var (text, setText) = UseState(new InputState("Hello World!"));
-        // return new Column
-        // {
-        //     Horizontal = Alignment.Horizontal.Center,
-        //     Vertical = Alignment.Vertical.Center,
-        //     Children =
-        //     {
-        //         new Button
-        //         {
-        //             Text = "Click me!",
-        //             OnClick = () => setValue(value + 1)
-        //         },
-        //         new Text("Value: " + value),
-        //         new Input
-        //         {
-        //             State = text,
-        //             OnStateChanged = newValue =>
-        //             {
-        //                 if (!newValue.Text.EndsWith('0'))
-        //                 {
-        //                     setText(newValue);
-        //                 }
-        //                 else
-        //                 {
-        //                     setText(newValue with { Text = text.Text });
-        //                 }
-        //             }
-        //         },
-        //         new Text("Text: " + text.Text)
-        //     },
-        // };
     }
 }
 

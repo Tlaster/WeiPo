@@ -82,12 +82,10 @@ internal class SubDeclarativeView :
 
     private async Task Render(int index)
     {
-#if UIKIT
         if (Builder == null || Renderer == null)
         {
             return;
         }
-#endif
         var widget = Builder.Invoke(index).Builder.Invoke();
         _renderedControl = await Renderer.BuildIfNeededAsync(_previousWidget, widget, _renderedControl);
         _previousWidget = widget;
