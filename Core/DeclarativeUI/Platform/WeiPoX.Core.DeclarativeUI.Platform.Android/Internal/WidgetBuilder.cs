@@ -10,21 +10,19 @@ namespace WeiPoX.Core.DeclarativeUI.Platform.Android.Internal;
 
 internal class WidgetBuilder : WidgetBuilder<View>
 {
-    private readonly Context _context;
     private readonly ImmutableDictionary<Type, IRenderer<View>> _renderers;
 
-    public WidgetBuilder(IBuildOwner owner, Context context) : base(owner)
+    public WidgetBuilder(Context context)
     {
-        _context = context;
         _renderers = new Dictionary<Type, IRenderer<View>>
         {
-            { typeof(Text), new TextRenderer(_context) },
-            { typeof(Box), new BoxRenderer(_context) },
-            { typeof(Widgets.Button), new ButtonRenderer(_context) },
-            { typeof(Column), new ColumnRenderer(_context) },
-            { typeof(Row), new RowRenderer(_context) },
-            { typeof(Padding), new PaddingRenderer(_context) },
-            { typeof(Input), new InputRenderer(_context) },
+            { typeof(Text), new TextRenderer(context) },
+            { typeof(Box), new BoxRenderer(context) },
+            { typeof(Widgets.Button), new ButtonRenderer(context) },
+            { typeof(Column), new ColumnRenderer(context) },
+            { typeof(Row), new RowRenderer(context) },
+            { typeof(Padding), new PaddingRenderer(context) },
+            { typeof(Input), new InputRenderer(context) },
             { typeof(LazyColumn), new LazyColumnRenderer(context) },
         }.ToImmutableDictionary();
     }

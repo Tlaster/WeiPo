@@ -5,7 +5,7 @@ using WeiPoX.Core.DeclarativeUI.Widgets;
 
 namespace WeiPoX.Core.DeclarativeUI.Platform.Avalonia.Renderer;
 
-internal abstract class RendererObject<TWidget, TControl> : IRenderer<Control>
+public abstract class RendererObject<TWidget, TControl> : IRenderer<Control>
     where TWidget : MappingWidget where TControl : class, new()
 {
     public void Update(Control control, MappingWidget widget)
@@ -43,12 +43,12 @@ internal abstract class RendererObject<TWidget, TControl> : IRenderer<Control>
         return null;
     }
 
-    Control IRenderer<Control>.Create(WidgetBuilder<Control> renderer)
+    Control IRenderer<Control>.Create(RendererContext<Control> context)
     {
-        return Create(renderer as WidgetBuilder ?? throw new InvalidOperationException()) as Control ?? throw new InvalidOperationException();
+        return Create(context ?? throw new InvalidOperationException()) as Control ?? throw new InvalidOperationException();
     }
 
-    protected virtual TControl Create(WidgetBuilder renderer)
+    protected virtual TControl Create(RendererContext<Control> context)
     {
         return new TControl();
     }
@@ -107,7 +107,7 @@ internal abstract class RendererObject<TWidget, TControl> : IRenderer<Control>
     protected abstract void Update(TControl control, TWidget widget);
 }
 
-internal abstract class LazyRendererObject<TWidget, TControl> : RendererObject<TWidget, TControl>, ILazyRenderer<Control>
+public abstract class LazyRendererObject<TWidget, TControl> : RendererObject<TWidget, TControl>, ILazyRenderer<Control>
     where TWidget : MappingWidget where TControl : class, new()
 {
     public bool IsVisible(Control control, int index)

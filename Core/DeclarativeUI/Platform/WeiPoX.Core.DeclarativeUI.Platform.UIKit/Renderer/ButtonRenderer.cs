@@ -1,3 +1,4 @@
+using WeiPoX.Core.DeclarativeUI.Internal;
 using WeiPoX.Core.DeclarativeUI.Platform.UIKit.Internal;
 using WeiPoX.Core.DeclarativeUI.Widgets;
 
@@ -5,7 +6,7 @@ namespace WeiPoX.Core.DeclarativeUI.Platform.UIKit.Renderer;
 
 internal class ButtonRenderer : RendererObject<Button, UIButton>
 {
-    protected override UIButton Create(WidgetBuilder renderer)
+    protected override UIButton Create(RendererContext<UIView> context)
     {
         return new UIButton(UIButtonType.System);
     }

@@ -5,7 +5,7 @@ namespace WeiPoX.Core.DeclarativeUI.Testing;
 
 internal class TestRenderer : IRenderer<TestControl>
 {
-    public TestControl Create(WidgetBuilder<TestControl> renderer)
+    public TestControl Create(RendererContext<TestControl> context)
     {
         return new TestControl();
     }

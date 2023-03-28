@@ -12,7 +12,7 @@ internal class PaddingRenderer : RendererObject<Padding, FrameLayout>
     {
     }
 
-    protected override FrameLayout Create(Context context, WidgetBuilder renderer)
+    protected override FrameLayout Create(Context context, RendererContext<View> rendererContext)
     {
         return new FrameLayout(context);
     }

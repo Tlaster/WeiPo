@@ -14,11 +14,11 @@ internal class LazyColumnRenderer : LazyRendererObject<LazyColumn, RecyclerView>
     {
     }
 
-    protected override RecyclerView Create(Context context, WidgetBuilder renderer)
+    protected override RecyclerView Create(Context context, RendererContext<View> rendererContext)
     {
         var view = new RecyclerView(context);
         view.SetLayoutManager(new LinearLayoutManager(context));
-        view.SetAdapter(new WeiPoXRecyclerViewAdapter(renderer));
+        view.SetAdapter(new WeiPoXRecyclerViewAdapter(rendererContext));
         return view;
     }
 
@@ -52,7 +52,7 @@ internal class LazyColumnRenderer : LazyRendererObject<LazyColumn, RecyclerView>
             if (index >= firstVisibleItemPosition && index <= lastVisibleItemPosition)
             {
                 var childAt = linearLayoutManager.FindViewByPosition(index);
-                if (childAt is SubDeclarativeView view)
+                if (childAt is DeclarativeView view)
                 {
                     return view.GetChildAt(0);
                 }
@@ -71,7 +71,7 @@ internal class LazyColumnRenderer : LazyRendererObject<LazyColumn, RecyclerView>
             if (index >= firstVisibleItemPosition && index <= lastVisibleItemPosition)
             {
                 var childAt = linearLayoutManager.FindViewByPosition(index);
-                if (childAt is SubDeclarativeView view)
+                if (childAt is DeclarativeView view)
                 {
                     view.UpdateChild(childControl);
                 }
@@ -82,31 +82,30 @@ internal class LazyColumnRenderer : LazyRendererObject<LazyColumn, RecyclerView>
 
 internal class WeiPoXRecyclerViewAdapter : RecyclerView.Adapter
 {
-    private readonly WidgetBuilder _renderer;
+    private readonly RendererContext<View> _rendererContext;
     private List<ActualLazyItem> _actualLazyItems = new();
     
-    public WeiPoXRecyclerViewAdapter(WidgetBuilder renderer)
+    public WeiPoXRecyclerViewAdapter(RendererContext<View> rendererContext)
     {
-        _renderer = renderer;
+        _rendererContext = rendererContext;
     }
 
     public override int ItemCount => _actualLazyItems.Count;
 
     public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
     {
-        if (holder is WeiPoXViewHolder { ItemView: SubDeclarativeView view })
+        if (holder is WeiPoXViewHolder { ItemView: DeclarativeView view })
         {
-            view.SetIndex(position);
+            view.Widget = _actualLazyItems[position].Builder();
         }
     }
 
     public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
     {
         return new WeiPoXViewHolder(
-            new SubDeclarativeView(
+            new DeclarativeView(
                 parent.Context!,
-                index => _actualLazyItems[index],
-                _renderer
+                _rendererContext.BuildOwner
             )
         );
     }
@@ -128,7 +127,7 @@ internal class WeiPoXRecyclerViewAdapter : RecyclerView.Adapter
 
 internal class WeiPoXViewHolder : RecyclerView.ViewHolder
 {
-    public WeiPoXViewHolder(SubDeclarativeView itemView) : base(itemView)
+    public WeiPoXViewHolder(DeclarativeView itemView) : base(itemView)
     {
     }
 }

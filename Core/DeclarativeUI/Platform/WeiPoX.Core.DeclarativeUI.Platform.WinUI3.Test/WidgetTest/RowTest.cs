@@ -14,8 +14,8 @@ public class RowTest
     public async Task TestCreateRow()
     {
         var row = new Row();
-        var renderer = new WidgetBuilder(new TestOwner());
-        var control = await renderer.BuildIfNeededAsync(null, row, null);
+        var renderer = new WidgetBuilder();
+        var control = await renderer.BuildIfNeededAsync(null, row, null, new TestOwner());
         Assert.IsInstanceOfType(control, typeof(StackPanel));
         Assert.AreEqual(Orientation.Horizontal, ((StackPanel)control).Orientation);
     }

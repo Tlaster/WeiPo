@@ -3,18 +3,11 @@ using WeiPoX.Core.DeclarativeUI.Widgets;
 
 namespace WeiPoX.Core.DeclarativeUI.Internal;
 
-internal abstract partial class WidgetBuilder<T>
+public abstract partial class WidgetBuilder<T>
 {
-    private readonly IBuildOwner _owner;
-
-    protected WidgetBuilder(IBuildOwner owner)
+    private bool IsChanged(Widget oldValue, Widget newValue, IBuildOwner owner)
     {
-        _owner = owner;
-    }
-
-    private bool IsChanged(Widget oldValue, Widget newValue)
-    {
-        return oldValue != newValue || _owner.IsBuildScheduled(newValue);
+        return oldValue != newValue || owner.IsBuildScheduled(newValue);
     }
 
     private bool IsContextChanged(StatefulWidget widget, BuildContext context)

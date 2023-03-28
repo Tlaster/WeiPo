@@ -12,7 +12,7 @@ internal class RowRenderer : RendererObject<Row, LinearLayout>
     {
     }
 
-    protected override LinearLayout Create(Context context, WidgetBuilder renderer)
+    protected override LinearLayout Create(Context context, RendererContext<View> rendererContext)
     {
         return new LinearLayout(context)
         {

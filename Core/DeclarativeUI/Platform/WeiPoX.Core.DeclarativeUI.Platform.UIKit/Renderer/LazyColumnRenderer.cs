@@ -1,4 +1,5 @@
-﻿using WeiPoX.Core.DeclarativeUI.Platform.UIKit.Internal;
+﻿using WeiPoX.Core.DeclarativeUI.Internal;
+using WeiPoX.Core.DeclarativeUI.Platform.UIKit.Internal;
 using WeiPoX.Core.DeclarativeUI.Widgets;
 using WeiPoX.Core.DeclarativeUI.Widgets.Layout;
 
@@ -6,7 +7,7 @@ namespace WeiPoX.Core.DeclarativeUI.Platform.UIKit.Renderer;
 
 internal class LazyColumnRenderer : LazyRendererObject<LazyColumn, WeiPoXUICollectionView>
 {
-    protected override WeiPoXUICollectionView Create(WidgetBuilder renderer)
+    protected override WeiPoXUICollectionView Create(RendererContext<UIView> context)
     {
         var layoutConfiguration = new UICollectionLayoutListConfiguration(UICollectionLayoutListAppearance.Plain)
         {
@@ -14,7 +15,7 @@ internal class LazyColumnRenderer : LazyRendererObject<LazyColumn, WeiPoXUIColle
             BackgroundColor = null,
         };
         var layout = UICollectionViewCompositionalLayout.GetLayout(layoutConfiguration);
-        return new WeiPoXUICollectionView(CGRect.Empty, layout, renderer);
+        return new WeiPoXUICollectionView(CGRect.Empty, layout, context);
     }
 
     protected override void Update(WeiPoXUICollectionView control, LazyColumn widget)
@@ -56,7 +57,7 @@ internal class LazyColumnRenderer : LazyRendererObject<LazyColumn, WeiPoXUIColle
 
 internal class WeiPoXUICollectionView : UICollectionView, IUICollectionViewDelegate, IUICollectionViewDataSource
 {
-    private readonly WidgetBuilder? _renderer;
+    private readonly RendererContext<UIView>? _context;
     private const string _cellIdentifier = "cell";
     private List<ActualLazyItem> _actualLazyItems = new();
     public WeiPoXUICollectionView() : base(CGRect.Empty, UICollectionViewCompositionalLayout.GetLayout(new UICollectionLayoutListConfiguration(UICollectionLayoutListAppearance.Plain)))
@@ -64,9 +65,9 @@ internal class WeiPoXUICollectionView : UICollectionView, IUICollectionViewDeleg
         
     }
 
-    public WeiPoXUICollectionView(CGRect frame, UICollectionViewLayout layout, WidgetBuilder renderer) : base(frame, layout)
+    public WeiPoXUICollectionView(CGRect frame, UICollectionViewLayout layout, RendererContext<UIView> context) : base(frame, layout)
     {
-        _renderer = renderer;
+        _context = context;
         RegisterClassForCell(typeof(WeiPoXUICollectionViewCell), _cellIdentifier);
         Delegate = this;
         DataSource = this;
@@ -80,9 +81,8 @@ internal class WeiPoXUICollectionView : UICollectionView, IUICollectionViewDeleg
     public UICollectionViewCell GetCell(UICollectionView collectionView, NSIndexPath indexPath)
     {
         var cell = collectionView.DequeueReusableCell(_cellIdentifier, indexPath) as WeiPoXUICollectionViewCell;
-        cell!.View.Renderer = _renderer;
-        cell!.View.Builder = (index) => _actualLazyItems[index];
-        cell!.View.SetIndex(indexPath.Row);
+        cell!.View.Init(_context?.BuildOwner);
+        cell!.View.Widget = _actualLazyItems[indexPath.Row].Builder.Invoke();
         return cell;
     }
     
@@ -115,5 +115,5 @@ internal class WeiPoXUICollectionViewCell : UICollectionViewCell
 
     }
 
-    public SubDeclarativeView View { get; } = new();
+    public DeclarativeView View { get; } = new();
 }

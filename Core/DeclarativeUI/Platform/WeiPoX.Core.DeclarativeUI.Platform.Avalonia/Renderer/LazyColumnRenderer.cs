@@ -1,5 +1,6 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Styling;
+using WeiPoX.Core.DeclarativeUI.Internal;
 using WeiPoX.Core.DeclarativeUI.Platform.Avalonia.Internal;
 using WeiPoX.Core.DeclarativeUI.Widgets;
 using WeiPoX.Core.DeclarativeUI.Widgets.Layout;
@@ -13,9 +14,9 @@ internal class LazyColumnRenderer : LazyRendererObject<LazyColumn, WeiPoXItemsRe
         control.SetItems(widget.GenerateActualLazyItems());
     }
 
-    protected override WeiPoXItemsRepeater Create(WidgetBuilder renderer)
+    protected override WeiPoXItemsRepeater Create(RendererContext<Control> context)
     {
-        return new WeiPoXItemsRepeater(renderer);
+        return new WeiPoXItemsRepeater(context);
     }
 
     protected override bool IsVisible(WeiPoXItemsRepeater control, int index)
@@ -25,12 +26,12 @@ internal class LazyColumnRenderer : LazyRendererObject<LazyColumn, WeiPoXItemsRe
 
     protected override Control? GetVisibleChild(WeiPoXItemsRepeater control, int index)
     {
-        return (control.Repeater.TryGetElement(index) as SubDeclarativeView)?.Content as Control;
+        return (control.Repeater.TryGetElement(index) as DeclarativeView)?.Content as Control;
     }
 
     protected override void UpdateChild(WeiPoXItemsRepeater control, int index, Control childControl)
     {
-        if (control.Repeater.TryGetElement(index) is SubDeclarativeView item)
+        if (control.Repeater.TryGetElement(index) is DeclarativeView item)
         {
             item.UpdateChild(childControl);
         }
@@ -45,11 +46,11 @@ internal class WeiPoXItemsRepeater : ScrollViewer, IStyleable
 
     internal ItemsRepeater Repeater { get; }
 
-    public WeiPoXItemsRepeater(WidgetBuilder renderer)
+    public WeiPoXItemsRepeater(RendererContext<Control> context)
     {
         Repeater = new ItemsRepeater
         {
-            ItemTemplate = new WeiPoXElementFactory(renderer, index => _actualLazyItems[index])
+            ItemTemplate = new WeiPoXElementFactory(context, index => _actualLazyItems[index])
         };
         Content = Repeater;
     }
@@ -74,20 +75,20 @@ internal class WeiPoXElementFactory : ElementFactory
     private const string Key = "WeiPoX";
     private readonly RecyclePool _recyclePool = new();
     private readonly Func<int, ActualLazyItem> _builder;
-    private readonly WidgetBuilder _renderer;
+    private readonly RendererContext<Control> _context;
 
-    public WeiPoXElementFactory(WidgetBuilder renderer, Func<int, ActualLazyItem> builder)
+    public WeiPoXElementFactory(RendererContext<Control> context, Func<int, ActualLazyItem> builder)
     {
-        _renderer = renderer;
+        _context = context;
         _builder = builder;
     }
 
     protected override Control GetElementCore(ElementFactoryGetArgs args)
     {
-        var element = _recyclePool.TryGetElement(Key, args.Parent) ?? new SubDeclarativeView(_renderer, _builder);
-        if (element is SubDeclarativeView subDeclarativeView)
+        var element = _recyclePool.TryGetElement(Key, args.Parent) ?? new DeclarativeView(_context.BuildOwner);
+        if (element is DeclarativeView subDeclarativeView)
         {
-            subDeclarativeView.SetIndex(args.Index);
+            subDeclarativeView.Widget = _builder(args.Index).Builder.Invoke();
         }
         else
         {

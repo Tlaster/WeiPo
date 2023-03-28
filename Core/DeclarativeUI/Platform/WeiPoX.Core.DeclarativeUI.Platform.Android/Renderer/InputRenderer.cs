@@ -16,7 +16,7 @@ internal class InputRenderer : RendererObject<Input, WeiPoXTextInputEditText>
     {
     }
 
-    protected override WeiPoXTextInputEditText Create(Context context, WidgetBuilder renderer)
+    protected override WeiPoXTextInputEditText Create(Context context, RendererContext<View> rendererContext)
     {
         return new WeiPoXTextInputEditText(context);
     }

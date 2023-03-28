@@ -18,12 +18,18 @@ public class WeiPoXDeclarativeUiApp<T> : Application where T : Widget, new()
             case IClassicDesktopStyleApplicationLifetime desktop:
                 desktop.MainWindow = new Window
                 {
-                    Content = new DeclarativeView(_widget),
+                    Content = new DeclarativeView
+                    {
+                        Widget = _widget,
+                    },
                     Title = Title
                 };
                 break;
             case ISingleViewApplicationLifetime singleViewApplicationLifetime:
-                singleViewApplicationLifetime.MainView = new DeclarativeView(_widget);
+                singleViewApplicationLifetime.MainView = new DeclarativeView
+                {
+                    Widget = _widget,
+                };
                 break;
         }
 

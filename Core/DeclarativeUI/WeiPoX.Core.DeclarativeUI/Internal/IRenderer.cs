@@ -2,9 +2,9 @@
 
 namespace WeiPoX.Core.DeclarativeUI.Internal;
 
-internal interface IRenderer<T>
+public interface IRenderer<T>
 {
-    T Create(WidgetBuilder<T> renderer);
+    T Create(RendererContext<T> context);
     void Update(T control, MappingWidget widget);
     void AddChild(T control, T childControl);
     void RemoveChild(T control, T childControl);
@@ -13,14 +13,16 @@ internal interface IRenderer<T>
     bool IsPanel(T value);
 }
 
-internal interface ILazyRenderer<T>
+public record RendererContext<T>(WidgetBuilder<T> Renderer, IBuildOwner BuildOwner);
+
+public interface ILazyRenderer<T>
 {
     bool IsVisible(T control, int index);
     T? GetVisibleChild(T control, int index);
     void UpdateChild(T control, int index, T childControl);
 }
 
-internal interface IBuildOwner
+public interface IBuildOwner
 {
     void MarkNeedsBuild(Widget widget);
 

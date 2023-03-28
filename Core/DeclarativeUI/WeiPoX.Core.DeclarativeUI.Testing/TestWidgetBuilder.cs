@@ -1,12 +1,21 @@
-﻿using WeiPoX.Core.DeclarativeUI.Internal;
+﻿using System.Collections.Immutable;
+using WeiPoX.Core.DeclarativeUI.Internal;
 using WeiPoX.Core.DeclarativeUI.Widgets;
 
 namespace WeiPoX.Core.DeclarativeUI.Testing;
 
 internal class TestWidgetBuilder : WidgetBuilder<TestControl>
 {
-    public TestWidgetBuilder(IBuildOwner owner) : base(owner)
+    private readonly IBuildOwner _owner;
+
+    public TestWidgetBuilder(IBuildOwner owner)
     {
+        _owner = owner;
+    }
+    
+    public Task<TestControl> BuildIfNeededAsync(Widget? oldValue, Widget newValue, TestControl? control)
+    {
+        return BuildIfNeededAsync(oldValue, newValue, control, _owner);
     }
 
     protected override IRenderer<TestControl> GetRenderer(Type widgetType)

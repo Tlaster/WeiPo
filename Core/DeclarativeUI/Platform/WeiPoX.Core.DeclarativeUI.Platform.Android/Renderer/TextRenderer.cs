@@ -13,7 +13,7 @@ internal class TextRenderer : RendererObject<Text, TextView>
     {
     }
 
-    protected override TextView Create(Context context, WidgetBuilder renderer)
+    protected override TextView Create(Context context, RendererContext<View> rendererContext)
     {
         return new TextView(context);
     }

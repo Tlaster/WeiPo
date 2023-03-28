@@ -4,7 +4,7 @@ using WeiPoX.Core.DeclarativeUI.Widgets;
 
 namespace WeiPoX.Core.DeclarativeUI.Platform.UIKit.Renderer;
 
-internal abstract class RendererObject<TWidget, TControl> : IRenderer<UIView>
+public abstract class RendererObject<TWidget, TControl> : IRenderer<UIView>
     where TWidget : MappingWidget where TControl : class, new()
 {
     public void Update(UIView control, MappingWidget widget)
@@ -37,12 +37,12 @@ internal abstract class RendererObject<TWidget, TControl> : IRenderer<UIView>
         return true;
     }
 
-    UIView IRenderer<UIView>.Create(WidgetBuilder<UIView> renderer)
+    UIView IRenderer<UIView>.Create(RendererContext<UIView> context)
     {
-        return Create(renderer as WidgetBuilder ?? throw new InvalidOperationException()) as UIView ?? throw new InvalidOperationException();
+        return Create(context ?? throw new InvalidOperationException()) as UIView ?? throw new InvalidOperationException();
     }
 
-    protected virtual TControl Create(WidgetBuilder renderer)
+    protected virtual TControl Create(RendererContext<UIView> context)
     {
         return new TControl();
     }
@@ -77,7 +77,7 @@ internal abstract class RendererObject<TWidget, TControl> : IRenderer<UIView>
 }
 
 
-internal abstract class LazyRendererObject<TWidget, TControl> : RendererObject<TWidget, TControl>, ILazyRenderer<UIView>
+public abstract class LazyRendererObject<TWidget, TControl> : RendererObject<TWidget, TControl>, ILazyRenderer<UIView>
     where TWidget : MappingWidget where TControl : class, new()
 {
     public bool IsVisible(UIView control, int index)

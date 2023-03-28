@@ -12,5 +12,4 @@
     <ItemGroup>
         <PackageReference Include="Xamarin.Google.Android.Material" Version="1.8.0" />
     </ItemGroup>
-    <Import Project="..\WeiPoX.Core.DeclarativeUI.Platform.Shared\WeiPoX.Core.DeclarativeUI.Platform.Shared.projitems" Label="Shared" />
 </Project>

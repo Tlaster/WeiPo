@@ -9,7 +9,10 @@ public abstract class WeiPoXDeclarativeUiApp : Application
     {
         new Window
         {
-            Content = new DeclarativeView(CreateWidget()),
+            Content = new DeclarativeView
+            {
+                Widget = CreateWidget()
+            },
         }.Activate();
     }
     

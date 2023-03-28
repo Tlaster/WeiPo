@@ -8,7 +8,7 @@ using WeiPoX.Core.DeclarativeUI.Widgets;
 
 namespace WeiPoX.Core.DeclarativeUI.Platform.WinUI3.Renderer;
 
-internal abstract class RendererObject<TWidget, TControl> : IRenderer<UIElement>
+public abstract class RendererObject<TWidget, TControl> : IRenderer<UIElement>
     where TWidget : MappingWidget where TControl : class, new()
 {
     public void Update(UIElement control, MappingWidget widget)
@@ -46,12 +46,12 @@ internal abstract class RendererObject<TWidget, TControl> : IRenderer<UIElement>
         return value is Panel;
     }
 
-    UIElement IRenderer<UIElement>.Create(WidgetBuilder<UIElement> renderer)
+    UIElement IRenderer<UIElement>.Create(RendererContext<UIElement> context)
     {
-        return Create(renderer as WidgetBuilder ?? throw new InvalidOperationException()) as UIElement ?? throw new InvalidOperationException();
+        return Create(context ?? throw new InvalidOperationException()) as UIElement ?? throw new InvalidOperationException();
     }
 
-    protected virtual TControl Create(WidgetBuilder renderer)
+    protected virtual TControl Create(RendererContext<UIElement> context)
     {
         return new TControl();
     }
@@ -111,7 +111,7 @@ internal abstract class RendererObject<TWidget, TControl> : IRenderer<UIElement>
 }
 
 
-internal abstract class LazyRendererObject<TWidget, TControl> : RendererObject<TWidget, TControl>, ILazyRenderer<Control>
+public abstract class LazyRendererObject<TWidget, TControl> : RendererObject<TWidget, TControl>, ILazyRenderer<Control>
     where TWidget : MappingWidget where TControl : class, new()
 {
     public bool IsVisible(Control control, int index)

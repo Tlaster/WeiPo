@@ -15,7 +15,7 @@ internal class ButtonRenderer : RendererObject<WeiPoX.Core.DeclarativeUI.Widgets
     {
     }
 
-    protected override Button Create(Context context, WidgetBuilder renderer)
+    protected override Button Create(Context context, RendererContext<View> rendererContext)
     {
         var button = new MaterialButton(context);
         button.LayoutParameters = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
