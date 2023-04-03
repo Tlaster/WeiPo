@@ -16,7 +16,9 @@ internal class LazyColumnRenderer : LazyRendererObject<LazyColumn, RecyclerView>
 
     protected override RecyclerView Create(Context context, RendererContext<View> rendererContext)
     {
-        var view = new RecyclerView(context);
+        var view = new RecyclerView(context)
+        {
+        };
         view.SetLayoutManager(new LinearLayoutManager(context));
         view.SetAdapter(new WeiPoXRecyclerViewAdapter(rendererContext));
         return view;

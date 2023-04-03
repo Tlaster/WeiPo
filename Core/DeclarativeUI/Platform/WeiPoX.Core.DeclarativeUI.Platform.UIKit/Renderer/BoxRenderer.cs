@@ -6,5 +6,11 @@ internal class BoxRenderer : RendererObject<Box, UIView>
 {
     protected override void Update(UIView control, Box widget)
     {
+        
     }
+}
+
+internal class WeiPoXBox : UIStackView
+{
+    
 }

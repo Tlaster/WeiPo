@@ -13,6 +13,7 @@ public class DeclarativeView : FrameLayout
     public DeclarativeView(Context context, IBuildOwner? buildOwner = null) : base(context)
     {
         _core = new DeclarativeCore<View>(new WidgetBuilder(context), UpdateChild, buildOwner);
+        this.LayoutParameters = new LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
     }
     
     public Widget? Widget

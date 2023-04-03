@@ -1,4 +1,5 @@
-﻿using WeiPoX.Core.DeclarativeUI.Widgets;
+﻿using WeiPoX.Core.DeclarativeUI.Foundation;
+using WeiPoX.Core.DeclarativeUI.Widgets;
 using WeiPoX.Core.DeclarativeUI.Widgets.Layout;
 
 namespace WeiPoX.Core.DeclarativeUI.Sample.Core;
@@ -13,22 +14,31 @@ public record SampleApp : StatefulWidget
         {
             new Item
             {
-                new Column
+                new Box
                 {
+                    BackgroundColor = new Color("#FF0000"),
+                    Height = 200,
                     Horizontal = Alignment.Horizontal.Center,
-                    Vertical = Alignment.Vertical.Center,
                     Children =
                     {
-                        new Button
+                        new Column
                         {
-                            Text = "Click me!",
-                            OnClick = () => setValue(value + 1)
-                        },
-                        new Text("Value: " + value),
-                        new Input
-                        {
-                            State = text,
-                            OnStateChanged = setText
+                            Horizontal = Alignment.Horizontal.Center,
+                            Vertical = Alignment.Vertical.Center,
+                            Children =
+                            {
+                                new Button
+                                {
+                                    Text = "Click me!",
+                                    OnClick = () => setValue(value + 1)
+                                },
+                                new Text("Value: " + value),
+                                new Input
+                                {
+                                    State = text,
+                                    OnStateChanged = setText
+                                }
+                            }
                         }
                     }
                 }

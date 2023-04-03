@@ -28,7 +28,7 @@ public abstract class RendererObject<TWidget, TControl> : IRenderer<Control>
         ReplaceChild(control as TControl ?? throw new InvalidOperationException(), index, newChildControl);
     }
 
-    public bool IsPanel(Control value)
+    public virtual bool IsPanel(Control value)
     {
         return value is Panel;
     }

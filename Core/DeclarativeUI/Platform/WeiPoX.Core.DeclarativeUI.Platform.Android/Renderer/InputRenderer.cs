@@ -34,6 +34,7 @@ internal class WeiPoXTextInputEditText : TextInputEditText
 {
     public WeiPoXTextInputEditText(Context context) : base(context)
     {
+        this.LayoutParameters = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
     }
 
     public bool Updating { get; set; }

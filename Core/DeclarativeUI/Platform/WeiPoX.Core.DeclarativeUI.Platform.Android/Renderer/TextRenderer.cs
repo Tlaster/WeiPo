@@ -15,7 +15,11 @@ internal class TextRenderer : RendererObject<Text, TextView>
 
     protected override TextView Create(Context context, RendererContext<View> rendererContext)
     {
-        return new TextView(context);
+        return new TextView(context)
+        {
+            LayoutParameters =
+                new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent),
+        };
     }
 
     protected override void Update(TextView control, Text widget)

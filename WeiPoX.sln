@@ -620,11 +620,4 @@ Global
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2EF5A3C1-B0AD-4D47-A567-87ED1B9C164D}
 	EndGlobalSection
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		Core\DeclarativeUI\Platform\WeiPoX.Core.DeclarativeUI.Platform.Shared\WeiPoX.Core.DeclarativeUI.Platform.Shared.projitems*{62c017eb-4cfb-495b-bcdf-6b5acb465420}*SharedItemsImports = 5
-		Core\DeclarativeUI\Platform\WeiPoX.Core.DeclarativeUI.Platform.Shared\WeiPoX.Core.DeclarativeUI.Platform.Shared.projitems*{95a1ae33-e449-409a-b47b-2a18ba6dfccd}*SharedItemsImports = 13
-		Core\DeclarativeUI\Platform\WeiPoX.Core.DeclarativeUI.Platform.Shared\WeiPoX.Core.DeclarativeUI.Platform.Shared.projitems*{ce335a29-c2e7-4af6-bf30-e44e326b8a6e}*SharedItemsImports = 5
-		Core\DeclarativeUI\Platform\WeiPoX.Core.DeclarativeUI.Platform.Shared\WeiPoX.Core.DeclarativeUI.Platform.Shared.projitems*{d690e6b2-538e-45de-99a3-fe920111ac8a}*SharedItemsImports = 5
-		Core\DeclarativeUI\Platform\WeiPoX.Core.DeclarativeUI.Platform.Shared\WeiPoX.Core.DeclarativeUI.Platform.Shared.projitems*{e01cab26-8976-430b-99e7-da9e9df999b3}*SharedItemsImports = 5
-	EndGlobalSection
 EndGlobal

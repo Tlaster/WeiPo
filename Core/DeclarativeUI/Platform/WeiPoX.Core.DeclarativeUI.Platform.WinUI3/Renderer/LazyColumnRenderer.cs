@@ -29,14 +29,14 @@ internal class LazyColumnRenderer : LazyRendererObject<LazyColumn, WeiPoXItemsRe
         return control.Repeater.TryGetElement(index) is not null;
     }
 
-    protected override Control? GetVisibleChild(WeiPoXItemsRepeater control, int index)
+    protected override UIElement? GetVisibleChild(WeiPoXItemsRepeater control, int index)
     {
-        return (control.Repeater.TryGetElement(index) as DeclarativeView)?.Content as Control;
+        return (control.Repeater.TryGetElement(index) as RepeaterDeclarativeView)?.Content as UIElement;
     }
 
-    protected override void UpdateChild(WeiPoXItemsRepeater control, int index, Control childControl)
+    protected override void UpdateChild(WeiPoXItemsRepeater control, int index, UIElement childControl)
     {
-        if (control.Repeater.TryGetElement(index) is DeclarativeView item)
+        if (control.Repeater.TryGetElement(index) is RepeaterDeclarativeView item)
         {
             item.UpdateChild(childControl);
         }
@@ -46,12 +46,14 @@ internal class LazyColumnRenderer : LazyRendererObject<LazyColumn, WeiPoXItemsRe
 internal class WeiPoXItemsRepeater : UserControl
 {
     private List<ActualLazyItem> _actualLazyItems = new();
+    private readonly RendererContext<UIElement> _context;
 
     public WeiPoXItemsRepeater(RendererContext<UIElement> context)
     {
+        _context = context;
         Repeater = new ItemsRepeater
         {
-            ItemTemplate = new WeiPoXElementFactory(context, index => _actualLazyItems[index])
+            ItemTemplate = RepeaterDeclarativeView.GenerateDataTemplate()
         };
         Content = new ScrollViewer
         {
@@ -70,12 +72,15 @@ internal class WeiPoXItemsRepeater : UserControl
     {
         if (generateActualLazyItems.Count != _actualLazyItems.Count)
         {
-            Repeater.ItemsSource = generateActualLazyItems.Select((_, i) => i).ToList();
+            Repeater.ItemsSource = generateActualLazyItems
+                .Select((item, index) => new RepeaterItem(() => _actualLazyItems[index].Builder.Invoke(), _context.BuildOwner)).ToList();
         }
 
         _actualLazyItems = generateActualLazyItems;
     }
 }
+
+public record RepeaterItem(Func<Widget> WidgetBuilder, IBuildOwner BuildOwner);
 
 internal class WeiPoXElementFactory : IElementFactory
 {

@@ -41,7 +41,7 @@ public abstract class RendererObject<TWidget, TControl> : IRenderer<UIElement>
         return null;
     }
 
-    public bool IsPanel(UIElement value)
+    public virtual bool IsPanel(UIElement value)
     {
         return value is Panel;
     }
@@ -111,27 +111,27 @@ public abstract class RendererObject<TWidget, TControl> : IRenderer<UIElement>
 }
 
 
-public abstract class LazyRendererObject<TWidget, TControl> : RendererObject<TWidget, TControl>, ILazyRenderer<Control>
+public abstract class LazyRendererObject<TWidget, TControl> : RendererObject<TWidget, TControl>, ILazyRenderer<UIElement>
     where TWidget : MappingWidget where TControl : class, new()
 {
-    public bool IsVisible(Control control, int index)
+    public bool IsVisible(UIElement control, int index)
     {
         return IsVisible(control as TControl ?? throw new InvalidOperationException(), index);
     }
     
-    public Control? GetVisibleChild(Control control, int index)
+    public UIElement? GetVisibleChild(UIElement control, int index)
     {
         return GetVisibleChild(control as TControl ?? throw new InvalidOperationException(), index);
     }
 
-    public void UpdateChild(Control control, int index, Control childControl)
+    public void UpdateChild(UIElement control, int index, UIElement childControl)
     {
         UpdateChild(control as TControl ?? throw new InvalidOperationException(), index, childControl);
     }
 
     protected abstract bool IsVisible(TControl control, int index);
 
-    protected abstract Control? GetVisibleChild(TControl control, int index);
+    protected abstract UIElement? GetVisibleChild(TControl control, int index);
 
-    protected abstract void UpdateChild(TControl control, int index, Control childControl);
+    protected abstract void UpdateChild(TControl control, int index, UIElement childControl);
 }

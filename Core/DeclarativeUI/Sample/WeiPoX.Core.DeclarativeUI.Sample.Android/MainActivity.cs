@@ -6,14 +6,6 @@ using WeiPoX.Core.DeclarativeUI.Sample.Core;
 namespace WeiPoX.Core.DeclarativeUI.Sample.Android;
 
 [Activity(Label = "@string/app_name", MainLauncher = true)]
-public class MainActivity : ComponentActivity
+public class MainActivity : DeclarativeActivity<SampleApp>
 {
-    protected override void OnCreate(Bundle? savedInstanceState)
-    {
-        base.OnCreate(savedInstanceState);
-        SetContentView(new DeclarativeView(this)
-        {
-            Widget = new SampleApp()
-        });
-    }
 }

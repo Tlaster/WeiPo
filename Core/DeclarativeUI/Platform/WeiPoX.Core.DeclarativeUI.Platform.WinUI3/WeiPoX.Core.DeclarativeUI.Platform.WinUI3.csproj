@@ -8,6 +8,9 @@
         <GenerateLibraryLayout>true</GenerateLibraryLayout>
         <DefineConstants>WINUI3</DefineConstants>
     </PropertyGroup>
+    <ItemGroup>
+      <None Remove="ResourceDictionary1.xaml" />
+    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.230313.1" />
@@ -17,6 +20,12 @@
     <ItemGroup>
         <ProjectReference Include="..\..\WeiPoX.Core.DeclarativeUI\WeiPoX.Core.DeclarativeUI.csproj" />
         <PackageReference Include="ReactiveUI.WinUI" Version="18.4.26" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Page Update="ResourceDictionary.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
     </ItemGroup>
 
 </Project>
