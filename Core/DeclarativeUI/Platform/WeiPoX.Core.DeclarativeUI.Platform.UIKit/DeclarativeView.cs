@@ -57,3 +57,68 @@ public class DeclarativeView : UIView
         });
     }
 }
+
+public class DeclarativeViewController<T> : UIViewController where T : Widget, new()
+{
+
+    private readonly DeclarativeCore<UIView> _core;
+    public DeclarativeViewController()
+    {
+        _core = new DeclarativeCore<UIView>(new WidgetBuilder(), UpdateChild)
+        {
+            Widget = new T()
+        };
+    }
+    
+
+    internal void UpdateChild(UIView control)
+    {
+        if (View == null)
+        {
+            return;
+        }
+        if (View.Subviews.Length == 0)
+        {
+            View.AddSubview(control);
+            ApplySafeArea(control);
+        }
+        else if (!View.Subviews[0].Equals(control))
+        {
+            View.Subviews[0].RemoveFromSuperview();
+            View.AddSubview(control);
+            ApplySafeArea(control);
+        }
+    }
+
+    public override void ViewDidLoad()
+    {
+        base.ViewDidLoad();
+        if (View != null)
+        {
+            View.BackgroundColor = UIColor.SystemBackground;
+        }
+    }
+    
+    private void ApplySafeArea(UIView control)
+    {
+        control.TranslatesAutoresizingMaskIntoConstraints = false;
+        var guide = View?.LayoutMarginsGuide;
+        if (guide != null)
+        {
+            NSLayoutConstraint.ActivateConstraints(new[]
+            {
+                control.LeadingAnchor.ConstraintEqualTo(guide.LeadingAnchor),
+                control.TrailingAnchor.ConstraintEqualTo(guide.TrailingAnchor),
+            });
+        }
+        var safeGuide = View?.SafeAreaLayoutGuide;
+        if (safeGuide != null)
+        {
+            NSLayoutConstraint.ActivateConstraints(new[]
+            {
+                control.TopAnchor.ConstraintEqualToSystemSpacingBelowAnchor(safeGuide.TopAnchor, 1),
+                control.BottomAnchor.ConstraintEqualToSystemSpacingBelowAnchor(safeGuide.BottomAnchor, 1),
+            });
+        }
+    }
+}

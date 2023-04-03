@@ -11,13 +11,7 @@ public class AppDelegate : UIApplicationDelegate
     public override bool FinishedLaunching(UIApplication application, NSDictionary launchOptions)
     {
         Window = new UIWindow(UIScreen.MainScreen.Bounds);
-        Window.RootViewController = new UIViewController
-        {
-            View = new DeclarativeView
-            {
-                Widget = new SampleApp()
-            }
-        };
+        Window.RootViewController = new DeclarativeViewController<SampleApp>();
         Window.MakeKeyAndVisible();
         return true;
     }
