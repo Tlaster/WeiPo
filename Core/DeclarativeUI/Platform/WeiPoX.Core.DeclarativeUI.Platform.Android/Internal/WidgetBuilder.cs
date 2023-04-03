@@ -5,6 +5,7 @@ using WeiPoX.Core.DeclarativeUI.Internal;
 using WeiPoX.Core.DeclarativeUI.Platform.Android.Renderer;
 using WeiPoX.Core.DeclarativeUI.Widgets;
 using WeiPoX.Core.DeclarativeUI.Widgets.Layout;
+using GestureDetector = WeiPoX.Core.DeclarativeUI.Widgets.GestureDetector;
 
 namespace WeiPoX.Core.DeclarativeUI.Platform.Android.Internal;
 
@@ -21,7 +22,7 @@ internal class WidgetBuilder : WidgetBuilder<View>
             { typeof(Widgets.Button), new ButtonRenderer(context) },
             { typeof(Column), new ColumnRenderer(context) },
             { typeof(Row), new RowRenderer(context) },
-            { typeof(Padding), new PaddingRenderer(context) },
+            { typeof(GestureDetector), new GestureDetectorRenderer(context) },
             { typeof(Input), new InputRenderer(context) },
             { typeof(LazyColumn), new LazyColumnRenderer(context) },
         }.ToImmutableDictionary();

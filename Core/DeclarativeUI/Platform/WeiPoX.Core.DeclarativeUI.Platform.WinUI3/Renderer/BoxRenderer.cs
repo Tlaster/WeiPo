@@ -22,6 +22,8 @@ internal class BoxRenderer : RendererObject<Box, WeiPoXBox>
         {
             control.Width = widget.Width;
         }
+        control.Padding = new Microsoft.UI.Xaml.Thickness(widget.Padding.Start, widget.Padding.Top, widget.Padding.End,
+            widget.Padding.Bottom);
     }
 
     protected override void AddChild(WeiPoXBox control, UIElement childControl)

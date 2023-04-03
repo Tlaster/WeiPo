@@ -87,6 +87,22 @@ public record HomeScene(Action OnNavigate) : StatefulWidget
         {
             new Text("Home"),
             new Text("Value: " + value),
+            new GestureDetector
+            {
+                OnTap = () => setValue(value + 1),
+                Children =
+                {
+                    new Box
+                    {
+                        Padding = new Thickness(16),
+                        BackgroundColor = new Color("#FF0000"),
+                        Children =
+                        {
+                            new Text("Click me!")
+                        }
+                    }
+                }
+            },
             new Button
             {
                 Text = "Click me!",

@@ -19,7 +19,7 @@ internal static class RendererPool
             { typeof(Button), new ButtonRenderer() },
             { typeof(Column), new ColumnRenderer() },
             { typeof(Row), new RowRenderer() },
-            { typeof(Padding), new PaddingRenderer() },
+            { typeof(GestureDetector), new GestureDetectorRenderer() },
             { typeof(Input), new InputRenderer() },
             { typeof(LazyColumn), new LazyColumnRenderer() },
         }.ToImmutableDictionary();

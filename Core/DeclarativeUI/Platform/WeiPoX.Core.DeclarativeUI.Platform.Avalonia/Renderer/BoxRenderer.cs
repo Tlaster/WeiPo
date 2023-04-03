@@ -1,8 +1,10 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.Media;
 using WeiPoX.Core.DeclarativeUI.Platform.Avalonia.Internal;
 using WeiPoX.Core.DeclarativeUI.Widgets.Layout;
+using AvaloniaThickness = Avalonia.Thickness;
 
 namespace WeiPoX.Core.DeclarativeUI.Platform.Avalonia.Renderer;
 
@@ -21,6 +23,8 @@ internal class BoxRenderer : RendererObject<Box, WeiPoXBox>
         {
             control.Width = widget.Width;
         }
+        control.Padding = new AvaloniaThickness(widget.Padding.Start, widget.Padding.Top, widget.Padding.End,
+            widget.Padding.Bottom);
     }
 
     protected override void AddChild(WeiPoXBox control, Control childControl)

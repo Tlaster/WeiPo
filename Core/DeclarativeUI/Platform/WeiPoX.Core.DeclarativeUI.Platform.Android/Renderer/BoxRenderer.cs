@@ -29,6 +29,10 @@ internal class BoxRenderer : RendererObject<Box, RelativeLayout>
         }
         control.SetBackgroundColor(widget.BackgroundColor.ToColor());
         control.SetGravity(widget.Horizontal.ToGravityFlags() | widget.Vertical.ToGravityFlags());
+        control.SetPaddingRelative(start: Convert.ToInt32(widget.Padding.Start),
+            top: Convert.ToInt32(widget.Padding.Top),
+            end: Convert.ToInt32(widget.Padding.End),
+            bottom: Convert.ToInt32(widget.Padding.Bottom));
     }
 
     public BoxRenderer(Context context) : base(context)

@@ -44,3 +44,39 @@ internal class OnClickListener : Java.Lang.Object, View.IOnClickListener
     }
 }
 
+internal class OnLongClickListener : Java.Lang.Object, View.IOnLongClickListener
+{
+    private readonly Action _command;
+
+    public OnLongClickListener(Action command)
+    {
+        _command = command;
+    }
+
+    public bool OnLongClick(View? v)
+    {
+        _command.Invoke();
+        return true;
+    }
+}
+
+internal class OnDoubleTapListener : Java.Lang.Object, View.IOnTouchListener
+{
+    private readonly Action _command;
+
+    public OnDoubleTapListener(Action command)
+    {
+        _command = command;
+    }
+
+    public bool OnTouch(View? v, MotionEvent? e)
+    {
+        if (e?.Action == MotionEventActions.Up)
+        {
+            _command.Invoke();
+        }
+
+        return true;
+    }
+}
+
