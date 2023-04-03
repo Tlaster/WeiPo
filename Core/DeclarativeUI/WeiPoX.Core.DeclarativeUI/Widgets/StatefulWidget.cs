@@ -1,4 +1,5 @@
 using WeiPoX.Core.DeclarativeUI.Internal;
+using WeiPoX.Core.Lifecycle;
 
 namespace WeiPoX.Core.DeclarativeUI.Widgets;
 
@@ -33,8 +34,9 @@ public abstract record StatefulWidget : StateWidget, IDisposable
             return true;
         }
 
-        return base.Equals(other);
+        return base.Equals(other) && State.Equals(other.State);
     }
+
 
     internal Widget BuildInternal()
     {
@@ -52,6 +54,23 @@ public abstract record StatefulWidget : StateWidget, IDisposable
 
     protected abstract Widget Build();
 
+    public State<T> UseSaveableState<T>(string key, T initialState)
+    {
+        return UseSaveableState(key, () => initialState);
+    }
+    
+    public State<T> UseSaveableState<T>(string key, Func<T> initialState)
+    {
+        var holder = UseContext<StateHolder>();
+        var (value, setValue) = UseState(() => holder.GetOrElse(key, initialState.Invoke()));
+        var proxySetValue = new Action<T>(state =>
+        {
+            setValue.Invoke(state);
+            holder.Add(key, state);
+        });
+        return new State<T>(value, proxySetValue);
+    }
+    
     public State<T> UseState<T>(T initialState)
     {
         return UseState(() => initialState);
@@ -132,6 +151,6 @@ public abstract record StatefulWidget : StateWidget, IDisposable
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(base.GetHashCode());
+        return HashCode.Combine(base.GetHashCode(), State);
     }
 }

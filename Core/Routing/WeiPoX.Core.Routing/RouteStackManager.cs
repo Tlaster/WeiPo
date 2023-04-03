@@ -55,7 +55,7 @@ internal class RouteStackManager : ILifecycleObserver
         }
 
         var backstackEntry = new BackstackEntry(
-            Guid.NewGuid().ToString(),
+            _routeStack.Count,
             matchResult.Route,
             _stateHolderParent,
             matchResult.PathMap,

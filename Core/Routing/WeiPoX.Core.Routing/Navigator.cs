@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using WeiPoX.Core.DeclarativeUI.Widgets;
 using WeiPoX.Core.Lifecycle;
 
 namespace WeiPoX.Core.Routing;
@@ -27,5 +28,13 @@ public class Navigator
     public bool CanPop()
     {
         return !_routeStackManager.IsEmpty();
+    }
+}
+
+public static class NavigatorExtensions
+{
+    public static Navigator UseNavigator(this StatefulWidget widget)
+    {
+        return widget.UseMemo(() => new Navigator(), true);
     }
 }

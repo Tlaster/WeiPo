@@ -1,6 +1,7 @@
 ﻿using WeiPoX.Core.DeclarativeUI.Internal;
 using WeiPoX.Core.DeclarativeUI.Platform.UIKit.Internal;
 using WeiPoX.Core.DeclarativeUI.Widgets;
+using WeiPoX.Core.Lifecycle;
 
 namespace WeiPoX.Core.DeclarativeUI.Platform.UIKit;
 
@@ -61,12 +62,19 @@ public class DeclarativeView : UIView
 public class DeclarativeViewController<T> : UIViewController where T : Widget, new()
 {
 
+    private readonly StateHolder _stateHolder = new();
+    private readonly LifecycleHolder _lifecycleHolder = new();
     private readonly DeclarativeCore<UIView> _core;
     public DeclarativeViewController()
     {
         _core = new DeclarativeCore<UIView>(new WidgetBuilder(), UpdateChild)
         {
-            Widget = new T()
+            Widget = new AppWidget
+            {
+                App = new T(),
+                StateHolder = _stateHolder,
+                LifecycleHolder = _lifecycleHolder,
+            }
         };
     }
     
