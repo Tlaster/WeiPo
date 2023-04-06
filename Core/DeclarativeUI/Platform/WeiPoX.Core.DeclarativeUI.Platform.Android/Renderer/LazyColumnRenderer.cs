@@ -28,7 +28,7 @@ internal class LazyColumnRenderer : LazyRendererObject<LazyColumn, RecyclerView>
     {
         if (control.GetAdapter() is WeiPoXRecyclerViewAdapter adapter)
         {
-            adapter.SetItems(widget.GenerateActualLazyItems());
+            adapter.SetItems(widget);
         }
     }
 
@@ -80,25 +80,48 @@ internal class LazyColumnRenderer : LazyRendererObject<LazyColumn, RecyclerView>
             }
         }
     }
+
+    protected override Range GetVisibleRange(RecyclerView control)
+    {
+        // return if recycler view is empty
+        if (control.GetAdapter()?.ItemCount == 0)
+        {
+            return new Range(0, 0);
+        }
+
+        // workaround for recycler view not showing items when first load
+        if (control.ChildCount == 0)
+        {
+            return new Range(0, 0);
+        }
+        var layoutManager = control.GetLayoutManager();
+        if (layoutManager is LinearLayoutManager linearLayoutManager)
+        {
+            var firstVisibleItemPosition = linearLayoutManager.FindFirstVisibleItemPosition();
+            var lastVisibleItemPosition = linearLayoutManager.FindLastVisibleItemPosition();
+            return new Range(Math.Max(0, firstVisibleItemPosition), Math.Max(0, lastVisibleItemPosition));
+        }
+        return new Range(0, 0);
+    }
 }
 
 internal class WeiPoXRecyclerViewAdapter : RecyclerView.Adapter
 {
     private readonly RendererContext<View> _rendererContext;
-    private List<ActualLazyItem> _actualLazyItems = new();
+    private ILazyWidget? _lazyWidget;
     
     public WeiPoXRecyclerViewAdapter(RendererContext<View> rendererContext)
     {
         _rendererContext = rendererContext;
     }
 
-    public override int ItemCount => _actualLazyItems.Count;
+    public override int ItemCount => _lazyWidget?.Count ?? 0;
 
     public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
     {
-        if (holder is WeiPoXViewHolder { ItemView: DeclarativeView view })
+        if (holder is WeiPoXViewHolder { ItemView: DeclarativeView view } && _lazyWidget != null)
         {
-            view.Widget = _actualLazyItems[position].Builder();
+            view.Widget = _lazyWidget.GetBuilder(position)?.Invoke();
         }
     }
 
@@ -113,23 +136,23 @@ internal class WeiPoXRecyclerViewAdapter : RecyclerView.Adapter
     }
     
     
-    public void SetItems(List<ActualLazyItem> generateActualLazyItems)
+    public void SetItems(ILazyWidget widget)
     {
-        if (generateActualLazyItems.Count != _actualLazyItems.Count)
+        if (_lazyWidget == null || widget.Count != _lazyWidget.Count)
         {
-            _actualLazyItems = generateActualLazyItems;
+            _lazyWidget = widget;
             NotifyDataSetChanged();
         }
         else
         {
-            _actualLazyItems = generateActualLazyItems;
+            _lazyWidget = widget;
         }
     }
 }
 
 internal class WeiPoXViewHolder : RecyclerView.ViewHolder
 {
-    public WeiPoXViewHolder(DeclarativeView itemView) : base(itemView)
+    public WeiPoXViewHolder(View itemView) : base(itemView)
     {
     }
 }

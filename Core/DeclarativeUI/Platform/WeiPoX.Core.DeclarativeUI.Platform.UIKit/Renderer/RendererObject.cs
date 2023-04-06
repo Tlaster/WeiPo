@@ -87,6 +87,11 @@ public abstract class RendererObject<TWidget, TControl> : IRenderer<UIView>
 public abstract class LazyRendererObject<TWidget, TControl> : RendererObject<TWidget, TControl>, ILazyRenderer<UIView>
     where TWidget : MappingWidget where TControl : class, new()
 {
+    public Range GetVisibleRange(UIView control)
+    {
+        return GetVisibleRange(control as TControl ?? throw new InvalidOperationException());
+    }
+
     public bool IsVisible(UIView control, int index)
     {
         return IsVisible(control as TControl ?? throw new InvalidOperationException(), index);
@@ -107,4 +112,6 @@ public abstract class LazyRendererObject<TWidget, TControl> : RendererObject<TWi
     protected abstract UIView? GetVisibleChild(TControl control, int index);
 
     protected abstract void UpdateChild(TControl control, int index, UIView childControl);
+    
+    protected abstract Range GetVisibleRange(TControl control);
 }

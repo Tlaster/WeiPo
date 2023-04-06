@@ -144,21 +144,29 @@ public partial class WidgetBuilder<T>
         IBuildOwner owner
     )
     {
-        var oldItemsCount = oldLazyWidget.Items.Count;
-        var newItemsCount = newLazyWidget.Items.Count;
-        var count = Math.Max(oldItemsCount, newItemsCount);
-        await Task.WhenAll(Enumerable.Range(0, count).Select(async i =>
+        var oldItemsCount = oldLazyWidget.Count;
+        var newItemsCount = newLazyWidget.Count;
+        var range = lazyRenderer.GetVisibleRange(control);
+        if (range.Start.Value == -1 || range.End.Value <= 0)
         {
-            var oldItem = oldLazyWidget.Items.ElementAtOrDefault(i);
-            var newItem = newLazyWidget.Items.ElementAtOrDefault(i);
+            return;
+        }
+        var actualEnd = Math.Min(newItemsCount, range.End.Value);
+        var actualStart = Math.Max(0, range.Start.Value);
+        var count = actualEnd - actualStart;
+        
+        await Task.WhenAll(Enumerable.Range(actualStart, count).Select(async i =>
+        {
             if (lazyRenderer.IsVisible(control, i))
             {
+                var oldItem = oldLazyWidget.GetBuilder(i);
+                var newItem = newLazyWidget.GetBuilder(i);
                 if (oldItem != null && newItem != null)
                 {
                     var oldItemControl = lazyRenderer.GetVisibleChild(control, i);
                     var newItemControl = await BuildIfNeededAsync(
-                        oldItem.Builder.Invoke(),
-                        newItem.Builder.Invoke(),
+                        oldItem.Invoke(),
+                        newItem.Invoke(),
                         oldItemControl, 
                         context, 
                         owner);

@@ -16,7 +16,7 @@ internal class LazyColumnRenderer : LazyRendererObject<LazyColumn, WeiPoXItemsRe
 {
     protected override void Update(WeiPoXItemsRepeater control, LazyColumn widget)
     {
-        control.SetItems(widget.GenerateActualLazyItems());
+        control.SetItems(widget);
     }
 
     protected override WeiPoXItemsRepeater Create(RendererContext<UIElement> context)
@@ -31,7 +31,7 @@ internal class LazyColumnRenderer : LazyRendererObject<LazyColumn, WeiPoXItemsRe
 
     protected override UIElement? GetVisibleChild(WeiPoXItemsRepeater control, int index)
     {
-        return (control.Repeater.TryGetElement(index) as RepeaterDeclarativeView)?.Content as UIElement;
+        return (control.Repeater.TryGetElement(index) as RepeaterDeclarativeView)?.Content;
     }
 
     protected override void UpdateChild(WeiPoXItemsRepeater control, int index, UIElement childControl)
@@ -41,12 +41,20 @@ internal class LazyColumnRenderer : LazyRendererObject<LazyColumn, WeiPoXItemsRe
             item.UpdateChild(childControl);
         }
     }
+
+    protected override Range GetVisibleRange(WeiPoXItemsRepeater control)
+    {
+        var first = control.VisibleIndex.Count > 0 ? control.VisibleIndex.Min() : -1;
+        var last = control.VisibleIndex.Count > 0 ? control.VisibleIndex.Max() : -1;
+        return new Range(Math.Max(first, 0), Math.Max(last, 0));
+    }
 }
 
 internal class WeiPoXItemsRepeater : UserControl
 {
-    private List<ActualLazyItem> _actualLazyItems = new();
     private readonly RendererContext<UIElement> _context;
+    private ILazyWidget? _lazyWidget;
+    public List<int> VisibleIndex { get; } = new();
 
     public WeiPoXItemsRepeater(RendererContext<UIElement> context)
     {
@@ -55,10 +63,32 @@ internal class WeiPoXItemsRepeater : UserControl
         {
             ItemTemplate = RepeaterDeclarativeView.GenerateDataTemplate()
         };
+        Repeater.ElementClearing += RepeaterOnElementClearing;
+        Repeater.ElementPrepared += RepeaterOnElementPrepared;
+        Repeater.ElementIndexChanged += RepeaterOnElementIndexChanged;
         Content = new ScrollViewer
         {
             Content = Repeater
         };
+    }
+
+    private void RepeaterOnElementIndexChanged(ItemsRepeater sender, ItemsRepeaterElementIndexChangedEventArgs args)
+    {
+        VisibleIndex.Remove(args.OldIndex);
+        VisibleIndex.Add(args.NewIndex);
+    }
+
+    private void RepeaterOnElementPrepared(ItemsRepeater sender, ItemsRepeaterElementPreparedEventArgs args)
+    {
+        VisibleIndex.Add(args.Index);
+    }
+
+    private void RepeaterOnElementClearing(ItemsRepeater sender, ItemsRepeaterElementClearingEventArgs args)
+    {
+        if (args.Element is RepeaterDeclarativeView repeaterDeclarativeView)
+        {
+            VisibleIndex.Remove(repeaterDeclarativeView.RepeaterItem.Index);
+        }
     }
 
     public WeiPoXItemsRepeater()
@@ -68,134 +98,20 @@ internal class WeiPoXItemsRepeater : UserControl
 
     internal ItemsRepeater Repeater { get; }
 
-    public void SetItems(List<ActualLazyItem> generateActualLazyItems)
+    public void SetItems(ILazyWidget widget)
     {
-        if (generateActualLazyItems.Count != _actualLazyItems.Count)
+        if (_lazyWidget == null || widget.Count != _lazyWidget.Count)
         {
-            Repeater.ItemsSource = generateActualLazyItems
-                .Select((item, index) => new RepeaterItem(() => _actualLazyItems[index].Builder.Invoke(), _context.BuildOwner)).ToList();
+            Repeater.ItemsSource = Enumerable.Range(0, widget.Count).Select(i =>
+                new RepeaterItem(
+                    () => _lazyWidget?.GetBuilder(i)?.Invoke(),
+                    _context.BuildOwner,
+                    i
+                    )
+            );
         }
-
-        _actualLazyItems = generateActualLazyItems;
+        _lazyWidget = widget;
     }
 }
 
-internal record RepeaterItem(Func<Widget> WidgetBuilder, IBuildOwner BuildOwner);
-
-internal class WeiPoXElementFactory : IElementFactory
-{
-    private const string Key = "WeiPoX";
-    private readonly Func<int, ActualLazyItem> _builder;
-    private readonly RecyclePool _recyclePool = new();
-    private readonly RendererContext<UIElement> _context;
-
-    public WeiPoXElementFactory(RendererContext<UIElement> context, Func<int, ActualLazyItem> builder)
-    {
-        _context = context;
-        _builder = builder;
-    }
-
-    public UIElement GetElement(ElementFactoryGetArgs args)
-    {
-        var element = _recyclePool.TryGetElement(Key, args.Parent) ?? new DeclarativeView(_context.BuildOwner);
-        if (element is DeclarativeView subDeclarativeView && args.Data is int index)
-        {
-            subDeclarativeView.Widget = _builder(index).Builder.Invoke();
-        }
-        else
-        {
-            throw new Exception("element is not SubDeclarativeView");
-        }
-
-        return element;
-    }
-
-    public void RecycleElement(ElementFactoryRecycleArgs args)
-    {
-        var element = args.Element!;
-        _recyclePool.PutElement(element, Key, args.Parent);
-    }
-}
-
-internal class RecyclePool
-{
-    private readonly Dictionary<string, List<ElementInfo>> _elements = new();
-
-    public void PutElement(UIElement element, string key, UIElement? owner)
-    {
-        var ownerAsPanel = EnsureOwnerIsPanelOrNull(owner);
-        var elementInfo = new ElementInfo(element, ownerAsPanel);
-
-        if (!_elements.TryGetValue(key, out var pool))
-        {
-            pool = new List<ElementInfo>();
-            _elements.Add(key, pool);
-        }
-
-        pool.Add(elementInfo);
-    }
-
-    public UIElement? TryGetElement(string key, UIElement? owner)
-    {
-        if (_elements.TryGetValue(key, out var elements))
-        {
-            if (elements.Count > 0)
-            {
-                // Prefer an element from the same owner or with no owner so that we don't incur
-                // the enter/leave cost during recycling.
-                // TODO: prioritize elements with the same owner to those without an owner.
-                var elementInfo = elements.FirstOrDefault(x => x.Owner == owner) ?? elements.LastOrDefault();
-                elements.Remove(elementInfo!);
-
-                var ownerAsPanel = EnsureOwnerIsPanelOrNull(owner);
-                if (elementInfo!.Owner != null && elementInfo.Owner != ownerAsPanel)
-                {
-                    // Element is still under its parent. remove it from its parent.
-                    var panel = elementInfo.Owner;
-                    if (panel != null)
-                    {
-                        var childIndex = panel.Children.IndexOf(elementInfo.Element);
-                        if (childIndex == -1)
-                        {
-                            throw new KeyNotFoundException(
-                                "ItemsRepeater's child not found in its Children collection.");
-                        }
-
-                        panel.Children.RemoveAt(childIndex);
-                    }
-                }
-
-                return elementInfo.Element;
-            }
-        }
-
-        return null;
-    }
-
-    private Panel? EnsureOwnerIsPanelOrNull(UIElement? owner)
-    {
-        if (owner is Panel panel)
-        {
-            return panel;
-        }
-
-        if (owner != null)
-        {
-            throw new InvalidOperationException("Owner must be IPanel or null.");
-        }
-
-        return null;
-    }
-
-    private class ElementInfo
-    {
-        public ElementInfo(UIElement element, Panel? owner)
-        {
-            Element = element;
-            Owner = owner;
-        }
-
-        public UIElement Element { get; }
-        public Panel? Owner { get; }
-    }
-}
+public record RepeaterItem(Func<Widget?> WidgetBuilder, IBuildOwner BuildOwner, int Index);

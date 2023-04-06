@@ -11,6 +11,7 @@ using DependencyObject = Microsoft.UI.Xaml.DependencyObject;
 using DependencyProperty = Microsoft.UI.Xaml.DependencyProperty;
 using DependencyPropertyChangedEventArgs = Microsoft.UI.Xaml.DependencyPropertyChangedEventArgs;
 using PropertyMetadata = Microsoft.UI.Xaml.PropertyMetadata;
+using RoutedEventArgs = Microsoft.UI.Xaml.RoutedEventArgs;
 using UIElement = Microsoft.UI.Xaml.UIElement;
 
 namespace WeiPoX.Core.DeclarativeUI.Platform.WinUI3;
@@ -42,7 +43,7 @@ public class DeclarativeView : UserControl
 public class RepeaterDeclarativeView : UserControl
 {
     private IBuildOwner? _previousBuildOwner;
-    private Func<Widget>? _previousWidgetBuilder;
+    private Func<Widget?>? _previousWidgetBuilder;
     private DeclarativeCore<UIElement>? _core;
 
     public static DataTemplate GenerateDataTemplate()
@@ -65,29 +66,29 @@ public class RepeaterDeclarativeView : UserControl
             {
                 if (o is RepeaterDeclarativeView declarativeView && args.NewValue is RepeaterItem item)
                 {
-                    declarativeView.Update(item);
+                    declarativeView.Update(args.OldValue as RepeaterItem, item);
                 }
             }));
 
-    internal RepeaterItem RepeaterItem
+    public RepeaterItem RepeaterItem
     {
         get => (RepeaterItem)GetValue(RepeaterItemProperty);
         set => SetValue(RepeaterItemProperty, value);
     }
-    
 
-    private void Update(RepeaterItem item)
+    private void Update(RepeaterItem? oldValue, RepeaterItem newValue)
     {
-        if (_previousBuildOwner != item.BuildOwner)
+        if (_previousBuildOwner != newValue.BuildOwner)
         {
-            _core = new DeclarativeCore<UIElement>(new WidgetBuilder(), UpdateChild, item.BuildOwner);
+            _core = new DeclarativeCore<UIElement>(new WidgetBuilder(), UpdateChild, newValue.BuildOwner);
         }
-        _previousBuildOwner = item.BuildOwner;
-        if (_previousWidgetBuilder != item.WidgetBuilder && _core != null)
+        _previousBuildOwner = newValue.BuildOwner;
+        if (_previousWidgetBuilder != newValue.WidgetBuilder && _core != null)
         {
-            _core.Widget = item.WidgetBuilder();
+            _core.Widget = newValue.WidgetBuilder();
         }
-        _previousWidgetBuilder = item.WidgetBuilder;
+
+        _previousWidgetBuilder = newValue.WidgetBuilder;
     }
     
     internal void UpdateChild(UIElement control)

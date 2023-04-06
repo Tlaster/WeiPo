@@ -1,4 +1,5 @@
-﻿using WeiPoX.Core.DeclarativeUI.Internal;
+﻿using System.Diagnostics;
+using WeiPoX.Core.DeclarativeUI.Internal;
 using WeiPoX.Core.DeclarativeUI.Widgets;
 
 namespace WeiPoX.Core.DeclarativeUI;
@@ -75,22 +76,31 @@ public class DeclarativeCore<T>
 
     private async Task Render(Widget widget)
     {
-        while (_requestBuildCount > 0)
+        try
         {
-            _rendering = true;
-            _renderedControl = await _renderer.BuildIfNeededAsync(_previousWidget, widget, _renderedControl, _buildOwner);
-            _previousWidget = widget;
-            _rendering = false;
-            _requestBuildCount--;
-            if (_requestBuildCount == 0)
+            while (_requestBuildCount > 0)
             {
-                _buildOwner.CleanUp();
-                _updateChild(_renderedControl);
+                _rendering = true;
+                _renderedControl = await _renderer.BuildIfNeededAsync(_previousWidget, widget, _renderedControl, _buildOwner);
+                _previousWidget = widget;
+                _rendering = false;
+                _requestBuildCount--;
+                if (_requestBuildCount == 0)
+                {
+                    _buildOwner.CleanUp();
+                    _updateChild(_renderedControl);
+                }
+                else
+                {
+                    _requestBuildCount = 1;
+                }
             }
-            else
-            {
-                _requestBuildCount = 1;
-            }
+        }
+        catch (Exception e)
+        {
+            var text = new Text(e.ToString());
+            _renderedControl = await _renderer.BuildIfNeededAsync(text, text, _renderedControl, _buildOwner);
+            throw;
         }
     }
 }

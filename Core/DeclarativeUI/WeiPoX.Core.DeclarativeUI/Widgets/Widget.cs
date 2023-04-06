@@ -20,7 +20,6 @@ internal interface IContextProvider
 
 internal interface ILazyWidget
 {
-    ImmutableList<ActualLazyItem> Items { get; }
+    int Count { get; }
+    Func<Widget>? GetBuilder(int index);
 }
-
-public record ActualLazyItem(int Index, Func<Widget> Builder);

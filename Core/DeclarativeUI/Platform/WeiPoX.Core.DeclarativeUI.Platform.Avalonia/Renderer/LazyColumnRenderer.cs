@@ -1,4 +1,5 @@
 ﻿using Avalonia.Controls;
+using Avalonia.Layout;
 using Avalonia.Styling;
 using WeiPoX.Core.DeclarativeUI.Internal;
 using WeiPoX.Core.DeclarativeUI.Platform.Avalonia.Internal;
@@ -11,7 +12,7 @@ internal class LazyColumnRenderer : LazyRendererObject<LazyColumn, WeiPoXItemsRe
 {
     protected override void Update(WeiPoXItemsRepeater control, LazyColumn widget)
     {
-        control.SetItems(widget.GenerateActualLazyItems());
+        control.SetItems(widget);
     }
 
     protected override WeiPoXItemsRepeater Create(RendererContext<Control> context)
@@ -37,12 +38,19 @@ internal class LazyColumnRenderer : LazyRendererObject<LazyColumn, WeiPoXItemsRe
         }
     }
 
+    protected override Range GetVisibleRange(WeiPoXItemsRepeater control)
+    {
+        var first = control.VisibleIndex.Count > 0 ? control.VisibleIndex.Min() : -1;
+        var last = control.VisibleIndex.Count > 0 ? control.VisibleIndex.Max() : -1;
+        return new Range(Math.Max(first, 0), Math.Max(last, 0));
+    }
 }
 
 internal class WeiPoXItemsRepeater : ScrollViewer, IStyleable
 {
     Type IStyleable.StyleKey => typeof(ScrollViewer);
-    private List<ActualLazyItem> _actualLazyItems = new();
+    private ILazyWidget? _lazyWidget;
+    public List<int> VisibleIndex { get; }= new();
 
     internal ItemsRepeater Repeater { get; }
 
@@ -50,7 +58,8 @@ internal class WeiPoXItemsRepeater : ScrollViewer, IStyleable
     {
         Repeater = new ItemsRepeater
         {
-            ItemTemplate = new WeiPoXElementFactory(context, index => _actualLazyItems[index])
+            ItemTemplate = new WeiPoXElementFactory(context, index => _lazyWidget?.GetBuilder(index),
+                index => VisibleIndex.Add(index), index => VisibleIndex.Remove(index))
         };
         Content = Repeater;
     }
@@ -60,13 +69,13 @@ internal class WeiPoXItemsRepeater : ScrollViewer, IStyleable
         throw new NotImplementedException();
     }
 
-    public void SetItems(List<ActualLazyItem> generateActualLazyItems)
+    public void SetItems(ILazyWidget widget)
     {
-        if (generateActualLazyItems.Count != _actualLazyItems.Count)
+        if (_lazyWidget == null || widget.Count != _lazyWidget.Count)
         {
-            Repeater.Items = generateActualLazyItems.Select((_, i) => i).ToList();
+            Repeater.Items = Enumerable.Range(0, widget.Count);
         }
-        _actualLazyItems = generateActualLazyItems;
+        _lazyWidget = widget;
     }
 }
 
@@ -74,26 +83,32 @@ internal class WeiPoXElementFactory : ElementFactory
 {
     private const string Key = "WeiPoX";
     private readonly RecyclePool _recyclePool = new();
-    private readonly Func<int, ActualLazyItem> _builder;
+    private readonly Func<int, Func<Widget>?> _builder;
     private readonly RendererContext<Control> _context;
+    private readonly Action<int> _onGetElement;
+    private readonly Action<int> _onRecycleElement;
 
-    public WeiPoXElementFactory(RendererContext<Control> context, Func<int, ActualLazyItem> builder)
+    public WeiPoXElementFactory(RendererContext<Control> context, Func<int, Func<Widget>?> builder, Action<int> onGetElement, Action<int> onRecycleElement)
     {
         _context = context;
         _builder = builder;
+        _onGetElement = onGetElement;
+        _onRecycleElement = onRecycleElement;
     }
 
     protected override Control GetElementCore(ElementFactoryGetArgs args)
     {
         var element = _recyclePool.TryGetElement(Key, args.Parent) ?? new DeclarativeView(_context.BuildOwner);
+        element.Tag = args.Index;
         if (element is DeclarativeView subDeclarativeView)
         {
-            subDeclarativeView.Widget = _builder(args.Index).Builder.Invoke();
+            subDeclarativeView.Widget = _builder(args.Index)?.Invoke();
         }
         else
         {
             throw new Exception("element is not SubDeclarativeView");
         }
+        _onGetElement(args.Index);
         return element;
     }
 
@@ -101,5 +116,6 @@ internal class WeiPoXElementFactory : ElementFactory
     {
         var element = args.Element!;
         _recyclePool.PutElement(element, Key, args.Parent);
+        _onRecycleElement((int)element.Tag!);
     }
 }

@@ -51,7 +51,7 @@ public class DeclarativeView : ContentView
 public class RepeaterDeclarativeView : ContentView
 {
     private IBuildOwner? _previousBuildOwner;
-    private Func<Widget>? _previousWidgetBuilder;
+    private Func<Widget?>? _previousWidgetBuilder;
     private DeclarativeCore<View>? _core;
 
     public static DataTemplate GenerateDataTemplate()
@@ -71,7 +71,7 @@ public class RepeaterDeclarativeView : ContentView
     {
         if (bindable is RepeaterDeclarativeView view)
         {
-            view.Update((RepeaterItem)newvalue);
+            view.Update((RepeaterItem?)oldvalue, (RepeaterItem)newvalue);
         }
     }
 
@@ -80,20 +80,36 @@ public class RepeaterDeclarativeView : ContentView
         get => (RepeaterItem)GetValue(RepeaterItemProperty);
         set => SetValue(RepeaterItemProperty, value);
     }
-    
 
-    private void Update(RepeaterItem item)
+    public RepeaterDeclarativeView()
     {
-        if (_previousBuildOwner != item.BuildOwner)
+        Loaded += OnLoaded;
+        Unloaded += OnUnloaded;
+    }
+
+    private void OnUnloaded(object? sender, EventArgs e)
+    {
+        RepeaterItem?.UnLoaded(this);
+    }
+
+    private void OnLoaded(object? sender, EventArgs e)
+    {
+        RepeaterItem?.Loaded(this);
+    }
+
+
+    private void Update(RepeaterItem? oldItem, RepeaterItem newItem)
+    {
+        if (_previousBuildOwner != newItem.BuildOwner)
         {
-            _core = new DeclarativeCore<View>(new WidgetBuilder(), UpdateChild, item.BuildOwner);
+            _core = new DeclarativeCore<View>(new WidgetBuilder(), UpdateChild, newItem.BuildOwner);
         }
-        _previousBuildOwner = item.BuildOwner;
-        if (_previousWidgetBuilder != item.WidgetBuilder && _core != null)
+        _previousBuildOwner = newItem.BuildOwner;
+        if (_previousWidgetBuilder != newItem.WidgetBuilder && _core != null)
         {
-            _core.Widget = item.WidgetBuilder();
+            _core.Widget = newItem.WidgetBuilder();
         }
-        _previousWidgetBuilder = item.WidgetBuilder;
+        _previousWidgetBuilder = newItem.WidgetBuilder;
     }
     
     internal void UpdateChild(View control)

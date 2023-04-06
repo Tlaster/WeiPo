@@ -5,28 +5,16 @@ namespace WeiPoX.Core.DeclarativeUI.Widgets.Layout;
 
 public abstract record LazyLayout : MappingWidget, ILazyWidget, IEnumerable
 {
-    ImmutableList<ActualLazyItem> ILazyWidget.Items => GenerateActualLazyItems().ToImmutableList();
-    public List<LazyItem> Content { get; } = new();
+    private readonly List<LazyItem> _content = new();
     public IEnumerator GetEnumerator()
     {
-        return Content.GetEnumerator();
+        return _content.GetEnumerator();
     }
     
     public void Add(LazyItem item)
     {
-        Content.Add(item);
+        _content.Add(item);
     }
-    
-    internal List<ActualLazyItem> GenerateActualLazyItems() =>
-        Content.SelectMany(it =>
-        {
-            return it switch
-            {
-                Item item => new [] { new Func<Widget>(() => item.Content)}.ToList(),
-                Items items => Enumerable.Range(0, items.Count).Select(index => new Func<Widget>(() => items.Builder.Invoke(index))).ToList(),
-                _ => throw new ArgumentOutOfRangeException(nameof(it))
-            };
-        }).Select((builder, index) => new ActualLazyItem(index, builder)).ToList();
 
     public virtual bool Equals(LazyLayout? other)
     {
@@ -40,12 +28,50 @@ public abstract record LazyLayout : MappingWidget, ILazyWidget, IEnumerable
             return true;
         }
 
-        return base.Equals(other) && Content.SequenceEqual(other.Content);
+        return base.Equals(other) && _content.SequenceEqual(other._content);
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(base.GetHashCode(), Content);
+        return HashCode.Combine(base.GetHashCode(), _content);
+    }
+
+    public int Count => _content.Sum(it => it switch
+    {
+        Item _ => 1,
+        Items items => items.Count,
+        _ => throw new ArgumentOutOfRangeException(nameof(it))
+    });
+    
+    public Func<Widget>? GetBuilder(int index)
+    {
+        var count = 0;
+        foreach (var item in _content)
+        {
+            switch (item)
+            {
+                case Item _:
+                    if (count == index)
+                    {
+                        return () => ((Item) item).Content;
+                    }
+
+                    count++;
+                    break;
+                case Items items:
+                    if (count + items.Count > index)
+                    {
+                        return () => items.Builder.Invoke(index - count);
+                    }
+
+                    count += items.Count;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(item));
+            }
+        }
+
+        return null;
     }
 }
 

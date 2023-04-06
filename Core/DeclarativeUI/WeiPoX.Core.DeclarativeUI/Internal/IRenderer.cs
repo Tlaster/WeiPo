@@ -17,6 +17,7 @@ public record RendererContext<T>(WidgetBuilder<T> Renderer, IBuildOwner BuildOwn
 
 public interface ILazyRenderer<T>
 {
+    Range GetVisibleRange(T control);
     bool IsVisible(T control, int index);
     T? GetVisibleChild(T control, int index);
     void UpdateChild(T control, int index, T childControl);

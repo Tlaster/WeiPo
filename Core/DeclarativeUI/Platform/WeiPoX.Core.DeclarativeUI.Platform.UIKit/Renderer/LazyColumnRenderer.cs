@@ -20,7 +20,7 @@ internal class LazyColumnRenderer : LazyRendererObject<LazyColumn, WeiPoXUIColle
 
     protected override void Update(WeiPoXUICollectionView control, LazyColumn widget)
     {
-        control.SetItems(widget.GenerateActualLazyItems());
+        control.SetItems(widget);
     }
 
     protected override bool IsVisible(WeiPoXUICollectionView control, int index)
@@ -53,13 +53,21 @@ internal class LazyColumnRenderer : LazyRendererObject<LazyColumn, WeiPoXUIColle
             view.View.UpdateChild(childControl);
         }
     }
+
+    protected override Range GetVisibleRange(WeiPoXUICollectionView control)
+    {
+        var firstVisibleItemPosition = control.IndexPathsForVisibleItems.MinBy(x => x.Row)?.Row ?? 0;
+        var lastVisibleItemPosition = control.IndexPathsForVisibleItems.MaxBy(x => x.Row)?.Row ?? 0;
+        return new Range(firstVisibleItemPosition, lastVisibleItemPosition);
+    }
 }
 
 internal class WeiPoXUICollectionView : UICollectionView, IUICollectionViewDelegate, IUICollectionViewDataSource
 {
     private readonly RendererContext<UIView>? _context;
-    private const string _cellIdentifier = "cell";
-    private List<ActualLazyItem> _actualLazyItems = new();
+    private const string CellIdentifier = "cell";
+    private ILazyWidget? _lazyWidget;
+    
     public WeiPoXUICollectionView() : base(CGRect.Empty, UICollectionViewCompositionalLayout.GetLayout(new UICollectionLayoutListConfiguration(UICollectionLayoutListAppearance.Plain)))
     {
         
@@ -68,34 +76,34 @@ internal class WeiPoXUICollectionView : UICollectionView, IUICollectionViewDeleg
     public WeiPoXUICollectionView(CGRect frame, UICollectionViewLayout layout, RendererContext<UIView> context) : base(frame, layout)
     {
         _context = context;
-        RegisterClassForCell(typeof(WeiPoXUICollectionViewCell), _cellIdentifier);
+        RegisterClassForCell(typeof(WeiPoXUICollectionViewCell), CellIdentifier);
         Delegate = this;
         DataSource = this;
     }
     
     public nint GetItemsCount(UICollectionView collectionView, nint section)
     {
-        return _actualLazyItems.Count;
+        return _lazyWidget?.Count ?? 0;
     }
 
     public UICollectionViewCell GetCell(UICollectionView collectionView, NSIndexPath indexPath)
     {
-        var cell = collectionView.DequeueReusableCell(_cellIdentifier, indexPath) as WeiPoXUICollectionViewCell;
+        var cell = collectionView.DequeueReusableCell(CellIdentifier, indexPath) as WeiPoXUICollectionViewCell;
         cell!.View.Init(_context?.BuildOwner);
-        cell!.View.Widget = _actualLazyItems[indexPath.Row].Builder.Invoke();
+        cell!.View.Widget = _lazyWidget?.GetBuilder(indexPath.Row)?.Invoke();
         return cell;
     }
     
-    public void SetItems(List<ActualLazyItem> generateActualLazyItems)
+    public void SetItems(ILazyWidget widget)
     {
-        if (generateActualLazyItems.Count != _actualLazyItems.Count)
+        if (_lazyWidget == null || widget.Count != _lazyWidget.Count)
         {
-            _actualLazyItems = generateActualLazyItems;
+            _lazyWidget = widget;
             ReloadData();
         }
         else
         {
-            _actualLazyItems = generateActualLazyItems;
+            _lazyWidget = widget;
         }
     }
 }
