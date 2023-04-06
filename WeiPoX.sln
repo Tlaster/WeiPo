@@ -87,6 +87,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeiPoX.Core.DeclarativeUI.S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeiPoX.Core.DeclarativeUI.Sample.iOS", "Core\DeclarativeUI\Sample\WeiPoX.Core.DeclarativeUI.Sample.iOS\WeiPoX.Core.DeclarativeUI.Sample.iOS.csproj", "{E7A9FE43-371A-40CF-AF81-9A4BA83A8B5E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeiPoX.Core.DeclarativeUI.Platform.MAUI", "Core\DeclarativeUI\Platform\WeiPoX.Core.DeclarativeUI.Platform.MAUI\WeiPoX.Core.DeclarativeUI.Platform.MAUI.csproj", "{490E1CC6-6727-4D62-ABDC-50FB9011D79C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -575,6 +577,22 @@ Global
 		{E7A9FE43-371A-40CF-AF81-9A4BA83A8B5E}.Release|x64.Build.0 = Release|Any CPU
 		{E7A9FE43-371A-40CF-AF81-9A4BA83A8B5E}.Release|x86.ActiveCfg = Release|Any CPU
 		{E7A9FE43-371A-40CF-AF81-9A4BA83A8B5E}.Release|x86.Build.0 = Release|Any CPU
+		{490E1CC6-6727-4D62-ABDC-50FB9011D79C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{490E1CC6-6727-4D62-ABDC-50FB9011D79C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{490E1CC6-6727-4D62-ABDC-50FB9011D79C}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{490E1CC6-6727-4D62-ABDC-50FB9011D79C}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{490E1CC6-6727-4D62-ABDC-50FB9011D79C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{490E1CC6-6727-4D62-ABDC-50FB9011D79C}.Debug|x64.Build.0 = Debug|Any CPU
+		{490E1CC6-6727-4D62-ABDC-50FB9011D79C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{490E1CC6-6727-4D62-ABDC-50FB9011D79C}.Debug|x86.Build.0 = Debug|Any CPU
+		{490E1CC6-6727-4D62-ABDC-50FB9011D79C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{490E1CC6-6727-4D62-ABDC-50FB9011D79C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{490E1CC6-6727-4D62-ABDC-50FB9011D79C}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{490E1CC6-6727-4D62-ABDC-50FB9011D79C}.Release|ARM64.Build.0 = Release|Any CPU
+		{490E1CC6-6727-4D62-ABDC-50FB9011D79C}.Release|x64.ActiveCfg = Release|Any CPU
+		{490E1CC6-6727-4D62-ABDC-50FB9011D79C}.Release|x64.Build.0 = Release|Any CPU
+		{490E1CC6-6727-4D62-ABDC-50FB9011D79C}.Release|x86.ActiveCfg = Release|Any CPU
+		{490E1CC6-6727-4D62-ABDC-50FB9011D79C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -616,6 +634,7 @@ Global
 		{492CAD5B-C410-46B9-8531-C0761B17630D} = {6683F1D8-C92F-49C4-B4DD-2EFEFAB178CA}
 		{42D4CB96-EAE5-4D1E-9351-EF2A2EA3A524} = {6683F1D8-C92F-49C4-B4DD-2EFEFAB178CA}
 		{E7A9FE43-371A-40CF-AF81-9A4BA83A8B5E} = {6683F1D8-C92F-49C4-B4DD-2EFEFAB178CA}
+		{490E1CC6-6727-4D62-ABDC-50FB9011D79C} = {7E732B48-5E33-472A-B721-56C7C4A3F867}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2EF5A3C1-B0AD-4D47-A567-87ED1B9C164D}

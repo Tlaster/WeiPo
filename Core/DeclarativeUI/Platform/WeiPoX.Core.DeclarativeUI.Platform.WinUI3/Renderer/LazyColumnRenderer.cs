@@ -80,7 +80,7 @@ internal class WeiPoXItemsRepeater : UserControl
     }
 }
 
-public record RepeaterItem(Func<Widget> WidgetBuilder, IBuildOwner BuildOwner);
+internal record RepeaterItem(Func<Widget> WidgetBuilder, IBuildOwner BuildOwner);
 
 internal class WeiPoXElementFactory : IElementFactory
 {

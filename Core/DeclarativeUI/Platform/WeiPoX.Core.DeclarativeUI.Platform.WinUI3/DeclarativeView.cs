@@ -69,7 +69,7 @@ public class RepeaterDeclarativeView : UserControl
                 }
             }));
 
-    public RepeaterItem RepeaterItem
+    internal RepeaterItem RepeaterItem
     {
         get => (RepeaterItem)GetValue(RepeaterItemProperty);
         set => SetValue(RepeaterItemProperty, value);
@@ -97,5 +97,4 @@ public class RepeaterDeclarativeView : UserControl
             Content = control;
         }
     }
-    
 }

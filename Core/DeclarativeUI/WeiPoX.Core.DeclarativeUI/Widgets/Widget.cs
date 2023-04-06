@@ -23,4 +23,4 @@ internal interface ILazyWidget
     ImmutableList<ActualLazyItem> Items { get; }
 }
 
-internal record ActualLazyItem(int Index, Func<Widget> Builder);
+public record ActualLazyItem(int Index, Func<Widget> Builder);

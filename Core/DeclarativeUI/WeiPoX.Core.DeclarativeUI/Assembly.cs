@@ -7,5 +7,6 @@
 [assembly: InternalsVisibleTo("WeiPoX.Core.DeclarativeUI.Platform.Avalonia")]
 [assembly: InternalsVisibleTo("WeiPoX.Core.DeclarativeUI.Platform.UIKit")]
 [assembly: InternalsVisibleTo("WeiPoX.Core.DeclarativeUI.Platform.Android")]
+[assembly: InternalsVisibleTo("WeiPoX.Core.DeclarativeUI.Platform.MAUI")]
 
 namespace WeiPoX.Core.DeclarativeUI;
