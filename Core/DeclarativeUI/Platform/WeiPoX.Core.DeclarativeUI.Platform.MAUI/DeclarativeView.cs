@@ -2,8 +2,27 @@
 using WeiPoX.Core.DeclarativeUI.Platform.MAUI.Internal;
 using WeiPoX.Core.DeclarativeUI.Platform.MAUI.Renderer;
 using WeiPoX.Core.DeclarativeUI.Widgets;
+using WeiPoX.Core.Lifecycle;
 
 namespace WeiPoX.Core.DeclarativeUI.Platform.MAUI;
+
+public class DeclarativePage<T> : ContentPage where T: Widget, new()
+{
+    private readonly StateHolder _stateHolder = new();
+    private readonly LifecycleHolder _lifecycleHolder = new();
+    public DeclarativePage()
+    {
+        Content = new DeclarativeView
+        {
+            Widget = new AppWidget
+            {
+                App = new T(),
+                StateHolder = _stateHolder,
+                LifecycleHolder = _lifecycleHolder,
+            }
+        };
+    }
+}
 
 public class DeclarativeView : ContentView
 {

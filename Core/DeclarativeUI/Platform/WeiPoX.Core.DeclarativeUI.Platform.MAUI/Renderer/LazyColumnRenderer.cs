@@ -18,11 +18,12 @@ internal class LazyColumnRenderer : LazyRendererObject<LazyColumn, WeiPoXItemsRe
 
     protected override bool IsVisible(WeiPoXItemsRepeater control, int index)
     {
-        
+        throw new NotImplementedException();
     }
 
     protected override View? GetVisibleChild(WeiPoXItemsRepeater control, int index)
     {
+        throw new NotImplementedException();
     }
 
     protected override void UpdateChild(WeiPoXItemsRepeater control, int index, View childControl)
