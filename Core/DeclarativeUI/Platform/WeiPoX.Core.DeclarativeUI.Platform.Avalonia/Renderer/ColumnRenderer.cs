@@ -18,7 +18,7 @@ internal class ColumnRenderer : RendererObject<Column, StackPanel>
 
     protected override void Update(StackPanel control, Column widget)
     {
-        control.HorizontalAlignment = widget.Horizontal.ToHorizontalAlignment();
+        control.HorizontalAlignment = widget.Alignment.ToHorizontalAlignment();
         control.VerticalAlignment = widget.Vertical.ToVerticalAlignment();
     }
 }

@@ -16,7 +16,7 @@ internal class ColumnRenderer : RendererObject<Column, StackLayout>
 
     protected override void Update(StackLayout control, Column widget)
     {
-        control.HorizontalOptions = widget.Horizontal.ToLayoutOptions();
+        control.HorizontalOptions = widget.Alignment.ToLayoutOptions();
         control.VerticalOptions = widget.Vertical.ToLayoutOptions();
     }
 }

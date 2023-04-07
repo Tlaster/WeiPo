@@ -6,17 +6,6 @@ using WeiPoX.Core.DeclarativeUI.Widgets.Layout;
 
 namespace WeiPoX.Core.DeclarativeUI.Platform.WinUI3.Renderer;
 
-internal class RowRenderer : RendererObject<Row, StackPanel>
+internal class RowRenderer : LayoutPanelRenderer<Row>
 {
-    protected override StackPanel Create(RendererContext<UIElement> context)
-    {
-        return new StackPanel
-        {
-            Orientation = Orientation.Horizontal
-        };
-    }
-
-    protected override void Update(StackPanel control, Row widget)
-    {
-    }
 }

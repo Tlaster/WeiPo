@@ -1,9 +1,62 @@
 using System.Collections.Immutable;
+using WeiPoX.Core.DeclarativeUI.Foundation;
 
 namespace WeiPoX.Core.DeclarativeUI.Widgets.Layout;
 
-public record Row : Panel
+public record Row : LayoutPanel
 {
-    public Alignment.Horizontal Horizontal { get; init; } = Alignment.Horizontal.Start;
-    public Alignment.Vertical Vertical { get; init; } = Alignment.Vertical.Top;
+    public Row()
+    {
+        Arrange = context =>
+        {
+            var children = context.Children;
+            var size = context.Size;
+            var width = size.Width;
+            var height = size.Height;
+            var x = 0.0;
+            var y = 0.0;
+            foreach (var child in children)
+            {
+                var childSize = child.DesiredSize;
+                var childWidth = childSize.Width;
+                var childHeight = childSize.Height;
+                var childX = x;
+                var childY = y;
+                childX += Horizontal switch
+                {
+                    Layout.Alignment.Horizontal.Center => (width - childWidth) / 2,
+                    Layout.Alignment.Horizontal.End => width - childWidth,
+                    Layout.Alignment.Horizontal.Start => 0,
+                    _ => throw new System.ArgumentOutOfRangeException()
+                };
+                childY += Alignment switch
+                {
+                    Layout.Alignment.Vertical.Center => (height - childHeight) / 2,
+                    Layout.Alignment.Vertical.Bottom => height - childHeight,
+                    Layout.Alignment.Vertical.Top => 0,
+                    _ => throw new System.ArgumentOutOfRangeException()
+                };
+                child.Arrange(new Rect(childX, childY, childWidth, childHeight));
+                x += childWidth;
+            }
+        };
+    }
+
+    public Alignment.Horizontal Horizontal { get; init; } = Layout.Alignment.Horizontal.Start;
+    public Alignment.Vertical Alignment { get; init; } = Layout.Alignment.Vertical.Top;
+    protected override Func<ILayoutContext, Size> Measure { get; } = context =>
+    {
+        var availableSize = context.Size;
+        var children = context.Children;
+        var width = 0.0;
+        var height = 0.0;
+        foreach (var child in children)
+        {
+            var childSize = child.Measure(availableSize);
+            width += childSize.Width;
+            height = System.Math.Max(height, childSize.Height);
+        }
+        return new Size(width, height);
+    };
+    protected override Action<ILayoutContext> Arrange { get; }
 }

@@ -22,12 +22,12 @@ public record SampleApp : StatefulWidget
                     BackgroundColor = new Color("#FF0000"),
                     Height = 200,
                     Horizontal = Alignment.Horizontal.Center,
+                    Vertical = Alignment.Vertical.Center,
                     Children =
                     {
                         new Column
                         {
-                            Horizontal = Alignment.Horizontal.Center,
-                            Vertical = Alignment.Vertical.Center,
+                            Alignment = Alignment.Horizontal.Center,
                             Children =
                             {
                                 new Button

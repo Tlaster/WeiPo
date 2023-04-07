@@ -3,10 +3,11 @@ using WeiPoX.Core.DeclarativeUI.Widgets.Layout;
 
 namespace WeiPoX.Core.DeclarativeUI.Platform.UIKit.Renderer;
 
-internal class BoxRenderer : RendererObject<Box, UIView>
+internal class BoxRenderer : LayoutPanelRenderer<Box>
 {
-    protected override void Update(UIView control, Box widget)
+    protected override void Update(WeiPoXPanel control, Box widget)
     {
+        base.Update(control, widget);
         control.BackgroundColor = widget.BackgroundColor.ToColor();
     }
 }
