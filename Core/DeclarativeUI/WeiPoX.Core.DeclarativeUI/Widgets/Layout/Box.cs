@@ -1,9 +1,11 @@
 using System.Collections.Immutable;
+using Generator.Equals;
 using WeiPoX.Core.DeclarativeUI.Foundation;
 
 namespace WeiPoX.Core.DeclarativeUI.Widgets.Layout;
 
-public record Box : LayoutPanel
+[Equatable]
+public partial record Box : LayoutPanel
 {
     public Box()
     {
@@ -82,7 +84,11 @@ public record Box : LayoutPanel
 
     public Thickness Padding { get; init; } = new();
     
+    [IgnoreEquality]
     protected override Func<ILayoutContext, Size> Measure { get; }
     
+    [IgnoreEquality]
     protected override Action<ILayoutContext> Arrange { get; }
+    
+    
 }

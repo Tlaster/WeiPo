@@ -1,9 +1,11 @@
 using System.Collections.Immutable;
+using Generator.Equals;
 using WeiPoX.Core.DeclarativeUI.Foundation;
 
 namespace WeiPoX.Core.DeclarativeUI.Widgets.Layout;
 
-public record Row : LayoutPanel
+[Equatable]
+public partial record Row : LayoutPanel
 {
     public Row()
     {
@@ -44,6 +46,8 @@ public record Row : LayoutPanel
 
     public Alignment.Horizontal Horizontal { get; init; } = Layout.Alignment.Horizontal.Start;
     public Alignment.Vertical Alignment { get; init; } = Layout.Alignment.Vertical.Top;
+    
+    [IgnoreEquality]
     protected override Func<ILayoutContext, Size> Measure { get; } = context =>
     {
         var availableSize = context.Size;
@@ -58,5 +62,7 @@ public record Row : LayoutPanel
         }
         return new Size(width, height);
     };
+    
+    [IgnoreEquality]
     protected override Action<ILayoutContext> Arrange { get; }
 }
