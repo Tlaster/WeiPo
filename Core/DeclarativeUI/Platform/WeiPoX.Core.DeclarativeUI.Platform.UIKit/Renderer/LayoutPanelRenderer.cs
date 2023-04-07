@@ -36,15 +36,15 @@ public class WeiPoXPanel : UIView
 
     public override void LayoutSubviews()
     {
-        base.LayoutSubviews();
         if (_panel == null || Subviews.Length == 0)
         {
             return;
         }
 
         var children = GetChildren();
-        _panel.Measure(new LayoutContext(new Foundation.Size(Bounds.Width, Bounds.Height), children));
-        _panel.Arrange(new LayoutContext(new Foundation.Size(Bounds.Width, Bounds.Height), children));
+        var size = _panel.Measure(new LayoutContext(new Foundation.Size(Bounds.Width, Bounds.Height), children));
+        this.Frame = new CoreGraphics.CGRect(this.Frame.X, this.Frame.Y, size.Width, size.Height);
+        _panel.Arrange(new LayoutContext(size, children));
     }
     
     private ImmutableList<ILayoutChild> GetChildren()
@@ -66,6 +66,7 @@ internal class LayoutChild : ILayoutChild
     public Foundation.Size Measure(Foundation.Size availableSize)
     {
         var size = Element.SizeThatFits(availableSize.ToSize());
+        DesiredSize = new Foundation.Size(size.Width, size.Height);
         return new Foundation.Size(size.Width, size.Height);
     }
 
@@ -74,7 +75,7 @@ internal class LayoutChild : ILayoutChild
         Element.Frame = rect.ToRect();
     }
 
-    public Foundation.Size DesiredSize => Element.Frame.Size.ToSize();
+    public Foundation.Size DesiredSize { get; private set; }
 }
 
 internal class LayoutContext : ILayoutContext

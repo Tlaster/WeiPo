@@ -53,12 +53,6 @@ public abstract class RendererObject<TWidget, TControl> : IRenderer<UIView>
         {
             case UIView panel:
                 panel.AddSubview(childControl);
-                
-                childControl.TranslatesAutoresizingMaskIntoConstraints = false;
-                childControl.TopAnchor.ConstraintEqualTo(panel.TopAnchor).Active = true;
-                childControl.LeadingAnchor.ConstraintEqualTo(panel.LeadingAnchor).Active = true;
-                childControl.TrailingAnchor.ConstraintEqualTo(panel.TrailingAnchor).Active = true;
-                childControl.BottomAnchor.ConstraintEqualTo(panel.BottomAnchor).Active = true;
                 break;
         }
         
