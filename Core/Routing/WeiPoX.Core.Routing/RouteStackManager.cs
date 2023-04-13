@@ -25,7 +25,6 @@ internal class RouteStackManager : ILifecycleObserver
 
     internal void Init(string initialRoute, ImmutableList<Route> routes, StateHolder stateHolder, LifecycleHolder lifecycleHolder)
     {
-        _lifecycleHolderParent?.RemoveObserver(this);
         _lifecycleHolderParent = lifecycleHolder;
         _lifecycleHolderParent.AddObserver(this);
         _stateHolderParent = stateHolder;
