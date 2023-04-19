@@ -8,7 +8,8 @@ public class Navigator
 {
     private readonly RouteStackManager _routeStackManager = new();
 
-    internal IObservable<BackstackEntry> CurrentRoute => _routeStackManager.CurrentRoute;
+    public IObservable<BackstackEntry> CurrentRoute => _routeStackManager.CurrentRoute;
+    public IObservable<bool> CanGoBack => _routeStackManager.CanGoBack;
 
     internal void Init(string initialRoute, ImmutableList<Route> routes, StateHolder stateHolder, LifecycleHolder lifecycleHolder)
     {
@@ -23,11 +24,6 @@ public class Navigator
     public void Pop()
     {
         _routeStackManager.Pop();
-    }
-
-    public bool CanPop()
-    {
-        return !_routeStackManager.IsEmpty();
     }
 }
 

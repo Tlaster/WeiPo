@@ -79,7 +79,7 @@ public partial record Box : LayoutPanel
     
     public double Width { get; init; } = double.NaN;
     public double Height { get; init; } = double.NaN;
-    
+
     public Color BackgroundColor { get; init; } = Color.Transparent;
 
     public Thickness Padding { get; init; } = new();

@@ -10,18 +10,19 @@ namespace WeiPoX.Core.Routing;
 
 internal class RouteStackManager : ILifecycleObserver
 {
-    private readonly ReplaySubject<BackstackEntry?> _currentRoute = new();
     private readonly RouteParser _routeParser = new();
-    private readonly Stack<BackstackEntry> _routeStack = new();
+    private readonly BehaviorSubject<ImmutableList<BackstackEntry>> _routeStack = new(ImmutableList<BackstackEntry>.Empty);
     private StateHolder? _stateHolderParent;
     private LifecycleHolder? _lifecycleHolderParent;
 
     public RouteStackManager()
     {
-        CurrentRoute = _currentRoute.WhereNotNull().AsObservable();
+        CurrentRoute = _routeStack.Select(x => x.LastOrDefault()).Where(x => x is not null).Select(x => x!);
+        CanGoBack = _routeStack.Select(x => x.Count > 0);
     }
 
     public IObservable<BackstackEntry> CurrentRoute { get; }
+    public IObservable<bool> CanGoBack { get; }
 
     internal void Init(string initialRoute, ImmutableList<Route> routes, StateHolder stateHolder, LifecycleHolder lifecycleHolder)
     {
@@ -45,6 +46,7 @@ internal class RouteStackManager : ILifecycleObserver
         {
             return;
         }
+        var currentRouteStack = _routeStack.Value;
         var query = path.Split('?').LastOrDefault() ?? string.Empty;
         var route = path.Split('?').FirstOrDefault() ?? throw new Exception("Route not found");
         var matchResult = _routeParser.Find(route);
@@ -54,31 +56,31 @@ internal class RouteStackManager : ILifecycleObserver
         }
 
         var backstackEntry = new BackstackEntry(
-            _routeStack.Count,
+            currentRouteStack.Count,
             matchResult.Route,
             _stateHolderParent,
             matchResult.PathMap,
             new QueryString(query)
         );
-        _routeStack.Push(backstackEntry);
-        _currentRoute.OnNext(backstackEntry);
+        _routeStack.OnNext(currentRouteStack.Add(backstackEntry));
     }
 
     public void Pop()
     {
-        var result = _routeStack.Pop();
-        _currentRoute.OnNext(_routeStack.Peek());
-        result.Destroy();
+        var currentRouteStack = _routeStack.Value;
+        if (currentRouteStack.Count == 0)
+        {
+            return;
+        }
+        var backstackEntry = currentRouteStack.LastOrDefault();
+        _routeStack.OnNext(currentRouteStack.RemoveAt(currentRouteStack.Count - 1));
+        backstackEntry?.Destroy();
     }
 
-    public BackstackEntry Peek()
+    public BackstackEntry? Peek()
     {
-        return _routeStack.Peek();
-    }
-
-    public bool IsEmpty()
-    {
-        return _routeStack.Count == 0;
+        var currentRouteStack = _routeStack.Value;
+        return currentRouteStack.LastOrDefault();
     }
 
     public void OnStateChanged(LifecycleState state)
@@ -88,17 +90,17 @@ internal class RouteStackManager : ILifecycleObserver
             case LifecycleState.Initialized:
                 break;
             case LifecycleState.Active:
-                _routeStack.LastOrDefault()?.Active();
+                _routeStack.Value.LastOrDefault()?.Active();
                 break;
             case LifecycleState.InActive:
-                _routeStack.LastOrDefault()?.InActive();
+                _routeStack.Value.LastOrDefault()?.InActive();
                 break;
             case LifecycleState.Destroyed:
-                foreach (var backstackEntry in _routeStack)
+                foreach (var backstackEntry in _routeStack.Value)
                 {
                     backstackEntry.Destroy();
                 }
-                _routeStack.Clear();
+                _routeStack.OnNext(ImmutableList<BackstackEntry>.Empty);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(state), state, null);

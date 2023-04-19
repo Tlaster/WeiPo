@@ -13,6 +13,7 @@ public class StateHolder : IDisposable
                 disposable.Dispose();
             }
         }
+        _states.Clear();
     }
 
     public void Add(string key, object? state)

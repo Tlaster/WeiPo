@@ -18,11 +18,12 @@ public record NavHost : StatefulWidget
         var lifecycleHolder = UseContext<LifecycleHolder>();
         UseEffect(() => { Navigator.Init(InitialRoute, Routes, stateHolder, lifecycleHolder); }, true);
         var currentRoute = this.UseObservable(Navigator.CurrentRoute, null);
+        var canGoBack = this.UseObservable(Navigator.CanGoBack, false);
         if (currentRoute is null)
         {
             return new Box();
         }
-
+        this.UseBackHandler(canGoBack, () => Navigator.Pop());
         UseEffect(() =>
         {
             currentRoute.Active();

@@ -127,6 +127,7 @@ public record AppWidget(Widget Child) : StatefulWidget
             {
                 {typeof(StateHolder), new StateHolder()},
                 {typeof(LifecycleHolder), new LifecycleHolder()},
+                {typeof(BackDispatcher), new BackDispatcher()}
             },
             Child = Child,
         };
