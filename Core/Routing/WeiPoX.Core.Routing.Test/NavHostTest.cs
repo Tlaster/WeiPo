@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using Splat;
+using WeiPoX.Core.DeclarativeUI.Foundation;
 using WeiPoX.Core.DeclarativeUI.Testing;
 using WeiPoX.Core.DeclarativeUI.Widgets;
 using WeiPoX.Core.DeclarativeUI.Widgets.Layout;

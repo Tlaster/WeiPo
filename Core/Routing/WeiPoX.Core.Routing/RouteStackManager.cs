@@ -18,7 +18,7 @@ internal class RouteStackManager : ILifecycleObserver
     public RouteStackManager()
     {
         CurrentRoute = _routeStack.Select(x => x.LastOrDefault()).Where(x => x is not null).Select(x => x!);
-        CanGoBack = _routeStack.Select(x => x.Count > 0);
+        CanGoBack = _routeStack.Select(x => x.Count > 1);
     }
 
     public IObservable<BackstackEntry> CurrentRoute { get; }

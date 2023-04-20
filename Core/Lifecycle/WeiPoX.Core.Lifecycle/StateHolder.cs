@@ -21,14 +21,15 @@ public class StateHolder : IDisposable
         _states[key] = state;
     }
     
-    public T GetOrElse<T>(string key, T defaultValue)
+    public T GetOrElse<T>(string key, Func<T> defaultValueFactory)
     {
         if (_states.TryGetValue(key, out var value) && value is T actualValue)
         {
             return actualValue;
         }
-
+        var defaultValue = defaultValueFactory.Invoke();
         _states.Add(key, defaultValue);
         return defaultValue;
     }
+    
 }

@@ -1,37 +1,42 @@
-﻿using System.Reactive.Linq;
+﻿using System.Collections.Immutable;
+using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Runtime.CompilerServices;
 using WeiPoX.Core.DeclarativeUI.Widgets;
+using WeiPoX.Core.Lifecycle;
 
-namespace WeiPoX.Core.Routing;
+namespace WeiPoX.Core.DeclarativeUI.Foundation;
 
 public class BackDispatcher
 {
-    private readonly List<IBackHandler> _handlers = new();
-    private readonly BehaviorSubject<int> _canGoBack = new(0);
-    
-    public void OnBackPressed()
+    private readonly BehaviorSubject<ImmutableList<IBackHandler>> _handlers = new(ImmutableList<IBackHandler>.Empty);
+
+    public BackDispatcher()
     {
-        _handlers.LastOrDefault(h => h.IsEnabled)?.OnBackPressed();
+        CanGoBack = _handlers.Select(list => list.Any(handler => handler.IsEnabled));
     }
 
-    public IObservable<bool> CanGoBack => _canGoBack.Select(_ => _handlers.Any(it => it.IsEnabled));
-    
-    internal void OnBackStackChanged()
+    public IObservable<bool> CanGoBack { get; }
+
+    public bool OnBackPressed()
     {
-        _canGoBack.OnNext(_canGoBack.Value + 1);
+        foreach (var handler in _handlers.Value.Where(handler => handler.IsEnabled))
+        {
+            handler.OnBackPressed();
+            return true;
+        }
+
+        return false;
     }
 
     public void Add(IBackHandler handler)
     {
-        _handlers.Add(handler);
+        _handlers.OnNext(_handlers.Value.Add(handler));
     }
-    
+
     public void Remove(IBackHandler handler)
     {
-        _handlers.Remove(handler);
+        _handlers.OnNext(_handlers.Value.Remove(handler));
     }
-    
 }
 
 public interface IBackHandler
@@ -53,11 +58,12 @@ public static class BackHandlerExtension
     public static void UseBackHandler(this StatefulWidget widget, bool enabled, Action handler)
     {
         var backDispatcher = widget.UseContext<BackDispatcher>();
+        var lifecycleHolder = widget.UseContext<LifecycleHolder>();
         widget.UseEffect(() =>
         {
             var backHandler = new BackHandler(enabled, handler);
             backDispatcher.Add(backHandler);
             return () => backDispatcher.Remove(backHandler);
-        }, enabled);
+        }, enabled, lifecycleHolder);
     }
 }

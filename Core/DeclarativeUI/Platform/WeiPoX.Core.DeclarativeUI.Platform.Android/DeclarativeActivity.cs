@@ -1,5 +1,9 @@
-﻿using Android.Runtime;
-using AndroidX.Core.App;
+﻿using Android.Content.Res;
+using Android.OS;
+using Android.Runtime;
+using AndroidX.Activity;
+using AndroidX.Lifecycle;
+using WeiPoX.Core.DeclarativeUI.Foundation;
 using WeiPoX.Core.DeclarativeUI.Widgets;
 using WeiPoX.Core.Lifecycle;
 using Object = Java.Lang.Object;
@@ -8,44 +12,82 @@ namespace WeiPoX.Core.DeclarativeUI.Platform.Android;
 
 public abstract class DeclarativeActivity<T> : ComponentActivity where T : Widget, new() 
 {
-    private DeclarativeState? _state;
+    private DeclarativeViewModel? _viewModel;
+
     protected override void OnCreate(Bundle? savedInstanceState)
     {
         base.OnCreate(savedInstanceState);
-        if (LastNonConfigurationInstance is DeclarativeState state)
-        {
-            _state = state;
-        }
-        else
-        {
-            _state = new DeclarativeState(new StateHolder(), new LifecycleHolder());
-        }
+        _viewModel = new ViewModelProvider(this).Get(Java.Lang.Class.FromType(typeof(DeclarativeViewModel))) as DeclarativeViewModel;
+        OnBackPressedDispatcher.AddCallback(this, _viewModel!.BackPressedCallback);
         SetContentView(new DeclarativeView(this)
         {
             Widget = new AppWidget
             {
                 App = new T(),
-                StateHolder = _state.StateHolder,
-                LifecycleHolder = _state.LifecycleHolder,
+                AppState = _viewModel!.AppState
             }
         });
     }
 
-    public override Object? OnRetainNonConfigurationInstance()
+    protected override void OnResume()
     {
-        return _state;
+        base.OnResume();
+        if (_viewModel?.AppState.LifecycleHolder != null)
+        {
+            _viewModel.AppState.LifecycleHolder.CurrentLifecycleState = LifecycleState.Active;
+        }
+    }
+
+    protected override void OnPause()
+    {
+        base.OnPause();
+        if (_viewModel?.AppState.LifecycleHolder != null)
+        {
+            _viewModel.AppState.LifecycleHolder.CurrentLifecycleState = LifecycleState.InActive;
+        }
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        if (_viewModel?.AppState.LifecycleHolder != null && !IsChangingConfigurations)
+        {
+            _viewModel.AppState.LifecycleHolder.CurrentLifecycleState = LifecycleState.Destroyed;
+        }
     }
 }
 
-internal class DeclarativeState : Object
+internal class DeclarativeViewModel : ViewModel
 {
-    public DeclarativeState(StateHolder stateHolder, LifecycleHolder lifecycleHolder)
+    private readonly IDisposable _disposable;
+
+    public DeclarativeViewModel()
     {
-        StateHolder = stateHolder;
-        LifecycleHolder = lifecycleHolder;
+        BackPressedCallback = new BackPressedCallback(true, () => AppState.BackDispatcher.OnBackPressed());
+        _disposable = AppState.BackDispatcher.CanGoBack.Subscribe(canGoBack => BackPressedCallback.Enabled = canGoBack);
     }
 
-    public StateHolder StateHolder { get; }
-    public LifecycleHolder LifecycleHolder { get; }
-    
+    public AppState AppState { get; } = new();
+    public BackPressedCallback BackPressedCallback { get; }
+
+    protected override void OnCleared()
+    {
+        base.OnCleared();
+        _disposable.Dispose();
+    }
+}
+
+internal class BackPressedCallback : OnBackPressedCallback
+{
+    private readonly Action _onBackPressed;
+
+    public BackPressedCallback(bool enabled, Action onBackPressed) : base(enabled)
+    {
+        _onBackPressed = onBackPressed;
+    }
+
+    public override void HandleOnBackPressed()
+    {
+        _onBackPressed();
+    }
 }

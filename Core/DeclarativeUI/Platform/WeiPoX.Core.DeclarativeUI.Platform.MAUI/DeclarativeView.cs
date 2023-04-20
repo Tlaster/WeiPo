@@ -8,8 +8,7 @@ namespace WeiPoX.Core.DeclarativeUI.Platform.MAUI;
 
 public class DeclarativePage<T> : ContentPage where T: Widget, new()
 {
-    private readonly StateHolder _stateHolder = new();
-    private readonly LifecycleHolder _lifecycleHolder = new();
+    private readonly AppState _appState = new();
     public DeclarativePage()
     {
         Content = new DeclarativeView
@@ -17,10 +16,14 @@ public class DeclarativePage<T> : ContentPage where T: Widget, new()
             Widget = new AppWidget
             {
                 App = new T(),
-                StateHolder = _stateHolder,
-                LifecycleHolder = _lifecycleHolder,
+                AppState = _appState,
             }
         };
+    }
+
+    protected override bool OnBackButtonPressed()
+    {
+        return _appState.BackDispatcher.OnBackPressed();
     }
 }
 

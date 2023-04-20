@@ -6,6 +6,7 @@ namespace WeiPoX.Core.Routing;
 
 public class Navigator
 {
+    private bool _isInitialized;
     private readonly RouteStackManager _routeStackManager = new();
 
     public IObservable<BackstackEntry> CurrentRoute => _routeStackManager.CurrentRoute;
@@ -13,6 +14,12 @@ public class Navigator
 
     internal void Init(string initialRoute, ImmutableList<Route> routes, StateHolder stateHolder, LifecycleHolder lifecycleHolder)
     {
+        if (_isInitialized)
+        {
+            return;
+        }
+
+        _isInitialized = true;
         _routeStackManager.Init(initialRoute, routes, stateHolder, lifecycleHolder);
     }
 
@@ -31,6 +38,8 @@ public static class NavigatorExtensions
 {
     public static Navigator UseNavigator(this StatefulWidget widget)
     {
-        return widget.UseMemo(() => new Navigator(), true);
+        var holder = widget.UseContext<StateHolder>();
+        var navigator = holder.GetOrElse("navigator", () => new Navigator());
+        return navigator;
     }
 }

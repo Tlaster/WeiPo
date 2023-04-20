@@ -61,9 +61,6 @@ public class DeclarativeView : UIView
 
 public class DeclarativeViewController<T> : UIViewController where T : Widget, new()
 {
-
-    private readonly StateHolder _stateHolder = new();
-    private readonly LifecycleHolder _lifecycleHolder = new();
     private readonly DeclarativeCore<UIView> _core;
     public DeclarativeViewController()
     {
@@ -72,8 +69,6 @@ public class DeclarativeViewController<T> : UIViewController where T : Widget, n
             Widget = new AppWidget
             {
                 App = new T(),
-                StateHolder = _stateHolder,
-                LifecycleHolder = _lifecycleHolder,
             }
         };
     }

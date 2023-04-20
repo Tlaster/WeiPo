@@ -62,7 +62,7 @@ public abstract record StatefulWidget : StateWidget, IDisposable
     public State<T> UseSaveableState<T>(string key, Func<T> initialState)
     {
         var holder = UseContext<StateHolder>();
-        var (value, setValue) = UseState(() => holder.GetOrElse(key, initialState.Invoke()));
+        var (value, setValue) = UseState(() => holder.GetOrElse(key, initialState));
         var proxySetValue = new Action<T>(state =>
         {
             setValue.Invoke(state);

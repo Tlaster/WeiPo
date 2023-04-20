@@ -13,7 +13,7 @@ public sealed record BackstackEntry(
 ) : IDisposable
 {
     private bool _destroyAfterTransition;
-    internal StateHolder State => ParentStateHolder.GetOrElse($"{Index}-{Route.Path}", new StateHolder()); 
+    internal StateHolder State => ParentStateHolder.GetOrElse($"{Index}-{Route.Path}", () => new StateHolder()); 
     internal LifecycleHolder Lifecycle { get; } = new();
 
     public void Dispose()

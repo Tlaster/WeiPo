@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using WeiPoX.Core.DeclarativeUI;
+using WeiPoX.Core.DeclarativeUI.Foundation;
 using WeiPoX.Core.DeclarativeUI.Widgets;
 using WeiPoX.Core.DeclarativeUI.Widgets.Layout;
 using WeiPoX.Core.Lifecycle;

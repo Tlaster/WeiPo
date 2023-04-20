@@ -9,8 +9,6 @@ namespace WeiPoX.Core.DeclarativeUI.Platform.Avalonia;
 
 public class WeiPoXDeclarativeUiApp<T> : Application where T : Widget, new()
 {
-    private readonly StateHolder _stateHolder = new();
-    private readonly LifecycleHolder _lifecycleHolder = new();
     private readonly AppWidget _widget;
 
     public WeiPoXDeclarativeUiApp()
@@ -18,8 +16,6 @@ public class WeiPoXDeclarativeUiApp<T> : Application where T : Widget, new()
         _widget = new AppWidget
         {
             App = new T(),
-            StateHolder = _stateHolder,
-            LifecycleHolder = _lifecycleHolder,
         };
     }
 
