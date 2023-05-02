@@ -5,7 +5,7 @@ namespace WeiPoX.Core.DeclarativeUI.Widgets.Layout;
 
 public abstract record Panel : MappingWidget, IPanelWidget, IEnumerable
 {
-    public List<Widget> Children { get; } = new();
+    public List<Widget> Children { get; init; } = new();
 
     public virtual bool Equals(Panel? other)
     {
