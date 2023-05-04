@@ -120,15 +120,18 @@ public class NavHostTest
 
 public record AppWidget(Widget Child) : StatefulWidget
 {
+    public StateHolder StateHolder { get; } = new();
+    public LifecycleHolder LifecycleHolder { get; } = new();
+    public BackDispatcher BackDispatcher { get; } = new();
     protected override Widget Build()
     {
         return new ContextProvider
         {
             Providers =
             {
-                {typeof(StateHolder), new StateHolder()},
-                {typeof(LifecycleHolder), new LifecycleHolder()},
-                {typeof(BackDispatcher), new BackDispatcher()}
+                {typeof(StateHolder), StateHolder},
+                {typeof(LifecycleHolder), LifecycleHolder},
+                {typeof(BackDispatcher), BackDispatcher}
             },
             Child = Child,
         };
