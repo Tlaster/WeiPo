@@ -73,7 +73,7 @@ internal class WeiPoXItemsRepeater : ScrollViewer, IStyleable
     {
         if (_lazyWidget == null || widget.Count != _lazyWidget.Count)
         {
-            Repeater.Items = Enumerable.Range(0, widget.Count);
+            Repeater.ItemsSource = Enumerable.Range(0, widget.Count);
         }
         _lazyWidget = widget;
     }
