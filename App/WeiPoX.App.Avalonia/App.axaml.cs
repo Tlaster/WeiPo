@@ -31,7 +31,7 @@ public class App : Application
                 {
                     Content = new ItemsRepeater
                     {
-                        Items = Enumerable.Range(0, 100).ToList(),
+                        ItemsSource = Enumerable.Range(0, 100).ToList(),
                         ItemTemplate = new FuncDataTemplate<int>((i, _) => new TextBlock
                         {       
                             [!TextBlock.TextProperty] = new Binding(),

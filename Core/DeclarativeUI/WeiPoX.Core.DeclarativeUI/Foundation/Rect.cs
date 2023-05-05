@@ -1,6 +1,6 @@
 ﻿namespace WeiPoX.Core.DeclarativeUI.Foundation;
 
-public struct Rect
+public readonly struct Rect
 {
     public double X { get; }
     public double Y { get; }

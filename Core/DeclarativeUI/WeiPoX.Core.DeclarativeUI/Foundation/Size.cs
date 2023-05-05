@@ -1,6 +1,6 @@
 ﻿namespace WeiPoX.Core.DeclarativeUI.Foundation;
 
-public struct Size
+public readonly struct Size
 {
     public double Width { get; }
     public double Height { get; }
