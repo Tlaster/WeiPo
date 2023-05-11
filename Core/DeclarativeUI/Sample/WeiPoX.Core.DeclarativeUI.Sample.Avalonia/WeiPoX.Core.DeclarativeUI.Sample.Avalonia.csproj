@@ -24,6 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\Animation\Platform\WeiPoX.Core.DeclarativeUI.Animation.Platform.Avalonia\WeiPoX.Core.DeclarativeUI.Animation.Platform.Avalonia.csproj" />
       <ProjectReference Include="..\..\Platform\WeiPoX.Core.DeclarativeUI.Platform.Avalonia\WeiPoX.Core.DeclarativeUI.Platform.Avalonia.csproj" />
       <ProjectReference Include="..\WeiPoX.Core.DeclarativeUI.Sample.Core\WeiPoX.Core.DeclarativeUI.Sample.Core.csproj" />
     </ItemGroup>

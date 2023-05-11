@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <DefineConstants>AVALONIA</DefineConstants>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Platform\WeiPoX.Core.DeclarativeUI.Platform.Avalonia\WeiPoX.Core.DeclarativeUI.Platform.Avalonia.csproj" />
+      <ProjectReference Include="..\..\WeiPoX.Core.DeclarativeUI.Animation\WeiPoX.Core.DeclarativeUI.Animation.csproj" />
+    </ItemGroup>
+
+</Project>

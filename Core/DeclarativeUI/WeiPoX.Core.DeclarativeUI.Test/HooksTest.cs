@@ -179,4 +179,60 @@ public class HooksTest
             };
         }
     }
+    
+    private record HookUseEffectDisposeParentWidget(Action OnDispose) : StatefulWidget
+    {
+        protected override Widget Build()
+        {
+            var (value, setValue) = UseState(0);
+            return new Row
+            {
+                new Button
+                {
+                    Text = "Click",
+                    OnClick = () => { setValue.Invoke(value + 1); }
+                },
+                new Text(value.ToString()),
+                value == 1 ? new HookUseEffectDisposeChildWidget(OnDispose) : new Text("Test"),
+            };
+        }
+    }
+    
+    private record HookUseEffectDisposeChildWidget(Action OnDispose) : StatefulWidget
+    {
+        protected override Widget Build()
+        {
+            UseEffect(() => OnDispose, true);
+            return new Text("Test");
+        }
+    }
+    
+    [TestMethod]
+    public void TestHooksUseEffectDisposeWidget()
+    {
+        var count = 0;
+        var tester = new HookUseEffectDisposeParentWidget(() =>
+        {
+            count++;
+        }).Test();
+        var button = tester.GetWidget<HookUseEffectDisposeParentWidget>().GetChild<Row>()?.FindChildAtIndex<Button>(0);
+        Assert.IsNotNull(button);
+        Assert.AreEqual(0, count);
+        button.OnClick();
+        Assert.AreEqual(0, count);
+        button = tester.GetWidget<HookUseEffectDisposeParentWidget>().GetChild<Row>()?.FindChildAtIndex<Button>(0);
+        Assert.IsNotNull(button);
+        button.OnClick();
+        Assert.AreEqual(1, count);
+        button = tester.GetWidget<HookUseEffectDisposeParentWidget>().GetChild<Row>()?.FindChildAtIndex<Button>(0);
+        Assert.IsNotNull(button);
+        button.OnClick();
+        Assert.AreEqual(1, count);
+        button = tester.GetWidget<HookUseEffectDisposeParentWidget>().GetChild<Row>()?.FindChildAtIndex<Button>(0);
+        Assert.IsNotNull(button);
+        button.OnClick();
+        Assert.AreEqual(1, count);
+        button = tester.GetWidget<HookUseEffectDisposeParentWidget>().GetChild<Row>()?.FindChildAtIndex<Button>(0);
+        Assert.IsNotNull(button);
+    }
 }

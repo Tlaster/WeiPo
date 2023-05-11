@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using WeiPoX.Core.DeclarativeUI.Animation;
 using WeiPoX.Core.DeclarativeUI.Foundation;
 using WeiPoX.Core.DeclarativeUI.Widgets;
 using WeiPoX.Core.DeclarativeUI.Widgets.Layout;
@@ -55,25 +56,41 @@ public record SampleApp : StatefulWidget
         //         }
         //     }
         // };
-        var navigator = this.UseNavigator();
+        // var navigator = this.UseNavigator();
+        //
+        // return new NavHost
+        // {
+        //     Navigator = navigator,
+        //     InitialRoute = "home",
+        //     Routes = new[]
+        //     {
+        //         new Route
+        //         {
+        //             Path = "home",
+        //             Content = entry => new HomeScene(() => navigator.Push("detail"))
+        //         },
+        //         new Route
+        //         {
+        //             Path = "detail",
+        //             Content = entry => new DetailScene(() => navigator.Pop())
+        //         }
+        //     }.ToImmutableList()
+        // };
         
-        return new NavHost
+        var (show, setShow) = UseState(false);
+        return new Column
         {
-            Navigator = navigator,
-            InitialRoute = "home",
-            Routes = new[]
+            new Text("Hello World!"),
+            new Button
             {
-                new Route
-                {
-                    Path = "home",
-                    Content = entry => new HomeScene(() => navigator.Push("detail"))
-                },
-                new Route
-                {
-                    Path = "detail",
-                    Content = entry => new DetailScene(() => navigator.Pop())
-                }
-            }.ToImmutableList()
+                Text = "Click me!",
+                OnClick = () => setShow(!show)
+            },
+            new AnimatedVisibility
+            {
+                Visible = show,
+                Child = new Text("Hello World!")
+            }
         };
     }
 }

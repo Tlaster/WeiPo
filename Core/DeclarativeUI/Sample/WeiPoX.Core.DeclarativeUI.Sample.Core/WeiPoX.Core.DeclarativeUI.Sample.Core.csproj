@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\Routing\WeiPoX.Core.Routing\WeiPoX.Core.Routing.csproj" />
+      <ProjectReference Include="..\..\Animation\WeiPoX.Core.DeclarativeUI.Animation\WeiPoX.Core.DeclarativeUI.Animation.csproj" />
       <ProjectReference Include="..\..\WeiPoX.Core.DeclarativeUI\WeiPoX.Core.DeclarativeUI.csproj" />
     </ItemGroup>
 

@@ -95,6 +95,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Animation", "Animation", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeiPoX.Core.DeclarativeUI.Animation", "Core\DeclarativeUI\Animation\WeiPoX.Core.DeclarativeUI.Animation\WeiPoX.Core.DeclarativeUI.Animation.csproj", "{8829EB5F-D9FE-489B-A2CD-02DBDFB5A6BC}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Platform", "Platform", "{0765E8BF-38A1-4BE5-B02E-919C443DBF7A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeiPoX.Core.DeclarativeUI.Animation.Platform.Avalonia", "Core\DeclarativeUI\Animation\Platform\WeiPoX.Core.DeclarativeUI.Animation.Platform.Avalonia\WeiPoX.Core.DeclarativeUI.Animation.Platform.Avalonia.csproj", "{6EC1EBEE-675B-4519-8202-0A45DC38A39E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -632,6 +636,22 @@ Global
 		{8829EB5F-D9FE-489B-A2CD-02DBDFB5A6BC}.Release|x64.Build.0 = Release|Any CPU
 		{8829EB5F-D9FE-489B-A2CD-02DBDFB5A6BC}.Release|x86.ActiveCfg = Release|Any CPU
 		{8829EB5F-D9FE-489B-A2CD-02DBDFB5A6BC}.Release|x86.Build.0 = Release|Any CPU
+		{6EC1EBEE-675B-4519-8202-0A45DC38A39E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6EC1EBEE-675B-4519-8202-0A45DC38A39E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6EC1EBEE-675B-4519-8202-0A45DC38A39E}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{6EC1EBEE-675B-4519-8202-0A45DC38A39E}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{6EC1EBEE-675B-4519-8202-0A45DC38A39E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6EC1EBEE-675B-4519-8202-0A45DC38A39E}.Debug|x64.Build.0 = Debug|Any CPU
+		{6EC1EBEE-675B-4519-8202-0A45DC38A39E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6EC1EBEE-675B-4519-8202-0A45DC38A39E}.Debug|x86.Build.0 = Debug|Any CPU
+		{6EC1EBEE-675B-4519-8202-0A45DC38A39E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6EC1EBEE-675B-4519-8202-0A45DC38A39E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6EC1EBEE-675B-4519-8202-0A45DC38A39E}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{6EC1EBEE-675B-4519-8202-0A45DC38A39E}.Release|ARM64.Build.0 = Release|Any CPU
+		{6EC1EBEE-675B-4519-8202-0A45DC38A39E}.Release|x64.ActiveCfg = Release|Any CPU
+		{6EC1EBEE-675B-4519-8202-0A45DC38A39E}.Release|x64.Build.0 = Release|Any CPU
+		{6EC1EBEE-675B-4519-8202-0A45DC38A39E}.Release|x86.ActiveCfg = Release|Any CPU
+		{6EC1EBEE-675B-4519-8202-0A45DC38A39E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -677,6 +697,8 @@ Global
 		{E0711692-5099-48B5-959F-8781E24480A2} = {6683F1D8-C92F-49C4-B4DD-2EFEFAB178CA}
 		{96CFC8CB-F936-43C9-B931-D456F8595996} = {3DAB5219-2A0F-4642-85A7-299AD8921745}
 		{8829EB5F-D9FE-489B-A2CD-02DBDFB5A6BC} = {96CFC8CB-F936-43C9-B931-D456F8595996}
+		{0765E8BF-38A1-4BE5-B02E-919C443DBF7A} = {96CFC8CB-F936-43C9-B931-D456F8595996}
+		{6EC1EBEE-675B-4519-8202-0A45DC38A39E} = {0765E8BF-38A1-4BE5-B02E-919C443DBF7A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2EF5A3C1-B0AD-4D47-A567-87ED1B9C164D}

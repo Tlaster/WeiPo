@@ -8,7 +8,7 @@ using AvaloniaThickness = Avalonia.Thickness;
 
 namespace WeiPoX.Core.DeclarativeUI.Platform.Avalonia.Renderer;
 
-internal class BoxRenderer : LayoutPanelRenderer<Box>
+public class BoxRenderer : LayoutPanelRenderer<Box>
 {
     protected override void Update(WeiPoXPanel control, Box widget)
     {

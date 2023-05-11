@@ -79,26 +79,44 @@ public record AnimatedVisibility : StatefulWidget
 {
     public required bool Visible { get; init; }
     public required Widget Child { get; init; }
-    public EnterTransition EnterTransition { get; init; } = new FadeIn();
-    public ExitTransition ExitTransition { get; init; } = new FadeOut();
+    public EnterTransition EnterTransition { get; init; } = Transitions.FadeIn();
+    public ExitTransition ExitTransition { get; init; } = Transitions.FadeOut();
     protected override Widget Build()
     {
-        
+        return new PlatformAnimated
+        {
+            Children = { Child },
+            Target = Visible ? TransitionData.Empty : ExitTransition.TransitionData,
+            Initial = Visible ? EnterTransition.TransitionData : TransitionData.Empty,
+        };
     }
 }
 
 internal record PlatformAnimated : Box
 {
-    public required TransitionData TransitionData { get; init; }
+    public required TransitionData Target { get; init; }
+    public required TransitionData Initial { get; init; }
 }
 
-internal record TransitionData(Fade? Fade = null, Scale? Scale = null, Slide? Slide = null, ChangeSize? ChangeSize = null, TimeSpan Duration = default);
+internal record TransitionData(Fade? Fade = null, Scale? Scale = null, Slide? Slide = null,
+    ChangeSize? ChangeSize = null)
+{
+    public static TransitionData Empty { get; } = new(new Fade(1f), new Scale(1f, 1f, 0.5f, 0.5f),
+        new Slide(_ => new Offset(0f, 0f)), new ChangeSize(_ => new Size(0f, 0f)));
+}
 internal record Fade(float Alpha);
 internal record Scale(float ScaleX, float ScaleY, float OriginX, float OriginY);
-internal delegate Size ChangeSizeDelegate(Size fullSize);
+public delegate Size ChangeSizeDelegate(Size fullSize);
 internal record ChangeSize(ChangeSizeDelegate Size);
-internal delegate Offset ChangePositionDelegate(Offset fullOffset);
+public delegate Offset ChangePositionDelegate(Offset fullOffset);
 internal record Slide(ChangePositionDelegate SlideOffset);
+
+public static class Transitions
+{
+    public static EnterTransition FadeIn(float initialAlpha = 0f) => new EnterTransitionImpl(new TransitionData(Fade: new Fade(initialAlpha)));
+    public static ExitTransition FadeOut(float finalAlpha = 0f) => new ExitTransitionImpl(new TransitionData(Fade: new Fade(finalAlpha)));
+}
+
 
 public abstract record EnterTransition
 {
@@ -108,6 +126,24 @@ public abstract record EnterTransition
     }
 
     internal TransitionData TransitionData { get; }
+    
+    // override plus operator
+    public static EnterTransition operator +(EnterTransition a, EnterTransition b) =>
+        new EnterTransitionImpl(
+            new TransitionData(
+                Fade: a.TransitionData.Fade ?? b.TransitionData.Fade,
+                Scale: a.TransitionData.Scale ?? b.TransitionData.Scale,
+                Slide: a.TransitionData.Slide ?? b.TransitionData.Slide,
+                ChangeSize: a.TransitionData.ChangeSize ?? b.TransitionData.ChangeSize
+            )
+        );
+}
+
+internal record EnterTransitionImpl : EnterTransition
+{
+    public EnterTransitionImpl(TransitionData transitionData) : base(transitionData)
+    {
+    }
 }
 
 public abstract record ExitTransition
@@ -118,26 +154,22 @@ public abstract record ExitTransition
     }
 
     internal TransitionData TransitionData { get; }
+    
+    // override plus operator
+    public static ExitTransition operator +(ExitTransition a, ExitTransition b) =>
+        new ExitTransitionImpl(
+            new TransitionData(
+                Fade: a.TransitionData.Fade ?? b.TransitionData.Fade,
+                Scale: a.TransitionData.Scale ?? b.TransitionData.Scale,
+                Slide: a.TransitionData.Slide ?? b.TransitionData.Slide,
+                ChangeSize: a.TransitionData.ChangeSize ?? b.TransitionData.ChangeSize
+            )
+        );
 }
 
-public record FadeIn : EnterTransition
+internal record ExitTransitionImpl : ExitTransition
 {
-    public FadeIn(float initialAlpha = 0f) : this(initialAlpha, TimeSpan.FromMilliseconds(300))
-    {
-    }
-    
-    public FadeIn(float initialAlpha, TimeSpan duration = default) : base(new TransitionData(Fade: new Fade(initialAlpha), Duration: duration))
-    {
-    }
-}
-
-public record FadeOut : ExitTransition
-{
-    public FadeOut(float finalAlpha = 0f) : this(finalAlpha, TimeSpan.FromMilliseconds(300))
-    {
-    }
-    
-    public FadeOut(float finalAlpha, TimeSpan duration = default) : base(new TransitionData(Fade: new Fade(finalAlpha), Duration: duration))
+    public ExitTransitionImpl(TransitionData transitionData) : base(transitionData)
     {
     }
 }

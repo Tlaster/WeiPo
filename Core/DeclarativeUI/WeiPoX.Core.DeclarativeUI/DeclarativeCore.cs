@@ -100,6 +100,8 @@ public class DeclarativeCore<T>
         {
             var text = new Text(e.ToString());
             _renderedControl = await _renderer.BuildIfNeededAsync(text, text, _renderedControl, _buildOwner);
+            _buildOwner.CleanUp();
+            _updateChild(_renderedControl);
             throw;
         }
     }
