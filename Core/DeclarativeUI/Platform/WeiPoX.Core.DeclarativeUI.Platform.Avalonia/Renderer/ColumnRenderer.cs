@@ -6,19 +6,6 @@ using WeiPoX.Core.DeclarativeUI.Widgets.Layout;
 
 namespace WeiPoX.Core.DeclarativeUI.Platform.Avalonia.Renderer;
 
-internal class ColumnRenderer : RendererObject<Column, StackPanel>
+internal class ColumnRenderer : LayoutPanelRenderer<Column>
 {
-    protected override StackPanel Create(RendererContext<Control> context)
-    {
-        return new StackPanel
-        {
-            Orientation = Orientation.Vertical
-        };
-    }
-
-    protected override void Update(StackPanel control, Column widget)
-    {
-        control.HorizontalAlignment = widget.Alignment.ToHorizontalAlignment();
-        control.VerticalAlignment = widget.Vertical.ToVerticalAlignment();
-    }
 }

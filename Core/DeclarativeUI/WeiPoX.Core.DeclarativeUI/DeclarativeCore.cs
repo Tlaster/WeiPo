@@ -34,6 +34,7 @@ public class BuildOwner : IBuildOwner
 public class DeclarativeCore<T>
 {
     private readonly WidgetBuilder<T> _renderer;
+    private readonly Action<Action> _runInUi;
     private readonly Action<T> _updateChild;
     private Widget? _previousWidget;
     private T? _renderedControl;
@@ -41,14 +42,15 @@ public class DeclarativeCore<T>
     private int _requestBuildCount = 1;
     private readonly IBuildOwner _buildOwner;
 
-    public DeclarativeCore(WidgetBuilder<T> renderer, Action<T> updateChild, IBuildOwner? buildOwner = null)
+    public DeclarativeCore(WidgetBuilder<T> renderer, Action<T> updateChild, Action<Action> runInUi, IBuildOwner? buildOwner = null)
     {
         _renderer = renderer;
         _updateChild = updateChild;
+        _runInUi = runInUi;
         _buildOwner = buildOwner ?? new BuildOwner(RequestRender);
     }
 
-    private void RequestRender()
+    internal void RequestRender()
     {
         _requestBuildCount++;
         if (!_rendering && _previousWidget != null)
@@ -76,14 +78,13 @@ public class DeclarativeCore<T>
 
     private async Task Render(Widget widget)
     {
+        _rendering = true;
         try
         {
             while (_requestBuildCount > 0)
             {
-                _rendering = true;
                 _renderedControl = await _renderer.BuildIfNeededAsync(_previousWidget, widget, _renderedControl, _buildOwner);
                 _previousWidget = widget;
-                _rendering = false;
                 _requestBuildCount--;
                 if (_requestBuildCount == 0)
                 {
@@ -100,9 +101,11 @@ public class DeclarativeCore<T>
         {
             var text = new Text(e.ToString());
             _renderedControl = await _renderer.BuildIfNeededAsync(text, text, _renderedControl, _buildOwner);
-            _buildOwner.CleanUp();
-            _updateChild(_renderedControl);
             throw;
+        }
+        finally
+        {
+            _rendering = false;
         }
     }
 }

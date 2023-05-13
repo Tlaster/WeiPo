@@ -22,7 +22,13 @@ public class DeclarativeView : UserControl
 
     public DeclarativeView(IBuildOwner? buildOwner = null)
     {
-        _core = new DeclarativeCore<UIElement>(new WidgetBuilder(), UpdateChild, buildOwner);
+        _core = new DeclarativeCore<UIElement>(new WidgetBuilder(), UpdateChild, RunInUi, buildOwner);
+    }
+
+    private void RunInUi(Action obj)
+    {
+        obj.Invoke();
+        // _ = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => obj());
     }
 
     public Widget? Widget

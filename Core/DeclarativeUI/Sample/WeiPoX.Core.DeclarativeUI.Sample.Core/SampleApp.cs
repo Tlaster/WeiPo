@@ -90,7 +90,8 @@ public record SampleApp : StatefulWidget
             {
                 Visible = show,
                 Child = new Text("Hello World!")
-            }
+            },
+            new Text("haha!"),
         };
     }
 }

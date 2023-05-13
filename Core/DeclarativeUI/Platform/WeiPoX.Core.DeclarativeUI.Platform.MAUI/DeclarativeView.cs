@@ -33,7 +33,12 @@ public class DeclarativeView : ContentView
 
     public DeclarativeView(IBuildOwner? buildOwner = null)
     {
-        _core = new DeclarativeCore<View>(new WidgetBuilder(), UpdateChild, buildOwner);
+        _core = new DeclarativeCore<View>(new WidgetBuilder(), UpdateChild, RunInUi, buildOwner);
+    }
+
+    private void RunInUi(Action obj)
+    {
+        Dispatcher.Dispatch(obj);
     }
 
     public Widget? Widget
@@ -105,7 +110,7 @@ public class RepeaterDeclarativeView : ContentView
     {
         if (_previousBuildOwner != newItem.BuildOwner)
         {
-            _core = new DeclarativeCore<View>(new WidgetBuilder(), UpdateChild, newItem.BuildOwner);
+            _core = new DeclarativeCore<View>(new WidgetBuilder(), UpdateChild, RunInUi, newItem.BuildOwner);
         }
         _previousBuildOwner = newItem.BuildOwner;
         if (_previousWidgetBuilder != newItem.WidgetBuilder && _core != null)
@@ -114,7 +119,12 @@ public class RepeaterDeclarativeView : ContentView
         }
         _previousWidgetBuilder = newItem.WidgetBuilder;
     }
-    
+
+    private void RunInUi(Action obj)
+    {
+        Dispatcher.Dispatch(obj);
+    }
+
     internal void UpdateChild(View control)
     {
         if (!Equals(Content, control))

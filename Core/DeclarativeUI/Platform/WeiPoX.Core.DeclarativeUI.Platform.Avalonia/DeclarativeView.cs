@@ -1,4 +1,5 @@
 ﻿using Avalonia.Controls;
+using Avalonia.Threading;
 using WeiPoX.Core.DeclarativeUI.Internal;
 using WeiPoX.Core.DeclarativeUI.Platform.Avalonia.Internal;
 using WeiPoX.Core.DeclarativeUI.Widgets;
@@ -11,9 +12,15 @@ public class DeclarativeView : UserControl
 
     public DeclarativeView(IBuildOwner? buildOwner = null)
     {
-        _core = new DeclarativeCore<Control>(new WidgetBuilder(), UpdateChild, buildOwner);
+        _core = new DeclarativeCore<Control>(new WidgetBuilder(), UpdateChild, RunInUi, buildOwner);
     }
-    
+
+    private void RunInUi(Action obj)
+    {
+        // obj.Invoke();
+        Dispatcher.UIThread.InvokeAsync(obj);
+    }
+
     public Widget? Widget
     {
         get => _core.Widget;

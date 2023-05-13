@@ -12,10 +12,15 @@ public class DeclarativeView : FrameLayout
 
     public DeclarativeView(Context context, IBuildOwner? buildOwner = null) : base(context)
     {
-        _core = new DeclarativeCore<View>(new WidgetBuilder(context), UpdateChild, buildOwner);
+        _core = new DeclarativeCore<View>(new WidgetBuilder(context), UpdateChild, RunInUi, buildOwner);
         this.LayoutParameters = new LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
     }
-    
+
+    private void RunInUi(Action obj)
+    {
+        Post(obj.Invoke);
+    }
+
     public Widget? Widget
     {
         get => _core.Widget;

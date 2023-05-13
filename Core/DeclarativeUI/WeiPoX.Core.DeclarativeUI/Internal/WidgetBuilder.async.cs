@@ -199,12 +199,12 @@ public partial class WidgetBuilder<T>
             {
                 var newChildControl = await CreateAsync(newChild, context, owner);
                 renderer.AddChild(control, newChildControl);
-                OnChildAdded(newChild, newChildControl);
+                OnChildAdded(newChild);
             }
             else if (oldChildControl != null && newChild == null)
             {
                 renderer.RemoveChild(control, oldChildControl);
-                OnChildRemoved(oldChild, oldChildControl);
+                OnChildRemoved(oldChild);
             }
             else if (oldChildControl != null && newChild != null)
             {
@@ -212,8 +212,8 @@ public partial class WidgetBuilder<T>
                 if (!ReferenceEquals(newChildControl, oldChildControl))
                 {
                     renderer.ReplaceChild(control, i, newChildControl);
-                    OnChildRemoved(oldChild, oldChildControl);
-                    OnChildAdded(newChild, newChildControl);
+                    OnChildRemoved(oldChild);
+                    OnChildAdded(newChild);
                 }
             }
             else if (oldChildControl == null && newChild == null)

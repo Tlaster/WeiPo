@@ -10,8 +10,8 @@ namespace WeiPoX.Core.DeclarativeUI.Platform.Avalonia.Internal;
 
 internal static class RendererPool
 {
-    private static readonly ImmutableDictionary<Type, IRenderer<Control>> Renderers =
-        new Dictionary<Type, IRenderer<Control>>
+    private static readonly Dictionary<Type, IRenderer<Control>> Renderers =
+        new()
         {
             { typeof(Text), new TextRenderer() },
             { typeof(Box), new BoxRenderer() },
@@ -21,7 +21,7 @@ internal static class RendererPool
             { typeof(GestureDetector), new GestureDetectorRenderer() },
             { typeof(Input), new InputRenderer() },
             { typeof(LazyColumn), new LazyColumnRenderer() },
-        }.ToImmutableDictionary();
+        };
 
     public static IRenderer<Control> GetRenderer(Type type)
     {
@@ -31,5 +31,10 @@ internal static class RendererPool
         }
 
         throw new NotSupportedException($"Renderer for {type} is not supported.");
+    }
+    
+    public static void RegisterRenderer(Type type, IRenderer<Control> renderer)
+    {
+        Renderers[type] = renderer;
     }
 }

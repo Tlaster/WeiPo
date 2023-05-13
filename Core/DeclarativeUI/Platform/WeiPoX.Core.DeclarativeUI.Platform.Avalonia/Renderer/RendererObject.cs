@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Threading;
 using WeiPoX.Core.DeclarativeUI.Internal;
 using WeiPoX.Core.DeclarativeUI.Platform.Avalonia.Internal;
 using WeiPoX.Core.DeclarativeUI.Widgets;

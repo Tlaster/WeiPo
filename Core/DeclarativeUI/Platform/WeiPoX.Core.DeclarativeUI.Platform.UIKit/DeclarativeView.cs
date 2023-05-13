@@ -11,9 +11,15 @@ public class DeclarativeView : UIView
     
     internal void Init(IBuildOwner? buildOwner = null)
     {
-        _core ??= new DeclarativeCore<UIView>(new WidgetBuilder(), UpdateChild, buildOwner);
+        _core ??= new DeclarativeCore<UIView>(new WidgetBuilder(), UpdateChild, RunInUi, buildOwner);
     }
-    
+
+    private void RunInUi(Action obj)
+    {
+        // TODO: RunInUi for UIKit
+        obj.Invoke();
+    }
+
     public Widget? Widget
     {
         get => _core?.Widget;
@@ -64,7 +70,7 @@ public class DeclarativeViewController<T> : UIViewController where T : Widget, n
     private readonly DeclarativeCore<UIView> _core;
     public DeclarativeViewController()
     {
-        _core = new DeclarativeCore<UIView>(new WidgetBuilder(), UpdateChild)
+        _core = new DeclarativeCore<UIView>(new WidgetBuilder(), UpdateChild, RunInUi)
         {
             Widget = new AppWidget
             {
@@ -72,7 +78,13 @@ public class DeclarativeViewController<T> : UIViewController where T : Widget, n
             }
         };
     }
-    
+
+    private void RunInUi(Action obj)
+    {
+        // TODO: RunInUi for UIKit
+        obj.Invoke();
+    }
+
 
     internal void UpdateChild(UIView control)
     {

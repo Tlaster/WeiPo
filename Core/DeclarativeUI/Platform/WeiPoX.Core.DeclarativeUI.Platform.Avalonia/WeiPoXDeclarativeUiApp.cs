@@ -2,6 +2,8 @@
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Themes.Fluent;
+using WeiPoX.Core.DeclarativeUI.Internal;
+using WeiPoX.Core.DeclarativeUI.Platform.Avalonia.Internal;
 using WeiPoX.Core.DeclarativeUI.Widgets;
 using WeiPoX.Core.Lifecycle;
 
@@ -21,8 +23,14 @@ public class WeiPoXDeclarativeUiApp<T> : Application where T : Widget, new()
 
     public string? Title { get; set; }
 
+    public Dictionary<Type, IRenderer<Control>> Renderers { get; } = new();
+
     public override void OnFrameworkInitializationCompleted()
     {
+        foreach (var (key, value) in Renderers)
+        {
+            RendererPool.RegisterRenderer(key, value);
+        }
         switch (ApplicationLifetime)
         {
             case IClassicDesktopStyleApplicationLifetime desktop:

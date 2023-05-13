@@ -5,77 +5,31 @@ namespace WeiPoX.Core.DeclarativeUI.Testing;
 
 public class DeclarativeUiTester
 {
-    private readonly TestBuildOwner _buildOwner;
-    private readonly TestWidgetBuilder _widgetBuilder;
-    private readonly bool _enableAsyncBuilder;
+    
+    private readonly DeclarativeCore<TestControl> _core;
     private readonly Widget _widget;
-    private TestControl? _control;
-    private bool _rendering;
-    private int _requestBuildCount = 1;
 
-    public DeclarativeUiTester(Widget widget, bool enableAsyncBuilder = true)
+    public DeclarativeUiTester(Widget widget)
     {
-        _buildOwner = new TestBuildOwner();
-        _buildOwner.OnRequestBuild += BuildOwnerOnOnRequestBuild;
-        _widgetBuilder = new TestWidgetBuilder(_buildOwner);
+        var buildOwner = new BuildOwner(RequestRender);
+        _core = new DeclarativeCore<TestControl>(new TestWidgetBuilder(buildOwner), UpdateChild, RunInUi, buildOwner);
         _widget = widget;
-        _enableAsyncBuilder = enableAsyncBuilder;
-        if (_enableAsyncBuilder)
-        {
-            _ = RenderAsync();
-        }
-        else
-        {
-            Render();
-        }
+        _core.Widget = widget;
     }
 
-    private void BuildOwnerOnOnRequestBuild()
+    private void RequestRender()
     {
-        _requestBuildCount++;
-        if (!_rendering)
-        {
-            if (_enableAsyncBuilder)
-            {
-                _ = RenderAsync();
-            }
-            else
-            {
-                Render();
-            }
-        }
+        _core.RequestRender();
     }
 
-    private async void Render()
+    private void RunInUi(Action obj)
     {
-        while (_requestBuildCount > 0)
-        {
-            _rendering = true;
-            _control = await _widgetBuilder.BuildIfNeededAsync(_widget, _widget, _control);
-            _buildOwner.CleanUp();
-            _rendering = false;
-            _requestBuildCount--;
-            if (_requestBuildCount != 0)
-            {
-                _requestBuildCount = 1;
-            }
-        }
+        obj.Invoke();
     }
 
-    private async Task RenderAsync()
+    private void UpdateChild(TestControl obj)
     {
-        while (_requestBuildCount > 0)
-        {
-            _rendering = true;
-            _control = await _widgetBuilder.BuildIfNeededAsync(_widget, _widget, _control);
-            _buildOwner.CleanUp();
-            _rendering = false;
-            _requestBuildCount--;
-            if (_requestBuildCount != 0)
-            {
-                _requestBuildCount = 1;
-            }
-        }
+        
     }
 
     public T GetWidget<T>() where T : Widget

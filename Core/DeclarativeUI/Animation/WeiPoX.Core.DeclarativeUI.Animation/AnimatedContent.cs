@@ -79,23 +79,47 @@ public record AnimatedVisibility : StatefulWidget
 {
     public required bool Visible { get; init; }
     public required Widget Child { get; init; }
-    public EnterTransition EnterTransition { get; init; } = Transitions.FadeIn();
-    public ExitTransition ExitTransition { get; init; } = Transitions.FadeOut();
+    public TimeSpan Duration { get; init; } = Transitions.DefaultDuration;
+    public EnterTransition EnterTransition { get; init; } = Transitions.FadeIn() + Transitions.SlideInFromTop();
+    public ExitTransition ExitTransition { get; init; } = Transitions.FadeOut() + Transitions.SlideOutToTop();
     protected override Widget Build()
     {
+        // var (showChild, setShowChild) = UseState(Visible);
+        // UseEffect(() =>
+        // {
+        //     var cancel = new CancellationTokenSource();
+        //     Task.Run(async () =>
+        //     {
+        //         if (Visible)
+        //         {
+        //             setShowChild(true);
+        //         }
+        //         await Task.Delay(Duration, cancel.Token);
+        //         if (!Visible)
+        //         {
+        //             setShowChild(false);
+        //         }
+        //     }, cancel.Token);
+        //     return () => cancel.Cancel();
+        // }, Visible, Duration);
         return new PlatformAnimated
         {
-            Children = { Child },
+            Children = 
+            {
+                Child,
+            },
+            Duration = Duration,
             Target = Visible ? TransitionData.Empty : ExitTransition.TransitionData,
             Initial = Visible ? EnterTransition.TransitionData : TransitionData.Empty,
         };
     }
 }
 
-internal record PlatformAnimated : Box
+public record PlatformAnimated : Box
 {
-    public required TransitionData Target { get; init; }
-    public required TransitionData Initial { get; init; }
+    internal TimeSpan Duration { get; init; }
+    internal TransitionData? Target { get; init; }
+    internal TransitionData? Initial { get; init; }
 }
 
 internal record TransitionData(Fade? Fade = null, Scale? Scale = null, Slide? Slide = null,
@@ -104,6 +128,7 @@ internal record TransitionData(Fade? Fade = null, Scale? Scale = null, Slide? Sl
     public static TransitionData Empty { get; } = new(new Fade(1f), new Scale(1f, 1f, 0.5f, 0.5f),
         new Slide(_ => new Offset(0f, 0f)), new ChangeSize(_ => new Size(0f, 0f)));
 }
+
 internal record Fade(float Alpha);
 internal record Scale(float ScaleX, float ScaleY, float OriginX, float OriginY);
 public delegate Size ChangeSizeDelegate(Size fullSize);
@@ -113,8 +138,23 @@ internal record Slide(ChangePositionDelegate SlideOffset);
 
 public static class Transitions
 {
+    public static readonly TimeSpan DefaultDuration = TimeSpan.FromMilliseconds(300);
     public static EnterTransition FadeIn(float initialAlpha = 0f) => new EnterTransitionImpl(new TransitionData(Fade: new Fade(initialAlpha)));
     public static ExitTransition FadeOut(float finalAlpha = 0f) => new ExitTransitionImpl(new TransitionData(Fade: new Fade(finalAlpha)));
+    public static EnterTransition ScaleIn(float initialScaleX = 0f, float initialScaleY = 0f, float originX = 0.5f, float originY = 0.5f) =>
+        new EnterTransitionImpl(new TransitionData(Scale: new Scale(initialScaleX, initialScaleY, originX, originY)));
+    public static ExitTransition ScaleOut(float finalScaleX = 0f, float finalScaleY = 0f, float originX = 0.5f, float originY = 0.5f) =>
+        new ExitTransitionImpl(new TransitionData(Scale: new Scale(finalScaleX, finalScaleY, originX, originY)));
+    public static EnterTransition SlideIn(ChangePositionDelegate slideOffset) => new EnterTransitionImpl(new TransitionData(Slide: new Slide(slideOffset)));
+    public static EnterTransition SlideInFromStart() => SlideIn(fullSize => new Offset(-fullSize.X, 0f));
+    public static EnterTransition SlideInFromEnd() => SlideIn(fullSize => new Offset(fullSize.X, 0f));
+    public static EnterTransition SlideInFromTop() => SlideIn(fullSize => new Offset(0f, -fullSize.Y));
+    public static EnterTransition SlideInFromBottom() => SlideIn(fullSize => new Offset(0f, fullSize.Y));
+    public static ExitTransition SlideOut(ChangePositionDelegate slideOffset) => new ExitTransitionImpl(new TransitionData(Slide: new Slide(slideOffset)));
+    public static ExitTransition SlideOutToStart() => SlideOut(fullSize => new Offset(-fullSize.X, 0f));
+    public static ExitTransition SlideOutToEnd() => SlideOut(fullSize => new Offset(fullSize.X, 0f));
+    public static ExitTransition SlideOutToTop() => SlideOut(fullSize => new Offset(0f, -fullSize.Y));
+    public static ExitTransition SlideOutToBottom() => SlideOut(fullSize => new Offset(0f, fullSize.Y));
 }
 
 

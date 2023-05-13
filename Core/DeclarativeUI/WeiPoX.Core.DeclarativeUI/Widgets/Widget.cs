@@ -22,4 +22,5 @@ internal interface ILazyWidget
 {
     int Count { get; }
     Func<Widget>? GetBuilder(int index);
+    Func<Range>? GetVisibleRange { get; set; }
 }

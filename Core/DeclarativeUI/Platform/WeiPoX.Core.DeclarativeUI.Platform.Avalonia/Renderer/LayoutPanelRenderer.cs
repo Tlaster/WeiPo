@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Threading;
 using WeiPoX.Core.DeclarativeUI.Platform.Avalonia.Internal;
 using WeiPoX.Core.DeclarativeUI.Widgets.Layout;
 using Rect = WeiPoX.Core.DeclarativeUI.Foundation.Rect;
@@ -29,7 +30,7 @@ public class WeiPoXPanel : AvaloniaPanel
             {
                 _panel = value;
                 InvalidateMeasure();
-                InvalidateArrange();
+                InvalidateArrange(); 
             }
             else
             {

@@ -73,6 +73,8 @@ public abstract record LazyLayout : MappingWidget, ILazyWidget, IEnumerable
 
         return null;
     }
+
+    public Func<Range>? GetVisibleRange { get; set; }
 }
 
 

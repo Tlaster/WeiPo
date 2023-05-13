@@ -1,5 +1,8 @@
+using Avalonia;
 using Avalonia.Animation;
 using Avalonia.Controls;
+using Avalonia.Media;
+using WeiPoX.Core.DeclarativeUI.Foundation;
 using WeiPoX.Core.DeclarativeUI.Internal;
 using WeiPoX.Core.DeclarativeUI.Platform.Avalonia.Renderer;
 using WeiPoX.Core.DeclarativeUI.Widgets.Layout;
@@ -16,10 +19,16 @@ public class PlatformAnimatedRenderer : BoxRenderer
     protected override void Update(WeiPoXPanel control, Box widget)
     {
         base.Update(control, widget);
-        if (widget is PlatformAnimated platformAnimated && control is WeiPoXAnimatedPanel animatedPanel)
+        if (widget is not PlatformAnimated platformAnimated || control is not WeiPoXAnimatedPanel animatedPanel)
         {
-            
+            return;
         }
+
+        if (platformAnimated is { Initial: not null, Target: not null })
+        {
+            animatedPanel.SetTransitionData(platformAnimated.Initial, platformAnimated.Target);
+        }
+        animatedPanel.SetDuration(platformAnimated.Duration);
     }
 }
 
@@ -27,10 +36,17 @@ internal class WeiPoXAnimatedPanel : WeiPoXPanel
 {
     public WeiPoXAnimatedPanel()
     {
-        this.Transitions?.Add(new DoubleTransition
+        Transitions = new global::Avalonia.Animation.Transitions
         {
-            Property = OpacityProperty,
-        });
+            new DoubleTransition
+            {
+                Property = OpacityProperty,
+            },
+            new TransformOperationsTransition
+            {
+                Property = RenderTransformProperty,
+            }
+        };
     }
 
     private TransitionData? _initial;
@@ -47,6 +63,39 @@ internal class WeiPoXAnimatedPanel : WeiPoXPanel
 
     private void PlayTransition(TransitionData initial, TransitionData target)
     {
-        this.Opacity = target.Fade?.Alpha ?? 0f;
+        Opacity = target.Fade?.Alpha ?? 0f;
+        RenderTransformOrigin = new RelativePoint(target.Scale?.OriginX ?? 0.5, target.Scale?.OriginY ?? 0.5,
+            RelativeUnit.Relative);
+        var slideOffset = target.Slide?.SlideOffset.Invoke(new Offset(Width, Height)) ?? new Offset(0f, 0f);
+        RenderTransform = new MatrixTransform(
+            new Matrix(
+                scaleX: target.Scale?.ScaleX ?? 1f,
+                scaleY: target.Scale?.ScaleY ?? 1f,
+                skewY: 0.0,
+                skewX: 0.0,
+                offsetX: slideOffset.X,
+                offsetY: slideOffset.Y
+            )
+        );
+    }
+
+    public void SetDuration(TimeSpan platformAnimatedDuration)
+    {
+        if (Transitions == null)
+        {
+            return;
+        }
+        foreach (var transition in Transitions)
+        {
+            switch (transition)
+            {
+                case DoubleTransition doubleTransition:
+                    doubleTransition.Duration = platformAnimatedDuration;
+                    break;
+                case TransformOperationsTransition transformOperationsTransition:
+                    transformOperationsTransition.Duration = platformAnimatedDuration;
+                    break;
+            }
+        }
     }
 }

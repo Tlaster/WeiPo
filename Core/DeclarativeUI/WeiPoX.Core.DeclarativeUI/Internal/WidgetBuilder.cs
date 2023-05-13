@@ -37,11 +37,11 @@ public abstract partial class WidgetBuilder<T>
         return result;
     }
 
-    private void OnChildAdded(Widget child, T childControl)
+    private void OnChildAdded(Widget child)
     {
     }
 
-    private void OnChildRemoved(Widget? oldChild, T oldChildControl)
+    private void OnChildRemoved(Widget? oldChild)
     {
         if (oldChild is IDisposable disposable)
         {
