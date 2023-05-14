@@ -41,6 +41,7 @@ public class DeclarativeCore<T>
     private bool _rendering;
     private int _requestBuildCount = 1;
     private readonly IBuildOwner _buildOwner;
+    private WidgetBuilder<T>.Element? _element;
 
     public DeclarativeCore(WidgetBuilder<T> renderer, Action<T> updateChild, Action<Action> runInUi, IBuildOwner? buildOwner = null)
     {
@@ -83,13 +84,17 @@ public class DeclarativeCore<T>
         {
             while (_requestBuildCount > 0)
             {
-                _renderedControl = await _renderer.BuildIfNeededAsync(_previousWidget, widget, _renderedControl, _buildOwner);
+                _element = await _renderer.BuildElement(_previousWidget, widget, _buildOwner);
                 _previousWidget = widget;
                 _requestBuildCount--;
                 if (_requestBuildCount == 0)
                 {
                     _buildOwner.CleanUp();
-                    _updateChild(_renderedControl);
+                    _runInUi.Invoke(() =>
+                    {
+                        _renderedControl = _renderer.ApplyElement(_element, _renderedControl, _buildOwner);
+                        _updateChild(_renderedControl);
+                    });
                 }
                 else
                 {
@@ -100,7 +105,7 @@ public class DeclarativeCore<T>
         catch (Exception e)
         {
             var text = new Text(e.ToString());
-            _renderedControl = await _renderer.BuildIfNeededAsync(text, text, _renderedControl, _buildOwner);
+            _renderedControl = await _renderer.Build(text, text, _renderedControl, _buildOwner);
             throw;
         }
         finally

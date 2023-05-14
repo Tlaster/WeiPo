@@ -25,9 +25,13 @@ public class RendererTest
     public async Task TestRendererUpdateReference()
     {
         var owner = new TestBuildOwner();
-        var control = new TestControl
+        var control = new TestPanel
         {
-            UpdateCount = 1
+            UpdateCount = 0,
+            Children =
+            {
+                new TestControl { UpdateCount = 1 }
+            }
         };
         var renderer = new TestWidgetBuilder(owner);
         var result = await renderer.BuildIfNeededAsync(
@@ -58,9 +62,23 @@ public class RendererTest
             {
                 new Text("world"),
             },
-            new TestControl { UpdateCount = 1 }
+            new TestPanel
+            {
+                UpdateCount = 0,
+                Children =
+                {
+                    new TestControl
+                    {
+                        UpdateCount = 1,
+                    }
+                }
+            }
         );
-        Assert.AreEqual(2, result.UpdateCount);
+        Assert.IsInstanceOfType<TestPanel>(result);
+        var panel = (TestPanel)result;
+        Assert.AreEqual(1, panel.UpdateCount);
+        Assert.AreEqual(1, panel.Children.Count);
+        Assert.AreEqual(2, panel.Children[0].UpdateCount);
     }
 
     [TestMethod]
@@ -77,9 +95,18 @@ public class RendererTest
             {
                 new Text("hello")
             },
-            new TestControl { UpdateCount = 1 }
+            new TestPanel
+            {
+                UpdateCount = 1,
+                Children =
+                {
+                    new TestControl { UpdateCount = 1 }
+                }
+            }
         );
         Assert.AreEqual(1, result.UpdateCount);
+        Assert.AreEqual(1, ((TestPanel)result).Children.Count);
+        Assert.AreEqual(1, ((TestPanel)result).Children[0].UpdateCount);
     }
 
     [TestMethod]
@@ -223,109 +250,84 @@ public class RendererTest
         Assert.AreSame(child, ((TestPanel)result).Children[0]);
         Assert.AreEqual(2, ((TestPanel)result).Children[0].UpdateCount);
     }
-}
 
-// internal class TestControl
-// {
-//     public int UpdateCount { get; set; }
-// }
-//
-// internal class TestPanel : TestControl
-// {
-//     public List<TestControl> Children { get; } = new();
-// }
-//
-// internal class TestBuildOwner : IBuildOwner
-// {
-//     public List<Widget> RebuiltWidgets { get; } = new();
-//
-//     public bool NeedsBuild => RebuiltWidgets.Count > 0;
-//
-//
-//     public void MarkNeedsBuild(Widget widget)
-//     {
-//         RebuiltWidgets.Add(widget);
-//     }
-//
-//     public bool IsBuildScheduled(Widget widget)
-//     {
-//         return RebuiltWidgets.Contains(widget);
-//     }
-//
-//     public void CleanUp()
-//     {
-//         RebuiltWidgets.Clear();
-//     }
-// }
-//
-// internal class TestWidgetBuilder : WidgetBuilder<TestControl>
-// {
-//     public TestWidgetBuilder(IBuildOwner owner) : base(owner)
-//     {
-//     }
-//
-//     protected override IRenderer<TestControl> GetRenderer(Type widgetType)
-//     {
-//         if (typeof(IPanelWidget).IsAssignableFrom(widgetType))
-//         {
-//             return new TestPanelRenderer();
-//         }
-//
-//         return new TestRenderer();
-//     }
-// }
-//
-// internal class TestPanelRenderer : IPanelRenderer<TestControl>
-// {
-//     public TestControl Create()
-//     {
-//         return new TestPanel();
-//     }
-//
-//     public void Update(TestControl control, MappingWidget widget)
-//     {
-//         control.UpdateCount++;
-//     }
-//
-//     public void AddChild(TestControl control, TestControl childControl)
-//     {
-//         if (control is TestPanel panel)
-//         {
-//             panel.Children.Add(childControl);
-//         }
-//     }
-//
-//     public void RemoveChild(TestControl control, TestControl childControl)
-//     {
-//         if (control is TestPanel panel)
-//         {
-//             panel.Children.Remove(childControl);
-//         }
-//     }
-//
-//     public void ReplaceChild(TestControl control, int index, TestControl newChildControl)
-//     {
-//         if (control is TestPanel panel)
-//         {
-//             panel.Children[index] = newChildControl;
-//         }
-//     }
-//
-//     public TestControl? GetChildAt(TestControl control, int index)
-//     {
-//         return control is TestPanel panel ? panel.Children.ElementAtOrDefault(index) : null;
-//     }
-// }
-//
-// internal class TestRenderer : IRenderer<TestControl>
-// {
-//     public TestControl Create()
-//     {
-//         return new TestControl();
-//     }
-//
-//     public void Update(TestControl control, MappingWidget widget)
-//     {
-//         control.UpdateCount++;
-//     }
-// }
+    [TestMethod]
+    public async Task TestChildTreeChanged()
+    {
+        
+        var owner = new TestBuildOwner();
+        var renderer = new TestWidgetBuilder(owner);
+        var result = await renderer.BuildIfNeededAsync(
+            new Box
+            {
+                new Text("hello1")
+            },
+            new Box
+            {
+                new Box(),
+                new Text("world")
+            },
+            new TestPanel
+            {
+                UpdateCount = 1,
+                Children =
+                {
+                    new TestControl
+                    {
+                        UpdateCount = 1
+                    }
+                }
+            }
+        );
+        Assert.IsInstanceOfType<TestPanel>(result);
+        var panel = (TestPanel)result;
+        Assert.AreEqual(2, panel.UpdateCount);
+        Assert.AreEqual(2, panel.Children.Count);
+        Assert.AreEqual(1, panel.Children[0].UpdateCount);
+        Assert.AreEqual(1, panel.Children[1].UpdateCount);
+        Assert.IsInstanceOfType<TestPanel>(panel.Children[0]);
+    }
+    
+    
+    record TestMultiPassWidget : StatefulWidget
+    {
+        protected override Widget Build()
+        {
+            var (value, setValue) = UseState(0);
+            var (value2, setValue2) = UseState(0);
+            UseEffect(() => { setValue2(value); }, value);
+            return new Box
+            {
+                new Button
+                {
+                    Text = "Click",
+                    OnClick = () => setValue(value + 1)
+                },
+                new Text(value.ToString()),
+                value == 1 ? new Text("1") : new Box(),
+            };
+        }
+    }
+    
+    [TestMethod]
+    public void TestMultiPassTreeChanged()
+    {
+        var test = new TestMultiPassWidget().Test();
+        var widget = test.GetWidget<TestMultiPassWidget>();
+        var button = widget.GetChild<Box>()?.FindChildAtIndex<Button>(0);
+        Assert.IsNotNull(button);
+        var panel = test.GetControl<TestPanel>()?.Children[2];
+        Assert.IsNotNull(panel);
+        Assert.IsInstanceOfType<TestPanel>(panel);
+        button.OnClick.Invoke();
+        var control = test.GetControl<TestPanel>()?.Children[2];
+        Assert.IsNotNull(control);
+        Assert.IsInstanceOfType<TestControl>(control);
+        button = widget.GetChild<Box>()?.FindChildAtIndex<Button>(0);
+        Assert.IsNotNull(button);
+        button.OnClick.Invoke();
+        var control2 = test.GetControl<TestPanel>()?.Children[2];
+        Assert.IsNotNull(control2);
+        Assert.IsInstanceOfType<TestPanel>(control2);
+    }
+}

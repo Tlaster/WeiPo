@@ -1,6 +1,6 @@
 ﻿namespace WeiPoX.Core.DeclarativeUI.Testing;
 
-internal class TestControl
+public class TestControl
 {
     public int UpdateCount { get; set; }
 }

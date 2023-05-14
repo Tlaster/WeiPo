@@ -12,71 +12,95 @@ public record SampleApp : StatefulWidget
 {
     protected override Widget Build()
     {
-        // var (value, setValue) = UseState(0);
-        // var (text, setText) = UseState(new InputState("Hello World!"));
-        // return new LazyColumn
-        // {
-        //     new Item
-        //     {
-        //         new Box
-        //         {
-        //             BackgroundColor = new Color("#FF0000"),
-        //             Height = 200,
-        //             Horizontal = Alignment.Horizontal.Center,
-        //             Vertical = Alignment.Vertical.Center,
-        //             Children =
-        //             {
-        //                 new Column
-        //                 {
-        //                     Alignment = Alignment.Horizontal.Center,
-        //                     Children =
-        //                     {
-        //                         new Button
-        //                         {
-        //                             Text = "Click me!",
-        //                             OnClick = () => setValue(value + 1)
-        //                         },
-        //                         new Text("Value: " + value),
-        //                         new Input
-        //                         {
-        //                             State = text,
-        //                             OnStateChanged = setText
-        //                         }
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     },
-        //     new Items(10000)
-        //     {
-        //         Builder = index => new Column
-        //         {
-        //             new Text($"item {index}, value: {value}"),
-        //             new Text($"text: {text.Text}")
-        //         }
-        //     }
-        // };
-        // var navigator = this.UseNavigator();
-        //
-        // return new NavHost
-        // {
-        //     Navigator = navigator,
-        //     InitialRoute = "home",
-        //     Routes = new[]
-        //     {
-        //         new Route
-        //         {
-        //             Path = "home",
-        //             Content = entry => new HomeScene(() => navigator.Push("detail"))
-        //         },
-        //         new Route
-        //         {
-        //             Path = "detail",
-        //             Content = entry => new DetailScene(() => navigator.Pop())
-        //         }
-        //     }.ToImmutableList()
-        // };
-        
+        var navigator = this.UseNavigator();
+        return new Column
+        {
+            new Button
+            {
+                Text = "Back",
+                OnClick = () => navigator.Pop()
+            },
+            new NavHost
+            {
+                Navigator = navigator,
+                InitialRoute = "home",
+                Routes = new[]
+                {
+                    new Route
+                    {
+                        Path = "home",
+                        Content = entry => new HomeScene(new HomeNavigation(
+                            OnCounter: () => navigator.Push("counter"),
+                            OnLazyColumn: () => navigator.Push("lazyColumn"),
+                            OnAnimatedVisibility: () => navigator.Push("animatedVisibility"))
+                        )
+                    },
+                    new Route
+                    {
+                        Path = "counter",
+                        Content = entry => new CounterScene(() => navigator.Push("detail"))
+                    },
+                    new Route
+                    {
+                        Path = "lazyColumn",
+                        Content = entry => new LazyColumnScene()
+                    },
+                    new Route
+                    {
+                        Path = "animatedVisibility",
+                        Content = entry => new AnimatedVisibilityScene()
+                    },
+                    new Route
+                    {
+                        Path = "detail",
+                        Content = entry => new DetailScene(() => navigator.Pop())
+                    }
+                }.ToImmutableList()
+            }
+        };
+    }
+}
+
+public record HomeNavigation(Action OnCounter, Action OnLazyColumn, Action OnAnimatedVisibility);
+
+public record HomeScene(HomeNavigation HomeNavigation) : StatefulWidget
+{
+    protected override Widget Build()
+    {
+        return new Column
+        {
+            new GestureDetector
+            {
+                Children =
+                {
+                    new Text("CounterScene"),
+                },
+                OnTap = HomeNavigation.OnCounter,
+            },
+            new GestureDetector
+            {
+                Children =
+                {
+                    new Text("LazyColumnScene"),
+                },
+                OnTap = HomeNavigation.OnLazyColumn,
+            },
+            new GestureDetector
+            {
+                Children =
+                {
+                    new Text("AnimatedVisibilityScene"),
+                },
+                OnTap = HomeNavigation.OnAnimatedVisibility,
+            },
+        };
+    }
+}
+
+public record AnimatedVisibilityScene : StatefulWidget
+{
+    protected override Widget Build()
+    {
         var (show, setShow) = UseState(false);
         return new Column
         {
@@ -96,7 +120,58 @@ public record SampleApp : StatefulWidget
     }
 }
 
-public record HomeScene(Action OnNavigate) : StatefulWidget
+public record LazyColumnScene : StatefulWidget
+{
+    protected override Widget Build()
+    {
+        var (value, setValue) = UseState(0);
+        var (text, setText) = UseState(new InputState("Hello World!"));
+        return new LazyColumn
+        {
+            new Item
+            {
+                new Box
+                {
+                    BackgroundColor = new Color("#FF0000"),
+                    Height = 200,
+                    Horizontal = Alignment.Horizontal.Center,
+                    Vertical = Alignment.Vertical.Center,
+                    Children =
+                    {
+                        new Column
+                        {
+                            Alignment = Alignment.Horizontal.Center,
+                            Children =
+                            {
+                                new Button
+                                {
+                                    Text = "Click me!",
+                                    OnClick = () => setValue(value + 1)
+                                },
+                                new Text("Value: " + value),
+                                new Input
+                                {
+                                    State = text,
+                                    OnStateChanged = setText
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            new Items(10000)
+            {
+                Builder = index => new Column
+                {
+                    new Text($"item {index}, value: {value}"),
+                    new Text($"text: {text.Text}")
+                }
+            }
+        };
+    }
+}
+
+public record CounterScene(Action OnNavigate) : StatefulWidget
 {
     protected override Widget Build()
     {

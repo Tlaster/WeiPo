@@ -77,6 +77,7 @@ public record AnimatedContent<T> : StatefulWidget where T : notnull
 
 public record AnimatedVisibility : StatefulWidget
 {
+    public bool ClipBounds { get; init; } = false;
     public required bool Visible { get; init; }
     public required Widget Child { get; init; }
     public TimeSpan Duration { get; init; } = Transitions.DefaultDuration;
@@ -84,33 +85,22 @@ public record AnimatedVisibility : StatefulWidget
     public ExitTransition ExitTransition { get; init; } = Transitions.FadeOut() + Transitions.SlideOutToTop();
     protected override Widget Build()
     {
-        // var (showChild, setShowChild) = UseState(Visible);
-        // UseEffect(() =>
-        // {
-        //     var cancel = new CancellationTokenSource();
-        //     Task.Run(async () =>
-        //     {
-        //         if (Visible)
-        //         {
-        //             setShowChild(true);
-        //         }
-        //         await Task.Delay(Duration, cancel.Token);
-        //         if (!Visible)
-        //         {
-        //             setShowChild(false);
-        //         }
-        //     }, cancel.Token);
-        //     return () => cancel.Cancel();
-        // }, Visible, Duration);
-        return new PlatformAnimated
+        return new Box
         {
-            Children = 
+            ClipBounds = ClipBounds,
+            Children =
             {
-                Child,
-            },
-            Duration = Duration,
-            Target = Visible ? TransitionData.Empty : ExitTransition.TransitionData,
-            Initial = Visible ? EnterTransition.TransitionData : TransitionData.Empty,
+                new PlatformAnimated
+                {
+                    Children = 
+                    {
+                        Child,
+                    },
+                    Duration = Duration,
+                    Target = Visible ? TransitionData.Empty : ExitTransition.TransitionData,
+                    Initial = Visible ? EnterTransition.TransitionData : TransitionData.Empty,
+                }
+            }
         };
     }
 }
@@ -138,7 +128,7 @@ internal record Slide(ChangePositionDelegate SlideOffset);
 
 public static class Transitions
 {
-    public static readonly TimeSpan DefaultDuration = TimeSpan.FromMilliseconds(300);
+    public static readonly TimeSpan DefaultDuration = TimeSpan.FromMilliseconds(3000);
     public static EnterTransition FadeIn(float initialAlpha = 0f) => new EnterTransitionImpl(new TransitionData(Fade: new Fade(initialAlpha)));
     public static ExitTransition FadeOut(float finalAlpha = 0f) => new ExitTransitionImpl(new TransitionData(Fade: new Fade(finalAlpha)));
     public static EnterTransition ScaleIn(float initialScaleX = 0f, float initialScaleY = 0f, float originX = 0.5f, float originY = 0.5f) =>

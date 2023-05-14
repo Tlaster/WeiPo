@@ -12,7 +12,14 @@ internal class TestPanelRenderer : IRenderer<TestControl>
 
     public void Update(TestControl control, MappingWidget widget)
     {
-        control.UpdateCount++;
+        if (control is TestPanel panel)
+        {
+            control.UpdateCount++;
+        }
+        else
+        {
+            throw new InvalidOperationException();
+        }
     }
 
     public void AddChild(TestControl control, TestControl childControl)
@@ -20,6 +27,10 @@ internal class TestPanelRenderer : IRenderer<TestControl>
         if (control is TestPanel panel)
         {
             panel.Children.Add(childControl);
+        }
+        else
+        {
+            throw new InvalidOperationException();
         }
     }
 
@@ -29,6 +40,10 @@ internal class TestPanelRenderer : IRenderer<TestControl>
         {
             panel.Children.Remove(childControl);
         }
+        else
+        {
+            throw new InvalidOperationException();
+        }
     }
 
     public void ReplaceChild(TestControl control, int index, TestControl newChildControl)
@@ -36,6 +51,10 @@ internal class TestPanelRenderer : IRenderer<TestControl>
         if (control is TestPanel panel)
         {
             panel.Children[index] = newChildControl;
+        }
+        else
+        {
+            throw new InvalidOperationException();
         }
     }
     
@@ -46,6 +65,6 @@ internal class TestPanelRenderer : IRenderer<TestControl>
 
     public TestControl? GetChildAt(TestControl control, int index)
     {
-        return control is TestPanel panel ? panel.Children.ElementAtOrDefault(index) : null;
+        return control is TestPanel panel ? panel.Children.ElementAtOrDefault(index) : throw new InvalidOperationException();
     }
 }

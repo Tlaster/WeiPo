@@ -15,7 +15,7 @@ internal class TestWidgetBuilder : WidgetBuilder<TestControl>
     
     public Task<TestControl> BuildIfNeededAsync(Widget? oldValue, Widget newValue, TestControl? control)
     {
-        return BuildIfNeededAsync(oldValue, newValue, control, _owner);
+        return Build(oldValue, newValue, control, _owner);
     }
 
     protected override IRenderer<TestControl> GetRenderer(Type widgetType)

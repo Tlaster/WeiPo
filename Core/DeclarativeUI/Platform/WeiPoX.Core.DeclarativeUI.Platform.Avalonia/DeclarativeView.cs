@@ -17,8 +17,8 @@ public class DeclarativeView : UserControl
 
     private void RunInUi(Action obj)
     {
-        // obj.Invoke();
-        Dispatcher.UIThread.InvokeAsync(obj);
+        obj.Invoke();
+        // Dispatcher.UIThread.InvokeAsync(obj);
     }
 
     public Widget? Widget

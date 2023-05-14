@@ -8,6 +8,7 @@ public class DeclarativeUiTester
     
     private readonly DeclarativeCore<TestControl> _core;
     private readonly Widget _widget;
+    private TestControl? _control;
 
     public DeclarativeUiTester(Widget widget)
     {
@@ -29,12 +30,17 @@ public class DeclarativeUiTester
 
     private void UpdateChild(TestControl obj)
     {
-        
+        _control = obj;
     }
 
     public T GetWidget<T>() where T : Widget
     {
         return (T)_widget;
+    }
+    
+    public T? GetControl<T>() where T : TestControl
+    {
+        return _control as T;
     }
 
     public static DeclarativeUiTester Create<T>() where T : Widget, new()

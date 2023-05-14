@@ -85,6 +85,7 @@ public partial record Box : LayoutPanel
     public Thickness Padding { get; init; } = new();
     
     public double Alpha { get; init; } = 1.0;
+    public bool ClipBounds { get; init; } = false;
     
     [IgnoreEquality]
     protected override Func<ILayoutContext, Size> Measure { get; }

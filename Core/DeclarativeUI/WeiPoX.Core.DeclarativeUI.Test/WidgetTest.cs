@@ -224,4 +224,82 @@ public class WidgetTest
             };
         }
     }
+    record TestTreeChangedWidget : StatefulWidget
+    {
+
+        protected override Widget Build()
+        {
+            var (value, setValue) = UseState(0);
+            return new Box
+            {
+                new Button
+                {
+                    Text = "Click",
+                    OnClick = () => setValue(value + 1)
+                },
+                new Text(value.ToString()),
+                value == 1 ? new Text("1") : new Box(),
+            };
+        }
+    }
+    
+    [TestMethod]
+    public void TestTreeChanged()
+    {
+        var test = new TestTreeChangedWidget().Test();
+        var widget = test.GetWidget<TestTreeChangedWidget>();
+        var button = widget.GetChild<Box>()?.FindChildAtIndex<Button>(0);
+        Assert.IsNotNull(button);
+        var box = widget.GetChild<Box>()?.FindChildAtIndex<Box>(2);
+        Assert.IsNotNull(box);
+        button.OnClick.Invoke();
+        var text = widget.GetChild<Box>()?.FindChildAtIndex<Text>(2);
+        Assert.IsNotNull(text);
+        Assert.AreEqual("1", text.Content);
+        button = widget.GetChild<Box>()?.FindChildAtIndex<Button>(0);
+        Assert.IsNotNull(button);
+        button.OnClick.Invoke();
+        box = widget.GetChild<Box>()?.FindChildAtIndex<Box>(2);
+        Assert.IsNotNull(box);
+    }
+    
+    record TestMultiPassWidget : StatefulWidget
+    {
+        protected override Widget Build()
+        {
+            var (value, setValue) = UseState(0);
+            var (value2, setValue2) = UseState(0);
+            UseEffect(() => { setValue2(value); }, value);
+            return new Box
+            {
+                new Button
+                {
+                    Text = "Click",
+                    OnClick = () => setValue(value + 1)
+                },
+                new Text(value.ToString()),
+                value == 1 ? new Text("1") : new Box(),
+            };
+        }
+    }
+    
+    [TestMethod]
+    public void TestMultiPass()
+    {
+        var test = new TestMultiPassWidget().Test();
+        var widget = test.GetWidget<TestMultiPassWidget>();
+        var button = widget.GetChild<Box>()?.FindChildAtIndex<Button>(0);
+        Assert.IsNotNull(button);
+        var box = widget.GetChild<Box>()?.FindChildAtIndex<Box>(2);
+        Assert.IsNotNull(box);
+        button.OnClick.Invoke();
+        var text = widget.GetChild<Box>()?.FindChildAtIndex<Text>(2);
+        Assert.IsNotNull(text);
+        Assert.AreEqual("1", text.Content);
+        button = widget.GetChild<Box>()?.FindChildAtIndex<Button>(0);
+        Assert.IsNotNull(button);
+        button.OnClick.Invoke();
+        box = widget.GetChild<Box>()?.FindChildAtIndex<Box>(2);
+        Assert.IsNotNull(box);
+    }
 }

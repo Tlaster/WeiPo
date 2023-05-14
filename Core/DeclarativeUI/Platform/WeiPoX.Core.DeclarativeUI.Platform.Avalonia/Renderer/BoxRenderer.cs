@@ -14,5 +14,6 @@ public class BoxRenderer : LayoutPanelRenderer<Box>
     {
         base.Update(control, widget);
         control.Background = new SolidColorBrush(widget.BackgroundColor.ToColor());
+        control.ClipToBounds = widget.ClipBounds;
     }
 }

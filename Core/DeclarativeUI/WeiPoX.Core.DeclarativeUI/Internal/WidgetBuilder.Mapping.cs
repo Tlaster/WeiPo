@@ -65,24 +65,28 @@ public partial class WidgetBuilder<T>
         renderer.Update(control, element.Widget);
         if (renderer.IsPanel(control))
         {
-            element.ChildrenToRemove?.ForEach(it =>
+            element.ChildrenToRemove.ForEach(index =>
             {
-                var child = renderer.GetChildAt(control, it);
+                var child = renderer.GetChildAt(control, index);
                 if (child != null)
                 {
                     renderer.RemoveChild(control, child);
                 }
             });
-            foreach (var (key, value) in element.Children)
+            foreach (var (childIndex, childElement) in element.Children)
             {
-                var child = renderer.GetChildAt(control, key);
+                var child = renderer.GetChildAt(control, childIndex);
                 if (child == null)
                 {
-                    renderer.AddChild(control, ApplyElement(value, default, owner));
+                    renderer.AddChild(control, ApplyElement(childElement, default, owner));
+                }
+                else if (childElement.ShouldReCreate)
+                {
+                    renderer.ReplaceChild(control, childIndex, ApplyElement(childElement, default, owner));
                 }
                 else
                 {
-                    ApplyElement(value, child, owner);
+                    ApplyElement(childElement, child, owner);
                 }
             }
         }
@@ -145,7 +149,7 @@ public partial class WidgetBuilder<T>
     {
         if (widget is not IPanelWidget panel)
         {
-            return new Element(widget, ImmutableDictionary<int, Element>.Empty);
+            return new Element(widget);
         }
 
         var child = await Task.WhenAll(panel.Children.Select(it => CreateElementAsync(it, context, owner)));
@@ -187,18 +191,14 @@ public partial class WidgetBuilder<T>
         IBuildOwner owner
     )
     {
-        // if (!IsChanged(oldValue, newValue, owner))
-        // {
-        //     return new Element(newValue, ImmutableDictionary<int, Element>.Empty, IsDirty: false);
-        // }
-
+        var isDirty = IsChanged(oldValue, newValue, owner);
         return newValue switch
         {
             IPanelWidget newPanel when oldValue is IPanelWidget oldPanel => await BuildPanelElement(context, oldPanel,
-                newPanel, owner),
+                newPanel, owner) with { IsDirty = isDirty },
             ILazyWidget newLazyWidget when oldValue is ILazyWidget oldLazyWidget => await BuildLazyWidgetElement(
-                context, oldLazyWidget, newLazyWidget, owner),
-            _ => new Element(newValue, ImmutableDictionary<int, Element>.Empty)
+                context, oldLazyWidget, newLazyWidget, owner) with { IsDirty = isDirty },
+            _ => new Element(newValue, IsDirty: isDirty),
         };
     }
 
@@ -220,7 +220,7 @@ public partial class WidgetBuilder<T>
         if (nullableRange is null)
         {
             // initial rendering, just skip it.
-            return new Element(newMappingWidget, ImmutableDictionary<int, Element>.Empty);
+            return new Element(newMappingWidget);
         }
 
         var range = nullableRange.Value;
@@ -229,10 +229,10 @@ public partial class WidgetBuilder<T>
 
         if (range.Start.Value == -1 || range.End.Value <= 0)
         {
-            return new Element(newMappingWidget, ImmutableDictionary<int, Element>.Empty);
+            return new Element(newMappingWidget);
         }
 
-        var actualEnd = Math.Min(newItemsCount, range.End.Value);
+        var actualEnd = Math.Min(newItemsCount, range.End.Value + 1);
         var actualStart = Math.Max(0, range.Start.Value);
         var count = actualEnd - actualStart;
 
@@ -319,5 +319,19 @@ public partial class WidgetBuilder<T>
             ChildrenToRemove: children.Where(it => it == null).Select((it, index) => index).ToImmutableList());
     }
 
-    internal record Element(MappingWidget Widget, ImmutableDictionary<int, Element> Children, ImmutableList<int>? ChildrenToRemove = null, bool IsDirty = true, bool ShouldReCreate = false);
+    internal record Element(MappingWidget Widget, ImmutableDictionary<int, Element> Children,
+        ImmutableList<int> ChildrenToRemove, bool IsDirty = true, bool ShouldReCreate = false)
+    {
+        public Element(MappingWidget widget, ImmutableDictionary<int, Element> children, bool IsDirty = true,
+            bool ShouldReCreate = false) : this(widget, children,
+            ImmutableList<int>.Empty, IsDirty, ShouldReCreate)
+        {
+        }
+
+        public Element(MappingWidget widget, bool IsDirty = true, bool ShouldReCreate = false) : this(widget,
+            ImmutableDictionary<int, Element>.Empty,
+            ImmutableList<int>.Empty, IsDirty, ShouldReCreate)
+        {
+        }
+    }
 }
