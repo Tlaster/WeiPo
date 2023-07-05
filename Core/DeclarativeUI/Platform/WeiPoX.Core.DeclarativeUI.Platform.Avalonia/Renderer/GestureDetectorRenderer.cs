@@ -17,9 +17,9 @@ internal class GestureDetectorRenderer : RendererObject<GestureDetector, WeiPoXG
     }
 }
 
-internal class WeiPoXGestureDetector : Grid, IStyleable
+internal class WeiPoXGestureDetector : Grid
 {
-    Type IStyleable.StyleKey => typeof(Grid);
+    protected override Type StyleKeyOverride { get; } = typeof(Grid);
 
     public Action? OnTap { get; set; }
     public Action? OnLongPress { get; set; }

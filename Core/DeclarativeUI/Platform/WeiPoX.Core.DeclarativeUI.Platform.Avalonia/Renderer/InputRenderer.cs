@@ -17,9 +17,9 @@ internal class InputRenderer : RendererObject<Input, WeiPoXTextBox>
     }
 }
 
-internal class WeiPoXTextBox : TextBox, IStyleable
+internal class WeiPoXTextBox : TextBox
 {
-    Type IStyleable.StyleKey => typeof(TextBox);
+    protected override Type StyleKeyOverride { get; } = typeof(TextBox);
     public bool Updating { get; set; }
     public Action<InputState>? TextChangedCallback { get; set; }
     public WeiPoXTextBox()

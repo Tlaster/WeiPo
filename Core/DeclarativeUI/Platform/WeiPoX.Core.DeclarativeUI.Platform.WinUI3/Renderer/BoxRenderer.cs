@@ -7,7 +7,7 @@ using WeiPoX.Core.DeclarativeUI.Widgets.Layout;
 
 namespace WeiPoX.Core.DeclarativeUI.Platform.WinUI3.Renderer;
 
-internal class BoxRenderer : LayoutPanelRenderer<Box>
+public class BoxRenderer : LayoutPanelRenderer<Box>
 {
     protected override void Update(WeiPoXPanel control, Box widget)
     {

@@ -2,25 +2,17 @@
     <PropertyGroup>
         <TargetFramework>net7.0-windows10.0.19041.0</TargetFramework>
         <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+        <RootNamespace>WeiPoX.Core.DeclarativeUI.Animation.Platform.WinUI3</RootNamespace>
         <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
         <UseWinUI>true</UseWinUI>
-        <EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
-        <GenerateLibraryLayout>true</GenerateLibraryLayout>
-        <DefineConstants>WINUI3</DefineConstants>
     </PropertyGroup>
-    <ItemGroup>
-      <None Remove="ResourceDictionary1.xaml" />
-    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.3.230602002" />
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.755" />
     </ItemGroup>
-
     <ItemGroup>
-        <ProjectReference Include="..\..\..\Lifecycle\WeiPoX.Core.Lifecycle\WeiPoX.Core.Lifecycle.csproj" />
-        <ProjectReference Include="..\..\WeiPoX.Core.DeclarativeUI\WeiPoX.Core.DeclarativeUI.csproj" />
-        <PackageReference Include="ReactiveUI.WinUI" Version="$(ReactiveUIVersion)" />
+        <ProjectReference Include="..\..\..\Platform\WeiPoX.Core.DeclarativeUI.Platform.WinUI3\WeiPoX.Core.DeclarativeUI.Platform.WinUI3.csproj" />
+        <ProjectReference Include="..\..\WeiPoX.Core.DeclarativeUI.Animation\WeiPoX.Core.DeclarativeUI.Animation.csproj" />
     </ItemGroup>
-
 </Project>

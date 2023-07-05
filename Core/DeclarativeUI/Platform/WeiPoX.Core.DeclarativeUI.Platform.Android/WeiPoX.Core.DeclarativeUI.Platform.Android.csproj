@@ -10,8 +10,8 @@
         <ProjectReference Include="..\..\WeiPoX.Core.DeclarativeUI\WeiPoX.Core.DeclarativeUI.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Xamarin.AndroidX.Activity" Version="1.7.0" />
-        <PackageReference Include="Xamarin.AndroidX.Lifecycle.ViewModel" Version="2.6.1" />
-        <PackageReference Include="Xamarin.Google.Android.Material" Version="1.8.0" />
+        <PackageReference Include="Xamarin.AndroidX.Activity" Version="1.7.2" />
+        <PackageReference Include="Xamarin.AndroidX.Lifecycle.ViewModel" Version="2.6.1.2" />
+        <PackageReference Include="Xamarin.Google.Android.Material" Version="1.9.0.1" />
     </ItemGroup>
 </Project>

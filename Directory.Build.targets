@@ -4,8 +4,8 @@
         <Nullable>enable</Nullable>
         <EnableWindowsTargeting>true</EnableWindowsTargeting>
         <LangVersion>default</LangVersion>
-        <AvaloniaVersion>11.0.0-preview7</AvaloniaVersion>
-        <ReactiveUIVersion>18.4.34</ReactiveUIVersion>
-        <RealmVersion>10.21.1</RealmVersion>
+        <AvaloniaVersion>11.0.0</AvaloniaVersion>
+        <ReactiveUIVersion>19.2.1</ReactiveUIVersion>
+        <RealmVersion>11.1.2</RealmVersion>
     </PropertyGroup>
 </Project>

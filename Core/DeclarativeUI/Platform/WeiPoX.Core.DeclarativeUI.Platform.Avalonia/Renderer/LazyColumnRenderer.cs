@@ -46,9 +46,9 @@ internal class LazyColumnRenderer : LazyRendererObject<LazyColumn, WeiPoXItemsRe
     }
 }
 
-internal class WeiPoXItemsRepeater : ScrollViewer, IStyleable
+internal class WeiPoXItemsRepeater : ScrollViewer
 {
-    Type IStyleable.StyleKey => typeof(ScrollViewer);
+    protected override Type StyleKeyOverride { get; } = typeof(ScrollViewer);
     private ILazyWidget? _lazyWidget;
     public List<int> VisibleIndex { get; }= new();
 
